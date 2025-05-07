@@ -5,18 +5,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="index.css" />
-  <title>Análise de Dados - Projeto 1</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <title>Análise Preditiva - Projeto 1</title>
   <meta name="description" content="Interface para análise de dados usando FastAPI" />
 </head>
 
 <body>
   <!-- ***** Cabeçalho ***** -->
-  <header class="header" role="banner">
+  <header class="header" id="header" role="banner">
     <div class="row">
       <nav class="nav" role="navigation">
         <ul class="nav__items">
           <li class="nav__item"><a href="index.html" class="nav__link">Home</a></li>
-          <li class="nav__item"><a href="#" class="nav__link">Sobre o Projeto</a></li>
+          <li class="nav__item"><a href="#enviar-dados" class="nav__link">Modelo Preditivo</a></li>
         </ul>
       </nav>
     </div>
@@ -31,7 +32,7 @@
   </header>
 
   <main role="main">
-    <section class="about">
+    <section class="about" id="enviar-dados">
       <div class="row">
         <h2>Enviar Dados para Análise</h2>
         <!-- Área de Visualização com Botões e Instruções -->
@@ -91,6 +92,7 @@
                 }
               </style>
               <button class="nav-btn" onclick="document.getElementById('fileInput').click()">Selecionar</button>
+              <button class="nav-btn" id="downloadExampleBtn" title="Baixar dados de exemplo para teste"><i class="fas fa-download" style="margin-right: 5px;"></i>Baixar Exemplo</button>
               <button class="nav-btn" id="testConnectionBtn" title="Verificar conexão com o servidor"><span id="serverStatus" class="server-status"></span>Testar API</button>
               <button class="nav-btn" id="uploadButton" disabled>Análise</button>
               <button class="nav-btn" id="downloadButton" disabled>Resultados</button>
@@ -137,7 +139,7 @@
   </footer>
 
   <!-- Botão Home -->
-  <a href="index.html" class="home" aria-label="Voltar para a página inicial">
+  <a href="#header" class="home" aria-label="Voltar para o topo da página">
     <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png" alt="Ícone de casa">
   </a>
 
@@ -184,6 +186,21 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Scroll suave para links de navegação
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
         const fileInput = document.getElementById('fileInput');
         const uploadButton = document.getElementById('uploadButton');
         const downloadButton = document.getElementById('downloadButton');
@@ -196,7 +213,26 @@
         const colCount = document.getElementById('colCount');
         const testConnectionBtn = document.getElementById('testConnectionBtn');
         const serverStatus = document.getElementById('serverStatus');
+        const downloadExampleBtn = document.getElementById('downloadExampleBtn');
 
+        // Download do arquivo de exemplo local
+        downloadExampleBtn.addEventListener('click', () => {
+            // Criar um elemento link para download
+            const link = document.createElement('a');
+            link.href = 'exemplo_dados.csv'; // Nome do arquivo local
+            link.download = 'exemplo_dados.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Mostrar mensagem informativa
+            statusText.textContent = 'Dados de exemplo baixados com sucesso!';
+            statusText.style.color = '#4CAF50';
+            setTimeout(() => {
+                statusText.textContent = '';
+            }, 3000);
+        });
+        
         // Quando um arquivo é selecionado
         fileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
