@@ -183,6 +183,43 @@ p {
     }
 }
 
+.home {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--pink);
+    border: none;
+    cursor: pointer;
+    z-index: 9999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.home img {
+    width: 24px;
+    height: 24px;
+    margin: 13px;
+    transition: filter 0.3s ease;
+}
+
+.home:hover {
+    background-color: transparent;
+    border: 1px solid var(--pink);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.home:hover img {
+    filter: brightness(1.2);
+}
+
+.home:active {
+    transform: scale(0.95);
+    border: 1px solid var(--pink);
+}
+
 /* --------------------------------------- */
 /* ----- Buttons and Links ----- */
 /* --------------------------------------- */

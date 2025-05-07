@@ -47,28 +47,28 @@
 
           <div class="work__box">
             <div class="work__text">
-              <h3>Projeto 1</h3>
+              <h3>Potencial de Crescimento</h3>
               <p>
-                Descrição sobre o projeto.
+                Modelo de Machine Learning para previsão do potencial de crescimento de ações com base em indicadores financeiros.
               </p>
               <ul class="work__list">
-                <li>HTML</li>
-                <li>SCSS</li>
+                <li>FastAPI</li>
+                <li>Machine Learning</li>
+                <li>Python</li>
                 <li>JavaScript</li>
-                <li>Parcel</li>
               </ul>
 
               <div class="work__links">
-                <a href="https://google.com" target="_blank" class="link__text">
-                  Visitar Website <span>&rarr;</span>
+                <a href="projeto_1.html" class="link__text">
+                  Acessar Aplicação <span>&rarr;</span>
                 </a>
-                <a href="https://github.com/nisarhassan12/portfolio" title="Verificar código Fonte" target="_blank">
+                <a href="https://github.com/sidnei-almeida/sidnei-almeida.github.io" title="Verificar código Fonte" target="_blank">
                   <img src="./images/github.svg" class="work__code" alt="GitHub">
                 </a>
               </div>
             </div>
             <div class="work__image-box">
-              <img src="./images/project-1.png" class="work__image" alt="Project 1" />
+              <img src="./images/project-1.png" class="work__image" alt="Potencial de Crescimento - Modelo de Machine Learning" />
             </div>
           </div>
 
@@ -195,6 +195,20 @@
       </ul>
     </div>
   </footer>
+  <button class="home" aria-label="Ir para o início" onclick="scrollToTop()">
+    <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png" alt="Ícone de casa">
+  </button>
+  <script>
+    function scrollToTop() {
+      const header = document.querySelector('.header');
+      if (header) {
+        header.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }
+  </script>
 </body>
 
 </html>
