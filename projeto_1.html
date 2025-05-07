@@ -141,6 +141,47 @@
     <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png" alt="Ícone de casa">
   </a>
 
+  <style>
+    .home {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--pink);
+        border: none;
+        cursor: pointer;
+        z-index: 9999;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .home img {
+        width: 24px;
+        height: 24px;
+        transition: filter 0.3s ease;
+    }
+
+    .home:hover {
+        background-color: transparent;
+        border: 1px solid var(--pink);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .home:hover img {
+        filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(330deg) brightness(104%) contrast(97%);
+    }
+
+    .home:active {
+        transform: scale(0.95);
+        border: 1px solid var(--pink);
+    }
+  </style>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
         const fileInput = document.getElementById('fileInput');
