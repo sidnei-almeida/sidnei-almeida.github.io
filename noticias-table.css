@@ -1,0 +1,67 @@
+.noticias-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgba(36, 35, 35, 0.98);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 1.3rem;
+  color: var(--white-1);
+  box-shadow: 0 2px 10px #0003;
+  margin-bottom: 1.5rem;
+}
+.noticias-table thead th {
+  background: var(--black);
+  color: var(--pink);
+  font-size: 1.25rem;
+  font-family: 'Jost', sans-serif;
+  font-weight: 400;
+  padding: 0.65rem 1.1rem;
+  border-bottom: 2px solid var(--pink);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.noticias-table tbody td {
+  padding: 0.55rem 1.1rem;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 1.2rem;
+  vertical-align: top;
+}
+.noticias-table tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.015);
+}
+.noticias-table tbody tr:hover {
+  background: rgba(213,0,50,0.07);
+  transition: background 0.2s;
+}
+.noticias-rotulo {
+  font-weight: 500;
+  border-radius: 5px;
+  padding: 0.15em 0.8em;
+  display: inline-block;
+  text-transform: capitalize;
+  font-size: 1.15rem;
+  letter-spacing: 0.01em;
+}
+.noticias-rotulo--positivo {
+  color: #4caf50;
+  background: rgba(76,175,80,0.08);
+}
+.noticias-rotulo--negativo {
+  color: #f44336;
+  background: rgba(244,67,54,0.08);
+}
+.noticias-rotulo--neutro {
+  color: #ffeb3b;
+  background: rgba(255,235,59,0.07);
+}
+.noticias-link {
+  color: var(--pink);
+  text-decoration: underline;
+  font-size: 1.15rem;
+}
+.noticias-link:hover {
+  text-decoration: none;
+  color: #fff;
+}
