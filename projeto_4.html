@@ -374,8 +374,8 @@
     </div>
     <div class="header__text-box row">
       <div class="header__text">
-        <h1 class="heading-primary"><span>Monitoramento Legislativo</span></h1>
-        <p>Coleta, análise e classificação ideológica de ementas legislativas</p>
+        <h1 class="heading-primary"><span>Classificação ideológica de Ementas</span></h1>
+        <p>Análise e classificação de posicionamento ideológico de ementas legislativas</p>
       </div>
     </div>
   </header>
@@ -385,8 +385,14 @@
       <div class="row">
         <h2>Busca de Ementas</h2>
         <div class="tutorial-busca" style="margin-bottom:1.2em; background:rgba(230,0,122,0.08); border-left:4px solid var(--pink); padding:1em 1.2em; border-radius:6px; color:var(--pink); font-size:0.85em; font-family:'Jost',Arial,sans-serif;">
-          <strong>Como usar:</strong> Utilize os campos abaixo para buscar ementas legislativas recentes ou consultar por código.<br>
-          As ementas encontradas serão exibidas na tabela, junto com a classificação ideológica. Você pode exportar os resultados para Excel clicando em <b>Baixar Excel</b>.
+          <strong>Como usar:</strong>
+          <ul style="margin-top:0.5em; margin-bottom:0.5em; padding-left:1.5em; list-style-type:disc;">
+            <li>Digite um código de ementa específico no campo de busca e clique em <b>Buscar Ementa</b>, ou clique em <b>Limpar</b> para ver todas as ementas recentes.</li>
+            <li>Nas ementas exibidas, selecione uma ou mais marcando as caixas de seleção e clique em <b>Rotular Ementas</b> para analisar sua classificação ideológica.</li>
+            <li>Para cada ementa, você pode clicar em <b>Acessar</b> para visualizar o documento original no site da fonte.</li>
+            <li>Os resultados da classificação mostrarão o posicionamento ideológico estimado para cada ementa selecionada.</li>
+            <li>Use o botão <b>Baixar Excel</b> abaixo da tabela para exportar os dados em formato de planilha.</li>
+          </ul>
         </div>
         <div class="busca-bar">
           <input type="text" id="codigoEmenta" class="input-busca" placeholder="Código da ementa">
@@ -445,8 +451,12 @@
             });
             
             html += '</tbody></table>';
+            html += `<div style="text-align:right;margin:0.5em 0;"><button id="btnExportarExcel" class="nav-btn">Baixar Excel</button></div>`;
             html += `<div id="rotularContainer" style="margin-top:1em;"></div>`;
             tabelaNoticias.innerHTML = html;
+            
+            // Configurar botão de exportar para Excel
+            document.getElementById('btnExportarExcel').addEventListener('click', exportarParaExcel);
             
             // Adiciona evento para seleção e estilização dos checkboxes
             configurarCheckboxes();
@@ -628,6 +638,61 @@
         // Busca ementas recentes novamente
         buscarEmentasRecentes();
       });
+      
+      // Função para exportar tabela para Excel
+      function exportarParaExcel() {
+        const tabela = document.getElementById('ementasTable');
+        if (!tabela) {
+          alert('Nenhuma tabela de ementas para exportar.');
+          return;
+        }
+        
+        // Criar objeto para armazenar os dados
+        const dados = [];
+        
+        // Obter cabeçalhos (ignorando a coluna de checkbox)
+        const cabecalhos = [];
+        const thElements = tabela.querySelectorAll('thead th');
+        for (let i = 1; i < thElements.length; i++) { // início em 1 para pular coluna de checkbox
+          cabecalhos.push(thElements[i].innerText);
+        }
+        dados.push(cabecalhos);
+        
+        // Obter dados das linhas
+        const linhas = tabela.querySelectorAll('tbody tr');
+        linhas.forEach(linha => {
+          const cells = linha.querySelectorAll('td');
+          const rowData = [];
+          // Começa do índice 1 para pular a coluna de checkbox
+          for (let i = 1; i < cells.length; i++) {
+            // Se for a célula com link 'Acessar', pegamos o href
+            if (i === cells.length - 1) {
+              const link = cells[i].querySelector('a');
+              rowData.push(link ? link.getAttribute('href') : '');
+            } else {
+              rowData.push(cells[i].innerText);
+            }
+          }
+          dados.push(rowData);
+        });
+        
+        // Converter para CSV
+        let csvContent = '';
+        dados.forEach(linha => {
+          csvContent += linha.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',') + '\n';
+        });
+        
+        // Criar elemento para o download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `ementas_legislativas_${new Date().toISOString().slice(0,10)}.xlsx`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
       
       // Scroll suave para links de navegação
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
