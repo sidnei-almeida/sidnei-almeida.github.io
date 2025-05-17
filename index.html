@@ -9,6 +9,7 @@
   <meta name="description" content="Portfólio profissional de Sidnei Almeida, desenvolvedor e cientista de dados." />
   <meta name="keywords" content="Sidnei Almeida, Data Science, Ciência de Dados, Machine Learning, Desenvolvimento" />
   <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 
 <body>
@@ -41,16 +42,40 @@
     <section class="work" id="projetos">
       <div class="row">
         <h2>Meus Projetos</h2>
+        
+        <div class="project-filter">
+          <button class="filter-btn active" data-filter="all">Todos</button>
+          <button class="filter-btn" data-filter="machine-learning">Machine Learning</button>
+          <button class="filter-btn" data-filter="data-visualization">Visualização</button>
+          <button class="filter-btn" data-filter="web-app">Web App</button>
+          <button class="filter-btn" data-filter="nlp">NLP</button>
+          <button class="filter-btn" data-filter="api">API</button>
+        </div>
+        
         <div class="work__boxes">
 
           <!-- Cada divisória é um projeto -->
 
-          <div class="work__box">
+          <div class="work__box" data-category="machine-learning web-app">
             <div class="work__text">
               <h3>Potencial de Crescimento</h3>
+              <div class="project__status">
+                <span class="status-badge status-active">Ativo</span>
+                <span class="status-badge status-recent">Recente</span>
+              </div>
               <p>
                 Modelo de Machine Learning para previsão do potencial de crescimento de ações com base em indicadores financeiros.
               </p>
+              <div class="project__metrics">
+                <div class="metric">
+                  <i class="fas fa-bullseye"></i>
+                  <span>Precisão: 87%</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-code-branch"></i>
+                  <span>Versão: 2.1</span>
+                </div>
+              </div>
               <ul class="work__list">
                 <li>FastAPI</li>
                 <li>Machine Learning</li>
@@ -72,39 +97,66 @@
             </div>
           </div>
 
-          <div class="work__box">
-  <div class="work__text">
-    <h3>Monitoramento Econômico</h3>
-    <p>
-      App com dashboard interativo para análise exploratória e visualização de indicadores econômicos de países sul-americanos.
-    </p>
-    <ul class="work__list">
-      <li>Streamlit</li>
-      <li>Python</li>
-      <li>Pandas</li>
-      <li>Plotly</li>
-      <li>Requests</li>
-    </ul>
-    <div class="work__links">
-      <a href="https://monitoramento-economico.streamlit.app/" class="link__text" target="_blank">
-        Acessar Dashboard <span>&rarr;</span>
-      </a>
-      <a href="https://github.com/sidnei-almeida/monitoramento_sulamericano" title="Verificar código fonte">
-        <img src="./images/github.svg" class="work__code" alt="GitHub">
-      </a>
-    </div>
-  </div>
-  <div class="work__image-box">
-    <img src="./images/project-2.png" class="work__image" alt="Dashboard de Monitoramento Econômico" />
-  </div>
-</div>
+          <div class="work__box" data-category="data-visualization web-app">
+            <div class="work__text">
+              <h3>Monitoramento Econômico</h3>
+              <div class="project__status">
+                <span class="status-badge status-active">Ativo</span>
+              </div>
+              <p>
+                App com dashboard interativo para análise exploratória e visualização de indicadores econômicos de países sul-americanos.
+              </p>
+              <div class="project__metrics">
+                <div class="metric">
+                  <i class="fas fa-chart-line"></i>
+                  <span>10+ Indicadores</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-users"></i>
+                  <span>500+ Usuários</span>
+                </div>
+              </div>
+              <ul class="work__list">
+                <li>Streamlit</li>
+                <li>Python</li>
+                <li>Pandas</li>
+                <li>Plotly</li>
+                <li>Requests</li>
+              </ul>
+              <div class="work__links">
+                <a href="https://monitoramento-economico.streamlit.app/" class="link__text" target="_blank">
+                  Acessar Dashboard <span>&rarr;</span>
+                </a>
+                <a href="https://github.com/sidnei-almeida/monitoramento_sulamericano" title="Verificar código fonte">
+                  <img src="./images/github.svg" class="work__code" alt="GitHub">
+                </a>
+              </div>
+            </div>
+            <div class="work__image-box">
+              <img src="./images/project-2.png" class="work__image" alt="Dashboard de Monitoramento Econômico" />
+            </div>
+          </div>
 
-          <div class="work__box">
+          <div class="work__box" data-category="nlp">
             <div class="work__text">
               <h3>Análise Inteligente de Notícias</h3>
+              <div class="project__status">
+                <span class="status-badge status-active">Ativo</span>
+                <span class="status-badge status-featured">Destaque</span>
+              </div>
               <p>
                 Classificação automática de notícias com NLP, machine learning e visualização de dados.
               </p>
+              <div class="project__metrics">
+                <div class="metric">
+                  <i class="fas fa-newspaper"></i>
+                  <span>20+ Fontes</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-language"></i>
+                  <span>PT/EN</span>
+                </div>
+              </div>
               <ul class="work__list">
                 <li>Pandas</li>
                 <li>Scikit-learn</li>
@@ -128,12 +180,25 @@
           </div>
 
           <!-- Novo Projeto: Monitoramento Legislativo Inteligente -->
-          <div class="work__box">
+          <div class="work__box" data-category="machine-learning nlp">
             <div class="work__text">
               <h3>Classificação Ideológica de Ementas</h3>
+              <div class="project__status">
+                <span class="status-badge status-development">Em Desenvolvimento</span>
+              </div>
               <p>
                 Análise e classificação de posicionamento ideológico de ementas legislativas da câmara dos deputados.
               </p>
+              <div class="project__metrics">
+                <div class="metric">
+                  <i class="fas fa-cogs"></i>
+                  <span>Fase: Beta</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-file-alt"></i>
+                  <span>5000+ Ementas</span>
+                </div>
+              </div>
               <ul class="work__list">
                 <li>FastAPI</li>
                 <li>Machine Learning</li>
@@ -155,13 +220,69 @@
             </div>
           </div>
 
+          <!-- Novo Projeto: CS2 Valuation API -->
+          <div class="work__box" data-category="web-app api">
+            <div class="work__text">
+              <h3>CS2 Valuation API</h3>
+              <div class="project__status">
+                <span class="status-badge status-active">Ativo</span>
+                <span class="status-badge status-recent">Recente</span>
+              </div>
+              <p>
+                API para avaliação de inventários de Counter-Strike 2, com scraping de preços, análise de Unidades de Armazenamento e classificação de itens.
+              </p>
+              <div class="project__metrics">
+                <div class="metric">
+                  <i class="fas fa-database"></i>
+                  <span>Scraping Exclusivo</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-lock"></i>
+                  <span>Steam Auth</span>
+                </div>
+              </div>
+              <ul class="work__list">
+                <li>FastAPI</li>
+                <li>Python</li>
+                <li>Web Scraping</li>
+                <li>Steam API</li>
+                <li>JWT</li>
+              </ul>
+              <div class="work__links">
+                <a href="https://elite-skins-2025.github.io/api.html" class="link__text" target="_blank">
+                  Ver Demonstração <span>&rarr;</span>
+                </a>
+                <a href="https://github.com/sidnei-almeida/cotacao_cs2" title="Verificar código fonte" target="_blank">
+                  <img src="./images/github.svg" class="work__code" alt="GitHub">
+                </a>
+              </div>
+            </div>
+            <div class="work__image-box">
+              <img src="./images/csso2.png" class="work__image" alt="CS2 Valuation API - Avaliação de inventários" />
+            </div>
+          </div>
+
           <!-- Novo Projeto: Elite Skins -->
-          <div class="work__box">
+          <div class="work__box" data-category="web-app">
             <div class="work__text">
               <h3>Elite Skins CS2</h3>
+              <div class="project__status">
+                <span class="status-badge status-active">Ativo</span>
+                <span class="status-badge status-collaboration">Colaboração</span>
+              </div>
               <p>
                 Plataforma para comunidade de trading de skins de Counter-Strike 2, com sistema de grupos, ofertas e sorteios.
               </p>
+              <div class="project__metrics">
+                <div class="metric">
+                  <i class="fas fa-gamepad"></i>
+                  <span>Game: CS2</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-globe"></i>
+                  <span>Web App</span>
+                </div>
+              </div>
               <ul class="work__list">
                 <li>HTML5</li>
                 <li>CSS3</li>
@@ -264,6 +385,63 @@
         });
       }
     }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Scroll suave para links internos
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+          });
+        });
+      });
+
+      // Filtro de projetos
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const projectBoxes = document.querySelectorAll('.work__box');
+      
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Remover classe active de todos os botões
+          filterBtns.forEach(b => b.classList.remove('active'));
+          
+          // Adicionar classe active ao botão clicado
+          btn.classList.add('active');
+          
+          const filter = btn.getAttribute('data-filter');
+          
+          projectBoxes.forEach(box => {
+            if (filter === 'all') {
+              box.style.display = 'flex';
+              setTimeout(() => {
+                box.style.opacity = '1';
+                box.style.transform = 'scale(1)';
+              }, 100);
+            } else {
+              const categories = box.getAttribute('data-category');
+              
+              if (categories && categories.includes(filter)) {
+                box.style.display = 'flex';
+                setTimeout(() => {
+                  box.style.opacity = '1';
+                  box.style.transform = 'scale(1)';
+                }, 100);
+              } else {
+                box.style.opacity = '0';
+                box.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                  box.style.display = 'none';
+                }, 300);
+              }
+            }
+          });
+        });
+      });
+    });
   </script>
 </body>
 

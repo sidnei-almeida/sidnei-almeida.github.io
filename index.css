@@ -505,9 +505,49 @@ body:not(.user-is-tabbing) a:focus {
 /* ----- Work ----- */
 /* --------------------------------------- */
 
+/* Filtros de Projetos */
+.project-filter {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 4rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  background: transparent;
+  border: 1px solid var(--white-1);
+  color: var(--white-1);
+  padding: 0.5rem 1.2rem;
+  border-radius: 2rem;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover, 
+.filter-btn.active {
+  background-color: var(--pink);
+  border-color: var(--pink);
+  color: var(--white-1);
+}
+
+@media(max-width: 600px) {
+  .project-filter {
+    margin-bottom: 2.5rem;
+  }
+  .filter-btn {
+    font-size: 1.1rem;
+    padding: 0.4rem 1rem;
+  }
+}
+
 .work__box {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  transition: all 0.4s ease;
+  opacity: 1;
+  transform: scale(1);
 }
 
 @media(max-width: 900px) {
@@ -518,12 +558,12 @@ body:not(.user-is-tabbing) a:focus {
 }
 
 .work__box:not(:last-child) {
-    margin-bottom: 25rem;
+    margin-bottom: 12rem;
 }
 
 @media(max-width: 500px) {
     .work__box:not(:last-child) {
-        margin-bottom: 20rem;
+        margin-bottom: 10rem;
     }
 }
 
@@ -568,6 +608,86 @@ body:not(.user-is-tabbing) a:focus {
     .work__code {
         height: 4rem;
     }
+}
+
+/* Status badges para projetos */
+.project__status {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  display: inline-block;
+  font-size: 1rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 3rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4CAF50;
+  border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+.status-development {
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #FFC107;
+  border: 1px solid rgba(255, 193, 7, 0.4);
+}
+
+.status-featured {
+  background-color: rgba(230, 0, 122, 0.2);
+  color: var(--pink);
+  border: 1px solid rgba(230, 0, 122, 0.4);
+}
+
+.status-recent {
+  background-color: rgba(33, 150, 243, 0.2);
+  color: #2196F3;
+  border: 1px solid rgba(33, 150, 243, 0.4);
+}
+
+.status-collaboration {
+  background-color: rgba(156, 39, 176, 0.2);
+  color: #9C27B0;
+  border: 1px solid rgba(156, 39, 176, 0.4);
+}
+
+/* Métricas dos projetos */
+.project__metrics {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.3rem;
+  color: var(--white-1);
+}
+
+.metric i {
+  color: var(--pink);
+  font-size: 1.4rem;
+}
+
+@media(max-width: 500px) {
+  .project__metrics {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .metric {
+    font-size: 1.2rem;
+  }
 }
 
 /* --------------------------------------- */
