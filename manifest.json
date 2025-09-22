@@ -1,0 +1,29 @@
+{
+  "name": "Tobias de Abreu Kuse - Portfolio",
+  "short_name": "Tobias Kuse",
+  "description": "Portfólio profissional de Tobias de Abreu Kuse - Cientista de Dados Sênior",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#00d4ff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon-16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-tk.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-tk.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "categories": ["portfolio", "professional", "data-science"],
+  "lang": "pt-BR"
+}

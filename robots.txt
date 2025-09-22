@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://tobiasakuse.github.io/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow specific file types if needed
+# Disallow: *.pdf$
+# Disallow: *.doc$
+# Disallow: *.docx$
+
+# Allow all images
+Allow: /images/
+
+# Allow all CSS and JS files
+Allow: /style.css
+Allow: /script.js
+
+# Allow favicon files
+Allow: /favicon*
