@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a2a2a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4af37;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4a90e2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background with subtle border -->
+  <rect width="32" height="32" rx="4" fill="url(#bgGradient)" stroke="#333" stroke-width="0.5"/>
+  
+  <!-- SA Text with premium gradient -->
+  <text x="16" y="22" font-family="Inter, sans-serif" font-size="12" font-weight="600" 
+        text-anchor="middle" fill="url(#textGradient)" letter-spacing="-0.5px">SA</text>
+  
+  <!-- Subtle accent dot -->
+  <circle cx="16" cy="8" r="1.5" fill="#d4af37" opacity="0.8"/>
+</svg>
