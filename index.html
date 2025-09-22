@@ -255,10 +255,59 @@
         <button class="filter-btn" data-filter="mlops" aria-pressed="false">MLOps</button>
         <button class="filter-btn" data-filter="analytics" aria-pressed="false">Analytics</button>
         <button class="filter-btn" data-filter="research" aria-pressed="false" data-pt="Pesquisa" data-en="Research" data-es="Investigación">Pesquisa</button>
+        <button class="filter-btn" data-filter="desktop" aria-pressed="false" data-pt="Desktop" data-en="Desktop" data-es="Escritorio">Desktop</button>
       </div>
 
       <div class="projects-grid">
-        <!-- Projeto 1: Potencial de Crescimento -->
+        <!-- Projeto 1: Tradutor de Dados Universal -->
+        <div class="project-card" data-category="desktop python">
+          <div class="project-image">
+            <img src="./images/tradu.png" alt="Tradutor de Dados Universal" loading="lazy" />
+          </div>
+          <div class="project-content">
+            <div class="project-header">
+            <h3 class="project-title" data-pt="Tradutor de Dados Universal" data-en="Universal Data Translator" data-es="Traductor de Datos Universal">Tradutor de Dados Universal</h3>
+            <div class="project-status">
+              <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Ativo</span>
+              <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recente</span>
+            </div>
+            </div>
+            <div class="project-body">
+            <p class="project-description">
+                <span class="description-short" data-pt="Aplicação desktop minimalista para traduzir datasets (CSV, Excel, SQLite) com foco em produtividade, estabilidade e UX." data-en="Minimalist desktop application for translating datasets (CSV, Excel, SQLite) with focus on productivity, stability and UX." data-es="Aplicación de escritorio minimalista para traducir datasets (CSV, Excel, SQLite) con enfoque en productividad, estabilidad y UX.">Aplicação desktop minimalista para traduzir datasets (CSV, Excel, SQLite) com foco em produtividade, estabilidade e UX.</span>
+                <span class="description-full" style="display: none;" data-pt="Aplicação desktop minimalista para traduzir datasets (CSV, Excel, SQLite) com foco em produtividade, estabilidade e UX. Construída em Python com CustomTkinter, oferece um fluxo simples: carregue o dataset, selecione colunas e traduza com um clique. Suporte multi-formato com processamento em lotes e controle de delay." data-en="Minimalist desktop application for translating datasets (CSV, Excel, SQLite) with focus on productivity, stability and UX. Built in Python with CustomTkinter, offers a simple flow: load dataset, select columns and translate with one click. Multi-format support with batch processing and delay control." data-es="Aplicación de escritorio minimalista para traducir datasets (CSV, Excel, SQLite) con enfoque en productividad, estabilidad y UX. Construida en Python con CustomTkinter, ofrece un flujo simple: cargar dataset, seleccionar columnas y traducir con un clic. Soporte multi-formato con procesamiento por lotes y control de delay.">Aplicação desktop minimalista para traduzir datasets (CSV, Excel, SQLite) com foco em produtividade, estabilidade e UX. Construída em Python com CustomTkinter, oferece um fluxo simples: carregue o dataset, selecione colunas e traduza com um clique. Suporte multi-formato com processamento em lotes e controle de delay.</span>
+            </p>
+              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
+                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">Ver mais</span>
+              </button>
+            <div class="project-metrics">
+              <div class="metric">
+                <i class="fas fa-desktop"></i>
+                <span data-pt="Desktop App" data-en="Desktop App" data-es="App Escritorio">Desktop App</span>
+              </div>
+              <div class="metric">
+                <i class="fas fa-language"></i>
+                <span data-pt="Multi-idioma" data-en="Multi-language" data-es="Multi-idioma">Multi-idioma</span>
+              </div>
+            </div>
+            <div class="project-tech">
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">CustomTkinter</span>
+              <span class="tech-tag">Pandas</span>
+              <span class="tech-tag">SQLite</span>
+              <span class="tech-tag">Deep Translator</span>
+              </div>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/sidnei-almeida/tradutor_dados" class="project-link project-link-primary" target="_blank">
+                <i class="fab fa-github"></i>
+                    <span data-pt="Código" data-en="Code" data-es="Código">Código</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projeto 2: Potencial de Crescimento -->
         <div class="project-card" data-category="machine-learning">
           <div class="project-image">
             <img src="./images/project-1.png" alt="Potencial de Crescimento" loading="lazy" />
@@ -305,7 +354,7 @@
           </div>
         </div>
 
-        <!-- Projeto 2: Monitoramento Econômico -->
+        <!-- Projeto 3: Monitoramento Econômico -->
         <div class="project-card" data-category="analytics">
           <div class="project-image">
             <img src="./images/project-2.png" alt="Monitoramento Econômico" loading="lazy" />
@@ -351,7 +400,7 @@
           </div>
         </div>
 
-        <!-- Projeto 3: Análise Inteligente de Notícias -->
+        <!-- Projeto 4: Análise Inteligente de Notícias -->
         <div class="project-card" data-category="machine-learning analytics">
           <div class="project-image">
             <img src="./images/project-3.png" alt="Análise Inteligente de Notícias" loading="lazy" />
@@ -398,7 +447,7 @@
           </div>
         </div>
 
-        <!-- Projeto 4: Classificação Ideológica de Ementas -->
+        <!-- Projeto 5: Classificação Ideológica de Ementas -->
         <div class="project-card" data-category="machine-learning analytics">
           <div class="project-image">
             <img src="./images/project-legislativo.png" alt="Classificação Ideológica de Ementas" loading="lazy" />
@@ -444,7 +493,7 @@
           </div>
         </div>
 
-        <!-- Projeto 5: Elite Skins CS2 -->
+        <!-- Projeto 6: Elite Skins CS2 -->
         <div class="project-card" data-category="analytics">
           <div class="project-image">
             <img src="./images/eliteskins.png" alt="Elite Skins CS2" loading="lazy" />
@@ -495,7 +544,7 @@
           </div>
         </div>
 
-        <!-- Projeto 6: CS2 Valuation API -->
+        <!-- Projeto 7: CS2 Valuation API -->
         <div class="project-card" data-category="api analytics">
           <div class="project-image">
             <img src="./images/csso2.png" alt="CS2 Valuation API" loading="lazy" />
@@ -547,7 +596,7 @@
           </div>
         </div>
 
-        <!-- Projeto 7: Pão de Açucar Scraping -->
+        <!-- Projeto 8: Pão de Açucar Scraping -->
         <div class="project-card" data-category="analytics">
           <div class="project-image">
             <img src="./images/paodeacucar.png" alt="Pão de Açucar Scraping" loading="lazy" />
