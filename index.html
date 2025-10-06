@@ -165,6 +165,7 @@
   <link rel="preload" href="./images/gans1.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/manut1.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/partanom.webp" as="image" type="image/webp">
+  <link rel="preload" href="./images/woof.webp" as="image" type="image/webp">
 </head>
 
 <body>
@@ -275,6 +276,67 @@
       </div>
 
       <div class="projects-grid">
+        <!-- Projeto: DogBreed Vision - YOLOv8 -->
+        <div class="project-card" data-category="machine-learning web-app">
+          <div class="project-image">
+            <img src="./images/woof.webp" alt="DogBreed Vision - Reconhecimento de Raças Caninas" loading="lazy" />
+          </div>
+          <div class="project-content">
+            <div class="project-header">
+            <h3 class="project-title" data-pt="DogBreed Vision • YOLOv8" data-en="DogBreed Vision • YOLOv8" data-es="DogBreed Vision • YOLOv8">DogBreed Vision • YOLOv8</h3>
+            <div class="project-status">
+              <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Ativo</span>
+              <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recente</span>
+              <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Destaque</span>
+            </div>
+            </div>
+            <div class="project-body">
+            <p class="project-description">
+                <span class="description-short" data-pt="Sistema profissional de reconhecimento de raças caninas com YOLOv8 e app Streamlit (tema dark) para inferência, métricas e testes interativos." data-en="Professional dog breed recognition with YOLOv8 and Streamlit app (dark theme) for inference, metrics and interactive testing." data-es="Reconocimiento profesional de razas caninas con YOLOv8 y app Streamlit (tema oscuro) para inferencia, métricas y pruebas interactivas.">Sistema profissional de reconhecimento de raças caninas com YOLOv8 e app Streamlit (tema dark) para inferência, métricas e testes interativos.</span>
+                <span class="description-full" style="display: none;" data-pt="DogBreed Vision é um sistema profissional de reconhecimento de raças caninas baseado em deep learning, treinado com o Stanford Dogs Dataset. Utilizando a arquitetura YOLOv8n (nano), o modelo identifica 120 raças de cães com alta precisão e velocidade. Métricas: mAP50-95 84.3%, Precisão 80.6%, Recall 76.3%, mAP50 84.5%, 164 épocas (early stopping). O app em Streamlit possui carrossel de imagens, upload, visualização de bounding boxes, feedback visual em tempo real e gráficos com Plotly. Configuração flexível via config.yaml (thresholds, IoU, visualização, performance)." data-en="DogBreed Vision is a professional dog breed recognition system trained on the Stanford Dogs Dataset using YOLOv8n, identifying 120 breeds with high accuracy and speed. Metrics: mAP50-95 84.3%, Precision 80.6%, Recall 76.3%, mAP50 84.5%, 164 epochs (early stopping). Streamlit app with image carousel, upload, bounding boxes, real-time feedback and Plotly charts. Flexible config via config.yaml." data-es="DogBreed Vision es un sistema profesional de reconocimiento de razas caninas entrenado con el Stanford Dogs Dataset usando YOLOv8n, identificando 120 razas con alta precisión y velocidad. Métricas: mAP50-95 84.3%, Precisión 80.6%, Recall 76.3%, mAP50 84.5%, 164 épocas (early stopping). App en Streamlit con carrusel de imágenes, carga, cajas delimitadoras, feedback en tiempo real y gráficos con Plotly. Configuración flexible vía config.yaml.">DogBreed Vision é um sistema profissional de reconhecimento de raças caninas baseado em deep learning, treinado com o Stanford Dogs Dataset. Utilizando a arquitetura YOLOv8n (nano), o modelo identifica 120 raças de cães com alta precisão e velocidade. Métricas: mAP50-95 84.3%, Precisão 80.6%, Recall 76.3%, mAP50 84.5%, 164 épocas (early stopping). O app em Streamlit possui carrossel de imagens, upload, visualização de bounding boxes, feedback visual em tempo real e gráficos com Plotly. Configuração flexível via config.yaml (thresholds, IoU, visualização, performance).</span>
+            </p>
+              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
+                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">Ver mais</span>
+              </button>
+            <div class="project-metrics">
+              <div class="metric">
+                <i class="fas fa-bullseye"></i>
+                <span data-pt="mAP50-95: 84.3%" data-en="mAP50-95: 84.3%" data-es="mAP50-95: 84.3%">mAP50-95: 84.3%</span>
+              </div>
+              <div class="metric">
+                <i class="fas fa-check"></i>
+                <span data-pt="Precisão: 80.6%" data-en="Precision: 80.6%" data-es="Precisión: 80.6%">Precisão: 80.6%</span>
+              </div>
+              <div class="metric">
+                <i class="fas fa-redo"></i>
+                <span data-pt="Recall: 76.3%" data-en="Recall: 76.3%" data-es="Recall: 76.3%">Recall: 76.3%</span>
+              </div>
+              <div class="metric">
+                <i class="fas fa-layer-group"></i>
+                <span data-pt="Classes: 120" data-en="Classes: 120" data-es="Clases: 120">Classes: 120</span>
+              </div>
+            </div>
+            <div class="project-tech">
+              <span class="tech-tag">YOLOv8</span>
+              <span class="tech-tag">Streamlit</span>
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">PyTorch</span>
+              <span class="tech-tag">OpenCV</span>
+              <span class="tech-tag">Plotly</span>
+            </div>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/sidnei-almeida/analise_canina_yolo" class="project-link project-link-primary" target="_blank">
+                <i class="fab fa-github"></i>
+                <span data-pt="Código" data-en="Code" data-es="Código">Código</span>
+              </a>
+              <a href="https://dkmf7cgkelgse8bimirwdn.streamlit.app/" class="project-link project-link-secondary" target="_blank">
+                <i class="fas fa-external-link-alt"></i>
+                <span data-pt="App" data-en="App" data-es="App">App</span>
+              </a>
+            </div>
+          </div>
+        </div>
         <!-- Projeto 1: Tradutor de Dados Universal -->
         <div class="project-card" data-category="desktop python">
           <div class="project-image">
