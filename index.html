@@ -166,6 +166,7 @@
   <link rel="preload" href="./images/manut1.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/partanom.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/woof.webp" as="image" type="image/webp">
+  <link rel="preload" href="./images/secom.webp" as="image" type="image/webp">
 </head>
 
 <body>
@@ -331,6 +332,68 @@
                 <span data-pt="Código" data-en="Code" data-es="Código">Código</span>
               </a>
               <a href="https://dkmf7cgkelgse8bimirwdn.streamlit.app/" class="project-link project-link-secondary" target="_blank">
+                <i class="fas fa-external-link-alt"></i>
+                <span data-pt="App" data-en="App" data-es="App">App</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projeto: SECOM Failure Prediction -->
+        <div class="project-card" data-category="machine-learning web-app">
+          <div class="project-image">
+            <img src="./images/secom.webp" alt="SECOM Failure Prediction - Detecção de Anomalias" loading="lazy" />
+          </div>
+          <div class="project-content">
+            <div class="project-header">
+            <h3 class="project-title" data-pt="SECOM Failure Prediction" data-en="SECOM Failure Prediction" data-es="SECOM Failure Prediction">SECOM Failure Prediction</h3>
+            <div class="project-status">
+              <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Ativo</span>
+              <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recente</span>
+              <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Destaque</span>
+            </div>
+            </div>
+            <div class="project-body">
+            <p class="project-description">
+                <span class="description-short" data-pt="Sistema avançado de detecção de anomalias em manufatura de semicondutores utilizando Autoencoder Neural Network com dashboard Streamlit interativo." data-en="Advanced anomaly detection system for semiconductor manufacturing using Autoencoder Neural Network with interactive Streamlit dashboard." data-es="Sistema avanzado de detección de anomalías en manufactura de semiconductores utilizando Autoencoder Neural Network con dashboard Streamlit interactivo.">Sistema avançado de detecção de anomalias em manufatura de semicondutores utilizando Autoencoder Neural Network com dashboard Streamlit interativo.</span>
+                <span class="description-full" style="display: none;" data-pt="SECOM Failure Prediction é um sistema de detecção de anomalias desenvolvido para identificar falhas em processos de manufatura de semicondutores. Utiliza Autoencoder Neural Network com arquitetura 558 → 128 → 64 → 32 (bottleneck) → 64 → 128 → 558. O sistema aprende padrões de operação normal e detecta desvios que podem indicar potenciais falhas. Dashboard interativo com Streamlit, dois thresholds de detecção (Balanced 0.45 e Conservative 0.50), visualizações avançadas com Plotly, design dark premium e performance otimizada com TensorFlow CPU. Dataset SECOM: 1567 registros, 558 features, desbalanceamento ~93% Normal vs ~7% Falhas." data-en="SECOM Failure Prediction is an anomaly detection system developed to identify failures in semiconductor manufacturing processes. Uses Autoencoder Neural Network with architecture 558 → 128 → 64 → 32 (bottleneck) → 64 → 128 → 558. The system learns normal operation patterns and detects deviations that may indicate potential failures. Interactive dashboard with Streamlit, two detection thresholds (Balanced 0.45 and Conservative 0.50), advanced visualizations with Plotly, premium dark design and optimized performance with TensorFlow CPU. SECOM Dataset: 1567 records, 558 features, imbalance ~93% Normal vs ~7% Failures." data-es="SECOM Failure Prediction es un sistema de detección de anomalías desarrollado para identificar fallas en procesos de manufactura de semiconductores. Utiliza Autoencoder Neural Network con arquitectura 558 → 128 → 64 → 32 (bottleneck) → 64 → 128 → 558. El sistema aprende patrones de operación normal y detecta desviaciones que pueden indicar fallas potenciales. Dashboard interactivo con Streamlit, dos umbrales de detección (Balanced 0.45 y Conservative 0.50), visualizaciones avanzadas con Plotly, diseño dark premium y rendimiento optimizado con TensorFlow CPU. Dataset SECOM: 1567 registros, 558 características, desbalance ~93% Normal vs ~7% Fallas.">SECOM Failure Prediction é um sistema de detecção de anomalias desenvolvido para identificar falhas em processos de manufatura de semicondutores. Utiliza Autoencoder Neural Network com arquitetura 558 → 128 → 64 → 32 (bottleneck) → 64 → 128 → 558. O sistema aprende padrões de operação normal e detecta desvios que podem indicar potenciais falhas. Dashboard interativo com Streamlit, dois thresholds de detecção (Balanced 0.45 e Conservative 0.50), visualizações avançadas com Plotly, design dark premium e performance otimizada com TensorFlow CPU. Dataset SECOM: 1567 registros, 558 features, desbalanceamento ~93% Normal vs ~7% Falhas.</span>
+            </p>
+              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
+                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">Ver mais</span>
+              </button>
+            <div class="project-metrics">
+              <div class="metric">
+                <i class="fas fa-bullseye"></i>
+                <span data-pt="Recall: 35.6%" data-en="Recall: 35.6%" data-es="Recall: 35.6%">Recall: 35.6%</span>
+              </div>
+              <div class="metric">
+                <i class="fas fa-check"></i>
+                <span data-pt="Precision: 44.6%" data-en="Precision: 44.6%" data-es="Precisión: 44.6%">Precision: 44.6%</span>
+              </div>
+              <div class="metric">
+                <i class="fas fa-chart-line"></i>
+                <span data-pt="F1-Score: 0.396" data-en="F1-Score: 0.396" data-es="F1-Score: 0.396">F1-Score: 0.396</span>
+              </div>
+              <div class="metric">
+                <i class="fas fa-cogs"></i>
+                <span data-pt="Features: 558" data-en="Features: 558" data-es="Características: 558">Features: 558</span>
+              </div>
+            </div>
+            <div class="project-tech">
+              <span class="tech-tag">TensorFlow</span>
+              <span class="tech-tag">Autoencoder</span>
+              <span class="tech-tag">Streamlit</span>
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">Plotly</span>
+              <span class="tech-tag">Pandas</span>
+            </div>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/sidnei-almeida/secom_failure_prediction" class="project-link project-link-primary" target="_blank">
+                <i class="fab fa-github"></i>
+                <span data-pt="Código" data-en="Code" data-es="Código">Código</span>
+              </a>
+              <a href="https://secomfailureprediction-ggtvuxcgyy5amrssx6g9xv.streamlit.app/" class="project-link project-link-secondary" target="_blank">
                 <i class="fas fa-external-link-alt"></i>
                 <span data-pt="App" data-en="App" data-es="App">App</span>
               </a>
