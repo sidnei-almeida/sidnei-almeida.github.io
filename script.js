@@ -993,6 +993,14 @@ function applyLanguage(lang) {
     }
   });
   
+  // Update form placeholders
+  document.querySelectorAll('[data-pt-placeholder], [data-en-placeholder], [data-es-placeholder]').forEach(input => {
+    const placeholder = input.getAttribute(`data-${lang}-placeholder`);
+    if (placeholder) {
+      input.setAttribute('placeholder', placeholder);
+    }
+  });
+  
   // Update language selector
   const text = document.getElementById('currentLangText');
   if (text) {
@@ -1102,29 +1110,12 @@ function initBackToTop() {
     }
   }
   
-  // Smooth scroll to top with easing
+  // Smooth scroll to top
   function scrollToTop() {
-    const startPosition = window.pageYOffset;
-    const startTime = performance.now();
-    const duration = 800; // Slightly longer for smoother feel
-    
-    function easeInOutCubic(t) {
-      return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-    }
-    
-    function animateScroll(currentTime) {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease = easeInOutCubic(progress);
-      
-      window.scrollTo(0, startPosition * (1 - ease));
-      
-      if (progress < 1) {
-        requestAnimationFrame(animateScroll);
-      }
-    }
-    
-    requestAnimationFrame(animateScroll);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
   
   // Throttled scroll handler
@@ -1145,3 +1136,110 @@ function initBackToTop() {
   // Initial check
   toggleBackToTop();
 }
+
+// Contact Form Toggle and Handler
+document.addEventListener('DOMContentLoaded', function() {
+  const contactToggle = document.getElementById('contactToggle');
+  const contactForm = document.getElementById('contactForm');
+  
+  // Toggle form visibility
+  if (contactToggle && contactForm) {
+    contactToggle.addEventListener('click', function() {
+      contactForm.classList.toggle('active');
+      contactToggle.classList.toggle('active');
+      
+      // Scroll to form if opening
+      if (contactForm.classList.contains('active')) {
+        setTimeout(() => {
+          contactForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      }
+    });
+  }
+  
+  // Form submission handler
+  if (contactForm) {
+    contactForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = this.querySelector('.btn-primary');
+      const originalText = submitBtn.querySelector('span').textContent;
+      const lang = localStorage.getItem('selectedLanguage') || 'pt';
+      
+      // Messages for different languages
+      const messages = {
+        sending: {
+          pt: 'Enviando...',
+          en: 'Sending...',
+          es: 'Enviando...'
+        },
+        success: {
+          pt: 'Mensagem enviada!',
+          en: 'Message sent!',
+          es: '¡Mensaje enviado!'
+        },
+        error: {
+          pt: 'Erro ao enviar. Tente novamente.',
+          en: 'Error sending. Please try again.',
+          es: 'Error al enviar. Inténtalo de nuevo.'
+        }
+      };
+      
+      // Disable button and show loading state
+      submitBtn.disabled = true;
+      submitBtn.querySelector('span').textContent = messages.sending[lang];
+      submitBtn.style.opacity = '0.7';
+      
+      try {
+        const formData = new FormData(this);
+        const response = await fetch(this.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          // Success
+          submitBtn.querySelector('span').textContent = messages.success[lang];
+          submitBtn.style.background = 'var(--accent-emerald)';
+          submitBtn.style.borderColor = 'var(--accent-emerald)';
+          
+          // Reset form
+          this.reset();
+          
+          // Hide form and reset button after 2 seconds
+          setTimeout(() => {
+            // Close form
+            contactForm.classList.remove('active');
+            contactToggle.classList.remove('active');
+            
+            // Reset button
+            submitBtn.disabled = false;
+            submitBtn.querySelector('span').textContent = originalText;
+            submitBtn.style.opacity = '1';
+            submitBtn.style.background = '';
+            submitBtn.style.borderColor = '';
+          }, 2000);
+        } else {
+          throw new Error('Form submission failed');
+        }
+      } catch (error) {
+        // Error
+        submitBtn.querySelector('span').textContent = messages.error[lang];
+        submitBtn.style.background = 'var(--accent-rose)';
+        submitBtn.style.borderColor = 'var(--accent-rose)';
+        
+        // Reset button after 3 seconds
+        setTimeout(() => {
+          submitBtn.disabled = false;
+          submitBtn.querySelector('span').textContent = originalText;
+          submitBtn.style.opacity = '1';
+          submitBtn.style.background = '';
+          submitBtn.style.borderColor = '';
+        }, 3000);
+      }
+    });
+  }
+});
