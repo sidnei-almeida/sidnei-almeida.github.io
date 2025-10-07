@@ -438,7 +438,7 @@ body::-webkit-scrollbar-thumb:hover {
   color: var(--accent-gold);
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(212, 175, 55, 0.3);
+  border: 1px solid var(--accent-gold-subtle);
   box-shadow: 
     0 2px 8px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -1656,11 +1656,174 @@ body::-webkit-scrollbar-thumb:hover {
 .contact-info {
   font-size: 1.125rem;
   color: var(--text-secondary);
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   line-height: 1.8;
   font-weight: 300;
   letter-spacing: 0.01em;
 }
+
+/* Contact Toggle Button */
+.contact-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 2rem;
+  background: transparent;
+  border: none;
+  border-radius: 0px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  outline: none;
+}
+
+.contact-toggle:hover {
+  opacity: 1;
+  color: var(--accent-blue);
+  transform: translateY(1px);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--accent-blue-subtle);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.contact-toggle:active {
+  transform: translateY(0) scale(0.95);
+  opacity: 0.8;
+}
+
+.contact-toggle i {
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-weight: 900 !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  text-rendering: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  display: inline-block !important;
+  line-height: 1 !important;
+}
+
+.contact-toggle:hover i {
+  transform: translateY(0.5px);
+}
+
+.contact-toggle.active i {
+  transform: rotate(180deg);
+}
+
+.contact-toggle.active:hover i {
+  transform: rotate(180deg) translateY(0.5px);
+}
+
+/* Contact Form */
+.contact-form {
+  max-width: 600px;
+  margin: 0 auto;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contact-form.active {
+  max-height: 600px;
+  opacity: 1;
+  transform: translateY(0);
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 300;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  transition: var(--transition-elegant);
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: var(--accent-blue);
+  background: rgba(74, 144, 226, 0.03);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
+  transition: var(--transition-elegant);
+}
+
+.form-input:focus::placeholder {
+  opacity: 0.4;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.contact-form .btn {
+  width: 100%;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.125rem 2rem;
+  font-size: 1rem;
+}
+
+.contact-divider {
+  text-align: center;
+  margin: 2.5rem 0;
+  position: relative;
+}
+
+.contact-divider::before,
+.contact-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.contact-divider::before {
+  left: 0;
+}
+
+.contact-divider::after {
+  right: 0;
+}
+
+.contact-divider span {
+  display: inline-block;
+  padding: 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 300;
+  text-transform: lowercase;
+  letter-spacing: 0.05em;
+}
+
 
 /* Footer */
 .footer {

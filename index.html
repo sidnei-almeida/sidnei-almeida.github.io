@@ -466,7 +466,7 @@
         <!-- Projeto 1: Tradutor de Dados Universal -->
         <div class="project-card" data-category="desktop python">
           <div class="project-image">
-            <img src="./images/tradu.png" alt="Tradutor de Dados Universal" loading="lazy" />
+            <img src="./images/tradu.webp" alt="Tradutor de Dados Universal" loading="lazy" />
           </div>
           <div class="project-content">
             <div class="project-header">
@@ -770,7 +770,7 @@
         <!-- Projeto 6: Elite Skins CS2 -->
         <div class="project-card" data-category="web-app">
           <div class="project-image">
-            <img src="./images/eliteskins.png" alt="Elite Skins CS2" loading="lazy" />
+            <img src="./images/eliteskins.webp" alt="Elite Skins CS2" loading="lazy" />
           </div>
           <div class="project-content">
             <div class="project-header">
@@ -821,7 +821,7 @@
         <!-- Projeto 7: CS2 Valuation API -->
         <div class="project-card" data-category="api web-scraping">
           <div class="project-image">
-            <img src="./images/csso2.png" alt="CS2 Valuation API" loading="lazy" />
+            <img src="./images/csso2.webp" alt="CS2 Valuation API" loading="lazy" />
           </div>
           <div class="project-content">
             <div class="project-header">
@@ -873,7 +873,7 @@
         <!-- Projeto 8: Pão de Açucar Scraping -->
         <div class="project-card" data-category="web-scraping">
           <div class="project-image">
-            <img src="./images/paodeacucar.png" alt="Pão de Açucar Scraping" loading="lazy" />
+            <img src="./images/paodeacucar.webp" alt="Pão de Açucar Scraping" loading="lazy" />
           </div>
           <div class="project-content">
             <div class="project-header">
@@ -924,7 +924,7 @@
         <!-- Projeto 9: Virtual Flow Forecasting -->
         <div class="project-card" data-category="machine-learning mlops">
           <div class="project-image">
-            <img src="./images/dl1.png" alt="Virtual Flow Forecasting" loading="lazy" />
+            <img src="./images/dl1.webp" alt="Virtual Flow Forecasting" loading="lazy" />
           </div>
           <div class="project-content">
             <div class="project-header">
@@ -1358,10 +1358,56 @@
           Estou sempre aberto a novas oportunidades em desenvolvimento de software, arquitetura de sistemas, cloud computing e Data Science, colaborações em projetos interessantes e conversas sobre tecnologia. 
           Se você tem um projeto desafiador ou quer trocar ideias sobre desenvolvimento, ficarei feliz em conversar!
         </p>
-        <a href="mailto:sidnei.almeida1806@gmail.com" class="btn btn-primary">
-          <i class="fas fa-envelope"></i>
-          sidnei.almeida1806@gmail.com
-        </a>
+        
+        <button class="contact-toggle" id="contactToggle" aria-label="Mostrar formulário de contato">
+          <i class="fas fa-chevron-down"></i>
+        </button>
+        
+        <form class="contact-form" id="contactForm" action="https://formspree.io/f/xgvnlaow" method="POST">
+          <div class="form-group">
+            <input 
+              type="text" 
+              name="name" 
+              class="form-input" 
+              placeholder="Seu nome"
+              required
+              data-pt-placeholder="Seu nome"
+              data-en-placeholder="Your name"
+              data-es-placeholder="Tu nombre"
+            />
+          </div>
+
+          <div class="form-group">
+            <input 
+              type="email" 
+              name="email" 
+              class="form-input" 
+              placeholder="Seu e-mail"
+              required
+              data-pt-placeholder="Seu e-mail"
+              data-en-placeholder="Your email"
+              data-es-placeholder="Tu correo"
+            />
+          </div>
+
+          <div class="form-group">
+            <textarea 
+              name="message" 
+              class="form-input form-textarea" 
+              placeholder="Sua mensagem"
+              rows="5"
+              required
+              data-pt-placeholder="Sua mensagem"
+              data-en-placeholder="Your message"
+              data-es-placeholder="Tu mensaje"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i>
+            <span data-pt="Enviar mensagem" data-en="Send message" data-es="Enviar mensaje">Enviar mensagem</span>
+          </button>
+        </form>
       </div>
     </div>
   </section>
