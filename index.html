@@ -168,6 +168,7 @@
   <link rel="preload" href="./images/woof.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/secom.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/licenseplate.webp" as="image" type="image/webp">
+  <link rel="preload" href="./images/emotions.webp" as="image" type="image/webp">
 </head>
 
 <body>
@@ -268,6 +269,7 @@
       <div class="project-filters" role="group" aria-label="Filtros de projetos">
         <button class="filter-btn active" data-filter="all" aria-pressed="true" data-pt="Todos" data-en="All" data-es="Todos">Todos</button>
         <button class="filter-btn" data-filter="machine-learning" aria-pressed="false">Machine Learning</button>
+        <button class="filter-btn" data-filter="deep-learning" aria-pressed="false">Deep Learning</button>
         <button class="filter-btn" data-filter="mlops" aria-pressed="false">MLOps</button>
         <button class="filter-btn" data-filter="analytics" aria-pressed="false">Analytics</button>
         <button class="filter-btn" data-filter="api" aria-pressed="false">API</button>
@@ -463,6 +465,70 @@
             </div>
           </div>
         </div>
+
+        <!-- Projeto: Facial Emotion Classifier - VGG16 -->
+        <div class="project-card" data-category="machine-learning deep-learning web-app">
+          <div class="project-image">
+            <img src="./images/emotions.webp" alt="Facial Emotion Classifier - Reconhecimento de Emoções Faciais" loading="lazy" />
+          </div>
+          <div class="project-content">
+            <div class="project-header">
+            <h3 class="project-title" data-pt="Facial Emotion Classifier • VGG16" data-en="Facial Emotion Classifier • VGG16" data-es="Facial Emotion Classifier • VGG16">Facial Emotion Classifier • VGG16</h3>
+            <div class="project-status">
+              <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Ativo</span>
+              <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recente</span>
+              <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Destaque</span>
+            </div>
+            </div>
+            <div class="project-body">
+            <p class="project-description">
+                <span class="description-short" data-pt="Sistema de reconhecimento de emoções faciais em tempo real usando VGG16 com Fine-Tuning. Classifica 7 emoções com 72% de acurácia e interface Streamlit interativa." data-en="Real-time facial emotion recognition system using VGG16 with Fine-Tuning. Classifies 7 emotions with 72% accuracy and interactive Streamlit interface." data-es="Sistema de reconocimiento de emociones faciales en tiempo real usando VGG16 con Fine-Tuning. Clasifica 7 emociones con 72% de precisión e interfaz Streamlit interactiva.">Sistema de reconhecimento de emoções faciais em tempo real usando VGG16 com Fine-Tuning. Classifica 7 emoções com 72% de acurácia e interface Streamlit interativa.</span>
+                <span class="description-full" style="display: none;" data-pt="Facial Emotion Classifier é uma aplicação avançada de Deep Learning que utiliza VGG16 com Transfer Learning do ImageNet para classificação em tempo real de 7 emoções faciais: Raiva (89.2%), Nojo (76.5%), Medo (82.1%), Alegria (94.7%), Neutro (67.8%), Tristeza (85.3%) e Surpresa (78.9%). Treinado no dataset FER-2013 (35.887 imagens) por 50 épocas, o modelo alcança 72% de acurácia geral. Sistema com detecção facial via OpenCV Haar Cascade, pré-processamento 96x96px, download automático do modelo (169MB) via Git LFS e interface Streamlit com tema dark premium. Oferece captura via câmera, upload de imagens, galeria de exemplos, visualizações com Plotly e mensagens motivacionais. Tempo de inferência < 1000ms com TensorFlow CPU." data-en="Facial Emotion Classifier is an advanced Deep Learning application using VGG16 with ImageNet Transfer Learning for real-time classification of 7 facial emotions: Anger (89.2%), Disgust (76.5%), Fear (82.1%), Happy (94.7%), Neutral (67.8%), Sad (85.3%) and Surprise (78.9%). Trained on FER-2013 dataset (35,887 images) for 50 epochs, achieving 72% overall accuracy. System features facial detection via OpenCV Haar Cascade, 96x96px preprocessing, automatic model download (169MB) via Git LFS and Streamlit interface with premium dark theme. Offers camera capture, image upload, example gallery, Plotly visualizations and motivational messages. Inference time < 1000ms with TensorFlow CPU." data-es="Facial Emotion Classifier es una aplicación avanzada de Deep Learning usando VGG16 con Transfer Learning de ImageNet para clasificación en tiempo real de 7 emociones faciales: Ira (89.2%), Asco (76.5%), Miedo (82.1%), Felicidad (94.7%), Neutral (67.8%), Tristeza (85.3%) y Sorpresa (78.9%). Entrenado en el dataset FER-2013 (35,887 imágenes) por 50 épocas, alcanzando 72% de precisión general. Sistema con detección facial via OpenCV Haar Cascade, preprocesamiento 96x96px, descarga automática del modelo (169MB) via Git LFS e interfaz Streamlit con tema oscuro premium. Ofrece captura por cámara, carga de imágenes, galería de ejemplos, visualizaciones con Plotly y mensajes motivacionales. Tiempo de inferencia < 1000ms con TensorFlow CPU.">Facial Emotion Classifier é uma aplicação avançada de Deep Learning que utiliza VGG16 com Transfer Learning do ImageNet para classificação em tempo real de 7 emoções faciais: Raiva (89.2%), Nojo (76.5%), Medo (82.1%), Alegria (94.7%), Neutro (67.8%), Tristeza (85.3%) e Surpresa (78.9%). Treinado no dataset FER-2013 (35.887 imagens) por 50 épocas, o modelo alcança 72% de acurácia geral. Sistema com detecção facial via OpenCV Haar Cascade, pré-processamento 96x96px, download automático do modelo (169MB) via Git LFS e interface Streamlit com tema dark premium. Oferece captura via câmera, upload de imagens, galeria de exemplos, visualizações com Plotly e mensagens motivacionais. Tempo de inferência < 1000ms com TensorFlow CPU.</span>
+            </p>
+              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
+                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">Ver mais</span>
+              </button>
+            <div class="project-metrics">
+              <div class="metric">
+                <i class="fas fa-bullseye"></i>
+                <span data-pt="Acurácia: 72.0%" data-en="Accuracy: 72.0%" data-es="Precisión: 72.0%">Acurácia: 72.0%</span>
+              </div>
+              <div class="metric">
+                <i class="fas fa-smile"></i>
+                <span data-pt="7 Emoções" data-en="7 Emotions" data-es="7 Emociones">7 Emoções</span>
+              </div>
+              <div class="metric">
+                <i class="fas fa-database"></i>
+                <span data-pt="35K+ Imagens" data-en="35K+ Images" data-es="35K+ Imágenes">35K+ Imagens</span>
+              </div>
+              <div class="metric">
+                <i class="fas fa-tachometer-alt"></i>
+                <span data-pt="< 1s Inferência" data-en="< 1s Inference" data-es="< 1s Inferencia">< 1s Inferência</span>
+              </div>
+            </div>
+            <div class="project-tech">
+              <span class="tech-tag">VGG16</span>
+              <span class="tech-tag">TensorFlow</span>
+              <span class="tech-tag">Transfer Learning</span>
+              <span class="tech-tag">Streamlit</span>
+              <span class="tech-tag">OpenCV</span>
+              <span class="tech-tag">Python</span>
+              <span class="tech-tag">Plotly</span>
+            </div>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/sidnei-almeida/vgg-emotion-classifier" class="project-link project-link-primary" target="_blank">
+                <i class="fab fa-github"></i>
+                <span data-pt="Código" data-en="Code" data-es="Código">Código</span>
+              </a>
+              <a href="https://vgg-emotion-classifier-nxubn9nadhxrvk9lpdhnn3.streamlit.app/" class="project-link project-link-secondary" target="_blank">
+                <i class="fas fa-external-link-alt"></i>
+                <span data-pt="App" data-en="App" data-es="App">App</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
         <!-- Projeto 1: Tradutor de Dados Universal -->
         <div class="project-card" data-category="desktop python">
           <div class="project-image">
