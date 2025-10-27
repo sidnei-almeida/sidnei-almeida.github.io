@@ -980,8 +980,9 @@ const translations = {
 // Apply language
 function applyLanguage(lang) {
   // Update document language
-  let htmlLang = 'pt-BR';
-  if (lang === 'en') htmlLang = 'en';
+  let htmlLang = 'en';
+  if (lang === 'pt') htmlLang = 'pt-BR';
+  else if (lang === 'en') htmlLang = 'en';
   else if (lang === 'es') htmlLang = 'es';
   document.documentElement.lang = htmlLang;
   
@@ -1041,8 +1042,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const savedTheme = localStorage.getItem('selectedColorTheme') || 'premium-mix';
   applyColorTheme(savedTheme);
   
-  // Load saved language or default to Portuguese
-  const savedLang = localStorage.getItem('selectedLanguage') || 'pt';
+  // Load saved language or default to English
+  const savedLang = localStorage.getItem('selectedLanguage') || 'en';
   applyLanguage(savedLang);
   
   // Close dropdowns when clicking outside
