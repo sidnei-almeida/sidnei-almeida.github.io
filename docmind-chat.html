@@ -256,6 +256,47 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-bottom: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .clear-history-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .clear-history-btn:hover {
+            background: var(--error-color);
+            border-color: var(--error-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .history-info {
+            background: var(--bg-tertiary);
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .history-info svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--accent-primary);
         }
 
         .collapse-icon-item {
@@ -1115,6 +1156,22 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">
+                        <span>Chat History</span>
+                        <button class="clear-history-btn" id="clearHistoryBtn" title="Clear chat history">
+                            Clear
+                        </button>
+                    </h3>
+                    <div class="history-info" id="historyInfo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span id="historyText">No messages yet</span>
+                    </div>
+                </div>
             </div>
         </aside>
 
@@ -1203,9 +1260,20 @@
         const chatInput = document.getElementById('chatInput');
         const sendButton = document.getElementById('sendButton');
         const suggestions = document.getElementById('suggestions');
+        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+        const historyInfo = document.getElementById('historyInfo');
+        const historyText = document.getElementById('historyText');
+
+        // LocalStorage keys
+        const STORAGE_KEYS = {
+            CHAT_HISTORY: 'docmind_chat_history',
+            UPLOADED_FILES: 'docmind_uploaded_files'
+        };
 
         // Initialize
         checkAPIStatus();
+        loadChatHistory();
+        loadUploadedFiles();
         setupEventListeners();
 
         // Check API Status
@@ -1234,10 +1302,161 @@
             statusDot.style.background = isOnline ? 'var(--success-color)' : 'var(--error-color)';
         }
 
+        // Load Chat History from LocalStorage
+        function loadChatHistory() {
+            try {
+                const savedHistory = localStorage.getItem(STORAGE_KEYS.CHAT_HISTORY);
+                if (savedHistory) {
+                    conversationHistory = JSON.parse(savedHistory);
+                    
+                    if (conversationHistory.length > 0) {
+                        // Hide empty state
+                        if (emptyState) {
+                            emptyState.style.display = 'none';
+                        }
+                        
+                        // Restore all messages
+                        conversationHistory.forEach(item => {
+                            addMessage('user', item.question, null, item.timestamp);
+                            addMessage('assistant', item.answer, item.sources, item.timestamp);
+                        });
+                        
+                        updateHistoryInfo();
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading chat history:', error);
+            }
+        }
+
+        // Load Uploaded Files from LocalStorage
+        function loadUploadedFiles() {
+            try {
+                const savedFiles = localStorage.getItem(STORAGE_KEYS.UPLOADED_FILES);
+                if (savedFiles) {
+                    uploadedFiles = JSON.parse(savedFiles);
+                    if (uploadedFiles.length > 0) {
+                        updateDocumentList();
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading uploaded files:', error);
+            }
+        }
+
+        // Save Chat History to LocalStorage
+        function saveChatHistory() {
+            try {
+                localStorage.setItem(STORAGE_KEYS.CHAT_HISTORY, JSON.stringify(conversationHistory));
+                updateHistoryInfo();
+            } catch (error) {
+                console.error('Error saving chat history:', error);
+            }
+        }
+
+        // Save Uploaded Files to LocalStorage
+        function saveUploadedFiles() {
+            try {
+                localStorage.setItem(STORAGE_KEYS.UPLOADED_FILES, JSON.stringify(uploadedFiles));
+            } catch (error) {
+                console.error('Error saving uploaded files:', error);
+            }
+        }
+
+        // Clear Chat History
+        function clearChatHistory() {
+            if (conversationHistory.length === 0) {
+                showToast('Info', 'No chat history to clear', 'warning');
+                return;
+            }
+
+            if (confirm('Are you sure you want to clear all chat history? This action cannot be undone.')) {
+                conversationHistory = [];
+                localStorage.removeItem(STORAGE_KEYS.CHAT_HISTORY);
+                
+                // Clear chat messages
+                chatMessages.innerHTML = '';
+                
+                // Show empty state
+                chatMessages.innerHTML = `
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <h2 class="empty-title">Welcome to DocMind</h2>
+                        <p class="empty-description">
+                            Your AI-powered document assistant. Upload a PDF document and start asking questions to get instant, accurate answers backed by the content.
+                        </p>
+                        <div class="suggestions" id="suggestions">
+                            <div class="suggestion-card" data-question="What is the main topic of this document?">
+                                <div class="suggestion-content">
+                                    <div class="suggestion-title">Main Topic</div>
+                                    <div class="suggestion-text">What is the main topic of this document?</div>
+                                </div>
+                            </div>
+                            <div class="suggestion-card" data-question="Can you summarize the key points?">
+                                <div class="suggestion-content">
+                                    <div class="suggestion-title">Summary</div>
+                                    <div class="suggestion-text">Can you summarize the key points?</div>
+                                </div>
+                            </div>
+                            <div class="suggestion-card" data-question="What are the most important findings?">
+                                <div class="suggestion-content">
+                                    <div class="suggestion-title">Key Findings</div>
+                                    <div class="suggestion-text">What are the most important findings?</div>
+                                </div>
+                            </div>
+                            <div class="suggestion-card" data-question="Are there any recommendations or conclusions?">
+                                <div class="suggestion-content">
+                                    <div class="suggestion-title">Conclusions</div>
+                                    <div class="suggestion-text">Are there any recommendations?</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Re-setup suggestion listeners
+                setupSuggestionListeners();
+                
+                updateHistoryInfo();
+                showToast('Success', 'Chat history cleared', 'success');
+            }
+        }
+
+        // Update History Info
+        function updateHistoryInfo() {
+            const count = conversationHistory.length;
+            if (count === 0) {
+                historyText.textContent = 'No messages yet';
+            } else {
+                historyText.textContent = `${count} conversation${count > 1 ? 's' : ''} saved`;
+            }
+        }
+
+        // Setup Suggestion Listeners
+        function setupSuggestionListeners() {
+            const suggestionCards = document.querySelectorAll('.suggestion-card');
+            suggestionCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    if (isIndexReady) {
+                        const question = card.dataset.question;
+                        chatInput.value = question;
+                        sendMessage();
+                    }
+                });
+            });
+        }
+
         // Setup Event Listeners
         function setupEventListeners() {
             // Sidebar toggle
             sidebarToggle.addEventListener('click', toggleSidebar);
+
+            // Clear history button
+            clearHistoryBtn.addEventListener('click', clearChatHistory);
 
             // Upload area click
             uploadArea.addEventListener('click', () => fileInput.click());
@@ -1284,15 +1503,8 @@
             // Send button
             sendButton.addEventListener('click', sendMessage);
 
-            // Suggestion cards
-            suggestions.addEventListener('click', (e) => {
-                const card = e.target.closest('.suggestion-card');
-                if (card && isIndexReady) {
-                    const question = card.dataset.question;
-                    chatInput.value = question;
-                    sendMessage();
-                }
-            });
+            // Setup suggestion listeners
+            setupSuggestionListeners();
         }
 
         // Toggle Sidebar
@@ -1351,6 +1563,7 @@
                     });
 
                     updateDocumentList();
+                    saveUploadedFiles();
                     isIndexReady = true;
                     enableChat();
 
@@ -1451,13 +1664,17 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    addMessage('assistant', data.answer, data.sources);
+                    const timestamp = new Date().toISOString();
+                    addMessage('assistant', data.answer, data.sources, timestamp);
                     
                     conversationHistory.push({
                         question,
                         answer: data.answer,
-                        sources: data.sources
+                        sources: data.sources,
+                        timestamp: timestamp
                     });
+                    
+                    saveChatHistory();
                 } else {
                     const error = await response.json();
                     throw new Error(error.detail || 'Failed to get answer');
@@ -1475,7 +1692,7 @@
         }
 
         // Add Message to Chat
-        function addMessage(role, content, sources = null) {
+        function addMessage(role, content, sources = null, savedTimestamp = null) {
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message';
             
@@ -1486,10 +1703,33 @@
             const avatarClass = isUser ? 'user-avatar' : 'assistant-avatar';
             const roleName = isUser ? 'You' : 'DocMind AI';
 
-            const timestamp = new Date().toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
+            // Format timestamp
+            let timestamp;
+            if (savedTimestamp) {
+                const date = new Date(savedTimestamp);
+                const now = new Date();
+                const isToday = date.toDateString() === now.toDateString();
+                
+                if (isToday) {
+                    timestamp = date.toLocaleTimeString('en-US', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                } else {
+                    timestamp = date.toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                    }) + ' ' + date.toLocaleTimeString('en-US', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                }
+            } else {
+                timestamp = new Date().toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+            }
 
             let sourcesHTML = '';
             if (sources && sources.length > 0) {
