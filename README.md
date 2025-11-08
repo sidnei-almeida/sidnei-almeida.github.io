@@ -1,93 +1,93 @@
-# Portfólio Profissional – Sidnei Almeida
+# Professional Portfolio – Sidnei Almeida
 
-Este repositório contém o site portfólio de Sidnei Almeida, Desenvolvedor & Arquiteto de Software especializado em Machine Learning, Data Science, APIs e soluções analíticas.
+This repository contains the portfolio website of Sidnei Almeida, a Software Engineer & Architect specialized in Machine Learning, Data Science, APIs, and analytical solutions.
 
-## :rocket: Sobre o site
+## :rocket: About the Website
 
-Portfólio profissional premium e responsivo desenvolvido para destacar a experiência e projetos de Sidnei em Desenvolvimento de Software e Ciência de Dados. O site apresenta um design elegante com tema escuro/claro, efeitos glassmorphism e acentos em cores premium, refletindo a expertise técnica em análise de dados, machine learning e desenvolvimento full-stack.
+Premium, responsive portfolio created to highlight Sidnei’s experience and projects in Software Engineering and Data Science. The site features a sleek dark/light theme, glassmorphism effects, and premium color accents that reflect technical expertise in data analytics, machine learning, and full-stack development.
 
-### Principais seções
-- **Projetos**: Demonstração de projetos reais de Machine Learning, APIs, Web Scraping e Analytics com descrições detalhadas e links para código-fonte.
-- **Habilidades**: Carrossel interativo com tecnologias e ferramentas especializadas em Python, Machine Learning, FastAPI e desenvolvimento web.
-- **Sobre Mim**: Apresentação profissional destacando formação acadêmica, experiência e certificações.
-- **Contato**: Informações de contato e links para redes sociais.
+### Main Sections
+- **Projects**: Showcase of real Machine Learning, API, Web Scraping, and Analytics projects with detailed descriptions and source code links.
+- **Skills**: Interactive carousel featuring technologies and tools across Python, Machine Learning, FastAPI, and modern web development.
+- **About Me**: Professional overview emphasizing academic background, experience, and certifications.
+- **Contact**: Contact information and social media links.
 
-## :computer: Projetos em destaque
+## :computer: Featured Projects
 
-### 1. Análise Preditiva de Potencial Empresarial
-Sistema de Machine Learning para previsão do potencial de crescimento de ações com base em indicadores financeiros, utilizando FastAPI e algoritmos de classificação.
+### 1. Business Potential Predictive Analysis
+Machine Learning system that forecasts the growth potential of stocks based on financial indicators, using FastAPI and classification algorithms.
 
-- **Tecnologias:** FastAPI, Machine Learning, Python, JavaScript
-- **Status:** Ativo e em destaque
-- **Precisão:** 87%
-- **Acesso:** [GitHub Repository](https://github.com/sidnei-almeida/potencial_empresarial)
+- **Technologies:** FastAPI, Machine Learning, Python, JavaScript
+- **Status:** Active and highlighted
+- **Accuracy:** 87%
+- **Access:** [GitHub Repository](https://github.com/sidnei-almeida/potencial_empresarial)
 
-### 2. Monitoramento Econômico Sul-Americano
-Dashboard interativo para análise exploratória e visualização de indicadores econômicos de países sul-americanos com múltiplas visualizações e filtros dinâmicos.
+### 2. South American Economic Monitoring
+Interactive dashboard for exploratory analysis and visualization of economic indicators from South American countries, with multiple visualizations and dynamic filters.
 
-- **Tecnologias:** Streamlit, Python, Pandas, Plotly, Requests
-- **Status:** Ativo
-- **Usuários:** 500+
-- **Acesso:** [GitHub Repository](https://github.com/sidnei-almeida/monitoramento_sulamericano)
+- **Technologies:** Streamlit, Python, Pandas, Plotly, Requests
+- **Status:** Active
+- **Users:** 500+
+- **Access:** [GitHub Repository](https://github.com/sidnei-almeida/monitoramento_sulamericano)
 
-### 3. Análise Inteligente de Notícias
-Sistema de classificação automática de notícias com NLP, machine learning e visualização de dados em tempo real.
+### 3. Intelligent News Analysis
+Automated news classification platform combining NLP, machine learning, and real-time data visualization.
 
-- **Tecnologias:** Pandas, Scikit-learn, NLTK, Matplotlib, HTML/CSS/JS
-- **Status:** Ativo e em destaque
-- **Fontes:** 20+ notícias
-- **Acesso:** [GitHub Repository](https://github.com/sidnei-almeida/api_noticias)
+- **Technologies:** Pandas, Scikit-learn, NLTK, Matplotlib, HTML/CSS/JS
+- **Status:** Active and highlighted
+- **Sources:** 20+ news outlets
+- **Access:** [GitHub Repository](https://github.com/sidnei-almeida/api_noticias)
 
 ### 4. CS2 Valuation API
-API para avaliação de inventários de Counter-Strike 2, com scraping de preços, análise de Unidades de Armazenamento e classificação de itens.
+API for evaluating Counter-Strike 2 inventories, including price scraping, Storage Unit analysis, and item classification.
 
-- **Tecnologias:** FastAPI, Python, Web Scraping, Steam API, JWT
-- **Status:** Ativo e recente
-- **Acesso:** [GitHub Repository](https://github.com/sidnei-almeida/cotacao_cs2) | [Demonstração](https://elite-skins-2025.github.io/api.html)
+- **Technologies:** FastAPI, Python, Web Scraping, Steam API, JWT
+- **Status:** Active and recent
+- **Access:** [GitHub Repository](https://github.com/sidnei-almeida/cotacao_cs2) | [Demo](https://elite-skins-2025.github.io/api.html)
 
 ### 5. Elite Skins CS2
-Plataforma para comunidade de trading de skins de Counter-Strike 2, com sistema de grupos, ofertas e sorteios.
+Community platform for Counter-Strike 2 skin trading, featuring group management, offers, and giveaways.
 
-- **Tecnologias:** HTML5, CSS3, JavaScript, Bootstrap, Responsive Design
-- **Status:** Ativo e colaborativo
-- **Acesso:** [GitHub Repository](https://github.com/elite-skins-2025/elite-skins-2025.github.io) | [Site](https://elite-skins-2025.github.io/)
+- **Technologies:** HTML5, CSS3, JavaScript, Bootstrap, Responsive Design
+- **Status:** Active and collaborative
+- **Access:** [GitHub Repository](https://github.com/elite-skins-2025/elite-skins-2025.github.io) | [Website](https://elite-skins-2025.github.io/)
 
-### 6. Pão de Açucar Scraping
-Web scraper automatizado para coletar dados nutricionais de produtos do Pão de Açúcar, utilizando técnicas avançadas de web scraping com Selenium.
+### 6. Pao de Acucar Scraping
+Automated web scraper built to collect nutritional data from Pão de Açúcar products, leveraging advanced Selenium scraping techniques.
 
-- **Tecnologias:** Python, Selenium, Pandas, Web Scraping, Docker
-- **Status:** Ativo e complexo
-- **Acesso:** [GitHub Repository](https://github.com/sidnei-almeida/pao_de_acucar_scraping)
+- **Technologies:** Python, Selenium, Pandas, Web Scraping, Docker
+- **Status:** Active and complex
+- **Access:** [GitHub Repository](https://github.com/sidnei-almeida/pao_de_acucar_scraping)
 
-## :scroll: Características técnicas
+## :scroll: Technical Highlights
 
-- **Design premium** com tema escuro/claro e efeitos glassmorphism
-- **Layout responsivo** com grid fixo de 3 colunas (desktop), 2 colunas (tablet), 1 coluna (mobile)
-- **Animações elegantes** e interações fluidas com IntersectionObserver
-- **Carrossel de habilidades** com scroll infinito e drag/swipe
-- **Filtros de projetos** com transições animadas
-- **Sistema de cores premium** com múltiplos temas (dourado, azul, roxo, esmeralda, rosa)
-- **Favicon customizado** com design minimalista
-- **SEO otimizado** com meta tags e structured data
+- **Premium design** with dark/light themes and glassmorphism effects
+- **Responsive layout** using a fixed grid of 3 columns (desktop), 2 columns (tablet), 1 column (mobile)
+- **Smooth animations** and interactions powered by IntersectionObserver
+- **Skills carousel** with infinite scroll and drag/swipe support
+- **Animated project filters** with seamless transitions
+- **Premium color system** with multiple themes (gold, blue, purple, emerald, pink)
+- **Custom favicon** with minimalist design
+- **SEO optimized** using meta tags and structured data
 
-## :file_folder: Estrutura do repositório
+## :file_folder: Repository Structure
 
-- `index.html` – Página principal do portfólio
-- `style.css` – Estilos CSS premium com glassmorphism
-- `script.js` – Funcionalidades JavaScript avançadas
-- `favicon.ico`, `favicon.svg` – Favicons personalizados
-- `images/` – Imagens e recursos visuais
-  - `project-1.png`, `project-2.png`, `project-3.png` – Imagens dos projetos
-  - `csso2.png`, `eliteskins.png`, `paodeacucar.png` – Imagens dos projetos específicos
-  - `github.svg`, `linkedin.svg` – Ícones sociais
+- `index.html` – Portfolio landing page
+- `style.css` – Premium CSS styles with glassmorphism
+- `script.js` – Advanced JavaScript interactions
+- `favicon.ico`, `favicon.svg` – Custom favicons
+- `images/` – Visual assets
+  - `project-1.png`, `project-2.png`, `project-3.png` – Project thumbnails
+  - `csso2.png`, `eliteskins.png`, `paodeacucar.png` – Specific project previews
+  - `github.svg`, `linkedin.svg` – Social icons
 
-## :email: Contato
+## :email: Contact
 
-Entre em contato por e-mail: [sidnei.almeida1806@gmail.com](mailto:sidnei.almeida1806@gmail.com)
+Get in touch by email: [sidnei.almeida1806@gmail.com](mailto:sidnei.almeida1806@gmail.com)
 
-Conecte-se também pelo [LinkedIn](https://www.linkedin.com/in/saaelmeida93/) ou confira outros projetos no [GitHub](https://github.com/sidnei-almeida).
+Connect on [LinkedIn](https://www.linkedin.com/in/saaelmeida93/) or explore more projects on [GitHub](https://github.com/sidnei-almeida).
 
 ---
 
-> **Sidnei Almeida** - Desenvolvedor & Arquiteto de Software  
-> Transformando dados em soluções com paixão e tecnologia.
+> **Sidnei Almeida** – Software Engineer & Architect  
+> Turning data into solutions with passion and technology.
