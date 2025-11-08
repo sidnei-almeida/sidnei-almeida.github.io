@@ -1,187 +1,150 @@
 ================================================================================
-                    DOCMIND API - ENDPOINTS DOCUMENTATION
+SCIENTIFIC RESEARCH AGENT API - ENDPOINTS FOR FRONTEND TEAM
 ================================================================================
 
-Base URLs:
-- Local development: http://localhost:8000
-- Production (Hugging Face): https://salmeida-my-rag-chatbot.hf.space
+BASE URL:
+https://salmeida-my-scientific-agent.hf.space
+
+INTERACTIVE DOCUMENTATION:
+https://salmeida-my-scientific-agent.hf.space/docs
 
 ================================================================================
-1. HEALTH CHECK
+ENDPOINTS
 ================================================================================
 
-GET /health
+1. ROOT - API Information
+   GET /
+   Returns basic API information and available endpoints
+   
+   Example Response:
+   {
+     "name": "Scientific Research Agent API",
+     "version": "1.0.0",
+     "description": "An autonomous AI agent specialized in scientific research",
+     "endpoints": {
+       "health": "/health",
+       "query": "/api/query",
+       "chat": "/api/chat",
+       "tools": "/api/tools",
+       "docs": "/docs"
+     }
+   }
 
-Response:
-{
-  "status": "ok" | "initializing"
-}
 
-Status Codes: 200 OK
+2. HEALTH CHECK
+   GET /health
+   Check API health status and agent initialization
+   
+   Example Response:
+   {
+     "status": "healthy",
+     "agent_initialized": true,
+     "available_tools": [
+       "Web Search (DuckDuckGo)",
+       "Wikipedia",
+       "ArXiv",
+       "Scientific Calculator"
+     ]
+   }
 
-Examples:
-- Local:      curl http://localhost:8000/health
-- Production: curl https://salmeida-my-rag-chatbot.hf.space/health
 
-================================================================================
-2. API STATUS & INFO
-================================================================================
+3. GET AVAILABLE TOOLS
+   GET /api/tools
+   Get list of all available tools with descriptions
+   
+   Example Response:
+   {
+     "tools": [
+       {
+         "name": "Web Search",
+         "provider": "DuckDuckGo",
+         "description": "Searches for up-to-date information on the internet..."
+       },
+       {
+         "name": "Wikipedia",
+         "provider": "Wikipedia API",
+         "description": "Searches for detailed and encyclopedic information..."
+       },
+       {
+         "name": "ArXiv",
+         "provider": "ArXiv API",
+         "description": "Searches and retrieves scientific articles..."
+       },
+       {
+         "name": "Scientific Calculator",
+         "provider": "Custom",
+         "description": "Performs complex mathematical calculations..."
+       }
+     ]
+   }
 
-GET /
 
-Response:
-{
-  "status": "DocMind API online",
-  "endpoints": ["/ask (POST)", "/upload (POST)"],
-  "health": "ok" | "initializing",
-  "index_ready": true | false
-}
+4. QUERY AGENT (Single Question)
+   POST /api/query
+   Query the agent with a single question. Best for one-off queries.
+   
+   Request Headers:
+   Content-Type: application/json
+   
+   Request Body:
+   {
+     "question": "What are the latest advances in quantum computing?",
+     "include_history": false
+   }
+   
+   Response:
+   {
+     "answer": "According to recent research on ArXiv...",
+     "question": "What are the latest advances in quantum computing?",
+     "tools_used": ["arxiv", "wikipedia"],
+     "processing_time": 12.45
+   }
+   
+   Example cURL:
+   curl -X POST "https://salmeida-my-scientific-agent.hf.space/api/query" \
+     -H "Content-Type: application/json" \
+     -d '{"question": "What are the latest advances in quantum computing?"}'
 
-Fields:
-- status: API status message
-- endpoints: List of available endpoints
-- health: Current health status
-- index_ready: Whether documents have been indexed (can ask questions)
 
-Status Codes: 200 OK
+5. CHAT WITH AGENT (Multi-turn Conversation)
+   POST /api/chat
+   Chat with the agent using conversation history. Best for multi-turn conversations.
+   
+   Request Headers:
+   Content-Type: application/json
+   
+   Request Body:
+   {
+     "messages": [
+       {
+         "role": "user",
+         "content": "What is quantum entanglement?"
+       },
+       {
+         "role": "assistant",
+         "content": "Quantum entanglement is a phenomenon..."
+       },
+       {
+         "role": "user",
+         "content": "Can you give me an example?"
+       }
+     ]
+   }
+   
+   Response:
+   {
+     "message": {
+       "role": "assistant",
+       "content": "Sure! Here's an example of quantum entanglement..."
+     },
+     "tools_used": ["wikipedia", "calculator"]
+   }
+   
+   Example cURL:
+   curl -X POST "https://salmeida-my-scientific-agent.hf.space/api/chat" \
+     -H "Content-Type: application/json" \
+     -d '{"messages": [{"role": "user", "content": "What is quantum entanglement?"}]}'
 
-Examples:
-- Local:      curl http://localhost:8000/
-- Production: curl https://salmeida-my-rag-chatbot.hf.space/
-
-================================================================================
-3. UPLOAD PDF DOCUMENT
-================================================================================
-
-POST /upload
-
-Content-Type: multipart/form-data
-
-Request:
-- file (File, required): PDF file to upload
-
-Response:
-{
-  "message": "PDF processed successfully",
-  "filename": "document.pdf",
-  "pages": 10,
-  "chunks": 45,
-  "status": "ready"
-}
-
-Fields:
-- message: Success message
-- filename: Name of the uploaded file
-- pages: Number of pages in the PDF
-- chunks: Number of text chunks created for indexing
-- status: Processing status
-
-Status Codes:
-- 200 OK: PDF processed successfully
-- 400 Bad Request: File is not a PDF or missing file
-- 500 Internal Server Error: Error processing PDF
-
-curl examples:
-- Local:
-  curl -X POST http://localhost:8000/upload \
-    -F "file=@document.pdf"
-- Production:
-  curl -X POST https://salmeida-my-rag-chatbot.hf.space/upload \
-    -F "file=@document.pdf"
-
-JavaScript Example (Fetch):
-const formData = new FormData();
-formData.append('file', fileInput.files[0]);
-
-const response = await fetch('http://localhost:8000/upload', {
-  method: 'POST',
-  body: formData
-});
-
-const data = await response.json();
-
-JavaScript Example (Axios):
-const formData = new FormData();
-formData.append('file', fileInput.files[0]);
-
-const response = await axios.post('http://localhost:8000/upload', formData, {
-  headers: { 'Content-Type': 'multipart/form-data' }
-});
-
-Notes:
-- Only PDF files are accepted
-- First upload creates a new index
-- Subsequent uploads add to the existing index
-- Processing may take 5-30 seconds depending on PDF size
-
-================================================================================
-4. ASK QUESTION
-================================================================================
-
-POST /ask
-
-Content-Type: application/json
-
-Request Body:
-{
-  "question": "What is the main theme of the document?"
-}
-
-Fields:
-- question (string, required): The question to ask about the documents
-
-Response:
-{
-  "answer": "The main theme of the document is about...",
-  "sources": [0, 1, 2]
-}
-
-Fields:
-- answer (string): The generated answer based on the documents
-- sources (array of numbers): Page numbers where the information was found
-
-Status Codes:
-- 200 OK: Question answered successfully
-- 400 Bad Request: No documents indexed yet (need to upload PDF first)
-- 503 Service Unavailable: API is still initializing
-- 500 Internal Server Error: Error processing the question
-
-curl examples:
-- Local:
-  curl -X POST http://localhost:8000/ask \
-    -H "Content-Type: application/json" \
-    -d '{"question": "What is the main theme of the document?"}'
-- Production:
-  curl -X POST https://salmeida-my-rag-chatbot.hf.space/ask \
-    -H "Content-Type: application/json" \
-    -d '{"question": "What is the main theme of the document?"}'
-
-JavaScript Example (Fetch):
-const response = await fetch('http://localhost:8000/ask', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    question: 'What is the main theme of the document?'
-  })
-});
-
-const data = await response.json();
-console.log(data.answer);
-console.log('Sources:', data.sources);
-
-JavaScript Example (Axios):
-const response = await axios.post('http://localhost:8000/ask', {
-  question: 'What is the main theme of the document?'
-});
-
-console.log(response.data.answer);
-console.log('Sources:', response.data.sources);
-
-Notes:
-- Must upload at least one PDF before asking questions
-- API searches the 3 most relevant document chunks
-- Response time depends on document size and question complexity
-- Sources array contains page numbers (0-indexed)
 
 ================================================================================
 ERROR RESPONSES
@@ -189,96 +152,90 @@ ERROR RESPONSES
 
 400 Bad Request:
 {
-  "detail": "No documents indexed yet. Please upload a PDF first using /upload endpoint."
+  "detail": "Validation error message"
 }
 
 500 Internal Server Error:
 {
-  "detail": "Error processing question: ErrorType: error message"
+  "detail": "Error processing query: error message"
 }
 
-503 Service Unavailable:
-{
-  "detail": "API is still initializing."
-}
 
 ================================================================================
-RECOMMENDED USER FLOW
+EXAMPLE USAGE - JavaScript/Fetch
 ================================================================================
 
-1. Check API Status (GET /)
-   - Display loading state if health: "initializing"
-   - Show upload button if index_ready: false
-   - Show question form if index_ready: true
+// Single Query
+const response = await fetch('https://salmeida-my-scientific-agent.hf.space/api/query', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    question: 'What is machine learning?'
+  })
+});
 
-2. Upload PDF (POST /upload)
-   - Show file input
-   - Display upload progress
-   - Show success message with pages/chunks count
-   - Enable question form after successful upload
+const data = await response.json();
+console.log(data);
 
-3. Ask Questions (POST /ask)
-   - Show question input form
-   - Display loading state while processing
-   - Show answer and sources
-   - Handle errors gracefully
+
+// Chat Conversation
+const chatResponse = await fetch('https://salmeida-my-scientific-agent.hf.space/api/chat', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    messages: [
+      { role: 'user', content: 'Explain quantum computing' }
+    ]
+  })
+});
+
+const chatData = await chatResponse.json();
+console.log(chatData);
+
 
 ================================================================================
-EXAMPLE REACT COMPONENT STRUCTURE
+EXAMPLE USAGE - Axios
 ================================================================================
 
-// Check if index is ready
-const checkStatus = async () => {
-  const response = await fetch('/');
-  const data = await response.json();
-  setIndexReady(data.index_ready);
-};
+import axios from 'axios';
 
-// Upload PDF
-const uploadPDF = async (file) => {
-  const formData = new FormData();
-  formData.append('file', file);
-  
-  const response = await fetch('/upload', {
-    method: 'POST',
-    body: formData
-  });
-  
-  if (response.ok) {
-    const data = await response.json();
-    setIndexReady(true);
-    alert(`PDF processed! ${data.pages} pages, ${data.chunks} chunks`);
+// Single Query
+const response = await axios.post(
+  'https://salmeida-my-scientific-agent.hf.space/api/query',
+  {
+    question: 'What is machine learning?'
   }
-};
+);
+console.log(response.data);
 
-// Ask question
-const askQuestion = async (question) => {
-  const response = await fetch('/ask', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ question })
-  });
-  
-  if (response.ok) {
-    const data = await response.json();
-    return { answer: data.answer, sources: data.sources };
-  } else {
-    const error = await response.json();
-    throw new Error(error.detail);
+
+// Chat Conversation
+const chatResponse = await axios.post(
+  'https://salmeida-my-scientific-agent.hf.space/api/chat',
+  {
+    messages: [
+      { role: 'user', content: 'Explain quantum computing' }
+    ]
   }
-};
+);
+console.log(chatResponse.data);
+
 
 ================================================================================
-NOTES FOR FRONTEND DEVELOPERS
+NOTES
 ================================================================================
 
-1. CORS: If deploying to different domains, ensure CORS is configured on backend
-2. File Size: Consider file size limits for PDF uploads (recommend max 10MB)
-3. Loading States: Processing can take 5-30 seconds depending on PDF size
-4. Error Handling: Always check response status and display user-friendly errors
-5. Sources: Page numbers are 0-indexed (page 0 = first page)
-6. Multiple Uploads: Users can upload multiple PDFs - they will be added to the same index
-7. Swagger UI: Visit http://localhost:8000/docs for interactive API documentation
+- All endpoints accept and return JSON
+- No authentication required currently
+- CORS is enabled for all origins
+- Processing time may vary (typically 10-30 seconds)
+- For interactive testing, visit: https://salmeida-my-scientific-agent.hf.space/docs
+- The /docs endpoint provides Swagger UI for testing all endpoints
+- The /redoc endpoint provides ReDoc documentation
 
 ================================================================================
 
