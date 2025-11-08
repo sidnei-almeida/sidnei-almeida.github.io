@@ -1026,10 +1026,29 @@
             text-decoration: none;
             border-bottom: 1px solid transparent;
             transition: var(--transition);
+            word-break: break-word;
         }
 
         .message-content a:hover {
             border-bottom-color: var(--accent-warm);
+        }
+
+        .message-content a.auto-link {
+            color: var(--accent-amber);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            padding: 0.2rem 0.4rem;
+            background: var(--bg-elevated);
+            border-radius: 4px;
+            border: 1px solid var(--border-subtle);
+            display: inline-block;
+            margin: 0.2rem 0;
+        }
+
+        .message-content a.auto-link:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-warm);
+            box-shadow: var(--glow-subtle);
         }
     </style>
 </head>
@@ -1191,7 +1210,7 @@
             messageInput.focus();
         }
 
-        // Format message content (basic markdown support)
+        // Format message content (markdown + URLs + emojis)
         function formatMessageContent(text) {
             // Convert markdown-like formatting to HTML
             let formatted = text
@@ -1203,8 +1222,10 @@
                 .replace(/```(\w+)?\n([\s\S]+?)```/g, '<pre><code>$2</code></pre>')
                 // Inline code
                 .replace(/`([^`]+)`/g, '<code>$1</code>')
-                // Links
-                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+                // Markdown links
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+                // Auto-detect URLs (including ArXiv URLs)
+                .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" class="auto-link">$1</a>')
                 // Line breaks
                 .replace(/\n/g, '<br>');
             
