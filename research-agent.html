@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scientific Research Agent - IA de Pesquisa Científica</title>
+    <title>Scientific Research Agent - AI Scientific Research</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -1057,7 +1057,7 @@
         <div class="header-left">
             <a href="index.html" class="back-button">
                 <span class="material-symbols-outlined">arrow_back</span>
-                <span>Portfólio</span>
+                <span>Portfolio</span>
             </a>
             <div class="header-title">
                 <div class="logo-icon">
@@ -1073,7 +1073,7 @@
             </div>
             <button class="btn new-chat-btn" id="newChatBtn">
                 <span class="material-symbols-outlined">add</span>
-                <span>Nova Conversa</span>
+                <span>New Chat</span>
             </button>
         </div>
     </header>
@@ -1085,48 +1085,48 @@
                 <span>⚛</span>
             </div>
             <h2 class="welcome-title">Scientific Research Agent</h2>
-            <p class="welcome-subtitle">Seu assistente de IA especializado em pesquisa científica. Acesso a ArXiv, Wikipedia, buscas web e calculadora científica.</p>
+            <p class="welcome-subtitle">Your AI assistant specialized in scientific research. Access to ArXiv, Wikipedia, web searches, and scientific calculator.</p>
             
             <div class="capabilities">
                 <div class="capability-card">
                     <div class="capability-icon">
                         <span class="material-symbols-outlined">science</span>
                     </div>
-                    <h3>Artigos Científicos</h3>
-                    <p>Busca e análise de artigos no ArXiv e outras fontes científicas</p>
+                    <h3>Scientific Articles</h3>
+                    <p>Search and analysis of articles on ArXiv and other scientific sources</p>
                 </div>
                 <div class="capability-card">
                     <div class="capability-icon">
                         <span class="material-symbols-outlined">search</span>
                     </div>
-                    <h3>Pesquisa Web</h3>
-                    <p>Informações atualizadas através do DuckDuckGo</p>
+                    <h3>Web Research</h3>
+                    <p>Updated information through DuckDuckGo</p>
                 </div>
                 <div class="capability-card">
                     <div class="capability-icon">
                         <span class="material-symbols-outlined">calculate</span>
                     </div>
-                    <h3>Cálculos Científicos</h3>
-                    <p>Calculadora avançada para operações matemáticas complexas</p>
+                    <h3>Scientific Calculations</h3>
+                    <p>Advanced calculator for complex mathematical operations</p>
                 </div>
                 <div class="capability-card">
                     <div class="capability-icon">
                         <span class="material-symbols-outlined">menu_book</span>
                     </div>
                     <h3>Wikipedia</h3>
-                    <p>Acesso a conhecimento enciclopédico detalhado</p>
+                    <p>Access to detailed encyclopedic knowledge</p>
                 </div>
             </div>
 
             <div class="example-prompts">
-                <div class="example-prompt" onclick="setExamplePrompt('Quais são os últimos avanços em computação quântica?')">
-                    💻 Quais são os últimos avanços em computação quântica?
+                <div class="example-prompt" onclick="setExamplePrompt('What are the latest advances in quantum computing?')">
+                    💻 What are the latest advances in quantum computing?
                 </div>
-                <div class="example-prompt" onclick="setExamplePrompt('Explique o entrelaçamento quântico com exemplos')">
-                    🔬 Explique o entrelaçamento quântico com exemplos
+                <div class="example-prompt" onclick="setExamplePrompt('Explain quantum entanglement with examples')">
+                    🔬 Explain quantum entanglement with examples
                 </div>
-                <div class="example-prompt" onclick="setExamplePrompt('Encontre artigos recentes sobre inteligência artificial em saúde')">
-                    🏥 Encontre artigos recentes sobre IA em saúde
+                <div class="example-prompt" onclick="setExamplePrompt('Find recent articles about artificial intelligence in healthcare')">
+                    🏥 Find recent articles about AI in healthcare
                 </div>
             </div>
         </div>
@@ -1142,7 +1142,7 @@
                 <div class="input-container">
                     <textarea 
                         id="messageInput" 
-                        placeholder="Faça uma pergunta científica..."
+                        placeholder="Ask a scientific question..."
                         rows="1"
                     ></textarea>
                     <div class="input-actions">
@@ -1239,7 +1239,7 @@
             
             const avatar = role === 'user' ? '👤' : '⚛';
             const avatarClass = role === 'user' ? 'user-avatar' : 'assistant-avatar';
-            const roleName = role === 'user' ? 'Você' : 'Scientific Agent';
+            const roleName = role === 'user' ? 'You' : 'Scientific Agent';
             
             let messageHTML = `
                 <div class="message-header">
@@ -1310,7 +1310,7 @@
                         <div class="thinking-dot"></div>
                         <div class="thinking-dot"></div>
                     </div>
-                    <span style="color: var(--text-secondary); font-size: 0.9rem;">Pensando e pesquisando...</span>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">Thinking and researching...</span>
                 </div>
             `;
             messagesContainer.appendChild(thinkingDiv);
@@ -1332,7 +1332,7 @@
             errorDiv.innerHTML = `
                 <span class="material-symbols-outlined">error</span>
                 <div>
-                    <strong>Erro:</strong> ${message}
+                    <strong>Error:</strong> ${message}
                 </div>
             `;
             messagesContainer.appendChild(errorDiv);
@@ -1365,8 +1365,8 @@
             showThinking();
 
             try {
-                console.log('Enviando requisição para:', `${API_BASE_URL}/api/chat`);
-                console.log('Histórico de conversa:', conversationHistory);
+                console.log('Sending request to:', `${API_BASE_URL}/api/chat`);
+                console.log('Conversation history:', conversationHistory);
                 
                 const response = await fetch(`${API_BASE_URL}/api/chat`, {
                     method: 'POST',
@@ -1378,16 +1378,16 @@
                     })
                 });
 
-                console.log('Status da resposta:', response.status);
+                console.log('Response status:', response.status);
 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    console.error('Resposta de erro:', errorText);
-                    throw new Error(`Erro HTTP ${response.status}: ${errorText}`);
+                    console.error('Error response:', errorText);
+                    throw new Error(`HTTP Error ${response.status}: ${errorText}`);
                 }
 
                 const data = await response.json();
-                console.log('Dados recebidos:', data);
+                console.log('Data received:', data);
                 
                 removeThinking();
 
@@ -1401,20 +1401,20 @@
 
             } catch (error) {
                 removeThinking();
-                console.error('Erro completo:', error);
+                console.error('Complete error:', error);
                 
-                let errorMessage = 'Não foi possível processar sua pergunta. ';
+                let errorMessage = 'Unable to process your question. ';
                 
                 if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                    errorMessage += 'Erro de conexão. Verifique se a API está online e se há conexão com a internet.';
+                    errorMessage += 'Connection error. Please check if the API is online and if there is an internet connection.';
                 } else if (error.message.includes('CORS')) {
-                    errorMessage += 'Erro de CORS. A API precisa permitir requisições do seu domínio.';
+                    errorMessage += 'CORS error. The API needs to allow requests from your domain.';
                 } else if (error.message.includes('500')) {
-                    errorMessage += 'Erro interno no servidor. A API pode estar com problemas.';
+                    errorMessage += 'Internal server error. The API may be experiencing issues.';
                 } else if (error.message.includes('404')) {
-                    errorMessage += 'Endpoint não encontrado. Verifique se a API está configurada corretamente.';
+                    errorMessage += 'Endpoint not found. Please check if the API is configured correctly.';
                 } else {
-                    errorMessage += `Detalhes: ${error.message}`;
+                    errorMessage += `Details: ${error.message}`;
                 }
                 
                 showError(errorMessage);
@@ -1441,7 +1441,7 @@
             const statusText = document.querySelector('.status-indicator span');
             
             try {
-                console.log('Verificando saúde da API...');
+                console.log('Checking API health...');
                 const response = await fetch(`${API_BASE_URL}/health`, {
                     method: 'GET',
                     headers: {
@@ -1462,11 +1462,11 @@
                         statusText.style.color = 'var(--text-secondary)';
                     }
                 } else {
-                    throw new Error('API respondeu com erro');
+                    throw new Error('API responded with error');
                 }
             } catch (error) {
-                console.error('Erro ao verificar status da API:', error);
-                console.error('URL tentada:', `${API_BASE_URL}/health`);
+                console.error('Error checking API status:', error);
+                console.error('URL attempted:', `${API_BASE_URL}/health`);
                 
                 if (statusDot) {
                     statusDot.style.background = '#ef4444';
@@ -1477,12 +1477,12 @@
                     statusText.style.color = '#ef4444';
                 }
                 
-                // Mostrar aviso no console
-                console.warn('⚠️ A API não está respondendo. Possíveis causas:');
-                console.warn('1. A API pode estar em sleep (Hugging Face Spaces entra em sleep após inatividade)');
-                console.warn('2. Problemas de CORS');
-                console.warn('3. A API pode estar fora do ar');
-                console.warn('Tente acessar diretamente:', API_BASE_URL);
+                // Show warning in console
+                console.warn('⚠️ The API is not responding. Possible causes:');
+                console.warn('1. The API may be in sleep mode (Hugging Face Spaces goes to sleep after inactivity)');
+                console.warn('2. CORS issues');
+                console.warn('3. The API may be down');
+                console.warn('Try accessing directly:', API_BASE_URL);
             }
         }
 
