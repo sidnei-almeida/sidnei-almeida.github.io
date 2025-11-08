@@ -453,7 +453,7 @@
     }
     
     .summary-card {
-      background: rgba(27, 40, 56, 0.4);
+      background: rgba(36, 36, 36, 0.6);
       border: 1px solid var(--cs2-border);
       border-radius: 12px;
       padding: 1.5rem;
@@ -565,7 +565,7 @@
     }
     
     .item-card {
-      background: rgba(27, 40, 56, 0.4);
+      background: rgba(36, 36, 36, 0.6);
       border: 1px solid var(--cs2-border);
       border-radius: 10px;
       padding: 1.5rem;
@@ -884,6 +884,369 @@
         background-position: -200% 0;
       }
     }
+    
+    /* Professional Data Table */
+    .data-table-container {
+      background: rgba(36, 36, 36, 0.6);
+      border: 1px solid var(--cs2-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      backdrop-filter: blur(8px) saturate(110%);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      overflow-x: auto;
+    }
+    
+    .data-table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .data-table-header h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--cs2-gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+    
+    .table-controls {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .table-search {
+      padding: 0.5rem 1rem;
+      background: var(--cs2-bg-dark);
+      border: 1px solid var(--cs2-border-subtle);
+      border-radius: 6px;
+      color: var(--cs2-text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      min-width: 200px;
+      transition: all 0.3s ease;
+    }
+    
+    .table-search:focus {
+      outline: none;
+      border-color: var(--cs2-gold);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+    }
+    
+    .table-sort-btn {
+      padding: 0.5rem 1rem;
+      background: var(--cs2-bg-light);
+      border: 1px solid var(--cs2-border-subtle);
+      color: var(--cs2-text);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .table-sort-btn:hover {
+      background: var(--cs2-bg-medium);
+      border-color: var(--cs2-gold);
+    }
+    
+    .table-sort-btn.active {
+      background: var(--gradient-gold);
+      color: var(--cs2-bg-darkest);
+      border-color: transparent;
+    }
+    
+    .professional-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-family: 'Rajdhani', sans-serif;
+    }
+    
+    .professional-table thead {
+      background: rgba(255, 215, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .professional-table th {
+      padding: 1rem 1.25rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--cs2-gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid var(--cs2-gold);
+      background: rgba(26, 26, 26, 0.95);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s ease;
+    }
+    
+    .professional-table th:hover {
+      background: rgba(255, 215, 0, 0.1);
+    }
+    
+    .professional-table th i {
+      margin-left: 0.5rem;
+      font-size: 0.75rem;
+      opacity: 0.6;
+    }
+    
+    .professional-table tbody tr {
+      transition: all 0.3s ease;
+      border-bottom: 1px solid var(--cs2-border-subtle);
+    }
+    
+    .professional-table tbody tr:hover {
+      background: rgba(255, 215, 0, 0.05);
+      transform: scale(1.01);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .professional-table tbody tr:last-child {
+      border-bottom: none;
+    }
+    
+    .professional-table td {
+      padding: 1rem 1.25rem;
+      color: var(--cs2-text);
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
+    
+    .professional-table td.item-name-cell {
+      font-weight: 500;
+      max-width: 300px;
+      word-wrap: break-word;
+    }
+    
+    .professional-table td.price-cell {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      color: var(--cs2-gold);
+      font-size: 1.05rem;
+      white-space: nowrap;
+    }
+    
+    .professional-table td.type-cell {
+      color: var(--cs2-text-dim);
+      font-size: 0.9rem;
+    }
+    
+    .professional-table .index-cell {
+      color: var(--cs2-text-darker);
+      font-weight: 600;
+      text-align: center;
+      width: 60px;
+    }
+    
+    .table-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--cs2-border);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .table-info {
+      color: var(--cs2-text-dim);
+      font-size: 0.9rem;
+    }
+    
+    .table-pagination {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .pagination-btn {
+      padding: 0.5rem 1rem;
+      background: var(--cs2-bg-light);
+      border: 1px solid var(--cs2-border-subtle);
+      color: var(--cs2-text);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
+    .pagination-btn:hover:not(:disabled) {
+      background: var(--gradient-gold);
+      color: var(--cs2-bg-darkest);
+      border-color: transparent;
+    }
+    
+    .pagination-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    
+    .pagination-btn.active {
+      background: var(--gradient-gold);
+      color: var(--cs2-bg-darkest);
+      border-color: transparent;
+    }
+    
+    /* Stats Cards Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+      background: rgba(36, 36, 36, 0.6);
+      border: 1px solid var(--cs2-border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      border-color: var(--cs2-gold);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(255, 215, 0, 0.1);
+    }
+    
+    .stat-icon {
+      font-size: 1.5rem;
+      color: var(--cs2-gold);
+      opacity: 0.8;
+    }
+    
+    .stat-content {
+      flex: 1;
+    }
+    
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--cs2-gold);
+      line-height: 1.2;
+    }
+    
+    .stat-label {
+      color: var(--cs2-text-dim);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 0.25rem;
+    }
+    
+    /* Price Result Card Enhanced */
+    .price-result-card {
+      background: rgba(36, 36, 36, 0.6);
+      border: 1px solid var(--cs2-border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 2rem;
+      backdrop-filter: blur(8px) saturate(110%);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    
+    .price-result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid var(--cs2-gold);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .price-result-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--cs2-text);
+      flex: 1;
+      min-width: 200px;
+    }
+    
+    .price-result-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--cs2-gold);
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+    
+    .price-details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .price-detail-item {
+      padding: 1rem;
+      background: rgba(26, 26, 26, 0.6);
+      border: 1px solid var(--cs2-border-subtle);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .price-detail-item:hover {
+      border-color: var(--cs2-gold);
+      transform: translateY(-2px);
+    }
+    
+    .price-detail-label {
+      color: var(--cs2-text-dim);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .price-detail-value {
+      color: var(--cs2-text);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    
+    @media (max-width: 768px) {
+      .professional-table {
+        font-size: 0.85rem;
+      }
+      
+      .professional-table th,
+      .professional-table td {
+        padding: 0.75rem 0.5rem;
+      }
+      
+      .data-table-container {
+        padding: 1rem;
+      }
+      
+      .table-search {
+        min-width: 150px;
+      }
+    }
   </style>
 </head>
 
@@ -1127,80 +1490,204 @@
     function displayInventoryResults(data, analysisType) {
       const resultsDiv = document.getElementById('inventory-results');
       
-      // Summary Cards
+      // Stats Grid - Enhanced Summary
       let summaryHTML = `
         <div class="results-section">
-          <div class="summary-cards">
-            <div class="summary-card">
-              <i class="fas fa-dollar-sign"></i>
-              <span class="value">$${data.total_value?.toFixed(2) || '0.00'}</span>
-              <span class="label">Total Value</span>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-wallet"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">$${data.total_value?.toFixed(2) || '0.00'}</div>
+                <div class="stat-label">Valor Total</div>
+              </div>
             </div>
-            <div class="summary-card">
-              <i class="fas fa-box"></i>
-              <span class="value">${data.total_items || 0}</span>
-              <span class="label">Total Items</span>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-box"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">${data.total_items || 0}</div>
+                <div class="stat-label">Total de Itens</div>
+              </div>
             </div>
-            <div class="summary-card">
-              <i class="fas fa-shopping-cart"></i>
-              <span class="value">${data.marketable_items || 0}</span>
-              <span class="label">Marketable Items</span>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">${data.marketable_items || 0}</div>
+                <div class="stat-label">Itens Vendáveis</div>
+              </div>
             </div>
-            <div class="summary-card">
-              <i class="fas fa-archive"></i>
-              <span class="value">${data.storage_units || 0}</span>
-              <span class="label">Storage Units</span>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">$${((data.total_value || 0) / (data.total_items || 1)).toFixed(2)}</div>
+                <div class="stat-label">Valor Médio/Item</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-archive"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">${data.storage_units || 0}</div>
+                <div class="stat-label">Unidades de Armazenamento</div>
+              </div>
             </div>
           </div>
       `;
       
-      // Items by Category (if full analysis)
-        if (analysisType === 'full' && data.items_by_category) {
-          summaryHTML += `
-            <div class="items-section">
-              <div class="section-header">
-                <h3><i class="fas fa-layer-group"></i> Items by Category</h3>
-              </div>
-        `;
-        
+      // Collect all items for the table
+      let allItems = [];
+      if (analysisType === 'full' && data.items_by_category) {
         for (const [category, items] of Object.entries(data.items_by_category)) {
           if (items && items.length > 0) {
-            summaryHTML += `
-              <div style="margin-bottom: 2rem;">
-                <h4 style="color: var(--cs2-gold); font-size: 1.5rem; margin-bottom: 1rem; text-transform: uppercase;">
-                  ${category} (${items.length})
-                </h4>
-                <div class="items-grid">
-            `;
-            
-            items.slice(0, 20).forEach(item => {
-              summaryHTML += createItemCard(item);
+            items.forEach(item => {
+              allItems.push({ ...item, category: category });
             });
-            
-            summaryHTML += `</div></div>`;
           }
         }
-        
-        summaryHTML += `</div>`;
       } else if (data.items && data.items.length > 0) {
-        // Basic analysis - show all items
+        allItems = data.items.map(item => ({ ...item, category: item.type || 'Outros' }));
+      }
+      
+      // Sort by price descending
+      allItems.sort((a, b) => (b.price || b.market_price || 0) - (a.price || a.market_price || 0));
+      
+      // Create Professional Table
+      if (allItems.length > 0) {
         summaryHTML += `
-          <div class="items-section">
-            <div class="section-header">
-              <h3><i class="fas fa-th"></i> All Items (${data.items.length})</h3>
+          <div class="data-table-container">
+            <div class="data-table-header">
+              <h3><i class="fas fa-table"></i> Detalhamento do Inventário</h3>
+              <div class="table-controls">
+                <input type="text" class="table-search" placeholder="Buscar item..." onkeyup="filterInventoryTable(this.value)">
+                <button class="table-sort-btn active" onclick="sortInventoryTable('price')">
+                  <i class="fas fa-sort-amount-down"></i> Ordenar por Valor
+                </button>
+              </div>
             </div>
-            <div class="items-grid">
+            <table class="professional-table" id="inventory-table">
+              <thead>
+                <tr>
+                  <th class="index-cell">#</th>
+                  <th onclick="sortInventoryTable('name')">Nome do Item <i class="fas fa-sort"></i></th>
+                  <th onclick="sortInventoryTable('category')">Categoria <i class="fas fa-sort"></i></th>
+                  <th onclick="sortInventoryTable('rarity')">Raridade <i class="fas fa-sort"></i></th>
+                  <th onclick="sortInventoryTable('price')">Valor <i class="fas fa-sort"></i></th>
+                </tr>
+              </thead>
+              <tbody>
         `;
         
-        data.items.slice(0, 50).forEach(item => {
-          summaryHTML += createItemCard(item);
+        allItems.forEach((item, index) => {
+          const price = item.price || item.market_price || 0;
+          const rarity = item.rarity || 'N/A';
+          const rarityClass = rarity.toLowerCase().replace(/\s+/g, '-');
+          const category = item.category || item.type || 'Outros';
+          const itemName = item.name || item.market_hash_name || 'Item';
+          
+          summaryHTML += `
+            <tr data-name="${itemName.toLowerCase()}" data-category="${category.toLowerCase()}" data-rarity="${rarity.toLowerCase()}" data-price="${price}">
+              <td class="index-cell">${index + 1}</td>
+              <td class="item-name-cell">${itemName}</td>
+              <td class="type-cell">${category}</td>
+              <td>
+                ${rarity !== 'N/A' ? `<span class="rarity-badge rarity-${rarityClass}">${rarity}</span>` : '<span style="color: var(--cs2-text-dim);">N/A</span>'}
+              </td>
+              <td class="price-cell">$${price.toFixed(2)}</td>
+            </tr>
+          `;
         });
         
-        summaryHTML += `</div></div>`;
+        summaryHTML += `
+              </tbody>
+            </table>
+            <div class="table-footer">
+              <div class="table-info">
+                Exibindo <strong id="items-count">${allItems.length}</strong> itens
+              </div>
+            </div>
+          </div>
+        `;
       }
       
       summaryHTML += `</div>`;
       resultsDiv.innerHTML = summaryHTML;
+      
+      // Store items globally for sorting/filtering
+      window.inventoryItems = allItems;
+    }
+    
+    // Filter Inventory Table
+    function filterInventoryTable(searchTerm) {
+      const table = document.getElementById('inventory-table');
+      const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+      let visibleCount = 0;
+      
+      searchTerm = searchTerm.toLowerCase();
+      
+      for (let row of rows) {
+        const name = row.getAttribute('data-name');
+        const category = row.getAttribute('data-category');
+        
+        if (name.includes(searchTerm) || category.includes(searchTerm)) {
+          row.style.display = '';
+          visibleCount++;
+          // Update index
+          row.querySelector('.index-cell').textContent = visibleCount;
+        } else {
+          row.style.display = 'none';
+        }
+      }
+      
+      document.getElementById('items-count').textContent = visibleCount;
+    }
+    
+    // Sort Inventory Table
+    function sortInventoryTable(column) {
+      const table = document.getElementById('inventory-table');
+      const tbody = table.getElementsByTagName('tbody')[0];
+      const rows = Array.from(tbody.getElementsByTagName('tr'));
+      
+      rows.sort((a, b) => {
+        let aVal, bVal;
+        
+        switch(column) {
+          case 'name':
+            aVal = a.getAttribute('data-name');
+            bVal = b.getAttribute('data-name');
+            return aVal.localeCompare(bVal);
+          case 'category':
+            aVal = a.getAttribute('data-category');
+            bVal = b.getAttribute('data-category');
+            return aVal.localeCompare(bVal);
+          case 'rarity':
+            aVal = a.getAttribute('data-rarity');
+            bVal = b.getAttribute('data-rarity');
+            return aVal.localeCompare(bVal);
+          case 'price':
+            aVal = parseFloat(a.getAttribute('data-price'));
+            bVal = parseFloat(b.getAttribute('data-price'));
+            return bVal - aVal; // Descending by default
+          default:
+            return 0;
+        }
+      });
+      
+      // Clear and rebuild tbody
+      tbody.innerHTML = '';
+      rows.forEach((row, index) => {
+        if (row.style.display !== 'none') {
+          row.querySelector('.index-cell').textContent = index + 1;
+        }
+        tbody.appendChild(row);
+      });
     }
     
     // Create Item Card
@@ -1280,32 +1767,130 @@
       
       const price = data.price || data.lowest_price || 0;
       const currency = data.currency || 'USD';
-      const timestamp = data.timestamp ? new Date(data.timestamp).toLocaleString('en-US') : 'N/A';
+      const timestamp = data.timestamp ? new Date(data.timestamp).toLocaleString('pt-BR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      }) : 'N/A';
       
       resultsDiv.innerHTML = `
         <div class="results-section">
-          <div class="summary-cards">
-            <div class="summary-card">
-              <i class="fas fa-tag"></i>
-              <span class="value">$${price.toFixed(2)}</span>
-              <span class="label">Current Price</span>
+          <div class="price-result-card">
+            <div class="price-result-header">
+              <div class="price-result-name">
+                <i class="fas fa-tag" style="color: var(--cs2-gold); margin-right: 0.5rem;"></i>
+                ${itemName}
+              </div>
+              <div class="price-result-value">
+                $${price.toFixed(2)}
+              </div>
             </div>
-            <div class="summary-card">
-              <i class="fas fa-money-bill-wave"></i>
-              <span class="value">${currency}</span>
-              <span class="label">Currency</span>
+            
+            <div class="price-details-grid">
+              <div class="price-detail-item">
+                <div class="price-detail-label">
+                  <i class="fas fa-money-bill-wave"></i> Moeda
+                </div>
+                <div class="price-detail-value">${currency}</div>
+              </div>
+              
+              <div class="price-detail-item">
+                <div class="price-detail-label">
+                  <i class="fas fa-clock"></i> Última Atualização
+                </div>
+                <div class="price-detail-value" style="font-size: 0.95rem;">${timestamp}</div>
+              </div>
+              
+              ${data.source ? `
+              <div class="price-detail-item">
+                <div class="price-detail-label">
+                  <i class="fas fa-database"></i> Fonte
+                </div>
+                <div class="price-detail-value">${data.source}</div>
+              </div>
+              ` : ''}
+              
+              ${data.volume ? `
+              <div class="price-detail-item">
+                <div class="price-detail-label">
+                  <i class="fas fa-chart-bar"></i> Volume
+                </div>
+                <div class="price-detail-value">${data.volume}</div>
+              </div>
+              ` : ''}
+              
+              ${data.median_price ? `
+              <div class="price-detail-item">
+                <div class="price-detail-label">
+                  <i class="fas fa-balance-scale"></i> Preço Mediano
+                </div>
+                <div class="price-detail-value">$${parseFloat(data.median_price.replace('$', '')).toFixed(2)}</div>
+              </div>
+              ` : ''}
+              
+              ${data.success !== undefined ? `
+              <div class="price-detail-item">
+                <div class="price-detail-label">
+                  <i class="fas fa-check-circle"></i> Status
+                </div>
+                <div class="price-detail-value">
+                  ${data.success ? '<span style="color: var(--cs2-green);">Sucesso</span>' : '<span style="color: var(--cs2-red);">Falhou</span>'}
+                </div>
+              </div>
+              ` : ''}
             </div>
-            <div class="summary-card">
-              <i class="fas fa-clock"></i>
-              <span class="value" style="font-size: 1rem;">${timestamp}</span>
-              <span class="label">Last Update</span>
+          </div>
+          
+          <div class="stats-grid" style="margin-top: 2rem;">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">$${price.toFixed(2)}</div>
+                <div class="stat-label">Preço Atual Steam</div>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">${currency}</div>
+                <div class="stat-label">Moeda de Negociação</div>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-sync-alt"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value" style="font-size: 1rem;">${timestamp.split(',')[0]}</div>
+                <div class="stat-label">Data da Consulta</div>
+              </div>
             </div>
           </div>
           
           <div class="search-section" style="margin-top: 2rem;">
-            <h3>${itemName}</h3>
-            ${data.source ? `<p style="margin-top: 1rem;">Source: ${data.source}</p>` : ''}
-            ${data.volume ? `<p>Volume: ${data.volume}</p>` : ''}
+            <h3><i class="fas fa-info-circle"></i> Informações Adicionais</h3>
+            <p style="margin-top: 1rem; color: var(--cs2-text-dim); line-height: 1.8;">
+              ${data.source ? `<strong>Fonte:</strong> ${data.source}<br>` : ''}
+              ${data.volume ? `<strong>Volume de Vendas:</strong> ${data.volume} unidades<br>` : ''}
+              <strong>Item:</strong> ${itemName}<br>
+              <strong>Tipo de Consulta:</strong> Preço Individual do Steam Market<br>
+              ${data.success !== undefined ? `<strong>Status da API:</strong> ${data.success ? 'Operacional' : 'Erro na Consulta'}<br>` : ''}
+            </p>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 215, 0, 0.05); border: 1px solid var(--cs2-border); border-radius: 8px;">
+              <p style="color: var(--cs2-text-dim); font-size: 0.9rem; margin: 0;">
+                <i class="fas fa-exclamation-circle" style="color: var(--cs2-gold);"></i>
+                <strong>Nota:</strong> Os preços são obtidos diretamente da Steam Market e podem variar. Para valores mais precisos e atualizados, considere fazer análises periódicas.
+              </p>
+            </div>
           </div>
         </div>
       `;
