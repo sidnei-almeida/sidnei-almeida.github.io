@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" type="image/png" href="./images/favicon.png" />
+  <title>CS2 Valuation | Evaluate Your Counter-Strike 2 Inventory</title>
+  <meta name="description" content="Evaluate your CS2 inventory for free. Complete price analysis, item categorization and detailed statistics." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --cs2-gold: #FFD700;
+      --cs2-gold-dark: #CC9900;
+      --cs2-blue-dark: #0F1923;
+      --cs2-blue-medium: #1B2838;
+      --cs2-blue-light: #2A475E;
+      --cs2-orange: #FF6B35;
+      --cs2-green: #4CAF50;
+      --cs2-red: #F44336;
+      --cs2-cyan: #00D9FF;
+      --cs2-purple: #B366FF;
+      --cs2-text: #C7D5E0;
+      --cs2-text-dim: #8F98A0;
+      --cs2-bg: #0A0E12;
+      --cs2-card-bg: rgba(27, 40, 56, 0.7);
+      --cs2-border: rgba(255, 215, 0, 0.2);
+      
+      --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+      --gradient-blue: linear-gradient(135deg, #1B2838 0%, #0F1923 100%);
+      --shadow-gold: 0 0 20px rgba(255, 215, 0, 0.3);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--cs2-bg);
+      color: var(--cs2-text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('./images/cs2.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      z-index: -2;
+    }
+    
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(180deg, rgba(10, 14, 18, 0.92) 0%, rgba(10, 14, 18, 0.88) 50%, rgba(10, 14, 18, 0.92) 100%),
+        radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 217, 255, 0.04) 0%, transparent 50%);
+      z-index: -1;
+      animation: pulse 15s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.95; }
+    }
+    
+    /* Header */
+    header {
+      background: rgba(15, 25, 35, 0.85);
+      border-bottom: 1px solid var(--cs2-border);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 215, 0, 0.1) inset;
+      transition: all 0.3s ease;
+    }
+    
+    header.scrolled {
+      background: rgba(15, 25, 35, 0.95);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.8);
+    }
+    
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .logo i {
+      font-size: 2rem;
+      color: var(--cs2-gold);
+      filter: drop-shadow(var(--shadow-gold));
+    }
+    
+    .logo-text h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--cs2-gold);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+    
+    .logo-text p {
+      font-size: 0.75rem;
+      color: var(--cs2-text-dim);
+      font-weight: 300;
+      letter-spacing: 0.5px;
+    }
+    
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    
+    /* Buttons */
+    .btn {
+      padding: 0.65rem 1.3rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    
+    .btn-primary {
+      background: var(--gradient-gold);
+      color: var(--cs2-bg);
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(255, 215, 0, 0.5), 0 0 0 1px rgba(255, 215, 0, 0.3);
+    }
+    
+    .btn-primary:active::before {
+      width: 300px;
+      height: 300px;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--cs2-gold);
+      color: var(--cs2-gold);
+    }
+    
+    .btn-outline:hover {
+      background: var(--gradient-gold);
+      color: var(--cs2-bg);
+      border-color: transparent;
+    }
+    
+    .btn-secondary {
+      background: var(--cs2-blue-light);
+      color: var(--cs2-text);
+      border: 1px solid var(--cs2-border);
+    }
+    
+    .btn-secondary:hover {
+      background: var(--cs2-blue-medium);
+      border-color: var(--cs2-gold);
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    
+    /* Hero */
+    .hero {
+      padding: 2.5rem 0;
+      text-align: center;
+    }
+    
+    .hero h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cs2-gold);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    }
+    
+    .hero p {
+      font-size: 1rem;
+      color: var(--cs2-text);
+      max-width: 650px;
+      margin: 0 auto 1.5rem;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+    
+    /* Main Content */
+    .main-content {
+      padding: 2rem 0;
+    }
+    
+    /* Search Section */
+    .search-section {
+      background: rgba(27, 40, 56, 0.5);
+      border: 1px solid var(--cs2-border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(15px) saturate(150%);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(255, 215, 0, 0.05) inset;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .search-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.03), transparent);
+      transition: left 0.6s ease;
+    }
+    
+    .search-section:hover::before {
+      left: 100%;
+    }
+    
+    .search-section h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--cs2-gold);
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .search-form {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+    
+    .form-group {
+      flex: 1;
+      min-width: 250px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--cs2-text);
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: var(--cs2-blue-dark);
+      border: 1px solid var(--cs2-border);
+      border-radius: 6px;
+      color: var(--cs2-text);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .form-group select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FFD700' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+    }
+    
+    .form-group select option {
+      background: var(--cs2-blue-dark);
+      color: var(--cs2-text);
+      padding: 0.5rem;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--cs2-gold);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+    }
+    
+    .form-group input:hover,
+    .form-group select:hover {
+      border-color: rgba(255, 215, 0, 0.4);
+    }
+    
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 3rem;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--cs2-border);
+      border-top-color: var(--cs2-gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Results */
+    .results-section {
+      margin-top: 2rem;
+    }
+    
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .summary-card {
+      background: rgba(27, 40, 56, 0.4);
+      border: 1px solid var(--cs2-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      backdrop-filter: blur(15px) saturate(150%);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .summary-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-gold);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    
+    .summary-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--cs2-gold);
+      box-shadow: 0 12px 48px rgba(255, 215, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1);
+    }
+    
+    .summary-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .summary-card i {
+      font-size: 2rem;
+      color: var(--cs2-gold);
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+    
+    .summary-card .value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--cs2-gold);
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    
+    .summary-card .label {
+      color: var(--cs2-text-dim);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.8px;
+      font-weight: 500;
+    }
+    
+    /* Items Grid */
+    .items-section {
+      margin-top: 2rem;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .section-header h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--cs2-gold);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .filter-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      background: var(--cs2-blue-light);
+      border: 1px solid var(--cs2-border);
+      color: var(--cs2-text);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.95rem;
+    }
+    
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: var(--gradient-gold);
+      color: var(--cs2-bg);
+      border-color: transparent;
+    }
+    
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .item-card {
+      background: rgba(27, 40, 56, 0.4);
+      border: 1px solid var(--cs2-border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(15px) saturate(150%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .item-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 215, 0, 0.08), transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    
+    .item-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--cs2-gold);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 0, 0.2);
+    }
+    
+    .item-card:hover::after {
+      opacity: 1;
+    }
+    
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+    
+    .item-name {
+      font-weight: 500;
+      color: var(--cs2-text);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      flex: 1;
+    }
+    
+    .item-price {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--cs2-gold);
+      white-space: nowrap;
+    }
+    
+    .item-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--cs2-border);
+    }
+    
+    .item-detail {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+    
+    .item-detail .label {
+      color: var(--cs2-text-dim);
+      font-weight: 400;
+    }
+    
+    .item-detail .value {
+      color: var(--cs2-text);
+      font-weight: 500;
+    }
+    
+    .rarity-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .rarity-consumer { background: rgba(176, 195, 217, 0.2); color: #B0C3D9; }
+    .rarity-industrial { background: rgba(94, 152, 217, 0.2); color: #5E98D9; }
+    .rarity-milspec { background: rgba(75, 105, 255, 0.2); color: #4B69FF; }
+    .rarity-restricted { background: rgba(136, 71, 255, 0.2); color: #8847FF; }
+    .rarity-classified { background: rgba(211, 44, 230, 0.2); color: #D32CE6; }
+    .rarity-covert { background: rgba(235, 75, 75, 0.2); color: #EB4B4B; }
+    .rarity-contraband { background: rgba(228, 174, 57, 0.2); color: #E4AE39; }
+    
+    /* Error/Empty States */
+    .error-message,
+    .empty-state {
+      background: var(--cs2-card-bg);
+      border: 1px solid var(--cs2-border);
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    
+    .error-message {
+      border-color: rgba(244, 67, 54, 0.5);
+    }
+    
+    .error-message i,
+    .empty-state i {
+      font-size: 3rem;
+      color: var(--cs2-gold);
+      margin-bottom: 0.75rem;
+      opacity: 0.5;
+    }
+    
+    .error-message h3,
+    .empty-state h3 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--cs2-gold);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .error-message p,
+    .empty-state p {
+      color: var(--cs2-text-dim);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+    
+    /* Footer */
+    footer {
+      background: var(--gradient-blue);
+      border-top: 2px solid var(--cs2-border);
+      padding: 2rem 0;
+      margin-top: 4rem;
+      text-align: center;
+    }
+    
+    footer p {
+      color: var(--cs2-text-dim);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    footer a {
+      color: var(--cs2-gold);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    footer a:hover {
+      color: var(--cs2-orange);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .logo-text h1 {
+        font-size: 1.2rem;
+      }
+      
+      .logo-text p {
+        font-size: 0.7rem;
+      }
+      
+      .hero h2 {
+        font-size: 1.5rem;
+      }
+      
+      .hero p {
+        font-size: 0.9rem;
+      }
+      
+      .search-form {
+        flex-direction: column;
+      }
+      
+      .form-group {
+        width: 100%;
+      }
+      
+      .items-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .tab {
+        padding: 0.75rem 1.2rem;
+        font-size: 0.95rem;
+      }
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--cs2-border);
+      flex-wrap: wrap;
+      position: relative;
+    }
+    
+    .tabs::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      height: 2px;
+      background: var(--gradient-gold);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    
+    .tab {
+      padding: 0.9rem 1.8rem;
+      background: transparent;
+      border: none;
+      color: var(--cs2-text-dim);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+    
+    .tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 215, 0, 0.05);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .tab:hover::before {
+      opacity: 1;
+    }
+    
+    .tab.active {
+      color: var(--cs2-gold);
+      border-bottom-color: var(--cs2-gold);
+    }
+    
+    .tab:hover {
+      color: var(--cs2-gold);
+    }
+    
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Fade in on scroll */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Skeleton loading */
+    .skeleton {
+      background: linear-gradient(90deg, rgba(27, 40, 56, 0.4) 25%, rgba(42, 71, 94, 0.4) 50%, rgba(27, 40, 56, 0.4) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+    
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-shield-alt"></i>
+        <div class="logo-text">
+          <h1>CS2 Valuation</h1>
+          <p>Evaluate your Counter-Strike 2 inventory</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="btn btn-outline">
+          <i class="fas fa-arrow-left"></i> Portfolio
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h2>Evaluate Your CS2 Inventory</h2>
+      <p>Complete and free analysis of your Counter-Strike 2 inventory with updated prices from Steam Market</p>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('inventory')">
+          <i class="fas fa-box"></i> Evaluate Inventory
+        </button>
+        <button class="tab" onclick="switchTab('price')">
+          <i class="fas fa-search-dollar"></i> Search Price
+        </button>
+      </div>
+
+      <!-- Inventory Tab -->
+      <div id="inventory-tab" class="tab-content active">
+        <div class="search-section">
+          <h3><i class="fas fa-search"></i> Search Inventory</h3>
+          <form class="search-form" onsubmit="searchInventory(event)">
+            <div class="form-group">
+              <label for="steamid">Steam ID or Profile URL</label>
+              <input 
+                type="text" 
+                id="steamid" 
+                placeholder="76561198XXXXXXXXX or steamcommunity.com/id/username"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="analysis-type">Analysis Type</label>
+              <select id="analysis-type">
+                <option value="basic">Basic (Fast)</option>
+                <option value="full">Complete (Detailed)</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-search"></i> Evaluate
+            </button>
+          </form>
+        </div>
+
+        <div id="inventory-results"></div>
+      </div>
+
+      <!-- Price Tab -->
+      <div id="price-tab" class="tab-content">
+        <div class="search-section">
+          <h3><i class="fas fa-search-dollar"></i> Search Item Price</h3>
+          <form class="search-form" onsubmit="searchPrice(event)">
+            <div class="form-group">
+              <label for="item-name">Item Name (Market Hash Name)</label>
+              <input 
+                type="text" 
+                id="item-name" 
+                placeholder="Ex: AK-47 | Redline (Field-Tested)"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-search"></i> Search Price
+            </button>
+          </form>
+        </div>
+
+        <div id="price-results"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 <a href="index.html">Sidnei Almeida</a> - Developed for educational purposes</p>
+      <p style="font-size: 0.9rem; margin-top: 0.5rem;">
+        Counter-Strike 2 is a trademark of Valve Corporation. This project is not affiliated with Valve.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    const API_BASE = 'https://cs2-valuation-api.onrender.com';
+    
+    // Scroll header effect
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+      
+      lastScroll = currentScroll;
+    });
+    
+    // Card hover effect with mouse tracking
+    document.addEventListener('mousemove', (e) => {
+      document.querySelectorAll('.item-card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        card.style.setProperty('--mouse-x', `${x}%`);
+        card.style.setProperty('--mouse-y', `${y}%`);
+      });
+    });
+    
+    // Smooth scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+    
+    // Tab Switching with animation
+    function switchTab(tabName) {
+      const tabs = document.querySelectorAll('.tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+      const activeTab = event.target.closest('.tab');
+      const tabsContainer = document.querySelector('.tabs');
+      
+      // Update active states
+      tabs.forEach(tab => tab.classList.remove('active'));
+      tabContents.forEach(content => content.classList.remove('active'));
+      
+      activeTab.classList.add('active');
+      document.getElementById(`${tabName}-tab`).classList.add('active');
+      
+      // Animate tab indicator
+      const tabRect = activeTab.getBoundingClientRect();
+      const tabsRect = tabsContainer.getBoundingClientRect();
+      const indicator = tabsContainer.querySelector('::after');
+      
+      // Scroll to top of content
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // Extract Steam ID from URL
+    function extractSteamId(input) {
+      input = input.trim();
+      
+      // Already a Steam ID
+      if (/^\d{17}$/.test(input)) {
+        return input;
+      }
+      
+      // Extract from URL
+      const patterns = [
+        /steamcommunity\.com\/profiles\/(\d{17})/,
+        /steamcommunity\.com\/id\/([^\/]+)/
+      ];
+      
+      for (const pattern of patterns) {
+        const match = input.match(pattern);
+        if (match) {
+          return match[1];
+        }
+      }
+      
+      return input;
+    }
+    
+    // Search Inventory
+    async function searchInventory(event) {
+      event.preventDefault();
+      
+      const steamIdInput = document.getElementById('steamid').value;
+      const analysisType = document.getElementById('analysis-type').value;
+      const resultsDiv = document.getElementById('inventory-results');
+      
+      const steamId = extractSteamId(steamIdInput);
+      
+      resultsDiv.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p style="margin-top: 1rem; color: var(--cs2-text);">Loading inventory...</p>
+        </div>
+      `;
+      
+      try {
+        const endpoint = analysisType === 'full' 
+          ? `/inventory/full/${steamId}`
+          : `/inventory/${steamId}`;
+        
+        const response = await fetch(`${API_BASE}${endpoint}`);
+        
+        if (!response.ok) {
+          throw new Error('Error fetching inventory');
+        }
+        
+        const data = await response.json();
+        displayInventoryResults(data, analysisType);
+        
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Error Loading Inventory</h3>
+            <p>${error.message}</p>
+            <p style="margin-top: 1rem;">Please verify that the Steam ID is correct and the inventory is public.</p>
+          </div>
+        `;
+      }
+    }
+    
+    // Display Inventory Results
+    function displayInventoryResults(data, analysisType) {
+      const resultsDiv = document.getElementById('inventory-results');
+      
+      // Summary Cards
+      let summaryHTML = `
+        <div class="results-section">
+          <div class="summary-cards">
+            <div class="summary-card">
+              <i class="fas fa-dollar-sign"></i>
+              <span class="value">$${data.total_value?.toFixed(2) || '0.00'}</span>
+              <span class="label">Total Value</span>
+            </div>
+            <div class="summary-card">
+              <i class="fas fa-box"></i>
+              <span class="value">${data.total_items || 0}</span>
+              <span class="label">Total Items</span>
+            </div>
+            <div class="summary-card">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="value">${data.marketable_items || 0}</span>
+              <span class="label">Marketable Items</span>
+            </div>
+            <div class="summary-card">
+              <i class="fas fa-archive"></i>
+              <span class="value">${data.storage_units || 0}</span>
+              <span class="label">Storage Units</span>
+            </div>
+          </div>
+      `;
+      
+      // Items by Category (if full analysis)
+        if (analysisType === 'full' && data.items_by_category) {
+          summaryHTML += `
+            <div class="items-section">
+              <div class="section-header">
+                <h3><i class="fas fa-layer-group"></i> Items by Category</h3>
+              </div>
+        `;
+        
+        for (const [category, items] of Object.entries(data.items_by_category)) {
+          if (items && items.length > 0) {
+            summaryHTML += `
+              <div style="margin-bottom: 2rem;">
+                <h4 style="color: var(--cs2-gold); font-size: 1.5rem; margin-bottom: 1rem; text-transform: uppercase;">
+                  ${category} (${items.length})
+                </h4>
+                <div class="items-grid">
+            `;
+            
+            items.slice(0, 20).forEach(item => {
+              summaryHTML += createItemCard(item);
+            });
+            
+            summaryHTML += `</div></div>`;
+          }
+        }
+        
+        summaryHTML += `</div>`;
+      } else if (data.items && data.items.length > 0) {
+        // Basic analysis - show all items
+        summaryHTML += `
+          <div class="items-section">
+            <div class="section-header">
+              <h3><i class="fas fa-th"></i> All Items (${data.items.length})</h3>
+            </div>
+            <div class="items-grid">
+        `;
+        
+        data.items.slice(0, 50).forEach(item => {
+          summaryHTML += createItemCard(item);
+        });
+        
+        summaryHTML += `</div></div>`;
+      }
+      
+      summaryHTML += `</div>`;
+      resultsDiv.innerHTML = summaryHTML;
+    }
+    
+    // Create Item Card
+    function createItemCard(item) {
+      const price = item.price || item.market_price || 0;
+      const rarity = item.rarity || item.type || 'unknown';
+      const rarityClass = rarity.toLowerCase().replace(/\s+/g, '-');
+      
+      return `
+        <div class="item-card">
+          <div class="item-header">
+            <div class="item-name">${item.name || item.market_hash_name || 'Item'}</div>
+            <div class="item-price">$${price.toFixed(2)}</div>
+          </div>
+          <div class="item-details">
+            ${item.type ? `
+              <div class="item-detail">
+                <span class="label">Type:</span>
+                <span class="value">${item.type}</span>
+              </div>
+            ` : ''}
+            ${item.rarity ? `
+              <div class="item-detail">
+                <span class="label">Rarity:</span>
+                <span class="rarity-badge rarity-${rarityClass}">${item.rarity}</span>
+              </div>
+            ` : ''}
+            ${item.quantity && item.quantity > 1 ? `
+              <div class="item-detail">
+                <span class="label">Quantity:</span>
+                <span class="value">${item.quantity}</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+    
+    // Search Price
+    async function searchPrice(event) {
+      event.preventDefault();
+      
+      const itemName = document.getElementById('item-name').value;
+      const resultsDiv = document.getElementById('price-results');
+      
+      resultsDiv.innerHTML = `
+        <div class="loading">
+          <div class="spinner"></div>
+          <p style="margin-top: 1rem; color: var(--cs2-text);">Searching price...</p>
+        </div>
+      `;
+      
+      try {
+        const response = await fetch(`${API_BASE}/price/${encodeURIComponent(itemName)}`);
+        
+        if (!response.ok) {
+          throw new Error('Item not found');
+        }
+        
+        const data = await response.json();
+        displayPriceResults(data, itemName);
+        
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Item Not Found</h3>
+            <p>${error.message}</p>
+          </div>
+        `;
+      }
+    }
+    
+    // Display Price Results
+    function displayPriceResults(data, itemName) {
+      const resultsDiv = document.getElementById('price-results');
+      
+      const price = data.price || data.lowest_price || 0;
+      const currency = data.currency || 'USD';
+      const timestamp = data.timestamp ? new Date(data.timestamp).toLocaleString('en-US') : 'N/A';
+      
+      resultsDiv.innerHTML = `
+        <div class="results-section">
+          <div class="summary-cards">
+            <div class="summary-card">
+              <i class="fas fa-tag"></i>
+              <span class="value">$${price.toFixed(2)}</span>
+              <span class="label">Current Price</span>
+            </div>
+            <div class="summary-card">
+              <i class="fas fa-money-bill-wave"></i>
+              <span class="value">${currency}</span>
+              <span class="label">Currency</span>
+            </div>
+            <div class="summary-card">
+              <i class="fas fa-clock"></i>
+              <span class="value" style="font-size: 1rem;">${timestamp}</span>
+              <span class="label">Last Update</span>
+            </div>
+          </div>
+          
+          <div class="search-section" style="margin-top: 2rem;">
+            <h3>${itemName}</h3>
+            ${data.source ? `<p style="margin-top: 1rem;">Source: ${data.source}</p>` : ''}
+            ${data.volume ? `<p>Volume: ${data.volume}</p>` : ''}
+          </div>
+        </div>
+      `;
+    }
+  </script>
+</body>
+
+</html>
