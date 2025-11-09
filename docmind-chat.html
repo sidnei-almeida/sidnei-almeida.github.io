@@ -1005,7 +1005,157 @@
             100% { transform: translateX(100%); }
         }
 
+        /* Processing Overlay */
+        .processing-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .processing-overlay.active {
+            display: flex;
+        }
+
+        .processing-content {
+            text-align: center;
+            max-width: 500px;
+            padding: 2rem;
+        }
+
+        .processing-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .processing-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: var(--accent-primary);
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .processing-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .processing-message {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .processing-status {
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        .processing-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+
+        .processing-step {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .processing-step.active {
+            color: var(--accent-primary);
+        }
+
+        .processing-step.completed {
+            color: var(--success-color);
+        }
+
+        .processing-step-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .processing-step-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
         /* Responsive Design */
+        @media (max-width: 1024px) {
+            .processing-content {
+                padding: 1.5rem;
+                max-width: 90%;
+            }
+
+            .processing-title {
+                font-size: 1.25rem;
+            }
+
+            .processing-message {
+                font-size: 0.9375rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .processing-content {
+                padding: 1rem;
+            }
+
+            .processing-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .processing-title {
+                font-size: 1.125rem;
+            }
+
+            .processing-message {
+                font-size: 0.875rem;
+            }
+
+            .processing-steps {
+                gap: 0.5rem;
+            }
+
+            .processing-step {
+                font-size: 0.8125rem;
+            }
+        }
+
         @media (max-width: 1024px) {
             .sidebar {
                 position: fixed;
@@ -1144,6 +1294,58 @@
             </div>
         </div>
     </header>
+
+        <!-- Processing Overlay -->
+    <div class="processing-overlay" id="processingOverlay">
+        <div class="processing-content">
+            <div class="processing-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+            </div>
+            <h2 class="processing-title">Processing PDF</h2>
+            <p class="processing-message">
+                Your document is being processed and indexed. This may take a few moments depending on the file size.
+            </p>
+            <div class="processing-steps" id="processingSteps">
+                <div class="processing-step" id="step1">
+                    <div class="processing-step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                    </div>
+                    <span>Uploading file...</span>
+                </div>
+                <div class="processing-step" id="step2">
+                    <div class="processing-step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                    </div>
+                    <span>Extracting text...</span>
+                </div>
+                <div class="processing-step" id="step3">
+                    <div class="processing-step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                    </div>
+                    <span>Creating embeddings...</span>
+                </div>
+                <div class="processing-step" id="step4">
+                    <div class="processing-step-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                    </div>
+                    <span>Building index...</span>
+                </div>
+            </div>
+            <div class="processing-status" id="processingStatus">Please wait...</div>
+        </div>
+    </div>
 
     <!-- Main Container -->
     <div class="container">
@@ -1306,6 +1508,9 @@
         const clearHistoryBtn = document.getElementById('clearHistoryBtn');
         const historyInfo = document.getElementById('historyInfo');
         const historyText = document.getElementById('historyText');
+        const processingOverlay = document.getElementById('processingOverlay');
+        const processingSteps = document.getElementById('processingSteps');
+        const processingStatus = document.getElementById('processingStatus');
 
         // LocalStorage keys
         const STORAGE_KEYS = {
@@ -1560,6 +1765,89 @@
             }
         }
 
+        // Show Processing Overlay
+        function showProcessingOverlay() {
+            processingOverlay.classList.add('active');
+            // Reset steps
+            document.querySelectorAll('.processing-step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index === 0) {
+                    step.classList.add('active');
+                }
+            });
+            processingStatus.textContent = 'Please wait...';
+        }
+
+        // Hide Processing Overlay
+        function hideProcessingOverlay() {
+            processingOverlay.classList.remove('active');
+        }
+
+        // Update Processing Step
+        function updateProcessingStep(stepNumber, status) {
+            const step = document.getElementById(`step${stepNumber}`);
+            if (!step) return;
+
+            step.classList.remove('active', 'completed');
+            if (status === 'active') {
+                step.classList.add('active');
+            } else if (status === 'completed') {
+                step.classList.add('completed');
+                const icon = step.querySelector('.processing-step-icon svg');
+                if (icon) {
+                    icon.innerHTML = '<circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/>';
+                }
+            }
+        }
+
+        // Wait for Index to be Ready
+        async function waitForIndexReady(maxAttempts = 30, interval = 2000) {
+            let attempts = 0;
+            
+            return new Promise((resolve, reject) => {
+                const checkIndex = async () => {
+                    attempts++;
+                    
+                    try {
+                        const response = await fetch(`${API_BASE_URL}/`);
+                        const data = await response.json();
+                        
+                        processingStatus.textContent = `Checking index status... (${attempts}/${maxAttempts})`;
+                        
+                        if (data.index_ready) {
+                            updateProcessingStep(4, 'completed');
+                            processingStatus.textContent = 'Index ready!';
+                            resolve(true);
+                            return;
+                        }
+                        
+                        // Update processing steps based on attempt
+                        if (attempts <= 5) {
+                            updateProcessingStep(1, 'completed');
+                            updateProcessingStep(2, 'active');
+                        } else if (attempts <= 15) {
+                            updateProcessingStep(2, 'completed');
+                            updateProcessingStep(3, 'active');
+                        } else {
+                            updateProcessingStep(3, 'completed');
+                            updateProcessingStep(4, 'active');
+                        }
+                        
+                        if (attempts >= maxAttempts) {
+                            reject(new Error('Index processing timeout. Please try again.'));
+                            return;
+                        }
+                        
+                        setTimeout(checkIndex, interval);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                
+                checkIndex();
+            });
+        }
+
         // Upload File
         async function uploadFile() {
             const file = fileInput.files[0];
@@ -1577,6 +1865,9 @@
 
             const formData = new FormData();
             formData.append('file', file);
+            
+            // Determine replace parameter: true if no documents exist, false if adding to existing
+            const replace = uploadedFiles.length === 0;
 
             // Simulate progress
             let progress = 0;
@@ -1588,7 +1879,8 @@
             }, 200);
 
             try {
-                const response = await fetch(`${API_BASE_URL}/upload`, {
+                updateProcessingStep(1, 'active');
+                const response = await fetch(`${API_BASE_URL}/upload?replace=${replace}`, {
                     method: 'POST',
                     body: formData
                 });
@@ -1599,6 +1891,11 @@
                 if (response.ok) {
                     const data = await response.json();
                     
+                    // If replace=true, clear existing files list
+                    if (replace) {
+                        uploadedFiles = [];
+                    }
+                    
                     uploadedFiles.push({
                         name: file.name,
                         pages: data.pages,
@@ -1607,14 +1904,39 @@
 
                     updateDocumentList();
                     saveUploadedFiles();
-                    isIndexReady = true;
-                    enableChat();
 
-                    showToast(
-                        'Upload Successful', 
-                        `Processed ${data.pages} pages into ${data.chunks} chunks`, 
-                        'success'
-                    );
+                    // Show processing overlay and wait for index
+                    showProcessingOverlay();
+                    updateProcessingStep(1, 'completed');
+                    updateProcessingStep(2, 'active');
+
+                    // Wait for index to be ready
+                    try {
+                        await waitForIndexReady();
+                        
+                        // Index is ready
+                        isIndexReady = true;
+                        enableChat();
+                        
+                        setTimeout(() => {
+                            hideProcessingOverlay();
+                            showToast(
+                                'Processing Complete', 
+                                `Document processed successfully! ${data.pages} pages indexed into ${data.chunks} chunks.`, 
+                                'success'
+                            );
+                        }, 1000);
+
+                    } catch (error) {
+                        hideProcessingOverlay();
+                        console.error('Error waiting for index:', error);
+                        showToast('Processing Warning', 'Document uploaded but index may still be processing. Please wait a moment before asking questions.', 'warning');
+                        // Still enable chat after a delay
+                        setTimeout(() => {
+                            isIndexReady = true;
+                            enableChat();
+                        }, 5000);
+                    }
 
                     // Reset upload area
                     setTimeout(() => {
@@ -1630,6 +1952,7 @@
                 }
             } catch (error) {
                 clearInterval(progressInterval);
+                hideProcessingOverlay();
                 console.error('Upload error:', error);
                 showToast('Upload Failed', error.message, 'error');
                 uploadProgress.style.display = 'none';
@@ -1662,7 +1985,7 @@
                         <div class="document-meta">${file.pages} pages • ${file.chunks} chunks</div>
                     </div>
                     <div class="document-actions">
-                        <button class="remove-document-btn" data-index="${index}" title="Remover documento" aria-label="Remover documento">
+                        <button class="remove-document-btn" data-index="${index}" title="Remove document" aria-label="Remove document">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="3 6 5 6 21 6"/>
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -1685,25 +2008,52 @@
         }
 
         // Remove Document
-        function removeDocument(index) {
+        async function removeDocument(index) {
             if (index < 0 || index >= uploadedFiles.length) return;
 
             const file = uploadedFiles[index];
+            const willHaveMoreDocs = uploadedFiles.length > 1;
             
-            if (confirm(`Tem certeza que deseja remover "${file.name}"? Esta ação não pode ser desfeita.`)) {
-                uploadedFiles.splice(index, 1);
-                saveUploadedFiles();
-                updateDocumentList();
-                
-                // If no documents left, disable chat
-                if (uploadedFiles.length === 0) {
+            const confirmMessage = willHaveMoreDocs 
+                ? `Are you sure you want to remove "${file.name}"?\n\nNote: The index will be cleared, so you'll need to upload the other documents again.`
+                : `Are you sure you want to remove "${file.name}"? This action cannot be undone.`;
+            
+            if (confirm(confirmMessage)) {
+                try {
+                    // Call DELETE /clear to clear the index from memory
+                    const response = await fetch(`${API_BASE_URL}/clear`, {
+                        method: 'DELETE'
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json().catch(() => ({ detail: 'Failed to clear index' }));
+                        throw new Error(error.detail || 'Failed to clear index');
+                    }
+
+                    // Remove from local storage
+                    uploadedFiles.splice(index, 1);
+                    saveUploadedFiles();
+                    updateDocumentList();
+                    
+                    // Disable chat since index is cleared
                     isIndexReady = false;
                     chatInput.disabled = true;
                     sendButton.disabled = true;
                     chatInput.placeholder = 'Upload a document to start chatting...';
+                    
+                    if (willHaveMoreDocs) {
+                        showToast(
+                            'Index Cleared', 
+                            `"${file.name}" removed. Please upload the other documents again to continue using the chat.`, 
+                            'warning'
+                        );
+                    } else {
+                        showToast('Document Removed', `"${file.name}" has been successfully removed from the index`, 'success');
+                    }
+                } catch (error) {
+                    console.error('Error removing document:', error);
+                    showToast('Error', `Error removing document: ${error.message}`, 'error');
                 }
-                
-                showToast('Documento Removido', `"${file.name}" foi removido com sucesso`, 'success');
             }
         }
 
