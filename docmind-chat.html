@@ -1535,6 +1535,24 @@
                 
                 if (isIndexReady) {
                     enableChat();
+                    hideProcessingOverlay(); // Ensure overlay is hidden if index is ready on load
+                } else {
+                    // If index is not ready on initial load, show overlay and start polling
+                    showProcessingOverlay();
+                    processingStatus.textContent = 'Index not ready. Checking status...';
+                    updateProcessingStep(1, 'completed'); // Assuming file is conceptually uploaded
+                    updateProcessingStep(4, 'active'); // Start directly at building index step
+                    try {
+                        await waitForIndexReady(33, 2000);
+                        isIndexReady = true;
+                        enableChat();
+                        hideProcessingOverlay();
+                        showToast('Processing Complete', 'Document index is now ready!', 'success');
+                    } catch (error) {
+                        hideProcessingOverlay();
+                        console.error('Initial index check error:', error);
+                        showToast('Initialization Error', 'Failed to initialize document index. Please try uploading a document.', 'error');
+                    }
                 }
             } catch (error) {
                 console.error('Error checking API status:', error);
@@ -1857,6 +1875,9 @@
             uploadProgress.style.display = 'block';
             progressBar.style.width = '0%';
 
+            // Disable chat input and button immediately after upload starts
+            disableChat();
+
             // Show uploading feedback
             const uploadText = uploadArea.querySelector('.upload-text');
             const originalContent = uploadText.innerHTML;
@@ -1907,12 +1928,13 @@
 
                     // Show processing overlay and wait for index
                     showProcessingOverlay();
+                    processingStatus.textContent = 'Document uploaded. Processing index...';
                     updateProcessingStep(1, 'completed');
-                    updateProcessingStep(2, 'active');
+                    updateProcessingStep(2, 'active'); // Start at extracting text step
 
-                    // Wait for index to be ready
+                    // Wait for index to be ready with polling
                     try {
-                        await waitForIndexReady();
+                        await waitForIndexReady(65, 1000); // Poll every 1 second for up to 65 seconds
                         
                         // Index is ready
                         isIndexReady = true;
@@ -1930,15 +1952,13 @@
                     } catch (error) {
                         hideProcessingOverlay();
                         console.error('Error waiting for index:', error);
-                        showToast('Processing Warning', 'Document uploaded but index may still be processing. Please wait a moment before asking questions.', 'warning');
-                        // Still enable chat after a delay
-                        setTimeout(() => {
-                            isIndexReady = true;
-                            enableChat();
-                        }, 5000);
+                        showToast('Processing Timeout', 'Document uploaded, but index processing timed out. Please try again or upload a new document.', 'error');
+                        // Keep chat disabled if index is not ready
+                        isIndexReady = false;
+                        disableChat();
                     }
 
-                    // Reset upload area
+                    // Reset upload area after processing is complete or timed out
                     setTimeout(() => {
                         uploadProgress.style.display = 'none';
                         uploadArea.classList.remove('uploading');
@@ -1958,6 +1978,7 @@
                 uploadProgress.style.display = 'none';
                 uploadArea.classList.remove('uploading');
                 uploadText.innerHTML = originalContent;
+                disableChat(); // Ensure chat is disabled on upload error
             }
         }
 
@@ -2110,6 +2131,39 @@
                     });
                     
                     saveChatHistory();
+                } else if (response.status === 400 || response.status === 503) {
+                    showToast('Processing', 'Document index is still loading. Please wait.', 'warning');
+                    isIndexReady = false;
+                    disableChat();
+                    showProcessingOverlay();
+                    processingStatus.textContent = 'Index not ready. Retrying status check...';
+                    updateProcessingStep(4, 'active'); // Re-activate index building step
+                    try {
+                        await waitForIndexReady(33, 2000);
+                        isIndexReady = true;
+                        enableChat();
+                        hideProcessingOverlay();
+                        showToast('Processing Complete', 'Document index is now ready!', 'success');
+                    } catch (error) {
+                        hideProcessingOverlay();
+                        console.error('Error during /ask index retry:', error);
+                        showToast('Processing Error', 'Failed to load document index. Please try again later.', 'error');
+                    }
+                } else if (response.status === 429) {
+                    const error = await response.json();
+                    const retryAfter = response.headers.get('Retry-After');
+                    let message = 'You have exceeded the API rate limit. Please try again later.';
+                    
+                    if (retryAfter) {
+                        message = `You have exceeded the API rate limit. Please try again in ${retryAfter} seconds.`;
+                    } else if (error && error.error && error.error.message) {
+                        // Attempt to parse the retry time from the detailed error message
+                        const match = error.error.message.match(/in (\d+m\d+\.\d+s)/);
+                        if (match && match[1]) {
+                            message = `You have exceeded the API rate limit. Please try again in ${match[1]}.`;
+                        }
+                    }
+                    showToast('Rate Limit Exceeded', message, 'warning');
                 } else {
                     const error = await response.json();
                     throw new Error(error.detail || 'Failed to get answer');
@@ -2260,6 +2314,13 @@
 
         // Periodic status check
         setInterval(checkAPIStatus, 30000);
+
+        // Disable Chat
+        function disableChat() {
+            chatInput.disabled = true;
+            sendButton.disabled = true;
+            chatInput.placeholder = 'Please wait, document index is loading...';
+        }
     </script>
 </body>
 </html>
