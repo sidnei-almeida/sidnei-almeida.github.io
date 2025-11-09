@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scientific Research Agent - AI Scientific Research</title>
+    <title>Research Assistant - AI-Powered Research Platform</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -21,18 +21,14 @@
             --text-primary: #e8e8e8;
             --text-secondary: #a0a0a0;
             --text-tertiary: #6b6b6b;
-            --accent-warm: #ff6b35;
-            --accent-amber: #ffa726;
-            --accent-coral: #ff7961;
-            --accent-neon: #ff4081;
-            --gradient-warm: linear-gradient(135deg, #ff6b35 0%, #ff8c61 100%);
-            --gradient-amber: linear-gradient(135deg, #ffa726 0%, #ffb74d 100%);
-            --glow-warm: 0 0 20px rgba(255, 107, 53, 0.3);
-            --glow-subtle: 0 0 10px rgba(255, 107, 53, 0.15);
+            --accent-primary: #4a9eff;
+            --accent-secondary: #5fb3b3;
+            --accent-tertiary: #6c7a89;
+            --gradient-primary: linear-gradient(135deg, #4a9eff 0%, #5fb3b3 100%);
+            --gradient-subtle: linear-gradient(135deg, rgba(74, 158, 255, 0.1) 0%, rgba(95, 179, 179, 0.1) 100%);
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
             --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
             --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
-            --shadow-warm: 0 4px 20px rgba(255, 107, 53, 0.2);
             --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -60,7 +56,7 @@
             transform: translateX(-50%);
             width: 800px;
             height: 800px;
-            background: radial-gradient(circle, rgba(255, 107, 53, 0.03) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(74, 158, 255, 0.02) 0%, transparent 70%);
             pointer-events: none;
             z-index: 0;
         }
@@ -112,7 +108,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: var(--gradient-warm);
+            background: var(--gradient-primary);
             opacity: 0;
             transition: var(--transition);
         }
@@ -123,13 +119,12 @@
         }
 
         .back-button:hover {
-            border-color: var(--accent-warm);
+            border-color: var(--accent-primary);
             transform: translateX(-3px);
-            box-shadow: var(--glow-subtle);
         }
 
         .back-button:hover::before {
-            opacity: 0.1;
+            opacity: 0.08;
         }
 
         .back-button .material-symbols-outlined {
@@ -151,7 +146,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
             position: relative;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
@@ -161,33 +155,24 @@
             content: '';
             position: absolute;
             inset: -2px;
-            background: var(--gradient-warm);
+            background: var(--gradient-primary);
             border-radius: 12px;
-            opacity: 0.15;
-            animation: pulse-glow 3s ease-in-out infinite;
+            opacity: 0.08;
         }
 
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 0.15; }
-            50% { opacity: 0.3; }
-        }
-
-        .logo-icon span {
+        .logo-icon .material-symbols-outlined {
             position: relative;
             z-index: 1;
-            filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.4));
+            color: var(--accent-primary);
+            font-size: 24px;
         }
 
         .header h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-warm) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
+            font-family: 'Inter', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
         }
 
         .header-right {
@@ -213,8 +198,7 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: var(--accent-warm);
-            box-shadow: 0 0 10px var(--accent-warm);
+            background: var(--accent-primary);
             animation: pulse-dot 2s ease-in-out infinite;
         }
 
@@ -224,8 +208,8 @@
                 transform: scale(1);
             }
             50% { 
-                opacity: 0.6;
-                transform: scale(1.1);
+                opacity: 0.7;
+                transform: scale(1.05);
             }
         }
 
@@ -267,7 +251,7 @@
             justify-content: center;
             font-size: 48px;
             margin-bottom: 2rem;
-            box-shadow: var(--shadow-lg), var(--shadow-warm);
+            box-shadow: var(--shadow-lg);
             animation: float 4s ease-in-out infinite;
             position: relative;
             overflow: hidden;
@@ -277,10 +261,9 @@
             content: '';
             position: absolute;
             inset: -2px;
-            background: var(--gradient-warm);
+            background: var(--gradient-primary);
             border-radius: 24px;
-            opacity: 0.2;
-            animation: pulse-glow 3s ease-in-out infinite;
+            opacity: 0.1;
         }
 
         .welcome-logo::after {
@@ -290,10 +273,9 @@
             left: 50%;
             width: 120%;
             height: 120%;
-            background: radial-gradient(circle, var(--accent-warm) 0%, transparent 70%);
+            background: radial-gradient(circle, var(--accent-primary) 0%, transparent 70%);
             transform: translate(-50%, -50%);
-            opacity: 0.1;
-            animation: rotate-glow 10s linear infinite;
+            opacity: 0.05;
         }
 
         @keyframes float {
@@ -305,28 +287,21 @@
             }
         }
 
-        @keyframes rotate-glow {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        .welcome-logo span {
+        .welcome-logo .material-symbols-outlined {
             position: relative;
             z-index: 2;
-            filter: drop-shadow(0 0 12px rgba(255, 107, 53, 0.5));
+            color: var(--accent-primary);
+            font-size: 48px;
         }
 
         .welcome-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
+            font-family: 'Inter', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
             margin-bottom: 1rem;
             text-align: center;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-warm) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-primary);
             line-height: 1.2;
         }
 
@@ -363,7 +338,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: var(--gradient-warm);
+            background: var(--gradient-primary);
             opacity: 0;
             transition: var(--transition);
         }
@@ -375,24 +350,24 @@
             left: 0;
             right: 0;
             height: 2px;
-            background: var(--gradient-warm);
+            background: var(--gradient-primary);
             opacity: 0;
             transition: var(--transition);
         }
 
         .capability-card:hover {
             background: var(--bg-hover);
-            border-color: var(--accent-warm);
+            border-color: var(--accent-primary);
             transform: translateY(-4px);
-            box-shadow: var(--shadow-md), var(--shadow-warm);
+            box-shadow: var(--shadow-md);
         }
 
         .capability-card:hover::before {
-            opacity: 0.05;
+            opacity: 0.03;
         }
 
         .capability-card:hover::after {
-            opacity: 1;
+            opacity: 0.6;
         }
 
         .capability-icon {
@@ -405,7 +380,7 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 1.25rem;
-            color: var(--accent-warm);
+            color: var(--accent-primary);
             transition: var(--transition);
             position: relative;
             z-index: 1;
@@ -413,9 +388,8 @@
 
         .capability-card:hover .capability-icon {
             background: var(--bg-elevated);
-            border-color: var(--accent-warm);
-            transform: scale(1.1) rotate(-5deg);
-            box-shadow: var(--glow-subtle);
+            border-color: var(--accent-primary);
+            transform: scale(1.05);
         }
 
         .capability-card h3 {
@@ -464,17 +438,16 @@
             top: 0;
             bottom: 0;
             width: 3px;
-            background: var(--gradient-warm);
+            background: var(--gradient-primary);
             transform: translateX(-3px);
             transition: var(--transition);
         }
 
         .example-prompt:hover {
             background: var(--bg-hover);
-            border-color: var(--accent-warm);
+            border-color: var(--accent-primary);
             color: var(--text-primary);
             transform: translateX(6px);
-            box-shadow: var(--glow-subtle);
         }
 
         .example-prompt:hover::before {
@@ -517,8 +490,7 @@
         }
 
         .messages-container::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-warm);
-            box-shadow: var(--glow-subtle);
+            background: var(--accent-primary);
         }
 
         .message {
@@ -571,14 +543,13 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: var(--gradient-warm);
-            opacity: 0.2;
+            background: var(--gradient-primary);
+            opacity: 0.15;
         }
 
         .message-avatar span {
             position: relative;
             z-index: 1;
-            filter: drop-shadow(0 0 4px rgba(255, 107, 53, 0.3));
         }
 
         .message-role {
@@ -608,7 +579,7 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85em;
             border: 1px solid var(--border-subtle);
-            color: var(--accent-amber);
+            color: var(--accent-secondary);
         }
 
         .message-content pre {
@@ -660,13 +631,13 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: var(--gradient-warm);
-            opacity: 0.08;
+            background: var(--gradient-primary);
+            opacity: 0.05;
         }
 
         .tool-badge .material-symbols-outlined {
             font-size: 14px;
-            color: var(--accent-warm);
+            color: var(--accent-primary);
             position: relative;
             z-index: 1;
         }
@@ -697,10 +668,9 @@
         .thinking-dot {
             width: 8px;
             height: 8px;
-            background: var(--accent-warm);
+            background: var(--accent-primary);
             border-radius: 50%;
             animation: thinking 1.4s infinite;
-            box-shadow: 0 0 8px rgba(255, 107, 53, 0.4);
         }
 
         .thinking-dot:nth-child(2) {
@@ -753,7 +723,7 @@
             content: '';
             position: absolute;
             inset: -2px;
-            background: var(--gradient-warm);
+            background: var(--gradient-primary);
             border-radius: 18px;
             opacity: 0;
             transition: var(--transition);
@@ -761,12 +731,11 @@
         }
 
         .input-container:focus-within {
-            border-color: var(--accent-warm);
-            box-shadow: var(--glow-warm);
+            border-color: var(--accent-primary);
         }
 
         .input-container:focus-within::before {
-            opacity: 0.1;
+            opacity: 0.08;
         }
 
         #messageInput {
@@ -828,21 +797,20 @@
         .btn-icon:hover:not(:disabled) {
             background: var(--bg-hover);
             color: var(--text-primary);
-            border-color: var(--accent-warm);
+            border-color: var(--accent-primary);
         }
 
         .btn-primary {
-            background: var(--gradient-warm);
+            background: var(--gradient-primary);
             color: white;
             border: none;
-            box-shadow: var(--shadow-warm);
         }
 
         .btn-primary::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, var(--accent-coral), var(--accent-amber));
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             opacity: 0;
             transition: var(--transition);
         }
@@ -853,8 +821,7 @@
         }
 
         .btn-primary:hover:not(:disabled) {
-            transform: scale(1.08);
-            box-shadow: var(--glow-warm);
+            transform: scale(1.05);
         }
 
         .btn-primary:hover:not(:disabled)::before {
@@ -879,7 +846,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: var(--gradient-warm);
+            background: var(--gradient-primary);
             opacity: 0;
             transition: var(--transition);
             border-radius: 10px;
@@ -893,12 +860,11 @@
         .new-chat-btn:hover {
             background: var(--bg-hover);
             color: var(--text-primary);
-            border-color: var(--accent-warm);
-            box-shadow: var(--glow-subtle);
+            border-color: var(--accent-primary);
         }
 
         .new-chat-btn:hover::before {
-            opacity: 0.08;
+            opacity: 0.06;
         }
 
         .char-count {
@@ -911,12 +877,12 @@
 
         /* Error Message */
         .error-message {
-            background: rgba(255, 107, 53, 0.08);
-            border: 1px solid rgba(255, 107, 53, 0.3);
+            background: rgba(74, 158, 255, 0.08);
+            border: 1px solid rgba(74, 158, 255, 0.2);
             border-radius: 14px;
             padding: 1.2rem 1.4rem;
             margin: 1rem 0;
-            color: var(--accent-coral);
+            color: var(--accent-primary);
             display: flex;
             align-items: center;
             gap: 0.85rem;
@@ -924,7 +890,7 @@
 
         .error-message .material-symbols-outlined {
             font-size: 22px;
-            color: var(--accent-warm);
+            color: var(--accent-primary);
         }
 
         /* Responsive */
@@ -993,7 +959,7 @@
         }
 
         .message-content blockquote {
-            border-left: 3px solid var(--accent-warm);
+            border-left: 3px solid var(--accent-primary);
             padding-left: 1.2rem;
             margin: 1rem 0;
             color: var(--text-secondary);
@@ -1022,7 +988,7 @@
         }
 
         .message-content a {
-            color: var(--accent-warm);
+            color: var(--accent-primary);
             text-decoration: none;
             border-bottom: 1px solid transparent;
             transition: var(--transition);
@@ -1030,11 +996,11 @@
         }
 
         .message-content a:hover {
-            border-bottom-color: var(--accent-warm);
+            border-bottom-color: var(--accent-primary);
         }
 
         .message-content a.auto-link {
-            color: var(--accent-amber);
+            color: var(--accent-secondary);
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.9em;
             padding: 0.2rem 0.4rem;
@@ -1047,8 +1013,98 @@
 
         .message-content a.auto-link:hover {
             background: var(--bg-hover);
-            border-color: var(--accent-warm);
-            box-shadow: var(--glow-subtle);
+            border-color: var(--accent-primary);
+        }
+
+        /* Structured Response Styles - Simplified (Sources and Authors only) */
+        .structured-response {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .references {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+        }
+
+        .references-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .references-title .material-symbols-outlined {
+            font-size: 18px;
+            color: var(--accent-primary);
+        }
+
+        .references-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .reference-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .reference-item:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+            transform: translateX(4px);
+        }
+
+        .reference-item.author-item {
+            cursor: default;
+        }
+
+        .reference-item.author-item:hover {
+            transform: none;
+        }
+
+        .reference-item .material-symbols-outlined {
+            font-size: 16px;
+            color: var(--accent-primary);
+            flex-shrink: 0;
+        }
+
+        .reference-link {
+            flex: 1;
+            word-break: break-all;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .reference-item:hover .reference-link {
+            color: var(--accent-primary);
+        }
+
+        .reference-item.author-item .reference-link {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
         }
     </style>
 </head>
@@ -1061,9 +1117,9 @@
             </a>
             <div class="header-title">
                 <div class="logo-icon">
-                    <span>⚛</span>
+                    <span class="material-symbols-outlined">search</span>
                 </div>
-                <h1>Scientific Research Agent</h1>
+                <h1>Research Assistant</h1>
             </div>
         </div>
         <div class="header-right">
@@ -1082,10 +1138,10 @@
         <!-- Welcome Screen -->
         <div class="welcome-screen" id="welcomeScreen">
             <div class="welcome-logo">
-                <span>⚛</span>
+                <span class="material-symbols-outlined">search</span>
             </div>
-            <h2 class="welcome-title">Scientific Research Agent</h2>
-            <p class="welcome-subtitle">Your AI assistant specialized in scientific research. Access to ArXiv, Wikipedia, web searches, and scientific calculator.</p>
+            <h2 class="welcome-title">Research Assistant</h2>
+            <p class="welcome-subtitle">Your AI-powered research platform. Access ArXiv, Wikipedia, web searches, and scientific calculations.</p>
             
             <div class="capabilities">
                 <div class="capability-card">
@@ -1232,22 +1288,113 @@
             return formatted;
         }
 
+        // Render structured response (sources and authors only)
+        function renderStructuredResponse(structured) {
+            if (!structured) return '';
+            
+            let html = '';
+            const hasSources = structured.sources && structured.sources.length > 0;
+            const hasAuthors = structured.authors && structured.authors.length > 0;
+            
+            if (!hasSources && !hasAuthors) return '';
+            
+            html += '<div class="structured-response">';
+            
+            // Authors
+            if (hasAuthors) {
+                html += `
+                    <div class="references">
+                        <div class="references-title">
+                            <span class="material-symbols-outlined">person</span>
+                            Authors
+                        </div>
+                        <div class="references-list">
+                `;
+                structured.authors.forEach(author => {
+                    html += `
+                        <div class="reference-item author-item">
+                            <span class="material-symbols-outlined">person</span>
+                            <span class="reference-link">${author}</span>
+                        </div>
+                    `;
+                });
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Sources (URLs and references)
+            if (hasSources) {
+                html += `
+                    <div class="references">
+                        <div class="references-title">
+                            <span class="material-symbols-outlined">link</span>
+                            Sources
+                        </div>
+                        <div class="references-list">
+                `;
+                structured.sources.forEach(ref => {
+                    // Check if it's an ArXiv ID or URL
+                    const isArxiv = /arxiv\.org|arxiv:\d+\.\d+/i.test(ref);
+                    const icon = isArxiv ? 'science' : 'link';
+                    
+                    // Normalize reference URL
+                    let href = ref;
+                    if (!ref.startsWith('http')) {
+                        if (ref.startsWith('arxiv:')) {
+                            href = `https://arxiv.org/abs/${ref.replace('arxiv:', '').trim()}`;
+                        } else if (/^\d{4}\.\d{4,5}/.test(ref)) {
+                            // ArXiv ID format: YYYY.NNNNN
+                            href = `https://arxiv.org/abs/${ref}`;
+                        } else {
+                            href = `https://${ref}`;
+                        }
+                    }
+                    
+                    html += `
+                        <a href="${href}" target="_blank" rel="noopener noreferrer" class="reference-item">
+                            <span class="material-symbols-outlined">${icon}</span>
+                            <span class="reference-link">${ref}</span>
+                        </a>
+                    `;
+                });
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
         // Add message to chat
-        function addMessage(role, content, toolsUsed = [], processingTime = null) {
+        function addMessage(role, content, toolsUsed = [], processingTime = null, structured = null) {
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message';
             
-            const avatar = role === 'user' ? '👤' : '⚛';
+            const avatar = role === 'user' ? '👤' : '<span class="material-symbols-outlined" style="font-size: 20px;">search</span>';
             const avatarClass = role === 'user' ? 'user-avatar' : 'assistant-avatar';
-            const roleName = role === 'user' ? 'You' : 'Scientific Agent';
+            const roleName = role === 'user' ? 'You' : 'Research Assistant';
             
             let messageHTML = `
                 <div class="message-header">
                     <div class="message-avatar ${avatarClass}">${avatar}</div>
                     <div class="message-role">${roleName}</div>
                 </div>
-                <div class="message-content">${formatMessageContent(content)}</div>
             `;
+            
+            // Always show conversational content, then add sources/authors below if available
+            messageHTML += `<div class="message-content">${formatMessageContent(content)}</div>`;
+            
+            // Add sources and authors below the message if available
+            if (structured && role === 'assistant') {
+                const structuredHTML = renderStructuredResponse(structured);
+                if (structuredHTML) {
+                    messageHTML += structuredHTML;
+                }
+            }
             
             if (role === 'assistant' && (toolsUsed.length > 0 || processingTime)) {
                 messageHTML += '<div class="message-footer">';
@@ -1300,9 +1447,9 @@
             thinkingDiv.innerHTML = `
                 <div class="message-header">
                     <div class="message-avatar assistant-avatar">
-                        <span>⚛</span>
+                        <span class="material-symbols-outlined" style="font-size: 20px;">search</span>
                     </div>
-                    <div class="message-role">Scientific Agent</div>
+                    <div class="message-role">Research Assistant</div>
                 </div>
                 <div class="thinking">
                     <div class="thinking-dots">
@@ -1391,12 +1538,16 @@
                 
                 removeThinking();
 
-                // Add assistant message
-                const assistantMessage = data.message.content;
+                // Extract response data (supporting both old and new formats)
+                const assistantMessage = data.message?.content || data.answer || '';
                 const toolsUsed = data.tools_used || [];
                 const processingTime = data.processing_time;
+                const structured = data.structured || null;
                 
-                addMessage('assistant', assistantMessage, toolsUsed, processingTime);
+                // Add assistant message with structured data if available
+                addMessage('assistant', assistantMessage, toolsUsed, processingTime, structured);
+                
+                // Store in conversation history (always use the message content for API compatibility)
                 conversationHistory.push({ role: 'assistant', content: assistantMessage });
 
             } catch (error) {
@@ -1454,8 +1605,7 @@
                     console.log('API Status:', data);
                     
                     if (statusDot) {
-                        statusDot.style.background = 'var(--accent-warm)';
-                        statusDot.style.boxShadow = '0 0 10px var(--accent-warm)';
+                        statusDot.style.background = 'var(--accent-primary)';
                     }
                     if (statusText) {
                         statusText.textContent = 'Online';
