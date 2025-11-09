@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Real-time facial emotion recognition using VGG16 deep learning model. Classify 7 emotions with high accuracy.">
+  <title>Facial Emotion Classifier | VGG16 Deep Learning</title>
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="./emotion-classifier.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo-section">
+          <i class="fas fa-brain"></i>
+          <h1>Facial Emotion Classifier</h1>
+        </div>
+        <div class="header-info">
+          <span class="model-badge">VGG16</span>
+          <span class="accuracy-badge">72% Accuracy</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <h2>Real-Time Emotion Recognition</h2>
+        <p class="hero-description">Powered by VGG16 Deep Learning model trained on FER-2013 dataset. Classify 7 facial emotions with high precision.</p>
+      </section>
+
+      <!-- Input Methods -->
+      <section class="input-section">
+        <div class="input-tabs">
+          <button class="tab-btn active" data-tab="camera">
+            <i class="fas fa-camera"></i>
+            <span>Camera</span>
+          </button>
+          <button class="tab-btn" data-tab="upload">
+            <i class="fas fa-upload"></i>
+            <span>Upload Image</span>
+          </button>
+          <button class="tab-btn" data-tab="examples">
+            <i class="fas fa-images"></i>
+            <span>Examples</span>
+          </button>
+        </div>
+
+        <!-- Camera Tab -->
+        <div class="tab-content active" id="camera-tab">
+          <div class="camera-container">
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <div class="camera-controls">
+              <button id="start-camera" class="btn btn-primary">
+                <i class="fas fa-video"></i>
+                Start Camera
+              </button>
+              <button id="capture-btn" class="btn btn-primary" disabled>
+                <i class="fas fa-camera-retro"></i>
+                Capture & Analyze
+              </button>
+              <button id="stop-camera" class="btn btn-secondary" disabled>
+                <i class="fas fa-stop"></i>
+                Stop Camera
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upload Tab -->
+        <div class="tab-content" id="upload-tab">
+          <div class="upload-container">
+            <div class="upload-area" id="upload-area">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Drag and drop an image here or click to browse</p>
+              <p class="upload-hint">Supported formats: PNG, JPG, JPEG</p>
+              <input type="file" id="file-input" accept="image/png,image/jpeg,image/jpg" hidden>
+            </div>
+            <div class="upload-preview" id="upload-preview" style="display: none;">
+              <img id="uploaded-image" alt="Uploaded image">
+              <button class="btn-remove" id="remove-upload">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Examples Tab -->
+        <div class="tab-content" id="examples-tab">
+          <div class="examples-grid">
+            <div class="example-item" data-emotion="angry">
+              <img src="./image_emotion_class/angry.jpg" alt="Angry example" loading="eager">
+              <span class="example-label">Angry</span>
+            </div>
+            <div class="example-item" data-emotion="disgust">
+              <img src="./image_emotion_class/disgust.jpg" alt="Disgust example" loading="eager">
+              <span class="example-label">Disgust</span>
+            </div>
+            <div class="example-item" data-emotion="fear">
+              <img src="./image_emotion_class/fear.jpg" alt="Fear example" loading="eager">
+              <span class="example-label">Fear</span>
+            </div>
+            <div class="example-item" data-emotion="happy">
+              <img src="./image_emotion_class/happy.jpg" alt="Happy example" loading="eager">
+              <span class="example-label">Happy</span>
+            </div>
+            <div class="example-item" data-emotion="neutral">
+              <img src="./image_emotion_class/neutral.jpg" alt="Neutral example" loading="eager">
+              <span class="example-label">Neutral</span>
+            </div>
+            <div class="example-item" data-emotion="sad">
+              <img src="./image_emotion_class/sad.jpg" alt="Sad example" loading="eager">
+              <span class="example-label">Sad</span>
+            </div>
+            <div class="example-item" data-emotion="surprised">
+              <img src="./image_emotion_class/surprised.jpg" alt="Surprised example" loading="eager">
+              <span class="example-label">Surprised</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Section -->
+      <section class="results-section" id="results-section" style="display: none;">
+        <div class="results-container">
+          <h3>Analysis Results</h3>
+          
+          <!-- Analyzed Image -->
+          <div class="analyzed-image-container">
+            <h4>Analyzed Image</h4>
+            <img id="analyzed-image" alt="Analyzed image">
+          </div>
+          
+          <!-- Main Result -->
+          <div class="main-result">
+            <div class="emotion-display">
+              <div class="emotion-icon" id="emotion-icon"></div>
+              <div class="emotion-info">
+                <h4 id="emotion-name"></h4>
+                <p class="confidence-text">Confidence: <span id="confidence-value"></span></p>
+              </div>
+            </div>
+            <p class="emotion-message" id="emotion-message"></p>
+          </div>
+
+          <!-- Probabilities Chart -->
+          <div class="probabilities-chart">
+            <h4>Probability Distribution</h4>
+            <div class="chart-container" id="chart-container"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Loading Overlay -->
+      <div class="loading-overlay" id="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+          <i class="fas fa-brain"></i>
+          <p>Analyzing emotion...</p>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-message" id="error-message" style="display: none;"></div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="container">
+      <p>Powered by VGG16 Deep Learning Model | FER-2013 Dataset | 7 Emotions Classification</p>
+      <div class="footer-links">
+        <a href="https://github.com/sidnei-almeida/vgg-emotion-classifier" target="_blank">
+          <i class="fab fa-github"></i>
+          GitHub
+        </a>
+        <a href="./index.html">
+          <i class="fas fa-home"></i>
+          Portfolio
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./emotion-classifier.js"></script>
+</body>
+</html>
+
