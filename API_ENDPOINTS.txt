@@ -1,8 +1,0 @@
-DogBreed Vision API Endpoints
-=============================
-
-GET /            - Welcome message with link to documentation.
-GET /health      - Returns API status, model device, and number of classes.
-GET /classes     - Lists all YOLO class IDs mapped to breed names.
-POST /predict    - Accepts an image file (multipart/form-data) and runs inference.
-POST /reload-config - Reloads configuration values from config.yaml at runtime.
