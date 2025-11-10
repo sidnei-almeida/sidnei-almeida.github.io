@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RoadSight Detector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./roadsign-detection.css">
+</head>
+<body>
+  <div class="preloader" id="preloader" aria-hidden="true">
+    <div class="preloader-inner">
+      <div class="preloader-logo" aria-hidden="true">
+        <svg viewBox="0 0 64 64" role="img" aria-label="Logotipo RoadSight">
+          <path class="ring" d="M32 4a28 28 0 1 1 0 56 28 28 0 0 1 0-56z"></path>
+          <path class="triangle" d="M32 15.5 49.5 48H14.5L32 15.5z"></path>
+          <circle class="dot" cx="32" cy="34" r="6"></circle>
+        </svg>
+      </div>
+      <p>Calibrating urban sensors...</p>
+    </div>
+  </div>
+
+  <div class="page-wrapper">
+    <div class="page-pattern" aria-hidden="true"></div>
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" role="img">
+            <path class="badge" d="M28.7 6.9a4 4 0 0 1 6.6 0l22 32.5a4 4 0 0 1-3.3 6.2H10.1a4 4 0 0 1-3.3-6.2z"></path>
+            <path class="inner" d="M32 18.5 44.5 37H19.5L32 18.5z"></path>
+            <circle class="beacon" cx="32" cy="38" r="5"></circle>
+          </svg>
+        </div>
+        <div>
+          <h1>RoadSight</h1>
+          <span>Road Sign Intelligence</span>
+        </div>
+      </div>
+      <div class="status-badges">
+        <div class="badge">
+          <span class="badge-label">Model</span>
+          <span class="badge-value" id="modelName">YOLOv8</span>
+        </div>
+        <div class="badge">
+          <span class="badge-label">Device</span>
+          <span class="badge-value" id="modelDevice">—</span>
+        </div>
+        <div class="badge">
+          <span class="badge-label">Avg Runtime</span>
+          <span class="badge-value" id="avgRuntime">—</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="api-indicator" id="apiStatus" data-status="checking">
+          <span class="dot"></span>
+          <span>API</span>
+        </div>
+        <a class="docs-link" href="./index.html">
+          <span>Portfolio</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <section class="panel interactions">
+        <header>
+          <h2>Input</h2>
+          <p>Use curated samples, your own uploads, or the camera to detect road signs.</p>
+        </header>
+        <div class="input-tabs" role="tablist">
+          <button class="tab active" data-target="samplesPanel" role="tab" aria-selected="true">Samples</button>
+          <button class="tab" data-target="uploadPanel" role="tab" aria-selected="false">Upload</button>
+          <button class="tab" data-target="cameraPanel" role="tab" aria-selected="false">Camera</button>
+        </div>
+
+        <div class="tab-panels">
+          <div class="tab-panel active" id="samplesPanel" role="tabpanel">
+            <ul class="sample-grid">
+              <li class="sample-card" data-src="./images/roadside_examples/road0.jpg">
+                <img src="./images/roadside_examples/road0.jpg" alt="Traffic light sample 0">
+                <div>
+                  <span>Traffic Light</span>
+                  <p>Green signal suspended over a night-time avenue.</p>
+                </div>
+              </li>
+              <li class="sample-card" data-src="./images/roadside_examples/road1.jpg">
+                <img src="./images/roadside_examples/road1.jpg" alt="Traffic light sample 1">
+                <div>
+                  <span>Intersection Signal</span>
+                  <p>Classic red-yellow-green light at an urban junction.</p>
+                </div>
+              </li>
+              <li class="sample-card" data-src="./images/roadside_examples/road109.jpg">
+                <img src="./images/roadside_examples/road109.jpg" alt="Speed limit sign sample 109">
+                <div>
+                  <span>Speed Limit</span>
+                  <p>Reflective speed restriction sign under city lights.</p>
+                </div>
+              </li>
+              <li class="sample-card" data-src="./images/roadside_examples/road122.jpg">
+                <img src="./images/roadside_examples/road122.jpg" alt="Crosswalk warning sample 122">
+                <div>
+                  <span>Crosswalk Warning</span>
+                  <p>Pedestrian crossing sign framed by autumn foliage.</p>
+                </div>
+              </li>
+              <li class="sample-card" data-src="./images/roadside_examples/road123.jpg">
+                <img src="./images/roadside_examples/road123.jpg" alt="Pedestrian crosswalk sample 123">
+                <div>
+                  <span>Pedestrian Crossing</span>
+                  <p>Marked crosswalk with bright zebra stripes in daylight.</p>
+                </div>
+              </li>
+              <li class="sample-card" data-src="./images/roadside_examples/road124.jpg">
+                <img src="./images/roadside_examples/road124.jpg" alt="Stop sign sample 124">
+                <div>
+                  <span>Stop Sign</span>
+                  <p>Weathered octagonal stop sign amid countryside structures.</p>
+                </div>
+              </li>
+              <li class="sample-card" data-src="./images/roadside_examples/speed_limit_2.jpg">
+                <img src="./images/roadside_examples/speed_limit_2.jpg" alt="Speed limit sample 2">
+                <div>
+                  <span>Speed Limit</span>
+                  <p>Limit 90 marker against a cloudy suburban sky.</p>
+                </div>
+              </li>
+              <li class="sample-card" data-src="./images/roadside_examples/stop_sign_2.jpg">
+                <img src="./images/roadside_examples/stop_sign_2.jpg" alt="Stop sign sample 2">
+                <div>
+                  <span>Stop Sign</span>
+                  <p>Crisp red stop sign with bold typography at a clear junction.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="tab-panel" id="uploadPanel" role="tabpanel">
+            <div class="upload-dropzone" id="uploadDropzone">
+              <input type="file" id="fileInput" accept="image/*" hidden>
+              <div class="dropzone-content">
+                <svg viewBox="0 0 64 64" aria-hidden="true">
+                  <path d="M32 12v28m0-28 10 10m-10-10-10 10"></path>
+                  <rect x="12" y="34" width="40" height="18" rx="6"></rect>
+                </svg>
+                <p>Drag &amp; drop or browse a road sign image.</p>
+                <button id="selectFileBtn" type="button">Choose file</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="cameraPanel" role="tabpanel">
+            <div class="camera-panel">
+              <video id="cameraPreview" autoplay playsinline></video>
+              <div class="camera-actions">
+                <button id="startCameraBtn" type="button">Start camera</button>
+                <button id="capturePhotoBtn" type="button" disabled>Capture</button>
+                <button id="stopCameraBtn" type="button" disabled>Stop</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel results">
+        <header>
+          <h2>Output</h2>
+          <p>Inspect detections, classes, and confidence in real time.</p>
+        </header>
+        <div class="result-view" id="resultView">
+          <div class="result-placeholder" id="resultPlaceholder">
+            <svg viewBox="0 0 96 96" aria-hidden="true">
+              <rect x="12" y="24" width="72" height="48" rx="10"></rect>
+              <path d="M24 54h18l8-12 8 10h14" class="stroke"></path>
+              <circle cx="32" cy="36" r="6"></circle>
+            </svg>
+            <p>Select an image to analyze traffic signage.</p>
+          </div>
+          <figure class="result-figure hidden" id="resultFigure">
+            <div class="result-media">
+              <img id="annotatedImage" alt="Road sign detection result">
+              <canvas id="detectionOverlay" aria-hidden="true"></canvas>
+            </div>
+            <figcaption>
+              <div class="summary">
+                <div>
+                  <span class="summary-label">Source</span>
+                  <span class="summary-value" id="imageSource">—</span>
+                </div>
+                <div>
+                  <span class="summary-label">Runtime</span>
+                  <span class="summary-value" id="inferenceTime">—</span>
+                </div>
+              </div>
+              <ul class="detections" id="detectionsList"></ul>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <aside class="panel insights">
+        <header>
+          <h2>Insights</h2>
+          <p>Recommendations to elevate inference accuracy.</p>
+        </header>
+        <ul class="insight-list">
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2 4 5v6c0 5 2.9 9.8 8 11 5.1-1.2 8-6 8-11V5l-8-3z"></path>
+                <circle cx="12" cy="10" r="2"></circle>
+              </svg>
+            </span>
+            <div>
+              <h3>Lighting</h3>
+              <p>Capture scenes with solid lighting to highlight retroreflective signs.</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12 3 21h18l-2-9"></path>
+                <path d="M7 9a5 5 0 0 1 10 0v3H7z"></path>
+              </svg>
+            </span>
+            <div>
+              <h3>Framing</h3>
+              <p>Keep the sign centered to avoid perspective distortion in detections.</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 4h16v16H4z"></path>
+                <path d="M9 9h6v6H9z" class="accent"></path>
+              </svg>
+            </span>
+            <div>
+              <h3>Resolution</h3>
+              <p>Higher resolution imagery delivers cleaner and more precise detections.</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2 3 7v10l9 5 9-5V7z"></path>
+                <path d="M12 8v8" class="accent"></path>
+                <path d="M8 12h8" class="accent"></path>
+              </svg>
+            </span>
+            <div>
+              <h3>YOLOv8 Backbone</h3>
+              <p>Powered by YOLOv8 for fast, accurate multilabel road sign detection.</p>
+            </div>
+          </li>
+        </ul>
+      </aside>
+    </main>
+
+    <footer class="app-footer">
+      <p>RoadSight Detector • YOLOv8 experimental deployment</p>
+      <div class="footer-links">
+        <a href="https://salmeida-roadsign-detection.hf.space" target="_blank" rel="noopener">API</a>
+        <a href="https://github.com/sidnei-almeida" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="./roadsign-detection.js" type="module" defer></script>
+</body>
+</html>
+
