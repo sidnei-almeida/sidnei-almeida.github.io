@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initializeTabs();
   initializeCamera();
   initializeUpload();
+  initializeResultsClose();
   
   // Check if we're running from file:// protocol
   if (window.location.protocol === 'file:') {
@@ -551,8 +552,16 @@ function displayResults(data, imageSrc) {
   });
 
   // Show results section
-  resultsSection.style.display = 'block';
-  resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  const analysisShell = document.querySelector('.analysis-shell');
+  if (analysisShell) {
+    analysisShell.classList.add('has-results');
+  }
+  resultsSection.style.display = 'flex';
+  resultsSection.setAttribute('aria-hidden', 'false');
+  requestAnimationFrame(() => {
+    resultsSection.focus({ preventScroll: true });
+  });
+  resultsSection.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
 }
 
 // ============================================
@@ -583,11 +592,49 @@ function hideError() {
 }
 
 function hideResults() {
-  document.getElementById('results-section').style.display = 'none';
+  const resultsSection = document.getElementById('results-section');
+  if (resultsSection) {
+    resultsSection.style.display = 'none';
+    resultsSection.setAttribute('aria-hidden', 'true');
+  }
+  const analysisShell = document.querySelector('.analysis-shell');
+  if (analysisShell) {
+    analysisShell.classList.remove('has-results');
+  }
+  resetUploadPreview();
 }
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {
   stopCamera();
 });
+
+function initializeResultsClose() {
+  const closeButton = document.getElementById('results-close');
+  if (!closeButton) return;
+
+  closeButton.addEventListener('click', () => {
+    hideResults();
+  });
+}
+
+function resetUploadPreview() {
+  const uploadPreview = document.getElementById('upload-preview');
+  const uploadedImage = document.getElementById('uploaded-image');
+  const fileInput = document.getElementById('file-input');
+
+  if (uploadPreview) {
+    uploadPreview.style.display = 'none';
+  }
+
+  if (uploadedImage) {
+    uploadedImage.src = '';
+  }
+
+  if (fileInput) {
+    fileInput.value = '';
+  }
+
+  currentImageSrc = null;
+}
 
