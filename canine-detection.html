@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DogBreed Vision | YOLO Canine Detection</title>
+    <meta
+      name="description"
+      content="Interactive showcase for the DogBreed Vision API powered by YOLOv8. Explore live canine breed detection through curated samples, uploads, and camera capture."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="canine-detection.css" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div
+      id="page-preloader"
+      class="loading-overlay"
+      role="status"
+      aria-label="Loading DogBreed Vision interface"
+    >
+      <div class="loading-spinner">
+        <span class="spinner-icon" aria-hidden="true">
+          <span class="spinner-glow"></span>
+          <svg class="spinner-paw" viewBox="0 0 48 48">
+            <path
+              d="M15.4 9.8c2.3 0 4.1 2.2 4.1 5s-1.8 5-4.1 5-4.1-2.2-4.1-5 1.8-5 4.1-5Zm17.2 0c2.3 0 4.1 2.2 4.1 5s-1.8 5-4.1 5-4.1-2.2-4.1-5 1.8-5 4.1-5ZM9 20.9c2.5 0 4.5 2.6 4.5 5.8s-2 5.8-4.5 5.8S4.5 29.9 4.5 26.7 6.6 20.9 9 20.9Zm30 0c2.5 0 4.5 2.6 4.5 5.8s-2 5.8-4.5 5.8-4.5-2.6-4.5-5.8 2-5.8 4.5-5.8ZM24 25.6c5.8 0 10.8 4.2 10.8 9.2 0 3.7-3.3 6.3-10.8 6.3S13.2 38.5 13.2 34.8c0-5 5-9.2 10.8-9.2Z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        <p>Preparing DogBreed Vision...</p>
+      </div>
+    </div>
+
+    <div class="page-wrapper">
+      <header class="app-header">
+        <div class="container">
+          <div class="header-content">
+            <div class="brand-block">
+              <span class="brand-icon" aria-hidden="true">
+                <svg viewBox="0 0 48 48">
+                  <path
+                    d="M15.4 9.8c2.3 0 4.1 2.2 4.1 5s-1.8 5-4.1 5-4.1-2.2-4.1-5 1.8-5 4.1-5Zm17.2 0c2.3 0 4.1 2.2 4.1 5s-1.8 5-4.1 5-4.1-2.2-4.1-5 1.8-5 4.1-5ZM9 20.9c2.5 0 4.5 2.6 4.5 5.8s-2 5.8-4.5 5.8S4.5 29.9 4.5 26.7 6.6 20.9 9 20.9Zm30 0c2.5 0 4.5 2.6 4.5 5.8s-2 5.8-4.5 5.8-4.5-2.6-4.5-5.8 2-5.8 4.5-5.8ZM24 25.6c5.8 0 10.8 4.2 10.8 9.2 0 3.7-3.3 6.3-10.8 6.3S13.2 38.5 13.2 34.8c0-5 5-9.2 10.8-9.2Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+              <div class="brand-text">
+                <h1>DogBreed Vision</h1>
+                <p>YOLO canine detector</p>
+              </div>
+            </div>
+            <div class="header-metrics">
+              <div class="metric-chip">
+                <span class="metric-label">Model</span>
+                <span class="metric-value">YOLOv8n</span>
+              </div>
+              <div class="metric-chip">
+                <span class="metric-label">Classes</span>
+                <span class="metric-value">120 breeds</span>
+              </div>
+            </div>
+            <div class="header-links">
+              <a
+                class="header-link"
+                href="https://github.com/sidnei-almeida/yolo-canine-detection"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12 .5C5.8.5.5 5.8.5 12c0 5.1 3.3 9.5 7.8 11.1.57.1.78-.25.78-.55v-2.17c-3.18.7-3.86-1.53-3.86-1.53-.52-1.3-1.28-1.66-1.28-1.66-1.03-.7.08-.69.08-.69 1.17.09 1.78 1.2 1.78 1.2 1.02 1.76 2.68 1.24 3.33.95.1-.74.4-1.25.73-1.54-2.53-.28-5.2-1.26-5.2-5.58 0-1.23.43-2.22 1.14-3.01-.11-.29-.48-1.43.1-2.98 0 0 .94-.3 3.08 1.14a10.6 10.6 0 0 1 5.6 0c2.13-1.44 3.08-1.13 3.08-1.13.58 1.55.22 2.69.1 2.98.7.8 1.14 1.78 1.14 3 0 4.34-2.69 5.29-5.25 5.57.43.36.8 1.06.8 2.14v3.17c0 .3.2.66.78.55A11.5 11.5 0 0 0 23.5 12C23.5 5.8 18.2.5 12 .5Z"
+                  />
+                </svg>
+                <span>Repository</span>
+              </a>
+              <a class="header-link" href="./index.html">
+                <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12 3 3.5 9.5l1 1.3L6 9.7V20h5v-5h2v5h5V9.7l1.5 1.1 1-1.3Z"
+                  />
+                </svg>
+                <span>Portfolio</span>
+              </a>
+            </div>
+            <div class="api-indicator" role="status" aria-live="polite" title="Checking deployment...">
+              <span class="api-label">API</span>
+              <span class="status-indicator" data-status="unknown" aria-hidden="true"></span>
+              <span class="visually-hidden status-description">Checking deployment...</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <div class="container">
+          <div class="app-shell">
+            <aside class="info-panel">
+              <section class="hero-section">
+                <h2>Experience premium canine breed detection</h2>
+                <p class="hero-description">
+                  Upload, capture, or pick one of our curated examples to preview
+                  the YOLOv8 canine model in action with production-level API
+                  responses.
+                </p>
+              </section>
+              <section class="insight-cards">
+                <article class="insight-card">
+                  <span class="insight-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path
+                        d="M4 7.5a2.5 2.5 0 1 1 5 0v1.1h2.2l1.6-2.8a2 2 0 0 1 1.7-1H20a2 2 0 0 1 0 4h-3.6l-1.3 2.3 2.3 4.1H20a1.5 1.5 0 1 1 0 3h-4.1a2 2 0 0 1-1.7-1l-1.3-2.3H9V16a2.5 2.5 0 1 1-3-2.4Zm2.5-3A1.5 1.5 0 0 0 5 6a1.5 1.5 0 0 0 1.5 1.5H7V4.5Zm0 9A1.5 1.5 0 1 0 8 15.5H7V13.5Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                  <span class="insight-label">Inputs</span>
+                  <h3 class="insight-title">Flexible acquisition</h3>
+                  <p class="insight-text">
+                    Switch between curated champions, manual uploads, or live
+                    camera capture while the interface manages preprocessing.
+                  </p>
+                </article>
+                <article class="insight-card">
+                  <span class="insight-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24">
+                      <path
+                        d="M12 4c.6 0 1.1.3 1.4.8l1.4 2.3 2.6.4a1.6 1.6 0 0 1 .9 2.7l-1.9 1.9.4 2.6a1.6 1.6 0 0 1-2.3 1.7L12 15.9 9.5 17.4a1.6 1.6 0 0 1-2.3-1.7l.4-2.6-1.9-1.9a1.6 1.6 0 0 1 .9-2.7l2.6-.4 1.4-2.3A1.6 1.6 0 0 1 12 4Zm0 2.1L10.9 8a1 1 0 0 1-.8.5l-2 .3 1.5 1.5a1 1 0 0 1 .3.9l-.3 2 1.8-1a1 1 0 0 1 .9 0l1.8 1-.3-2a1 1 0 0 1 .3-.9l1.5-1.4-2-.3a1 1 0 0 1-.8-.5Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                  <span class="insight-label">Outputs</span>
+                  <h3 class="insight-title">Confidence-first feedback</h3>
+                  <p class="insight-text">
+                    Each inference returns normalized confidences alongside the
+                    annotated frame, so stakeholders focus on insights, not raw
+                    tensors.
+                  </p>
+                </article>
+              </section>
+              <section class="meta-grid">
+                <div class="meta-item">
+                  <span class="meta-label">Dataset</span>
+                  <span class="meta-value">Stanford Dogs</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Hosted on</span>
+                  <span class="meta-value">Hugging Face Spaces</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">API</span>
+                  <span class="meta-value">FastAPI REST</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Latency target</span>
+                  <span class="meta-value">~250ms</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Device</span>
+                  <span class="meta-value" id="device-value">cpu</span>
+                </div>
+                <div class="meta-item">
+                  <span class="meta-label">Runtime</span>
+                  <span class="meta-value" id="runtime-value">0 ms</span>
+                </div>
+              </section>
+            </aside>
+
+            <section class="interaction-panel">
+              <div class="analysis-shell">
+                <section class="input-section" id="detector">
+                  <div class="section-head">
+                    <h3>Image input</h3>
+                    <p>Choose how you want to provide a dog portrait.</p>
+                  </div>
+                  <p class="input-hint">
+                    Start by selecting a curated sample, uploading your own image, or
+                    capturing directly from the camera.
+                  </p>
+                  <div class="input-tabs" role="tablist">
+                    <button class="tab-btn active" data-tab="examples">
+                      <span>Curated Samples</span>
+                    </button>
+                    <button class="tab-btn" data-tab="upload">
+                      <span>Upload</span>
+                    </button>
+                    <button class="tab-btn" data-tab="camera">
+                      <span>Camera</span>
+                    </button>
+                  </div>
+
+                  <div
+                    class="tab-content active"
+                    id="examples-tab"
+                    role="tabpanel"
+                  >
+                    <div class="examples-grid">
+                      <button
+                        class="example-item sample-card"
+                        data-src="images/dogs/German_Shepherd_sample.jpg"
+                      >
+                        <img
+                          src="images/dogs/German_Shepherd_sample.jpg"
+                          alt="German Shepherd sample"
+                          loading="lazy"
+                        />
+                        <span>German Shepherd</span>
+                      </button>
+                      <button
+                        class="example-item sample-card"
+                        data-src="images/dogs/Saint_Bernard_sample.jpg"
+                      >
+                        <img
+                          src="images/dogs/Saint_Bernard_sample.jpg"
+                          alt="Saint Bernard sample"
+                          loading="lazy"
+                        />
+                        <span>Saint Bernard</span>
+                      </button>
+                      <button
+                        class="example-item sample-card"
+                        data-src="images/dogs/Labrador_sample.jpg"
+                      >
+                        <img
+                          src="images/dogs/Labrador_sample.jpg"
+                          alt="Labrador sample"
+                          loading="lazy"
+                        />
+                        <span>Labrador</span>
+                      </button>
+                      <button
+                        class="example-item sample-card"
+                        data-src="images/dogs/Pug_sample.jpg"
+                      >
+                        <img
+                          src="images/dogs/Pug_sample.jpg"
+                          alt="Pug sample"
+                          loading="lazy"
+                        />
+                        <span>Pug</span>
+                      </button>
+                      <button
+                        class="example-item sample-card"
+                        data-src="images/dogs/African_Hunting_Dog_sample.jpg"
+                      >
+                        <img
+                          src="images/dogs/African_Hunting_Dog_sample.jpg"
+                          alt="African Hunting Dog sample"
+                          loading="lazy"
+                        />
+                        <span>African Hunting Dog</span>
+                      </button>
+                      <button
+                        class="example-item sample-card"
+                        data-src="images/dogs/Chihuahua_sample.jpg"
+                      >
+                        <img
+                          src="images/dogs/Chihuahua_sample.jpg"
+                          alt="Chihuahua sample"
+                          loading="lazy"
+                        />
+                        <span>Chihuahua</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="tab-content" id="upload-tab" role="tabpanel">
+                    <label class="upload-area" for="upload-input">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        id="upload-input"
+                        hidden
+                      />
+                      <span class="upload-icon">⬆</span>
+                      <p>Select or drop a dog photo</p>
+                      <small>PNG, JPG up to 10MB</small>
+                    </label>
+                  </div>
+
+                  <div class="tab-content" id="camera-tab" role="tabpanel">
+                    <div class="camera-container">
+                      <video id="camera-stream" autoplay playsinline></video>
+                      <div class="camera-overlay"></div>
+                      <div class="camera-controls">
+                        <button id="camera-toggle" class="btn tertiary">
+                          Start Camera
+                        </button>
+                        <button id="camera-capture" class="btn primary" disabled>
+                          Capture &amp; Detect
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="output-section">
+                  <div class="results-panel" id="results-panel" data-empty="true">
+                    <div class="result-media">
+                      <img
+                        id="result-image"
+                        alt="Canine detection preview"
+                        class="hidden"
+                      />
+                      <canvas id="result-overlay"></canvas>
+                      <div class="result-placeholder">
+                        <p>
+                          Select a sample, upload an image, or capture via camera
+                          to visualize detections.
+                        </p>
+                      </div>
+                    </div>
+                    <div class="result-summary">
+                      <div class="result-caption" id="result-caption">
+                        <span class="result-breed" id="result-breed">Awaiting detection</span>
+                        <span class="result-confidence" id="result-confidence">--</span>
+                      </div>
+                      <p class="results-count" id="prediction-count">Awaiting detections</p>
+                    </div>
+                    <div id="prediction-list" class="prediction-list">
+                      <p class="placeholder">
+                        Your prediction feed appears here. Expect rich metadata,
+                        precise class mapping, and performance feedback.
+                      </p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <footer class="app-footer" id="credits">
+        <div class="container">
+          <p>Crafted by Sidnei Almeida — Computer Vision &amp; Applied AI</p>
+          <div class="footer-links">
+            <a
+              href="https://github.com/sidnei-almeida/yolo-canine-detection"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 .5C5.8.5.5 5.8.5 12c0 5.1 3.3 9.5 7.8 11.1.57.1.78-.25.78-.55v-2.17c-3.18.7-3.86-1.53-3.86-1.53-.52-1.3-1.28-1.66-1.28-1.66-1.03-.7.08-.69.08-.69 1.17.09 1.78 1.2 1.78 1.2 1.02 1.76 2.68 1.24 3.33.95.1-.74.4-1.25.73-1.54-2.53-.28-5.2-1.26-5.2-5.58 0-1.23.43-2.22 1.14-3.01-.11-.29-.48-1.43.1-2.98 0 0 .94-.3 3.08 1.14a10.6 10.6 0 0 1 5.6 0c2.13-1.44 3.08-1.13 3.08-1.13.58 1.55.22 2.69.1 2.98.7.8 1.14 1.78 1.14 3 0 4.34-2.69 5.29-5.25 5.57.43.36.8 1.06.8 2.14v3.17c0 .3.2.66.78.55A11.5 11.5 0 0 0 23.5 12C23.5 5.8 18.2.5 12 .5Z"
+                />
+              </svg>
+              <span>GitHub Repo</span>
+            </a>
+            <a href="./index.html">
+              <svg class="link-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 3 3.5 9.5l1 1.3L6 9.7V20h5v-5h2v5h5V9.7l1.5 1.1 1-1.3Z"
+                />
+              </svg>
+              <span>Back to Portfolio</span>
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="canine-detection.js" type="module"></script>
+  </body>
+</html>
+
