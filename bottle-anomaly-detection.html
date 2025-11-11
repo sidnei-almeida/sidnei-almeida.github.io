@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="GlassGuard • Curated bottle anomaly inspection with UNet reconstruction. Pick a sample or upload to run inference instantly."
+    />
+    <title>GlassGuard • Bottle Anomaly Detection</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./bottle-anomaly-detection.css" />
+  </head>
+  <body>
+    <div class="glassguard">
+      <header class="gg-header">
+        <div class="gg-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 28 28" width="26" height="26">
+              <path
+                d="M10 2h8a2 2 0 0 1 2 2v3.2a1.6 1.6 0 0 0 .5 1.17l1.9 1.76a2.6 2.6 0 0 1 .85 1.9V24a2 2 0 0 1-2 2H8.75a2 2 0 0 1-2-2V10.03a2.6 2.6 0 0 1 .85-1.9l1.9-1.76A1.6 1.6 0 0 0 10 7.2Z"
+              />
+              <path d="M8.8 14h10.4v7.2a1.8 1.8 0 0 1-1.8 1.8H10.6a1.8 1.8 0 0 1-1.8-1.8Z" />
+              <circle cx="14" cy="10.4" r="1.6" />
+            </svg>
+          </div>
+          <div class="brand-copy">
+            <strong>GlassGuard</strong>
+            <span>UNet anomaly inspection</span>
+          </div>
+        </div>
+        <div class="gg-meta">
+          <div class="meta-item">
+            <span>Model</span>
+            <strong id="metaModel">—</strong>
+          </div>
+          <div class="meta-item">
+            <span>Version</span>
+            <strong id="metaVersion">—</strong>
+          </div>
+        </div>
+        <div class="gg-actions">
+          <a class="ghost-btn" href="./index.html">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M9.3 3.3a1 1 0 0 1 1.4 0l5.73 5.73a1 1 0 1 1-1.42 1.42L11 6.17V16a1 1 0 1 1-2 0V6.17L4.95 10.45a1 1 0 0 1-1.42-1.42Z" />
+            </svg>
+            <span>Voltar ao portfólio</span>
+          </a>
+          <div class="gg-status">
+            <div class="status-chip" id="apiIndicator" aria-live="polite">
+              <span class="dot"></span>
+              <span>API</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="gg-main">
+        <section class="panel palette">
+          <header>
+            <h2>Curated Samples</h2>
+            <p>Tap any bottle to stage it for inspection.</p>
+          </header>
+          <div class="swatch-grid" id="sampleGrid"></div>
+        </section>
+
+        <section class="panel workspace">
+          <div class="workspace-top">
+            <div class="dropzone" id="dropzone">
+              <input type="file" accept="image/*" id="fileInput" />
+              <div class="dropzone-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" width="24" height="24">
+                  <path
+                    d="M16 4a1 1 0 0 1 .9.56l3.1 6.44H24a1 1 0 0 1 .67 1.74L14.7 22a1 1 0 0 1-1.4-1.42l8.1-7.08H12.75a1 1 0 0 1-.93-1.37l2.8-7a1 1 0 0 1 .93-.63Z"
+                  />
+                </svg>
+              </div>
+              <div class="dropzone-copy">
+                <p>Drop frame or <span>browse</span></p>
+                <label class="visual-toggle">
+                  <input type="checkbox" id="toggleVisualizations" checked />
+                  <span>Return artefacts</span>
+                </label>
+              </div>
+            </div>
+            <button class="primary-btn" id="runBtn" type="button" disabled>Inspect</button>
+          </div>
+
+          <div class="workspace-bottom">
+            <div class="result-shell" id="resultShell">
+              <div class="preview-stage" id="previewStage">
+                <img id="previewImage" alt="Inspection preview" />
+                <canvas id="previewOverlay" aria-hidden="true"></canvas>
+              </div>
+              <div class="progress-bar" id="progressRail" hidden></div>
+              <div class="result-placeholder" id="resultEmpty">
+                <svg viewBox="0 0 60 60" aria-hidden="true">
+                  <rect x="20" y="5" width="20" height="10" rx="3"></rect>
+                  <path d="M14 15h32l4 6v28a6 6 0 0 1-6 6H16a6 6 0 0 1-6-6V21Z"></path>
+                </svg>
+                <p>Select a sample or upload a frame to start.</p>
+              </div>
+            </div>
+            <div class="metrics">
+              <div class="metric-card">
+                <span>Verdict</span>
+                <strong id="verdictValue">—</strong>
+              </div>
+              <div class="metric-card">
+                <span>Latency</span>
+                <strong id="latencyValue">—</strong>
+              </div>
+              <div class="metric-card">
+                <span>Recon Error</span>
+                <strong id="errorValue">—</strong>
+              </div>
+            </div>
+            <div class="threshold-row">
+              <div class="threshold-card">
+                <span>Class Threshold</span>
+                <strong id="thresholdClass">—</strong>
+              </div>
+              <div class="threshold-card">
+                <span>Heatmap Threshold</span>
+                <strong id="thresholdHeat">—</strong>
+              </div>
+              <div class="threshold-card">
+                <span>Bounding Threshold</span>
+                <strong id="thresholdBox">—</strong>
+              </div>
+            </div>
+
+            <section class="artifact-section" id="artifactSection" hidden>
+              <header>
+                <h3>Artefacts</h3>
+                <p>Click any thumbnail to open the lightbox.</p>
+              </header>
+              <div class="artifact-grid" id="artifactGrid"></div>
+            </section>
+          </div>
+        </section>
+      </main>
+
+      <footer class="gg-footer">
+        <span>© <span id="footerYear"></span> GlassGuard</span>
+        <span>Shortcuts: Ctrl+U upload • Enter inspect • Tab navigate</span>
+      </footer>
+    </div>
+
+    <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="loading-overlay" id="loadingOverlay" hidden aria-live="polite" aria-atomic="true">
+      <div class="loading-card">
+        <div class="loading-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="40" height="40">
+            <path
+              class="loading-outline"
+              d="M10 2h12a2 2 0 0 1 2 2v4.5c0 .6.22 1.18.62 1.62l1.88 2a2.5 2.5 0 0 1 .7 1.74V28a2 2 0 0 1-2 2H7.8a2 2 0 0 1-2-2V11.86a2.5 2.5 0 0 1 .7-1.74l1.88-2A2.2 2.2 0 0 0 9 8.5V4a2 2 0 0 1 2-2Z"
+            />
+            <path class="loading-liquid" d="M8.8 14h14.4V24a2 2 0 0 1-2 2H10.8a2 2 0 0 1-2-2Z" />
+            <circle class="loading-spark" cx="22" cy="10" r="2" />
+          </svg>
+        </div>
+        <div class="loading-copy">
+          <strong>Processing inspection…</strong>
+          <span>UNet reconstruction running. This may take a few seconds.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lightbox" id="lightbox" hidden>
+      <div class="lightbox-backdrop" data-close="true"></div>
+      <figure class="lightbox-modal" role="dialog" aria-modal="true">
+        <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close lightbox">
+          <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
+            <path d="M5 5l10 10m0-10L5 15" />
+          </svg>
+        </button>
+        <img id="lightboxImage" alt="" />
+        <figcaption id="lightboxCaption"></figcaption>
+      </figure>
+    </div>
+
+    <script src="./bottle-anomaly-detection.js" type="module"></script>
+  </body>
+</html>
