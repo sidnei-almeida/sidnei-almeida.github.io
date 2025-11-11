@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta
+      name="description"
+      content="Interactive YOLOv8 pipeline for Brazilian license plate detection. Test with curated samples, uploads or live camera and integrate with Hugging Face Spaces."
+    />
+    <title>PlatePulse • Brazilian License Plate Recognition</title>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./license-plate-detection.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <noscript>
+      <div class="noscript-banner">
+        PlatePulse requires JavaScript to run detections. Please enable JavaScript in your browser.
+      </div>
+    </noscript>
+
+    <div class="preloader hidden" id="preloader" role="status" aria-live="polite">
+      <div class="preloader-ring">
+        <div class="inner">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <rect class="loader-frame" x="8" y="16" width="48" height="32" rx="9"></rect>
+            <rect class="loader-body" x="12.5" y="20" width="39" height="24" rx="7"></rect>
+            <rect class="loader-band" x="12.5" y="32" width="39" height="6" rx="3"></rect>
+            <circle class="loader-node" cx="22" cy="26" r="3"></circle>
+            <circle class="loader-node" cx="42" cy="26" r="3"></circle>
+          </svg>
+        </div>
+        <span>Calibrating PlatePulse...</span>
+      </div>
+    </div>
+
+    <header class="app-header">
+      <div class="container">
+        <div class="brand">
+          <div class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32">
+              <rect class="logo-frame" x="3.5" y="9" width="25" height="14" rx="4"></rect>
+              <rect class="logo-line" x="7" y="13" width="17" height="2" rx="1"></rect>
+              <rect class="logo-line logo-line--short" x="7" y="17" width="12" height="2" rx="1"></rect>
+              <circle class="logo-dot" cx="23" cy="18" r="2"></circle>
+            </svg>
+          </div>
+          <div class="brand-copy">
+            <h1>PlatePulse</h1>
+            <p>Brazilian License Plate Intelligence</p>
+          </div>
+        </div>
+
+        <div class="header-meta">
+          <div class="metric">
+            <span class="label">Model</span>
+            <strong id="modelName">—</strong>
+          </div>
+          <div class="metric">
+            <span class="label">Avg Runtime</span>
+            <strong id="avgRuntime">0.18s</strong>
+          </div>
+          <div class="metric">
+            <span class="label">Precision</span>
+            <strong id="metricPrecision">—</strong>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div class="api-indicator" id="apiIndicator" aria-live="polite">
+            <span class="dot"></span>
+            <span class="text">API</span>
+          </div>
+          <button class="link-btn" id="backToPortfolio" type="button">
+            <span>Portfolio</span>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M10.5 12.5L6 8l4.5-4.5" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <div class="container">
+        <div class="layout">
+          <section class="panel input-panel">
+            <header class="panel-head">
+              <div>
+                <h2>Input Center</h2>
+                <p class="subhead">
+                  Pick a source and load an image to run PlatePulse instantly.
+                </p>
+              </div>
+            </header>
+
+            <div class="panel-content">
+              <div class="input-tabs" data-active="samples" role="tablist" aria-label="Input selection">
+                <button
+                  class="tab"
+                  data-tab="samples"
+                  type="button"
+                  role="tab"
+                  id="tab-samples"
+                  aria-controls="panel-samples"
+                  aria-selected="true"
+                  tabindex="0"
+                >
+                  Samples
+                </button>
+                <button
+                  class="tab"
+                  data-tab="upload"
+                  type="button"
+                  role="tab"
+                  id="tab-upload"
+                  aria-controls="panel-upload"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  Upload
+                </button>
+                <button
+                  class="tab"
+                  data-tab="camera"
+                  type="button"
+                  role="tab"
+                  id="tab-camera"
+                  aria-controls="panel-camera"
+                  aria-selected="false"
+                  tabindex="-1"
+                >
+                  Camera
+                </button>
+              </div>
+
+              <div class="tab-panels">
+                <div
+                  class="tab-panel samples"
+                  data-tab="samples"
+                  id="panel-samples"
+                  role="tabpanel"
+                  aria-labelledby="tab-samples"
+                >
+                  <div class="sample-grid" id="sampleGrid"></div>
+                </div>
+                <div
+                  class="tab-panel upload"
+                  data-tab="upload"
+                  id="panel-upload"
+                  role="tabpanel"
+                  aria-labelledby="tab-upload"
+                  hidden
+                >
+                  <div class="upload-dropzone" id="uploadDropzone">
+                    <input type="file" accept="image/*" id="uploadInput" />
+                    <div class="icon">
+                      <svg viewBox="0 0 48 48" aria-hidden="true">
+                        <path d="M24 10l10 10h-6v10h-8V20h-6z"></path>
+                        <rect x="10" y="32" width="28" height="6" rx="2"></rect>
+                      </svg>
+                    </div>
+                    <p>Select or drag a vehicle photo</p>
+                    <small>PNG or JPEG, up to 10 MB</small>
+                  </div>
+                </div>
+                <div
+                  class="tab-panel camera"
+                  data-tab="camera"
+                  id="panel-camera"
+                  role="tabpanel"
+                  aria-labelledby="tab-camera"
+                  hidden
+                >
+                  <div class="camera-stage">
+                    <video id="cameraFeed" autoplay playsinline></video>
+                    <div class="camera-actions">
+                      <button id="startCamera" type="button">Start Camera</button>
+                      <button id="captureFrame" type="button" disabled>Capture</button>
+                      <button id="stopCamera" type="button" disabled>Stop</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel result-panel">
+            <header class="panel-head">
+              <div>
+                <h2>Detection Output</h2>
+                <p class="subhead">
+                  Review the annotated prediction, metrics and runtime in one glance.
+                </p>
+              </div>
+              <div class="result-controls">
+                <div class="runtime-chip">
+                  <span>Runtime</span>
+                  <strong id="lastRuntime">—</strong>
+                </div>
+                <button class="predict-btn" id="runDetection" type="button" aria-busy="false">
+                  <span>Run Detection</span>
+                </button>
+              </div>
+            </header>
+
+            <div class="panel-content">
+              <div class="result-stage" id="resultStage">
+                <div class="progress-bar" id="progressBar" hidden></div>
+                <figure class="result-figure">
+                  <img id="resultImage" alt="Detection preview" />
+                </figure>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <section class="insights">
+          <article class="insight-card">
+            <div class="icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <rect x="6" y="6" width="20" height="20" rx="6"></rect>
+                <path d="M16 11v10M11 16h10" />
+              </svg>
+            </div>
+            <div>
+              <h3>Optimised for Mercosul plates</h3>
+              <p>High recall for reflective backgrounds, rain and oblique camera angles.</p>
+            </div>
+          </article>
+          <article class="insight-card">
+            <div class="icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M10 22l2.5-9.5L16 10l3.5 2.5L22 22z"></path>
+                <circle cx="16" cy="16" r="3"></circle>
+              </svg>
+            </div>
+            <div>
+              <h3>YOLOv8m backbone</h3>
+              <p>Fine-tuned anchors and augmentation deliver consistent precision in production.</p>
+            </div>
+          </article>
+          <article class="insight-card">
+            <div class="icon">
+              <svg viewBox="0 0 32 32" aria-hidden="true">
+                <path d="M9 11h14v3H9zM9 18h10v3H9z"></path>
+                <path d="M21 18l4-4v10z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3>REST-ready delivery</h3>
+              <p>Plug into Hugging Face Spaces or any cloud function with zero additional code.</p>
+            </div>
+          </article>
+        </section>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <div class="container">
+        <p class="footer-note">
+          © <span id="currentYear"></span> PlatePulse · Brazilian License Plate Intelligence
+        </p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a class="footer-link" href="https://github.com/sidnei-almeida" target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 .5C5.8.5.5 5.8.5 12c0 5.1 3.3 9.5 7.8 11.1.57.1.78-.25.78-.55v-2.17c-3.18.7-3.86-1.53-3.86-1.53-.52-1.3-1.28-1.66-1.28-1.66-1.03-.7.08-.69.08-.69 1.17.09 1.78 1.2 1.78 1.2 1.02 1.76 2.68 1.24 3.33.95.1-.74.4-1.25.73-1.54-2.53-.28-5.2-1.26-5.2-5.58 0-1.23.43-2.22 1.14-3.01-.11-.29-.48-1.43.1-2.98 0 0 .94-.3 3.08 1.14a10.6 10.6 0 0 1 5.6 0c2.13-1.44 3.08-1.13 3.08-1.13.58 1.55.22 2.69.1 2.98.7.8 1.14 1.78 1.14 3 0 4.34-2.69 5.29-5.25 5.57.43.36.8 1.06.8 2.14v3.17c0 .3.2.66.78.55A11.5 11.5 0 0 0 23.5 12C23.5 5.8 18.2.5 12 .5Z"
+              />
+            </svg>
+            <span>GitHub</span>
+          </a>
+          <a class="footer-link" href="./index.html">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3 3.5 9.5l1 1.3L6 9.7V20h5v-5h2v5h5V9.7l1.5 1.1 1-1.3Z" />
+            </svg>
+            <span>Portfolio</span>
+          </a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="./license-plate-detection.js"></script>
+    <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="lightbox" id="lightbox" hidden>
+      <div class="lightbox-backdrop" data-close="true"></div>
+      <figure class="lightbox-modal" role="dialog" aria-modal="true">
+        <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close preview">
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+            <path d="M5 5l10 10m0-10L5 15" />
+          </svg>
+        </button>
+        <img id="lightboxImage" alt="Expanded detection" />
+        <figcaption id="lightboxCaption"></figcaption>
+      </figure>
+    </div>
+  </body>
+</html>
+
