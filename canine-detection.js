@@ -29,6 +29,8 @@ const runtimeValue = document.getElementById("runtime-value");
 
 const INITIAL_MIN_DURATION = 4000;
 const INFERENCE_MIN_DURATION = 2000;
+const REQUEST_TIMEOUT_MS = 9000;
+const PREDICTION_TIMEOUT_MS = 15000;
 
 let preloaderVisibleSince = performance.now();
 let preloaderHideTimeout = null;
@@ -83,6 +85,34 @@ function hidePreloader(minDuration = 0) {
   }, wait);
 }
 
+async function fetchWithTimeout(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error("Request timed out.");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchJson(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+  const response = await fetchWithTimeout(url, options, timeout);
+  if (!response.ok) {
+    const text = await response.text().catch(() => "");
+    throw new Error(text || `Status ${response.status}`);
+  }
+  try {
+    return await response.json();
+  } catch (error) {
+    throw new Error("Invalid JSON response.");
+  }
+}
+
 function handlePageLoad() {
   hidePreloader();
 }
@@ -109,13 +139,9 @@ function initialiseTabs() {
 }
 
 async function checkApiHealth() {
+  updateStatusIndicator("checking");
   try {
-    updateStatusIndicator("checking");
-    const response = await fetch(ENDPOINTS.health, { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error(`Status ${response.status}`);
-    }
-    const data = await response.json();
+    const data = await fetchJson(ENDPOINTS.health, { cache: "no-store" });
     updateStatusIndicator("online", data);
     hidePreloader(50);
     updateInferenceInfo({
@@ -125,7 +151,7 @@ async function checkApiHealth() {
     });
   } catch (error) {
     console.error("Health check failed:", error);
-    updateStatusIndicator("offline");
+    updateStatusIndicator("offline", { error: error?.message });
     hidePreloader(200);
   }
 }
@@ -138,7 +164,8 @@ function updateStatusIndicator(status, data) {
     const device = data?.device ? ` • ${String(data.device).toUpperCase()}` : "";
     message = `${classes}${device}`;
   } else if (status === "offline") {
-    message = "API unreachable";
+    const suffix = data?.error ? ` • ${data.error}` : "";
+    message = `API unreachable${suffix}`;
   }
 
   if (apiIndicator) {
@@ -255,7 +282,7 @@ function attachSampleHandlers() {
       console.log("[DogBreed Vision] Selected sample:", source);
       try {
         showPreloader("Loading curated sample...");
-        const response = await fetch(source, { mode: "cors" });
+        const response = await fetchWithTimeout(source, { mode: "cors", cache: "no-store" });
         if (!response.ok) {
           const errorText = await response.text();
           console.error("[DogBreed Vision] Failed to load sample response:", errorText);
@@ -403,25 +430,19 @@ async function runPrediction(file, origin) {
       fileSize: file.size,
     });
 
-    const response = await fetch(ENDPOINTS.predict, {
-      method: "POST",
-      body: formData,
-      headers: {
-        accept: "application/json",
+    const data = await fetchJson(
+      ENDPOINTS.predict,
+      {
+        method: "POST",
+        body: formData,
+        headers: {
+          accept: "application/json",
+        },
+        mode: "cors",
+        credentials: "omit",
       },
-      mode: "cors",
-      credentials: "omit",
-    });
-
-    console.debug("[DogBreed Vision] API Response status:", response.status, response.statusText);
-    const responseText = await response.text(); // Leia o corpo da resposta como texto
-    console.debug("[DogBreed Vision] API Response raw text:", responseText);
-
-    if (!response.ok) {
-      throw new Error(`Prediction failed with status ${response.status}: ${responseText}`);
-    }
-
-    const data = JSON.parse(responseText);
+      PREDICTION_TIMEOUT_MS,
+    );
     console.debug("[DogBreed Vision] Prediction response JSON:", data);
     renderDetections(data, previewURL);
   } catch (error) {

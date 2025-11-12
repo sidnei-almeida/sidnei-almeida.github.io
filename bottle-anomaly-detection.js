@@ -6,6 +6,9 @@
 
 const API_BASE_URL = "https://salmeida-bottle-anomaly-detection.hf.space/";
 const POLL_INTERVAL = 12000;
+const FETCH_TIMEOUT_MS = 8000;
+const OVERLAY_FAILSAFE_MS = 12000;
+const INFER_TIMEOUT_MS = 16000;
 
 const SAMPLE_IMAGES = [
   { label: "Reference Good", src: "./images/bottles/000.png" },
@@ -49,13 +52,14 @@ const SELECTORS = {
 
 let selectedFile = null;
 let previewUrl = null;
-let includeArtefacts = true;
+let includeArtifacts = true;
 let activeSampleIndex = null;
 let lightboxOpen = false;
 let lightboxLastFocus = null;
 let boundingBoxCache = null;
 let bboxRenderFrame = null;
 let bboxResizeObserver = null;
+let overlayFailSafeTimer = null;
 
 /** Utility: Element by id */
 function byId(id) {
@@ -67,6 +71,35 @@ function endpoint(path) {
   const base = API_BASE_URL.replace(/\/$/, "");
   const route = path.startsWith("/") ? path : `/${path}`;
   return `${base}${route}`;
+}
+
+function armOverlayFailSafe() {
+  disarmOverlayFailSafe();
+  overlayFailSafeTimer = window.setTimeout(() => {
+    console.warn("[GlassGuard] overlay failsafe triggered");
+    toggleOverlay(false);
+  }, OVERLAY_FAILSAFE_MS);
+}
+
+function disarmOverlayFailSafe() {
+  if (overlayFailSafeTimer) {
+    clearTimeout(overlayFailSafeTimer);
+    overlayFailSafeTimer = null;
+  }
+}
+
+function toggleOverlay(visible) {
+  const overlay = byId("loadingOverlay");
+  if (!overlay) return;
+  if (visible) {
+    overlay.hidden = false;
+    overlay.classList.add("visible");
+    armOverlayFailSafe();
+  } else {
+    overlay.classList.remove("visible");
+    overlay.hidden = true;
+    disarmOverlayFailSafe();
+  }
 }
 
 /** Utility: show toast message */
@@ -89,10 +122,9 @@ function showToast(message, variant = "info", duration = 3200) {
 function setLoading(state) {
   const progress = byId(SELECTORS.progressRail);
   const runBtn = byId(SELECTORS.runBtn);
-  const overlay = byId("loadingOverlay");
   if (progress) progress.hidden = !state;
   if (runBtn) runBtn.disabled = state || !selectedFile;
-  if (overlay) overlay.hidden = !state;
+  toggleOverlay(state);
 }
 
 /** Utility: clamp helper */
@@ -837,31 +869,20 @@ function setupShortcuts() {
 
 /** Fetch API health */
 async function fetchHealth() {
-  try {
-    const res = await fetch(endpoint("/health"));
-    if (!res.ok) throw new Error(res.statusText);
-    const data = await res.json();
-    byId(SELECTORS.apiIndicator).classList.toggle("live", data?.status === "ready");
-    byId(SELECTORS.apiIndicator).classList.toggle("error", data?.status !== "ready");
-  } catch (error) {
-    console.warn("[GlassGuard] health check failed", error);
-    const indicator = byId(SELECTORS.apiIndicator);
-    indicator.classList.remove("live");
-    indicator.classList.add("error");
-  }
+  const indicator = byId(SELECTORS.apiIndicator);
+  if (!indicator) return;
+  const data = await fetchJson(endpoint("/health"));
+  const status = String(data?.status ?? "unknown").toLowerCase();
+  const live = status === "ready" || status === "ok";
+  indicator.classList.toggle("live", live);
+  indicator.classList.toggle("error", !live);
 }
 
 /** Fetch API metadata */
 async function fetchMeta() {
-  try {
-    const res = await fetch(endpoint("/"));
-    if (!res.ok) throw new Error(res.statusText);
-    const data = await res.json();
-    byId(SELECTORS.metaModel).textContent = data?.name ?? "UNet";
-    byId(SELECTORS.metaVersion).textContent = data?.version ?? "—";
-  } catch (error) {
-    console.warn("[GlassGuard] meta fetch failed", error);
-  }
+  const data = await fetchJson(endpoint("/"));
+  byId(SELECTORS.metaModel).textContent = data?.name ?? "UNet";
+  byId(SELECTORS.metaVersion).textContent = data?.version ?? "—";
 }
 
 /** Execute inspection */
@@ -876,21 +897,18 @@ async function runInspection() {
   try {
     const form = new FormData();
     form.append("file", selectedFile);
-    includeArtefacts = byId(SELECTORS.toggleVisualizations)?.checked ?? true;
-    form.append("include_visualizations", String(includeArtefacts));
+    includeArtifacts = byId(SELECTORS.toggleVisualizations)?.checked ?? true;
+    form.append("include_visualizations", String(includeArtifacts));
 
     const start = performance.now();
-    const response = await fetch(endpoint("/infer"), {
-      method: "POST",
-      body: form,
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(text || `Request failed ${response.status}`);
-    }
-
-    const payload = await response.json();
+    const payload = await fetchJson(
+      endpoint("/infer"),
+      {
+        method: "POST",
+        body: form,
+      },
+      INFER_TIMEOUT_MS,
+    );
     const latency = payload?.latency_ms ?? performance.now() - start;
     updateResults(payload, latency);
   } catch (error) {
@@ -920,15 +938,36 @@ function updateResults(payload, latency) {
   });
 }
 
+async function fetchJson(url, options = {}, timeout = FETCH_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), timeout);
+  try {
+    const response = await fetch(url, { ...options, signal: controller.signal });
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || `Request failed ${response.status}`);
+    }
+    try {
+      return await response.json();
+    } catch (parseError) {
+      throw new Error("Invalid JSON response.");
+    }
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error("Request timed out.");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /** Initialise page */
 function init() {
-  const overlay = byId("loadingOverlay");
+  toggleOverlay(true);
   const canvas = byId(SELECTORS.overlayCanvas);
   if (canvas) {
     canvas.dataset.empty = "true";
-  }
-  if (overlay) {
-    overlay.hidden = false;
   }
 
   renderSamples();
@@ -945,18 +984,46 @@ function init() {
     }
   }
   byId(SELECTORS.toggleVisualizations)?.addEventListener("change", (event) => {
-    includeArtefacts = event.target.checked;
+    includeArtifacts = event.target.checked;
   });
   byId(SELECTORS.runBtn)?.addEventListener("click", runInspection);
   const year = byId(SELECTORS.footerYear);
   if (year) year.textContent = new Date().getFullYear().toString();
-  fetchMeta();
-  fetchHealth();
-  setInterval(fetchHealth, POLL_INTERVAL);
 
-  setTimeout(() => {
-    if (overlay) overlay.hidden = true;
-  }, 1800);
+  Promise.allSettled([fetchMeta(), fetchHealth()])
+    .then(([metaResult, healthResult]) => {
+      if (metaResult?.status === "rejected") {
+        console.warn("[GlassGuard] metadata load failed", metaResult.reason);
+        showToast("Unable to load API metadata.", "warning");
+      }
+      if (healthResult?.status === "rejected") {
+        console.warn("[GlassGuard] health check failed", healthResult.reason);
+        showToast("API health check failed.", "warning");
+        const indicator = byId(SELECTORS.apiIndicator);
+        if (indicator) {
+          indicator.classList.remove("live");
+          indicator.classList.add("error");
+        }
+      }
+    })
+    .finally(() => {
+      toggleOverlay(false);
+    });
+
+  const pollHealth = async () => {
+    try {
+      await fetchHealth();
+    } catch (error) {
+      console.warn("[GlassGuard] health poll failed", error);
+      const indicator = byId(SELECTORS.apiIndicator);
+      if (indicator) {
+        indicator.classList.remove("live");
+        indicator.classList.add("error");
+      }
+    }
+  };
+
+  window.setInterval(pollHealth, POLL_INTERVAL);
 }
 
 document.addEventListener("DOMContentLoaded", init);

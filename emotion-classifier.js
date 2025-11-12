@@ -3,6 +3,8 @@
 // ============================================
 
 const API_BASE_URL = 'https://salmeida-vgg16-emotion-classifier.hf.space';
+const REQUEST_TIMEOUT_MS = 9000;
+const PREDICTION_TIMEOUT_MS = 15000;
 let stream = null;
 let currentImageSrc = null;
 
@@ -19,14 +21,42 @@ const emotionEmojis = {
 
 // Emotion messages mapping
 const emotionMessages = {
-  angry: "😠 Looks like someone woke up on the wrong side of bed today! Stay calm!",
-  disgust: "🤢 Eww! Something left you disgusted. Let's improve that mood?",
-  fear: "😨 Fear? Don't be afraid! You're stronger than you think!",
-  happy: "😄 Pure joy! Keep spreading that contagious smile!",
-  neutral: "😐 Neutral like Ironically. Let's add some color?",
-  sad: "😢 Sadness in the air... Remember that after rain comes the rainbow!",
-  surprise: "😲 Wow! What a surprise! The world is full of unexpected things!"
+  angry: "Heightened anger detected. Offer a short pause before continuing the session.",
+  disgust: "Disgust response detected. Consider resetting the scene or providing relief cues.",
+  fear: "Fearful expression detected. Reassure the subject to foster a safer environment.",
+  happy: "Positive affect detected. Maintain the current conditions to capture authentic joy.",
+  neutral: "Neutral baseline detected. Provide a prompt to elicit a more expressive reaction.",
+  sad: "Sad affect detected. Offer support or adapt the context to restore comfort.",
+  surprise: "Surprise detected. Be ready to capture subsequent expressions and reactions."
 };
+
+async function fetchWithTimeout(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } catch (error) {
+    if (error?.name === 'AbortError') {
+      throw new Error('Request timed out.');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchJson(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+  const response = await fetchWithTimeout(url, options, timeout);
+  if (!response.ok) {
+    const text = await response.text().catch(() => '');
+    throw new Error(text || `Status ${response.status}`);
+  }
+  try {
+    return await response.json();
+  } catch (error) {
+    throw new Error('Invalid JSON response.');
+  }
+}
 
 // ============================================
 // Tab Management
@@ -238,7 +268,7 @@ async function preloadExampleFiles() {
       // Try fetch first
       let blob;
       try {
-        const response = await fetch(path);
+        const response = await fetchWithTimeout(path, { cache: 'no-store' });
         if (response.ok) {
           blob = await response.blob();
         } else {
@@ -301,7 +331,7 @@ async function loadExampleFile(emotion, imgSrc) {
         url = new URL(imgSrc, window.location.href).href;
       }
       console.log(`Trying fetch for ${url}`);
-      const response = await fetch(url);
+      const response = await fetchWithTimeout(url, { cache: 'no-store' });
       if (!response.ok) {
         throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
       }
@@ -458,14 +488,13 @@ function initializeExamples() {
 
 async function checkAPIHealth() {
   try {
-    const response = await fetch(`${API_BASE_URL}/health`);
-    const data = await response.json();
-    
+    const data = await fetchJson(`${API_BASE_URL}/health`);
     if (!data.model_loaded || !data.cascade_loaded) {
-      showError('API models are not fully loaded. Please try again in a moment.');
+      showError('API models are warming up. Please try again in a few seconds.');
     }
   } catch (error) {
     console.error('Health check error:', error);
+    showError('Unable to reach the inference API at the moment.');
   }
 }
 
@@ -478,17 +507,14 @@ async function analyzeImage(file, imageSrc) {
   formData.append('file', file);
 
   try {
-    const response = await fetch(`${API_BASE_URL}/predict`, {
-      method: 'POST',
-      body: formData
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.detail || 'Failed to analyze image');
-    }
-
-    const data = await response.json();
+    const data = await fetchJson(
+      `${API_BASE_URL}/predict`,
+      {
+        method: 'POST',
+        body: formData
+      },
+      PREDICTION_TIMEOUT_MS
+    );
     displayResults(data, imageSrc);
   } catch (error) {
     showError(error.message || 'Failed to analyze image. Please try again.');

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="PulseBridge • Predictive maintenance cockpit powered by LSTM time-series inference. Simule sensores, compare leituras e antecipe falhas."
+    />
+    <title>PulseBridge • Predictive Maintenance LSTM</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./predictive-maintenance.css" />
+  </head>
+  <body>
+    <div class="pulsebridge">
+      <header class="pb-header">
+        <div class="pb-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 28 28" width="26" height="26">
+              <defs>
+                <linearGradient id="axiomAura" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#f54768" stop-opacity="0.85" />
+                  <stop offset="100%" stop-color="#f09e4a" stop-opacity="0.85" />
+                </linearGradient>
+              </defs>
+              <rect width="28" height="28" rx="9" fill="#121212" />
+              <rect x="3" y="3" width="22" height="22" rx="7" fill="#0a0a0a" />
+              <rect x="3" y="3" width="22" height="22" rx="7" stroke="url(#axiomAura)" stroke-width="1.5" fill="none" />
+              <path
+                d="M12 19.5 14 11l2 8.5m-3.6-2.8h2.9"
+                fill="none"
+                stroke="url(#axiomAura)"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <div class="brand-copy">
+            <strong>AXIOM SENTINEL</strong>
+            <span>Diagnostics Intelligence</span>
+          </div>
+        </div>
+        <div class="pb-meta">
+          <div class="meta-chip">
+            <span>Model</span>
+            <strong id="metaModel">—</strong>
+          </div>
+          <div class="meta-chip">
+            <span>Version</span>
+            <strong id="metaVersion">—</strong>
+          </div>
+          <div class="meta-chip">
+            <span>Dataset</span>
+            <strong id="metaDataset">—</strong>
+          </div>
+        </div>
+        <div class="pb-actions">
+          <a class="ghost-btn" href="./index.html">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M9.3 3.3a1 1 0 0 1 1.4 0l5.73 5.73a1 1 0 1 1-1.42 1.42L11 6.17V16a1 1 0 1 1-2 0V6.17L4.95 10.45a1 1 0 0 1-1.42-1.42Z" />
+            </svg>
+            <span>Back to portfolio</span>
+          </a>
+          <div class="status-chip" id="apiIndicator" aria-live="polite">
+            <span class="dot"></span>
+            <span>API</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="pb-main">
+        <section class="panel telemetry">
+          <header>
+            <div class="section-intro">
+              <h2>Line Simulation</h2>
+              <p>Monitor live failure risk and detect anomalies ahead of time.</p>
+            </div>
+            <div class="header-actions">
+              <button class="ghost-btn small" id="seedSampleBtn" type="button">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M4 10a6 6 0 1 1 12 0 6 6 0 0 1-12 0Zm7-3H9v2H7v2h2v2h2v-2h2v-2h-2Z" />
+                </svg>
+                <span>Run sample</span>
+              </button>
+              <button class="primary-btn" id="autoSimulateToggle" type="button" aria-pressed="false">
+                <span class="label-live">Start simulation</span>
+                <span class="label-stop">Stop simulation</span>
+              </button>
+            </div>
+          </header>
+          <div class="telemetry-stage">
+            <canvas id="telemetryCanvas" aria-hidden="true"></canvas>
+            <div class="telemetry-overlay" id="telemetrySkeleton">
+              <div class="skeleton-chart"></div>
+            </div>
+            <div class="telemetry-legend">
+              <div class="legend-item">
+                <span class="swatch primary"></span>
+                <span>Failure probability</span>
+              </div>
+              <div class="legend-item">
+                <span class="swatch threshold"></span>
+                <span>Dynamic threshold</span>
+              </div>
+            </div>
+          </div>
+          <div class="telemetry-meta">
+            <div>
+              <span>Steps observed</span>
+              <strong id="telemetrySteps">0</strong>
+            </div>
+            <div>
+              <span>Average prob.</span>
+              <strong id="telemetryAverage">—</strong>
+            </div>
+            <div>
+              <span>Last threshold</span>
+              <strong id="telemetryThreshold">—</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel controls">
+          <header>
+            <div class="section-intro">
+              <h2>Sensor Console</h2>
+              <p>Tune a frame or pick a curated sample to run inference instantly.</p>
+            </div>
+          </header>
+          <form class="control-grid" id="predictForm">
+            <fieldset>
+              <legend>Temperatures</legend>
+              <label>
+                <span>Air (K)</span>
+                <input type="range" min="290" max="330" step="0.1" name="air_temperature_k" id="inputAir" />
+                <output for="inputAir" id="labelAir">—</output>
+              </label>
+              <label>
+                <span>Process (K)</span>
+                <input type="range" min="300" max="360" step="0.1" name="process_temperature_k" id="inputProcess" />
+                <output for="inputProcess" id="labelProcess">—</output>
+              </label>
+            </fieldset>
+            <fieldset>
+              <legend>Mechanics</legend>
+              <label>
+                <span>Speed (RPM)</span>
+                <input type="range" min="1200" max="2900" step="10" name="rotational_speed_rpm" id="inputSpeed" />
+                <output for="inputSpeed" id="labelSpeed">—</output>
+              </label>
+              <label>
+                <span>Torque (Nm)</span>
+                <input type="range" min="10" max="90" step="0.5" name="torque_nm" id="inputTorque" />
+                <output for="inputTorque" id="labelTorque">—</output>
+              </label>
+              <label>
+                <span>Desgaste (min)</span>
+                <input type="range" min="0" max="240" step="1" name="tool_wear_min" id="inputWear" />
+                <output for="inputWear" id="labelWear">—</output>
+              </label>
+            </fieldset>
+            <fieldset>
+              <legend>Product line</legend>
+              <div class="product-selector" role="radiogroup" aria-label="Product line">
+                <button type="button" class="product-pill" data-value="L" aria-pressed="false">Line L</button>
+                <button type="button" class="product-pill" data-value="M" aria-pressed="true">Line M</button>
+                <button type="button" class="product-pill" data-value="H" aria-pressed="false">Line H</button>
+              </div>
+              <input type="hidden" name="product_type" id="inputProduct" value="M" />
+            </fieldset>
+            <div class="control-actions">
+              <button class="ghost-btn" type="button" id="resetFormBtn">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M10 4a6 6 0 0 1 5.65 3.96l1.89-.64A8 8 0 1 0 18 10h-2a6 6 0 1 1-6-6Z" />
+                </svg>
+                <span>Reset sensors</span>
+              </button>
+              <button class="primary-btn" type="submit" id="predictBtn">
+                <span>Run inference</span>
+              </button>
+            </div>
+          </form>
+          <footer class="control-footer">
+            <span>Shortcuts: Ctrl+Enter run • Ctrl+R sample</span>
+          </footer>
+        </section>
+
+        <section class="panel insights">
+          <header>
+            <div class="section-intro">
+              <h2>Real-time Verdict</h2>
+              <p>Failure probability, decision threshold and recent readings.</p>
+            </div>
+          </header>
+          <div class="insight-grid">
+            <div class="insight-card verdict">
+              <span>Status</span>
+              <strong id="verdictLabel">—</strong>
+              <small id="verdictConfidence">—</small>
+            </div>
+            <div class="insight-card probability">
+              <span>Probability %</span>
+              <div class="gauge" id="probabilityGauge">
+                <svg viewBox="0 0 120 60" aria-hidden="true">
+                  <path class="gauge-rail" d="M10 54a50 50 0 0 1 100 0" />
+                  <path class="gauge-fill" id="gaugeFill" d="M10 54a50 50 0 0 1 100 0" />
+                </svg>
+                <strong id="probabilityValue">0%</strong>
+              </div>
+            </div>
+            <div class="insight-card threshold">
+              <span>Threshold</span>
+              <strong id="thresholdValue">—</strong>
+              <small id="thresholdContext">—</small>
+            </div>
+            <div class="insight-card latency">
+              <span>Latency</span>
+              <strong id="latencyValue">—</strong>
+              <small>Total pipeline time</small>
+            </div>
+          </div>
+          <section class="explanation">
+            <header>
+              <h3>Latest readings</h3>
+              <button class="ghost-btn small" type="button" id="viewSequenceBtn">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M4 5a2 2 0 0 1 2-2h2v2H6v10h2v2H6a2 2 0 0 1-2-2Zm10 12h-2v-2h2V5h-2V3h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2ZM9 9h2v2H9Z" />
+                </svg>
+                <span>View sequence</span>
+              </button>
+            </header>
+            <ul class="reading-list" id="recentReadings"></ul>
+          </section>
+        </section>
+
+        <section class="panel history">
+          <header>
+            <div class="section-intro">
+              <h2>Inference History</h2>
+              <p>Compare the latest runs and surface recurring patterns.</p>
+            </div>
+          </header>
+          <div class="history-table" role="table" aria-label="Inference history">
+            <div class="table-header" role="rowgroup">
+              <div role="row">
+                <span role="columnheader">Time</span>
+                <span role="columnheader">Source</span>
+                <span role="columnheader">Product</span>
+                <span role="columnheader">Probability</span>
+                <span role="columnheader">Threshold</span>
+                <span role="columnheader">Status</span>
+              </div>
+            </div>
+            <div class="table-body" id="historyBody" role="rowgroup"></div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="pb-footer">
+        <span>© <span id="footerYear"></span> PulseBridge</span>
+        <span>Shortcuts: Ctrl+Enter run • Ctrl+R sample • Shift+S export</span>
+      </footer>
+    </div>
+
+    <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="loading-overlay" id="loadingOverlay" hidden aria-live="polite" aria-atomic="true">
+      <div class="loading-card">
+        <div class="loading-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="42" height="42">
+            <circle class="halo" cx="16" cy="16" r="14" />
+            <path class="pulse" d="M6 18h6l2-6 4 12 2-6h6" />
+          </svg>
+        </div>
+        <div class="loading-copy">
+          <strong>Syncing telemetry…</strong>
+          <span>Checking API health and loading model metadata.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-shell" id="sequenceModal" hidden>
+      <div class="modal-backdrop" data-close="true"></div>
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="sequenceTitle">
+        <header>
+          <h2 id="sequenceTitle">Analyzed sequence</h2>
+          <button type="button" class="modal-close" id="sequenceClose" aria-label="Close modal">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M5 5l10 10m0-10L5 15" />
+            </svg>
+          </button>
+        </header>
+        <div class="modal-body">
+          <p>Normalized data across 50 time steps for the LSTM.</p>
+          <div class="sequence-scroll" id="sequenceScroll"></div>
+        </div>
+        <footer>
+          <button type="button" class="ghost-btn" data-close="true">Close</button>
+        </footer>
+      </section>
+    </div>
+
+    <script type="module" src="./predictive-maintenance.js"></script>
+  </body>
+</html>
+
