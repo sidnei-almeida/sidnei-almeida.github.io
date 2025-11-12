@@ -3,6 +3,9 @@ const API_BASE_URL = DEFAULT_BASE_URL;
 const DEFAULT_EMPTY_MESSAGE = "No license plates detected.";
 const LOCAL_STORAGE_KEY = "licensePlateApiBaseUrl";
 const INITIAL_MIN_LOADER = 1200;
+const REQUEST_TIMEOUT_MS = 9000;
+const DETECTION_TIMEOUT_MS = 16000;
+const HEALTH_POLL_INTERVAL = 20000;
 
 let loaderTimer = null;
 let loaderVisibleAt = null;
@@ -146,6 +149,34 @@ function hidePreloader() {
     loaderVisibleAt = null;
     currentMinDuration = INITIAL_MIN_LOADER;
   }, remaining);
+}
+
+async function fetchWithTimeout(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error("Request timed out.");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchJson(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+  const response = await fetchWithTimeout(url, options, timeout);
+  if (!response.ok) {
+    const text = await response.text().catch(() => "");
+    throw new Error(text || `Status ${response.status}`);
+  }
+  try {
+    return await response.json();
+  } catch (error) {
+    throw new Error("Invalid JSON response.");
+  }
 }
 
 function setApiStatus(state) {
@@ -560,7 +591,7 @@ function highlightSample(index) {
 }
 
 async function fetchBlob(url) {
-  const response = await fetch(url);
+  const response = await fetchWithTimeout(url, { cache: "no-store" });
   if (!response.ok) {
     throw new Error(`Unable to load sample image. Status: ${response.status}`);
   }
@@ -803,17 +834,14 @@ async function runPrediction(file) {
   formData.append("file", file);
   formData.append("return_image", "false");
 
-  const response = await fetch(buildUrl("/v1/detect"), {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Prediction failed: ${response.status} ${response.statusText} • ${text}`);
-  }
-
-  const payload = await response.json();
+  const payload = await fetchJson(
+    buildUrl("/v1/detect"),
+    {
+      method: "POST",
+      body: formData,
+    },
+    DETECTION_TIMEOUT_MS,
+  );
   const runtimeMs = payload?.performance?.inference_time_ms ?? performance.now() - start;
   return { payload, runtimeMs };
 }
@@ -832,33 +860,24 @@ function renderError(error) {
 
 async function fetchHealth() {
   try {
-    const response = await fetch(buildUrl("/health"));
-    if (!response.ok) {
-      throw new Error(`Health check failed: ${response.status}`);
+    const payload = await fetchJson(buildUrl("/health"));
+    const status = String(payload?.status ?? "unknown").toLowerCase();
+    const healthy = status === "ok" || status === "ready";
+    setApiStatus(healthy ? "live" : "error");
+    if (!healthy) {
+      throw new Error(`API status: ${status}`);
     }
-    const payload = await response.json();
-    if (payload?.status === "ok") {
-      setApiStatus("live");
-    } else {
-      setApiStatus("error");
-    }
+    return payload;
   } catch (error) {
-    console.warn("[PlatePulse] Health check error", error);
     setApiStatus("error");
+    throw error;
   }
 }
 
 async function fetchModelInfo() {
-  try {
-    const response = await fetch(buildUrl("/model/info"));
-    if (!response.ok) {
-      throw new Error(`Model info failed: ${response.status}`);
-    }
-    const payload = await response.json();
-    applyModelMetrics(payload);
-  } catch (error) {
-    console.warn("[PlatePulse] Model info unavailable", error);
-  }
+  const payload = await fetchJson(buildUrl("/model/info"));
+  applyModelMetrics(payload);
+  return payload;
 }
 
 function attachBaseUrlControls() {
@@ -910,13 +929,38 @@ function initialise() {
   initLightbox();
   registerShortcuts();
   attachBaseUrlControls();
-  fetchHealth();
-  fetchModelInfo();
   resetResultPanel();
   updateRunButton();
-  setTimeout(() => {
+
+  const bootstrapFailSafe = setTimeout(() => {
     hidePreloader();
-  }, 900);
+  }, INITIAL_MIN_LOADER * 3);
+
+  Promise.allSettled([fetchHealth(), fetchModelInfo()])
+    .then(([healthResult, infoResult]) => {
+      if (healthResult?.status === "rejected") {
+        console.warn("[PlatePulse] Health bootstrap failed", healthResult.reason);
+        showToast("Unable to confirm API health.", "warning");
+      }
+      if (infoResult?.status === "rejected") {
+        console.warn("[PlatePulse] Model info bootstrap failed", infoResult.reason);
+        showToast("Model metrics unavailable.", "warning");
+      }
+    })
+    .finally(() => {
+      clearTimeout(bootstrapFailSafe);
+      hidePreloader();
+    });
+
+  const pollHealth = async () => {
+    try {
+      await fetchHealth();
+    } catch (error) {
+      console.warn("[PlatePulse] Periodic health check failed", error);
+    }
+  };
+
+  window.setInterval(pollHealth, HEALTH_POLL_INTERVAL);
 }
 
 document.addEventListener("DOMContentLoaded", initialise);

@@ -739,11 +739,16 @@ input:focus-visible {
   background: rgba(5, 5, 5, 0.82);
   backdrop-filter: blur(16px);
   z-index: 80;
-  transition: opacity var(--transition);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--transition), visibility var(--transition);
 }
 
-.loading-overlay[hidden] {
-  display: none;
+.loading-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
 }
 
 .loading-card {

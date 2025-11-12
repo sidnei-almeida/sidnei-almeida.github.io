@@ -7,6 +7,9 @@ const ENDPOINTS = {
 
 const INITIAL_MIN_DURATION = 600;
 const INFERENCE_MIN_DURATION = 0;
+const REQUEST_TIMEOUT_MS = 9000;
+const PREDICTION_TIMEOUT_MS = 16000;
+const HEALTH_POLL_INTERVAL = 20000;
 
 const preloader = document.getElementById("preloader");
 const pageWrapper = document.querySelector(".page-wrapper");
@@ -94,49 +97,92 @@ function hidePreloader(minDuration = 0) {
   }, wait);
 }
 
+async function fetchWithTimeout(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeout);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error("Request timed out.");
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchJson(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+  const response = await fetchWithTimeout(url, options, timeout);
+  if (!response.ok) {
+    const text = await response.text().catch(() => "");
+    throw new Error(text || `Status ${response.status}`);
+  }
+  try {
+    return await response.json();
+  } catch (error) {
+    throw new Error("Invalid JSON response.");
+  }
+}
+
 function setApiStatus(state) {
   if (!apiStatus) return;
   apiStatus.dataset.status = state;
 }
 
 async function checkApiHealth() {
+  setApiStatus("checking");
   try {
-    setApiStatus("checking");
-    const response = await fetch(ENDPOINTS.health, {
-      method: "GET",
-      mode: "cors",
-      cache: "no-store",
-      credentials: "omit",
-    });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json().catch(() => ({}));
-    if (data?.status === "ready" || response.ok) {
+    const data = await fetchJson(
+      ENDPOINTS.health,
+      {
+        method: "GET",
+        mode: "cors",
+        cache: "no-store",
+        credentials: "omit",
+      },
+      REQUEST_TIMEOUT_MS,
+    );
+    const status = String(data?.status ?? "unknown").toLowerCase();
+    if (status === "ready" || status === "ok") {
       setApiStatus("ready");
-    } else {
+    } else if (status === "degraded") {
       setApiStatus("degraded");
+    } else {
+      throw new Error(`API status: ${status}`);
     }
+    return data;
   } catch (error) {
     console.error("[RoadSight] Failed to verify API health:", error);
     setApiStatus("error");
-  } finally {
-    hidePreloader();
+    throw error;
   }
 }
 
 async function fetchModelInfo() {
   try {
-    const response = await fetch(ENDPOINTS.info, {
-      method: "GET",
-      mode: "cors",
-      cache: "no-store",
-      credentials: "omit",
-    });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
+    const data = await fetchJson(
+      ENDPOINTS.info,
+      {
+        method: "GET",
+        mode: "cors",
+        cache: "no-store",
+        credentials: "omit",
+      },
+      REQUEST_TIMEOUT_MS,
+    );
     modelNameEl.textContent = data?.weights_path ? formatModelName(data.weights_path) : data?.model_name ?? "YOLOv8";
     modelDeviceEl.textContent = String(data?.device ?? "cpu").toUpperCase();
+    if (Array.isArray(data?.performance_history)) {
+      const avg = data.performance_history.filter(Number.isFinite).at(-1);
+      if (Number.isFinite(avg)) {
+        avgRuntimeEl.textContent = formatRuntimeDisplay(avg);
+      }
+    }
+    return data;
   } catch (error) {
     console.warn("[RoadSight] Unable to fetch model info:", error);
+    throw error;
   }
 }
 
@@ -194,13 +240,21 @@ function attachSampleHandlers() {
 }
 
 async function fetchSampleBlob(url) {
-  const response = await fetch(url, { mode: "cors", credentials: "omit" });
+  const response = await fetchWithTimeout(url, {
+    mode: "cors",
+    credentials: "omit",
+    cache: "no-store",
+  });
   if (!response.ok) {
-    const payload = await response.text().catch(() => "");
+    let payload = "";
+    try {
+      payload = await response.text();
+    } catch (error) {
+      console.warn("[RoadSight] Unable to read sample payload", error);
+    }
     throw new Error(`Failed to fetch sample ${response.status}: ${payload}`);
   }
-  const blob = await response.blob();
-  return new File([blob], url.split("/").pop() || "sample.jpg", { type: blob.type || "image/jpeg" });
+  return response.blob();
 }
 
 function attachUploadHandlers() {
@@ -314,26 +368,16 @@ async function runPrediction(file, { origin, label }) {
     formData.append("file", file);
     formData.append("include_image", "true");
 
-    const response = await fetch(ENDPOINTS.predict, {
-      method: "POST",
-      mode: "cors",
-      credentials: "omit",
-      body: formData,
-    });
-
-    const rawText = await response.text();
-    let payload = null;
-    try {
-      payload = rawText ? JSON.parse(rawText) : {};
-    } catch (error) {
-      console.error("[RoadSight] Unable to parse JSON response:", rawText);
-      throw new Error("Invalid API response.");
-    }
-
-    if (!response.ok) {
-      const message = payload?.detail || payload?.error || `Error ${response.status}`;
-      throw new Error(message);
-    }
+    const payload = await fetchJson(
+      ENDPOINTS.predict,
+      {
+        method: "POST",
+        mode: "cors",
+        credentials: "omit",
+        body: formData,
+      },
+      PREDICTION_TIMEOUT_MS,
+    );
 
     const elapsedMs = performance.now() - requestStartedAt;
     lastMeasuredRuntime = elapsedMs;
@@ -511,8 +555,34 @@ function initialise() {
   attachSampleHandlers();
   attachUploadHandlers();
   attachCameraHandlers();
-  fetchModelInfo();
-  checkApiHealth();
+
+  const bootstrapFailSafe = setTimeout(() => {
+    hidePreloader();
+  }, INITIAL_MIN_DURATION * 4);
+
+  Promise.allSettled([fetchModelInfo(), checkApiHealth()])
+    .then(([infoResult, healthResult]) => {
+      if (infoResult?.status === "rejected") {
+        console.warn("[RoadSight] Model metadata unavailable during bootstrap", infoResult.reason);
+      }
+      if (healthResult?.status === "rejected") {
+        console.warn("[RoadSight] API health unavailable during bootstrap", healthResult.reason);
+      }
+    })
+    .finally(() => {
+      clearTimeout(bootstrapFailSafe);
+      hidePreloader();
+    });
+
+  const pollHealth = async () => {
+    try {
+      await checkApiHealth();
+    } catch (error) {
+      console.warn("[RoadSight] Periodic health check failed", error);
+    }
+  };
+
+  window.setInterval(pollHealth, HEALTH_POLL_INTERVAL);
 }
 
 document.addEventListener("DOMContentLoaded", initialise);

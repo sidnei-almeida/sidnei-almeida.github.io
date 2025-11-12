@@ -1448,10 +1448,10 @@
     <div class="container">
       <!-- Tabs -->
       <div class="tabs">
-        <button class="tab active" onclick="switchTab('inventory')">
+        <button class="tab active" onclick="switchTab(event, 'inventory')">
           <i class="fas fa-box"></i> Evaluate Inventory
         </button>
-        <button class="tab" onclick="switchTab('price')">
+        <button class="tab" onclick="switchTab(event, 'price')">
           <i class="fas fa-search-dollar"></i> Search Price
         </button>
       </div>
@@ -1492,16 +1492,16 @@
           <h3><i class="fas fa-search-dollar"></i> Search Item Price</h3>
           <form class="search-form" onsubmit="searchPrice(event)">
             <div class="form-group">
-              <label for="item-name">Nome da Arma (sem condição)</label>
+              <label for="item-name">Weapon Name (without wear)</label>
               <input 
                 type="text" 
                 id="item-name" 
-                placeholder="Ex: AK-47 | Redline"
+                placeholder="e.g., AK-47 | Redline"
                 required
               />
               <small style="display: block; margin-top: 0.5rem; color: var(--cs2-text-dim); font-size: 0.85rem;">
                 <i class="fas fa-info-circle" style="margin-right: 0.25rem;"></i>
-                Digite apenas o nome da arma. O sistema buscará automaticamente todos os preços (Field-Tested, Minimal Wear, etc.) e versões StatTrak™.
+                Enter only the weapon name. The system automatically collects every wear tier (Field-Tested, Minimal Wear, etc.) and StatTrak™ variants.
               </small>
             </div>
             <button type="submit" class="btn btn-primary">
@@ -1527,6 +1527,37 @@
 
   <script>
     const API_BASE = 'https://cs2-valuation-api.onrender.com';
+    const REQUEST_TIMEOUT_MS = 9000;
+    const INVENTORY_TIMEOUT_MS = 16000;
+    const PRICE_TIMEOUT_MS = 12000;
+    
+    async function fetchWithTimeout(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeout);
+      try {
+        return await fetch(url, { ...options, signal: controller.signal });
+      } catch (error) {
+        if (error?.name === 'AbortError') {
+          throw new Error('Request timed out.');
+        }
+        throw error;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    
+    async function fetchJson(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+      const response = await fetchWithTimeout(url, options, timeout);
+      if (!response.ok) {
+        const text = await response.text().catch(() => '');
+        throw new Error(text || `Status ${response.status}`);
+      }
+      try {
+        return await response.json();
+      } catch (error) {
+        throw new Error('Invalid response payload.');
+      }
+    }
     
     // Scroll header effect
     let lastScroll = 0;
@@ -1566,11 +1597,10 @@
     });
     
     // Tab Switching with animation
-    function switchTab(tabName) {
+    function switchTab(evt, tabName) {
       const tabs = document.querySelectorAll('.tab');
       const tabContents = document.querySelectorAll('.tab-content');
-      const activeTab = event.target.closest('.tab');
-      const tabsContainer = document.querySelector('.tabs');
+      const activeTab = evt.target.closest('.tab');
       
       // Update active states
       tabs.forEach(tab => tab.classList.remove('active'));
@@ -1578,11 +1608,6 @@
       
       activeTab.classList.add('active');
       document.getElementById(`${tabName}-tab`).classList.add('active');
-      
-      // Animate tab indicator
-      const tabRect = activeTab.getBoundingClientRect();
-      const tabsRect = tabsContainer.getBoundingClientRect();
-      const indicator = tabsContainer.querySelector('::after');
       
       // Scroll to top of content
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1635,21 +1660,28 @@
           ? `/inventory/full/${steamId}`
           : `/inventory/${steamId}`;
         
-        const response = await fetch(`${API_BASE}${endpoint}`);
+        const data = await fetchJson(
+          `${API_BASE}${endpoint}`,
+          {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-store',
+            credentials: 'omit'
+          },
+          INVENTORY_TIMEOUT_MS
+        );
         
-        if (!response.ok) {
-          throw new Error('Error fetching inventory');
-        }
-        
-        const data = await response.json();
         displayInventoryResults(data, analysisType);
         
       } catch (error) {
+        const message = error.message?.includes('Status 404')
+          ? 'Inventory not found or set to private.'
+          : error.message;
         resultsDiv.innerHTML = `
           <div class="error-message">
             <i class="fas fa-exclamation-triangle"></i>
             <h3>Error Loading Inventory</h3>
-            <p>${error.message}</p>
+            <p>${message}</p>
             <p style="margin-top: 1rem;">Please verify that the Steam ID is correct and the inventory is public.</p>
           </div>
         `;
@@ -1670,7 +1702,7 @@
               </div>
               <div class="stat-content">
                 <div class="stat-value">$${data.total_value?.toFixed(2) || '0.00'}</div>
-                <div class="stat-label">Valor Total</div>
+                <div class="stat-label">Total Value</div>
               </div>
             </div>
             <div class="stat-card">
@@ -1679,7 +1711,7 @@
               </div>
               <div class="stat-content">
                 <div class="stat-value">${data.total_items || 0}</div>
-                <div class="stat-label">Total de Itens</div>
+                <div class="stat-label">Total Items</div>
               </div>
             </div>
             <div class="stat-card">
@@ -1688,7 +1720,7 @@
               </div>
               <div class="stat-content">
                 <div class="stat-value">${data.marketable_items || 0}</div>
-                <div class="stat-label">Itens Vendáveis</div>
+                <div class="stat-label">Marketable Items</div>
               </div>
             </div>
             <div class="stat-card">
@@ -1697,7 +1729,7 @@
               </div>
               <div class="stat-content">
                 <div class="stat-value">$${((data.total_value || 0) / (data.total_items || 1)).toFixed(2)}</div>
-                <div class="stat-label">Valor Médio/Item</div>
+                <div class="stat-label">Average Value per Item</div>
               </div>
             </div>
             <div class="stat-card">
@@ -1706,7 +1738,7 @@
               </div>
               <div class="stat-content">
                 <div class="stat-value">${data.storage_units || 0}</div>
-                <div class="stat-label">Unidades de Armazenamento</div>
+                <div class="stat-label">Storage Units</div>
               </div>
             </div>
           </div>
@@ -1723,7 +1755,7 @@
           }
         }
       } else if (data.items && data.items.length > 0) {
-        allItems = data.items.map(item => ({ ...item, category: item.type || 'Outros' }));
+        allItems = data.items.map(item => ({ ...item, category: item.type || 'Other' }));
       }
       
       // Sort by price descending
@@ -1734,11 +1766,11 @@
         summaryHTML += `
           <div class="data-table-container">
             <div class="data-table-header">
-              <h3><i class="fas fa-table"></i> Detalhamento do Inventário</h3>
+              <h3><i class="fas fa-table"></i> Inventory Breakdown</h3>
               <div class="table-controls">
-                <input type="text" class="table-search" placeholder="Buscar item..." onkeyup="filterInventoryTable(this.value)">
+                <input type="text" class="table-search" placeholder="Search item..." onkeyup="filterInventoryTable(this.value)">
                 <button class="table-sort-btn active" onclick="sortInventoryTable('price')">
-                  <i class="fas fa-sort-amount-down"></i> Ordenar por Valor
+                  <i class="fas fa-sort-amount-down"></i> Sort by Value
                 </button>
               </div>
             </div>
@@ -1746,11 +1778,11 @@
               <thead>
                 <tr>
                   <th class="index-cell">#</th>
-                  <th onclick="sortInventoryTable('name')">Imagem</th>
-                  <th onclick="sortInventoryTable('name')">Nome do Item <i class="fas fa-sort"></i></th>
-                  <th onclick="sortInventoryTable('category')">Categoria <i class="fas fa-sort"></i></th>
-                  <th onclick="sortInventoryTable('rarity')">Raridade <i class="fas fa-sort"></i></th>
-                  <th onclick="sortInventoryTable('price')">Valor <i class="fas fa-sort"></i></th>
+                  <th onclick="sortInventoryTable('name')">Image</th>
+                  <th onclick="sortInventoryTable('name')">Item Name <i class="fas fa-sort"></i></th>
+                  <th onclick="sortInventoryTable('category')">Category <i class="fas fa-sort"></i></th>
+                  <th onclick="sortInventoryTable('rarity')">Rarity <i class="fas fa-sort"></i></th>
+                  <th onclick="sortInventoryTable('price')">Price <i class="fas fa-sort"></i></th>
                 </tr>
               </thead>
               <tbody>
@@ -1760,7 +1792,7 @@
           const price = item.price || item.market_price || 0;
           const rarity = item.rarity || 'N/A';
           const rarityClass = rarity.toLowerCase().replace(/\s+/g, '-');
-          const category = item.category || item.type || 'Outros';
+          const category = item.category || item.type || 'Other';
           const itemName = item.name || item.market_hash_name || 'Item';
           const imageUrl = item.image_url || '';
           
@@ -1787,7 +1819,7 @@
             </table>
             <div class="table-footer">
               <div class="table-info">
-                Exibindo <strong id="items-count">${allItems.length}</strong> itens
+                Showing <strong id="items-count">${allItems.length}</strong> items
               </div>
             </div>
           </div>
@@ -1873,6 +1905,7 @@
       const rarity = item.rarity || item.type || 'unknown';
       const rarityClass = rarity.toLowerCase().replace(/\s+/g, '-');
       const imageUrl = item.image_url || '';
+      const displayCategory = item.category || item.type || 'Other';
       
       return `
         <div class="item-card">
@@ -1904,10 +1937,10 @@
                 <span class="value">${item.weapon}</span>
               </div>
             ` : ''}
-            ${item.category ? `
+            ${displayCategory ? `
               <div class="item-detail">
                 <span class="label">Category:</span>
-                <span class="value">${item.category}</span>
+                <span class="value">${displayCategory}</span>
               </div>
             ` : ''}
             ${item.quantity && item.quantity > 1 ? `
@@ -1936,21 +1969,25 @@
       `;
       
       try {
-        const response = await fetch(`${API_BASE}/price/${encodeURIComponent(itemName)}`);
-        
-        if (!response.ok) {
-          throw new Error('Item not found');
-        }
-        
-        const data = await response.json();
+        const data = await fetchJson(
+          `${API_BASE}/price/${encodeURIComponent(itemName)}`,
+          {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-store',
+            credentials: 'omit'
+          },
+          PRICE_TIMEOUT_MS
+        );
         displayPriceResults(data, itemName);
         
       } catch (error) {
+        const message = error.message?.includes('Status 404') ? 'Item not found' : error.message;
         resultsDiv.innerHTML = `
           <div class="error-message">
             <i class="fas fa-exclamation-triangle"></i>
             <h3>Item Not Found</h3>
-            <p>${error.message}</p>
+            <p>${message}</p>
           </div>
         `;
       }
@@ -1985,12 +2022,12 @@
         pricesTableHTML = `
           <div class="prices-table-container">
             <h3 style="color: var(--cs2-gold); margin-bottom: 1rem; font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 1px;">
-              <i class="fas fa-table"></i> Preços por Condição
+              <i class="fas fa-table"></i> Prices by Wear
             </h3>
             <table class="prices-table">
               <thead>
                 <tr>
-                  <th>Condição</th>
+                  <th>Wear</th>
                   <th>Normal</th>
                   <th>StatTrak™</th>
                 </tr>
@@ -2030,7 +2067,7 @@
               <img src="${data.image_url}" alt="${itemName}" class="skin-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
               <div class="skin-image-placeholder" style="display: none;">
                 <i class="fas fa-image" style="font-size: 2rem; margin-right: 0.5rem;"></i>
-                Imagem não disponível
+                Image not available
               </div>
             </div>
           ` : ''}
@@ -2051,19 +2088,19 @@
                 ${data.weapon ? `
                   <div class="weapon-info-badge">
                     <i class="fas fa-crosshairs"></i>
-                    <span>Arma: ${data.weapon}</span>
+                    <span>Weapon: ${data.weapon}</span>
                   </div>
                 ` : ''}
                 ${data.category ? `
                   <div class="weapon-info-badge">
                     <i class="fas fa-layer-group"></i>
-                    <span>Categoria: ${data.category}</span>
+                    <span>Category: ${data.category}</span>
                   </div>
                 ` : ''}
                 ${data.rarity ? `
                   <div class="weapon-info-badge">
                     <i class="fas fa-gem"></i>
-                    <span>Raridade: ${data.rarity}</span>
+                    <span>Rarity: ${data.rarity}</span>
                   </div>
                 ` : ''}
               </div>
@@ -2072,7 +2109,7 @@
             <div class="price-details-grid" style="margin-top: 1.5rem;">
               <div class="price-detail-item">
                 <div class="price-detail-label">
-                  <i class="fas fa-money-bill-wave"></i> Moeda
+                  <i class="fas fa-money-bill-wave"></i> Currency
                 </div>
                 <div class="price-detail-value">${currency}</div>
               </div>
@@ -2087,14 +2124,14 @@
               ${data.price_range ? `
                 <div class="price-detail-item">
                   <div class="price-detail-label">
-                    <i class="fas fa-arrow-down"></i> Preço Mínimo
+                    <i class="fas fa-arrow-down"></i> Lowest Price
                   </div>
                   <div class="price-detail-value">$${data.price_range.min?.toFixed(2) || 'N/A'}</div>
                 </div>
                 
                 <div class="price-detail-item">
                   <div class="price-detail-label">
-                    <i class="fas fa-arrow-up"></i> Preço Máximo
+                    <i class="fas fa-arrow-up"></i> Highest Price
                   </div>
                   <div class="price-detail-value">$${data.price_range.max?.toFixed(2) || 'N/A'}</div>
                 </div>
@@ -2115,7 +2152,7 @@
                   <i class="fas fa-check-circle"></i> Processado
                 </div>
                 <div class="price-detail-value">
-                  ${data.processed ? '<span style="color: var(--cs2-green);">Sim</span>' : '<span style="color: var(--cs2-red);">Não</span>'}
+                  ${data.processed ? '<span style="color: var(--cs2-green);">Yes</span>' : '<span style="color: var(--cs2-red);">No</span>'}
                 </div>
               </div>
               ` : ''}
@@ -2131,7 +2168,7 @@
               </div>
               <div class="stat-content">
                 <div class="stat-value">$${price.toFixed(2)}</div>
-                <div class="stat-label">Preço Atual</div>
+                <div class="stat-label">Current Price</div>
               </div>
             </div>
             
@@ -2142,7 +2179,7 @@
                 </div>
                 <div class="stat-content">
                   <div class="stat-value">$${((data.price_range.min + data.price_range.max) / 2).toFixed(2)}</div>
-                  <div class="stat-label">Preço Médio</div>
+                  <div class="stat-label">Average Price</div>
                 </div>
               </div>
             ` : ''}
@@ -2153,7 +2190,7 @@
               </div>
               <div class="stat-content">
                 <div class="stat-value">${currency}</div>
-                <div class="stat-label">Moeda</div>
+                <div class="stat-label">Currency</div>
               </div>
             </div>
             
@@ -2169,21 +2206,21 @@
           </div>
           
           <div class="search-section" style="margin-top: 2rem;">
-            <h3><i class="fas fa-info-circle"></i> Informações Adicionais</h3>
+            <h3><i class="fas fa-info-circle"></i> Additional Information</h3>
             <p style="margin-top: 1rem; color: var(--cs2-text-dim); line-height: 1.8;">
-              ${data.source ? `<strong>Fonte:</strong> ${data.source}<br>` : ''}
+              ${data.source ? `<strong>Source:</strong> ${data.source}<br>` : ''}
               <strong>Item:</strong> ${data.market_hash_name || itemName}<br>
-              ${data.weapon ? `<strong>Arma:</strong> ${data.weapon}<br>` : ''}
-              ${data.category ? `<strong>Categoria:</strong> ${data.category}<br>` : ''}
-              ${data.rarity ? `<strong>Raridade:</strong> ${data.rarity}<br>` : ''}
-              ${data.price_range ? `<strong>Range de Preços:</strong> $${data.price_range.min?.toFixed(2)} - $${data.price_range.max?.toFixed(2)}<br>` : ''}
-              <strong>Tipo de Consulta:</strong> Preço Individual do Steam Market<br>
+              ${data.weapon ? `<strong>Weapon:</strong> ${data.weapon}<br>` : ''}
+              ${data.category ? `<strong>Category:</strong> ${data.category}<br>` : ''}
+              ${data.rarity ? `<strong>Rarity:</strong> ${data.rarity}<br>` : ''}
+              ${data.price_range ? `<strong>Price Range:</strong> $${data.price_range.min?.toFixed(2)} - $${data.price_range.max?.toFixed(2)}<br>` : ''}
+              <strong>Query Type:</strong> Steam Market Single Item<br>
             </p>
             
             <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255, 215, 0, 0.05); border: 1px solid var(--cs2-border); border-radius: 8px;">
               <p style="color: var(--cs2-text-dim); font-size: 0.9rem; margin: 0;">
                 <i class="fas fa-exclamation-circle" style="color: var(--cs2-gold);"></i>
-                <strong>Nota:</strong> Os preços são obtidos diretamente da Steam Market e podem variar. Para valores mais precisos e atualizados, considere fazer análises periódicas.
+                <strong>Note:</strong> Prices are pulled directly from the Steam Market and may fluctuate. For accurate guidance, schedule periodic valuations.
               </p>
             </div>
           </div>

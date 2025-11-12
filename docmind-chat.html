@@ -1484,11 +1484,56 @@
     <script>
         // Configuration
         const API_BASE_URL = 'https://salmeida-my-rag-chatbot.hf.space';
+        const REQUEST_TIMEOUT_MS = 9000;
+        const LONG_REQUEST_TIMEOUT_MS = 20000;
+        const UPLOAD_TIMEOUT_MS = 45000;
+        const INDEX_POLL_TIMEOUT_MS = 15000;
+        const MIN_READY_DELAY_MS = 10000;
+        const READY_JOKE_MESSAGE = "✅ PDF carregado! Prometo que li tudo e não virei meme. Pode mandar a pergunta.";
+        
+        async function fetchWithTimeout(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeout);
+            try {
+                return await fetch(url, { ...options, signal: controller.signal });
+            } catch (error) {
+                if (error?.name === 'AbortError') {
+                    throw new Error('Request timed out.');
+                }
+                throw error;
+            } finally {
+                clearTimeout(timer);
+            }
+        }
+        
+        async function requestJson(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+            const response = await fetchWithTimeout(url, options, timeout);
+            const text = await response.text().catch(() => '');
+            let data = null;
+            if (text) {
+                try {
+                    data = JSON.parse(text);
+                } catch (error) {
+                    if (response.ok) {
+                        throw new Error('Invalid JSON response.');
+                    }
+                }
+            }
+            if (!response.ok) {
+                const message = data?.detail || data?.error?.message || text || `Status ${response.status}`;
+                const err = new Error(message);
+                err.status = response.status;
+                throw err;
+            }
+            return data ?? {};
+        }
         
         // State
         let isIndexReady = false;
         let uploadedFiles = [];
         let conversationHistory = [];
+        let uploadStartedAt = 0;
+        let indexReadyOnce = false;
 
         // DOM Elements
         const sidebar = document.getElementById('sidebar');
@@ -1512,6 +1557,21 @@
         const processingSteps = document.getElementById('processingSteps');
         const processingStatus = document.getElementById('processingStatus');
 
+        function waitMs(ms) {
+            return new Promise((resolve) => setTimeout(resolve, ms));
+        }
+
+        async function waitForMinimumReadyDelay() {
+            if (!uploadStartedAt) return;
+            const elapsed = performance.now() - uploadStartedAt;
+            const remaining = MIN_READY_DELAY_MS - elapsed;
+            if (remaining > 0) {
+                const seconds = Math.ceil(remaining / 1000);
+                processingStatus.textContent = `Finalizing index… (${seconds}s)`;
+                await waitMs(remaining);
+            }
+        }
+
         // LocalStorage keys
         const STORAGE_KEYS = {
             CHAT_HISTORY: 'docmind_chat_history',
@@ -1527,37 +1587,28 @@
         // Check API Status
         async function checkAPIStatus() {
             try {
-                const response = await fetch(`${API_BASE_URL}/`);
-                const data = await response.json();
+                const data = await requestJson(`${API_BASE_URL}/`, {
+                    method: 'GET',
+                    cache: 'no-store'
+                }, INDEX_POLL_TIMEOUT_MS);
                 
-                isIndexReady = data.index_ready;
-                updateStatus(data.health === 'ok' ? 'Connected' : 'Initializing');
+                const isHealthy = data.health === 'ok';
+                updateStatus(isHealthy ? 'Connected' : 'Initializing', isHealthy);
                 
-                if (isIndexReady) {
+                if (uploadStartedAt > 0 && !indexReadyOnce && data.index_ready) {
+                    isIndexReady = true;
+                    await waitForMinimumReadyDelay();
+                    indexReadyOnce = true;
+                    hideProcessingOverlay();
                     enableChat();
-                    hideProcessingOverlay(); // Ensure overlay is hidden if index is ready on load
-                } else {
-                    // If index is not ready on initial load, show overlay and start polling
-                    showProcessingOverlay();
-                    processingStatus.textContent = 'Index not ready. Checking status...';
-                    updateProcessingStep(1, 'completed'); // Assuming file is conceptually uploaded
-                    updateProcessingStep(4, 'active'); // Start directly at building index step
-                    try {
-                        await waitForIndexReady(33, 2000);
-                        isIndexReady = true;
-                        enableChat();
-                        hideProcessingOverlay();
-                        showToast('Processing Complete', 'Document index is now ready!', 'success');
-                    } catch (error) {
-                        hideProcessingOverlay();
-                        console.error('Initial index check error:', error);
-                        showToast('Initialization Error', 'Failed to initialize document index. Please try uploading a document.', 'error');
-                    }
+                    showToast('Processing Complete', 'Document index is now ready!', 'success');
+                    uploadStartedAt = 0;
+                    if (emptyState) emptyState.style.display = 'none';
+                    addMessage('assistant', READY_JOKE_MESSAGE);
                 }
             } catch (error) {
                 console.error('Error checking API status:', error);
                 updateStatus('Disconnected', false);
-                showToast('Connection Error', 'Unable to connect to the API', 'error');
             }
         }
 
@@ -1827,19 +1878,20 @@
                     attempts++;
                     
                     try {
-                        const response = await fetch(`${API_BASE_URL}/`);
-                        const data = await response.json();
+                        const data = await requestJson(`${API_BASE_URL}/`, {
+                            method: 'GET',
+                            cache: 'no-store'
+                        }, INDEX_POLL_TIMEOUT_MS);
                         
                         processingStatus.textContent = `Checking index status... (${attempts}/${maxAttempts})`;
                         
                         if (data.index_ready) {
                             updateProcessingStep(4, 'completed');
-                            processingStatus.textContent = 'Index ready!';
+                            processingStatus.textContent = 'Finalizing index…';
                             resolve(true);
                             return;
                         }
                         
-                        // Update processing steps based on attempt
                         if (attempts <= 5) {
                             updateProcessingStep(1, 'completed');
                             updateProcessingStep(2, 'active');
@@ -1863,6 +1915,8 @@
                 };
                 
                 checkIndex();
+            }).then(async () => {
+                await waitForMinimumReadyDelay();
             });
         }
 
@@ -1889,6 +1943,9 @@
             
             // Determine replace parameter: true if no documents exist, false if adding to existing
             const replace = uploadedFiles.length === 0;
+            uploadStartedAt = performance.now();
+            isIndexReady = false;
+            indexReadyOnce = false;
 
             // Simulate progress
             let progress = 0;
@@ -1901,17 +1958,27 @@
 
             try {
                 updateProcessingStep(1, 'active');
-                const response = await fetch(`${API_BASE_URL}/upload?replace=${replace}`, {
+                const response = await fetchWithTimeout(`${API_BASE_URL}/upload?replace=${replace}`, {
                     method: 'POST',
                     body: formData
-                });
+                }, UPLOAD_TIMEOUT_MS);
 
                 clearInterval(progressInterval);
                 progressBar.style.width = '100%';
 
+                const text = await response.text().catch(() => '');
+                let data = {};
+                if (text) {
+                    try {
+                        data = JSON.parse(text);
+                    } catch (error) {
+                        if (response.ok) {
+                            throw new Error('Invalid JSON response from upload endpoint.');
+                        }
+                    }
+                }
+
                 if (response.ok) {
-                    const data = await response.json();
-                    
                     // If replace=true, clear existing files list
                     if (replace) {
                         uploadedFiles = [];
@@ -1938,16 +2005,17 @@
                         
                         // Index is ready
                         isIndexReady = true;
+                        indexReadyOnce = true;
                         enableChat();
-                        
-                        setTimeout(() => {
-                            hideProcessingOverlay();
-                            showToast(
-                                'Processing Complete', 
-                                `Document processed successfully! ${data.pages} pages indexed into ${data.chunks} chunks.`, 
-                                'success'
-                            );
-                        }, 1000);
+                        hideProcessingOverlay();
+                        showToast(
+                            'Processing Complete', 
+                            `Document processed successfully! ${data.pages} pages indexed into ${data.chunks} chunks.`, 
+                            'success'
+                        );
+                        uploadStartedAt = 0;
+                        if (emptyState) emptyState.style.display = 'none';
+                        addMessage('assistant', READY_JOKE_MESSAGE);
 
                     } catch (error) {
                         hideProcessingOverlay();
@@ -1967,8 +2035,7 @@
                     }, 2000);
 
                 } else {
-                    const error = await response.json();
-                    throw new Error(error.detail || 'Upload failed');
+                    throw new Error(data?.detail || 'Upload failed');
                 }
             } catch (error) {
                 clearInterval(progressInterval);
@@ -1979,6 +2046,7 @@
                 uploadArea.classList.remove('uploading');
                 uploadText.innerHTML = originalContent;
                 disableChat(); // Ensure chat is disabled on upload error
+                uploadStartedAt = 0;
             }
         }
 
@@ -2042,35 +2110,32 @@
             if (confirm(confirmMessage)) {
                 try {
                     // Call DELETE /clear to clear the index from memory
-                    const response = await fetch(`${API_BASE_URL}/clear`, {
+                    await requestJson(`${API_BASE_URL}/clear`, {
                         method: 'DELETE'
-                    });
-
-                    if (!response.ok) {
-                        const error = await response.json().catch(() => ({ detail: 'Failed to clear index' }));
-                        throw new Error(error.detail || 'Failed to clear index');
-                    }
-
-                    // Remove from local storage
-                    uploadedFiles.splice(index, 1);
-                    saveUploadedFiles();
-                    updateDocumentList();
-                    
-                    // Disable chat since index is cleared
-                    isIndexReady = false;
-                    chatInput.disabled = true;
-                    sendButton.disabled = true;
-                    chatInput.placeholder = 'Upload a document to start chatting...';
-                    
-                    if (willHaveMoreDocs) {
-                        showToast(
-                            'Index Cleared', 
-                            `"${file.name}" removed. Please upload the other documents again to continue using the chat.`, 
-                            'warning'
-                        );
-                    } else {
-                        showToast('Document Removed', `"${file.name}" has been successfully removed from the index`, 'success');
-                    }
+                    }, LONG_REQUEST_TIMEOUT_MS);
+ 
+                     // Remove from local storage
+                     uploadedFiles.splice(index, 1);
+                     saveUploadedFiles();
+                     updateDocumentList();
+                     
+                     // Disable chat since index is cleared
+                     isIndexReady = false;
+                     indexReadyOnce = false;
+                     uploadStartedAt = 0;
+                     chatInput.disabled = true;
+                     sendButton.disabled = true;
+                     chatInput.placeholder = 'Upload a document to start chatting...';
+                     
+                     if (willHaveMoreDocs) {
+                         showToast(
+                             'Index Cleared', 
+                             `"${file.name}" removed. Please upload the other documents again to continue using the chat.`, 
+                             'warning'
+                         );
+                     } else {
+                         showToast('Document Removed', `"${file.name}" has been successfully removed from the index`, 'success');
+                     }
                 } catch (error) {
                     console.error('Error removing document:', error);
                     showToast('Error', `Error removing document: ${error.message}`, 'error');
@@ -2108,13 +2173,13 @@
             const loadingId = addLoadingMessage();
 
             try {
-                const response = await fetch(`${API_BASE_URL}/ask`, {
+                const response = await fetchWithTimeout(`${API_BASE_URL}/ask`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ question })
-                });
+                }, LONG_REQUEST_TIMEOUT_MS);
 
                 removeLoadingMessage(loadingId);
 
