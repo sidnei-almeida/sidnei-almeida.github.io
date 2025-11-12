@@ -10,6 +10,12 @@ const MAX_HISTORY = 40;
 const MAX_TELEMETRY_POINTS = 120;
 const FETCH_TIMEOUT_MS = 6000;
 const OVERLAY_FAILSAFE_MS = 10000;
+const DEMO_BASE_THRESHOLD = 0.62;
+const DEMO_INITIAL_PATTERN = [false, false, false, true, false, false, false, false, false, true, false, false];
+const DEMO_BREAK_MIN = 30;
+const DEMO_BREAK_MAX = 50;
+const DEMO_INTERVAL_MIN = 900;
+const DEMO_INTERVAL_MAX = 1100;
 
 const SELECTORS = {
   footerYear: "footerYear",
@@ -61,6 +67,13 @@ let isAutoSimulationActive = false;
 let telemetryRenderFrame = null;
 let metadataStore = null;
 let overlayFailSafeTimer = null;
+let demoSeeded = false;
+let demoTimer = null;
+let demoNormalStreak = 0;
+let demoFailureCountdownInitial = 0;
+let demoFailureCountdown = 0;
+let demoMaintenancePending = false;
+let demoPrevProbability = null;
 
 /** DOM helpers */
 function byId(id) {
@@ -331,17 +344,52 @@ function drawTelemetry() {
 
   const stepX = points.length > 1 ? plotWidth / (points.length - 1) : plotWidth;
 
-  // threshold line
+  const thresholdPoints = [];
+  const probabilityPoints = [];
+  let runningThreshold = DEMO_BASE_THRESHOLD;
+
+  points.forEach((point, index) => {
+    runningThreshold = Number.isFinite(point.threshold) ? clamp(point.threshold, 0, 1) : runningThreshold;
+    const thresholdX = originX + stepX * index;
+    const thresholdY = originY - runningThreshold * plotHeight;
+    thresholdPoints.push({ x: thresholdX, y: thresholdY, value: runningThreshold });
+
+    const probabilityValue = Number.isFinite(point.probability) ? clamp(point.probability, 0, 1) : 0;
+    const probabilityX = thresholdX;
+    const probabilityY = originY - probabilityValue * plotHeight;
+    const maintenanceFlag = Boolean(point.maintenance);
+    const isAnomaly = maintenanceFlag || probabilityValue >= runningThreshold;
+    probabilityPoints.push({
+      x: probabilityX,
+      y: probabilityY,
+      probability: probabilityValue,
+      threshold: runningThreshold,
+      maintenance: maintenanceFlag,
+      isAnomaly,
+    });
+  });
+
+  ctx.globalAlpha = 1;
+
+  if (thresholdPoints.length >= 2) {
+    ctx.save();
+    ctx.fillStyle = "rgba(245, 71, 104, 0.08)";
+    ctx.beginPath();
+    ctx.moveTo(thresholdPoints[0].x, originY);
+    thresholdPoints.forEach(({ x, y }) => ctx.lineTo(x, y));
+    ctx.lineTo(thresholdPoints[thresholdPoints.length - 1].x, originY);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  ctx.save();
   ctx.globalAlpha = 0.9;
-  ctx.strokeStyle = "rgba(245, 71, 104, 0.72)";
+  ctx.strokeStyle = "rgba(245, 71, 104, 0.7)";
   ctx.lineWidth = 2;
   ctx.setLineDash([6, 6]);
   ctx.beginPath();
-  points.forEach((point, index) => {
-    const prob = Number.isFinite(point.threshold) ? clamp(point.threshold, 0, 1) : NaN;
-    if (!Number.isFinite(prob)) return;
-    const x = originX + stepX * index;
-    const y = originY - prob * plotHeight;
+  thresholdPoints.forEach(({ x, y }, index) => {
     if (index === 0) {
       ctx.moveTo(x, y);
     } else {
@@ -349,42 +397,94 @@ function drawTelemetry() {
     }
   });
   ctx.stroke();
+  ctx.restore();
   ctx.setLineDash([]);
 
-  // probability line
   const gradient = ctx.createLinearGradient(originX, padding.top, originX, originY);
   gradient.addColorStop(0, "rgba(240, 158, 74, 0.4)");
   gradient.addColorStop(1, "rgba(240, 158, 74, 0.08)");
 
-  ctx.strokeStyle = "rgba(240, 158, 74, 0.85)";
+  ctx.save();
+  ctx.strokeStyle = "rgba(240, 158, 74, 0.88)";
   ctx.lineWidth = 2.6;
   ctx.shadowColor = "rgba(240, 158, 74, 0.45)";
   ctx.shadowBlur = 12;
   ctx.beginPath();
-  points.forEach((point, index) => {
-    const prob = Number.isFinite(point.probability) ? clamp(point.probability, 0, 1) : NaN;
-    if (!Number.isFinite(prob)) return;
-    const x = originX + stepX * index;
-    const y = originY - prob * plotHeight;
-    if (index === 0) {
+  let started = false;
+  probabilityPoints.forEach(({ x, y }) => {
+    if (!started) {
       ctx.moveTo(x, y);
+      started = true;
     } else {
       ctx.lineTo(x, y);
     }
   });
-  ctx.stroke();
+  if (started) {
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+    ctx.lineTo(probabilityPoints[probabilityPoints.length - 1].x, originY);
+    ctx.lineTo(probabilityPoints[0].x, originY);
+    ctx.closePath();
+    ctx.fillStyle = gradient;
+    ctx.fill();
+  }
+  ctx.restore();
 
-  // fill area
-  ctx.shadowBlur = 0;
-  ctx.lineTo(originX + stepX * (points.length - 1), originY);
-  ctx.lineTo(originX, originY);
-  ctx.closePath();
-  ctx.fillStyle = gradient;
-  ctx.fill();
+  ctx.save();
+  ctx.lineWidth = 3.2;
+  ctx.strokeStyle = "rgba(255, 120, 155, 0.95)";
+  ctx.shadowColor = "rgba(255, 120, 155, 0.35)";
+  ctx.shadowBlur = 10;
+  ctx.beginPath();
+  let highlighting = false;
+  probabilityPoints.forEach((point, index) => {
+    if (point.isAnomaly) {
+      if (!highlighting) {
+        ctx.moveTo(point.x, point.y);
+        highlighting = true;
+      } else {
+        ctx.lineTo(point.x, point.y);
+      }
+    } else if (highlighting) {
+      ctx.stroke();
+      ctx.beginPath();
+      highlighting = false;
+    }
+    if (highlighting && index === probabilityPoints.length - 1) {
+      ctx.stroke();
+    }
+  });
+  ctx.restore();
+
+  ctx.save();
+  ctx.fillStyle = "rgba(255, 120, 155, 0.95)";
+  probabilityPoints.forEach((point) => {
+    if (!point.isAnomaly) return;
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, point.maintenance ? 5.2 : 4.2, 0, Math.PI * 2);
+    ctx.fill();
+    if (point.maintenance) {
+      ctx.font = `600 11px ${getComputedStyle(document.documentElement).getPropertyValue("--font-mono").trim()}`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.fillText("MAINTENANCE", point.x, point.y - 12);
+    }
+  });
+  ctx.restore();
 }
 
 function pushTelemetry(point) {
-  telemetryPoints.push(point);
+  const normalized = { ...point };
+  const lastPoint = telemetryPoints[telemetryPoints.length - 1];
+  const fallbackThreshold = Number.isFinite(normalized.threshold)
+    ? clamp(normalized.threshold, 0, 1)
+    : Number.isFinite(lastPoint?.threshold)
+    ? clamp(lastPoint.threshold, 0, 1)
+    : DEMO_BASE_THRESHOLD;
+  normalized.threshold = fallbackThreshold;
+  normalized.maintenance = Boolean(point.maintenance);
+
+  telemetryPoints.push(normalized);
   if (telemetryPoints.length > MAX_TELEMETRY_POINTS) {
     telemetryPoints = telemetryPoints.slice(-MAX_TELEMETRY_POINTS);
   }
@@ -394,6 +494,163 @@ function pushTelemetry(point) {
   }
   updateTelemetryStats();
   queueTelemetryRender();
+}
+
+function randomBetween(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function initializeDemoCycle() {
+  demoFailureCountdownInitial = Math.max(DEMO_BREAK_MIN, Math.floor(randomBetween(DEMO_BREAK_MIN, DEMO_BREAK_MAX + 1)));
+  demoFailureCountdown = demoFailureCountdownInitial;
+  demoMaintenancePending = false;
+  demoNormalStreak = 0;
+  demoPrevProbability = null;
+}
+
+function computeRampProbability(previous, threshold, progress) {
+  const margin = clamp(0.18 - progress * 0.12, 0.035, 0.18);
+  const target = clamp(threshold - margin, 0.3, threshold - 0.02);
+  if (!Number.isFinite(previous)) {
+    return clamp(target + randomBetween(-0.015, 0.02), 0.3, threshold - 0.015);
+  }
+  const blend = previous + (target - previous) * randomBetween(0.25, 0.55);
+  return clamp(blend + randomBetween(-0.01, 0.015), 0.28, threshold - 0.012);
+}
+
+function jitterProbability(probability, threshold, magnitude = 0.015) {
+  const jittered = probability + randomBetween(-magnitude, magnitude);
+  return clamp(jittered, 0.18, Math.min(threshold - 0.008, 0.95));
+}
+
+function createDemoReading(product, anomaly) {
+  const baseAir = randomBetween(295, 305);
+  const baseProcess = baseAir + randomBetween(8, 14);
+  const baseSpeed = randomBetween(1420, 1620);
+  const baseTorque = randomBetween(38, 47);
+  const baseWear = randomBetween(60, 110);
+
+  const adjustment = anomaly ? 1.2 : 1;
+
+  return {
+    air_temperature_k: Number(baseAir.toFixed(2)),
+    process_temperature_k: Number((baseProcess * adjustment).toFixed(2)),
+    rotational_speed_rpm: Math.round(baseSpeed * (anomaly ? 0.96 : 1.0)),
+    torque_nm: Number((baseTorque * adjustment).toFixed(2)),
+    tool_wear_min: Math.round(baseWear * adjustment),
+    product_type: product,
+  };
+}
+
+function createDemoResult({ probability, threshold, anomaly = false, maintenance = false }) {
+  const finalThreshold = Number.isFinite(threshold) ? clamp(threshold, 0, 1) : DEMO_BASE_THRESHOLD;
+  const clampedProbability = Number.isFinite(probability) ? clamp(probability, 0, 1) : finalThreshold - 0.1;
+  const product = ["L", "M", "H"][Math.floor(Math.random() * 3)] || "M";
+  const reading = createDemoReading(product, anomaly || maintenance);
+  const label = maintenance ? "Maintenance required" : anomaly ? "Failure" : "Normal";
+
+  return {
+    probability: clampedProbability,
+    threshold: finalThreshold,
+    label,
+    latency: randomBetween(120, 420),
+    reading,
+    sequence: null,
+    origin: maintenance ? "Maintenance" : "Simulated Feed",
+    timestamp: new Date(),
+    details: null,
+    maintenance,
+  };
+}
+
+function seedDemoHistory() {
+  if (demoSeeded || telemetryPoints.length || historyEntries.length) return;
+  const now = Date.now();
+  const threshold = clamp(DEMO_BASE_THRESHOLD, 0.45, 0.85);
+  demoPrevProbability = null;
+  DEMO_INITIAL_PATTERN.forEach((forceAnomaly, index) => {
+    const progress = index / Math.max(DEMO_INITIAL_PATTERN.length - 1, 1);
+    let probability = computeRampProbability(demoPrevProbability, threshold, progress);
+    if (forceAnomaly) {
+      probability = clamp(threshold + randomBetween(0.05, 0.2), threshold + 0.03, 0.98);
+    }
+    const result = createDemoResult({ probability, threshold, anomaly: forceAnomaly });
+    result.timestamp = new Date(now - (DEMO_INITIAL_PATTERN.length - index) * 60000);
+    applyPrediction(result);
+    demoPrevProbability = probability;
+  });
+  demoSeeded = true;
+  initializeDemoCycle();
+}
+
+function startDemoSimulation() {
+  if (demoTimer || isAutoSimulationActive) return;
+  if (demoMaintenancePending || demoFailureCountdown <= 0) {
+    initializeDemoCycle();
+  }
+  const initialDelay = randomBetween(DEMO_INTERVAL_MIN, DEMO_INTERVAL_MAX);
+  demoTimer = window.setTimeout(generateDemoTelemetry, initialDelay);
+}
+
+function stopDemoSimulation() {
+  if (demoTimer) {
+    window.clearTimeout(demoTimer);
+    demoTimer = null;
+  }
+}
+
+function scheduleNextDemoStep() {
+  if (isAutoSimulationActive || demoMaintenancePending) {
+    stopDemoSimulation();
+    return;
+  }
+  const delay = randomBetween(DEMO_INTERVAL_MIN, DEMO_INTERVAL_MAX);
+  if (demoTimer) {
+    window.clearTimeout(demoTimer);
+  }
+  demoTimer = window.setTimeout(generateDemoTelemetry, delay);
+}
+
+function generateDemoTelemetry() {
+  if (isAutoSimulationActive || demoMaintenancePending) {
+    stopDemoSimulation();
+    return;
+  }
+
+  if (demoFailureCountdownInitial === 0) {
+    initializeDemoCycle();
+  }
+
+  const threshold = clamp(DEMO_BASE_THRESHOLD, 0.45, 0.9);
+  const progress = 1 - demoFailureCountdown / Math.max(demoFailureCountdownInitial, 1);
+  let probability = computeRampProbability(demoPrevProbability, threshold, progress);
+  probability = jitterProbability(probability, threshold, 0.02);
+  let maintenanceTriggered = false;
+
+  if (demoFailureCountdown <= 1 || probability >= threshold - 0.01) {
+    maintenanceTriggered = true;
+    probability = clamp(threshold + randomBetween(0.04, 0.12), threshold + 0.03, 0.9);
+  }
+
+  const result = createDemoResult({
+    probability,
+    threshold,
+    anomaly: !maintenanceTriggered && probability >= threshold,
+    maintenance: maintenanceTriggered,
+  });
+  applyPrediction(result);
+  demoPrevProbability = maintenanceTriggered ? null : probability;
+
+  if (maintenanceTriggered) {
+    demoMaintenancePending = true;
+    stopDemoSimulation();
+    showToast("Maintenance required. Click start simulation to resume.", "warning", 3200);
+    return;
+  }
+
+  demoFailureCountdown = Math.max(demoFailureCountdown - 1, 0);
+  demoNormalStreak = Math.min(demoNormalStreak + 1, 12);
+  scheduleNextDemoStep();
 }
 
 /** Recent readings list */
@@ -769,9 +1026,10 @@ function toggleInteraction(state) {
 
 /** Apply model result to UI */
 function applyPrediction(result) {
-  const { probability, threshold, label, latency, origin, reading, sequence, details, timestamp } = result;
+  const { probability, threshold, label, latency, origin, reading, sequence, details, timestamp, maintenance } = result;
+  const isMaintenance = Boolean(maintenance);
   const isAlert = Number.isFinite(probability) && Number.isFinite(threshold) ? probability >= threshold : false;
-  updateGauge(Number.isFinite(probability) ? probability : 0, isAlert);
+  updateGauge(Number.isFinite(probability) ? probability : 0, isAlert || isMaintenance);
   updateVerdict(probability, threshold, label);
   updateLatency(latency);
 
@@ -779,6 +1037,7 @@ function applyPrediction(result) {
     probability: Number.isFinite(probability) ? probability : NaN,
     threshold: Number.isFinite(threshold) ? threshold : NaN,
     timestamp,
+    maintenance: isMaintenance,
   });
 
   sequenceCache = sequence ?? details ?? (reading ? { reading } : null);
@@ -798,11 +1057,11 @@ function applyPrediction(result) {
 
   const historyEntry = {
     time: timeLabel,
-    source: origin,
+    source: isMaintenance ? "Maintenance" : origin,
     product: normalized.product ?? "—",
     probability: Number.isFinite(probability) ? `${formatNumber(probability * 100, 1)}%` : "—",
     threshold: Number.isFinite(threshold) ? `${formatNumber(threshold * 100, 1)}%` : "—",
-    alert: isAlert,
+    alert: isAlert || isMaintenance,
   };
   appendHistory(historyEntry);
 }
@@ -869,10 +1128,21 @@ function setProductType(value) {
 function toggleAutoSimulation() {
   const button = byId(SELECTORS.autoSimulateToggle);
   if (!button) return;
+  if (demoMaintenancePending && !isAutoSimulationActive) {
+    demoMaintenancePending = false;
+    button.classList.remove("active");
+    button.setAttribute("aria-pressed", "false");
+    initializeDemoCycle();
+    startDemoSimulation();
+    showToast("Simulation restarted after maintenance.", "success", 2400);
+    return;
+  }
   isAutoSimulationActive = !isAutoSimulationActive;
   button.setAttribute("aria-pressed", String(isAutoSimulationActive));
   if (isAutoSimulationActive) {
     button.classList.add("active");
+    stopDemoSimulation();
+    demoNormalStreak = 0;
     runSample();
     autoSimTimer = setInterval(() => {
       runSample();
@@ -883,6 +1153,7 @@ function toggleAutoSimulation() {
     clearInterval(autoSimTimer);
     autoSimTimer = null;
     showToast("Auto simulation stopped.", "info", 2000);
+    scheduleNextDemoStep();
   }
 }
 
@@ -1001,6 +1272,8 @@ async function bootstrap() {
     initTelemetryCanvas();
     initSequenceModal();
     initForm();
+    seedDemoHistory();
+    startDemoSimulation();
 
     setTimeout(() => {
       showToast("PulseBridge ready for inference.", "success");
