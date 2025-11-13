@@ -1,4 +1,4 @@
-const DEFAULT_BASE_URL = "https://salmeida-brazilian-license-plates.hf.space";
+const DEFAULT_BASE_URL = "https://brazilian-license-plate-recognition.onrender.com";
 const API_BASE_URL = DEFAULT_BASE_URL;
 const DEFAULT_EMPTY_MESSAGE = "No license plates detected.";
 const LOCAL_STORAGE_KEY = "licensePlateApiBaseUrl";
