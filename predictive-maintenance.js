@@ -12,8 +12,8 @@ const FETCH_TIMEOUT_MS = 6000;
 const OVERLAY_FAILSAFE_MS = 10000;
 const DEMO_BASE_THRESHOLD = 0.62;
 const DEMO_INITIAL_PATTERN = [false, false, false, true, false, false, false, false, false, true, false, false];
-const DEMO_BREAK_MIN = 30;
-const DEMO_BREAK_MAX = 50;
+const DEMO_ALERT_MIN = 20;
+const DEMO_ALERT_MAX = 36;
 const DEMO_INTERVAL_MIN = 900;
 const DEMO_INTERVAL_MAX = 1100;
 
@@ -70,10 +70,55 @@ let overlayFailSafeTimer = null;
 let demoSeeded = false;
 let demoTimer = null;
 let demoNormalStreak = 0;
-let demoFailureCountdownInitial = 0;
-let demoFailureCountdown = 0;
-let demoMaintenancePending = false;
+let alertCountdownInitial = 0;
+let alertCountdown = 0;
 let demoPrevProbability = null;
+
+const thresholdState = {
+  canonical: clamp(DEMO_BASE_THRESHOLD, 0, 1),
+  locked: false,
+};
+
+function getCanonicalThreshold() {
+  return thresholdState.canonical;
+}
+
+function setCanonicalThreshold(value, { lock = false } = {}) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) {
+    return;
+  }
+  const normalized = clamp(parsed, 0, 1);
+  if (thresholdState.canonical === normalized && thresholdState.locked && lock) {
+    return;
+  }
+  thresholdState.canonical = normalized;
+  if (lock) {
+    thresholdState.locked = true;
+  }
+
+  if (telemetryPoints.length) {
+    telemetryPoints = telemetryPoints.map((point) => ({
+      ...point,
+      threshold: normalized,
+    }));
+    updateTelemetryStats();
+    queueTelemetryRender();
+  }
+  if (historyEntries.length) {
+    historyEntries = historyEntries.map((entry) => ({
+      ...entry,
+      threshold: `${formatNumber(normalized * 100, 1)}%`,
+    }));
+    renderHistoryEntries();
+  }
+}
+
+function ensureCanonicalThreshold(value) {
+  if (!thresholdState.locked && Number.isFinite(value)) {
+    setCanonicalThreshold(value, { lock: true });
+  }
+}
 
 /** DOM helpers */
 function byId(id) {
@@ -203,22 +248,22 @@ function updateGauge(probability, highlight = false) {
 
 function resolveVerdictLabel(label, isAlert) {
   if (typeof label === "number") {
-    return label >= 0.5 ? "Failure risk" : "Normal operation";
+    return label >= 0.5 ? "WARNING" : "NORMAL";
   }
   if (typeof label === "string") {
     const normalized = label.trim().toLowerCase();
     if (!normalized) {
-      return isAlert ? "Failure risk" : "Normal operation";
+      return isAlert ? "WARNING" : "NORMAL";
     }
-    if (["1", "failure", "fail", "fault", "anomaly detected"].includes(normalized)) {
-      return "Failure risk";
+    if (["1", "failure", "fail", "fault", "anomaly detected", "alert", "alerta", "warning"].includes(normalized)) {
+      return "WARNING";
     }
-    if (["0", "normal", "ok", "healthy"].includes(normalized)) {
-      return "Normal operation";
+    if (["0", "normal", "ok", "healthy", "none"].includes(normalized)) {
+      return "NORMAL";
     }
     return label;
   }
-  return isAlert ? "Failure risk" : "Normal operation";
+  return isAlert ? "WARNING" : "NORMAL";
 }
 
 /** Update verdict card */
@@ -357,15 +402,15 @@ function drawTelemetry() {
     const probabilityValue = Number.isFinite(point.probability) ? clamp(point.probability, 0, 1) : 0;
     const probabilityX = thresholdX;
     const probabilityY = originY - probabilityValue * plotHeight;
-    const maintenanceFlag = Boolean(point.maintenance);
-    const isAnomaly = maintenanceFlag || probabilityValue >= runningThreshold;
+    const alertFlag = Boolean(point.alert);
+    const isAlert = alertFlag || probabilityValue >= runningThreshold;
     probabilityPoints.push({
       x: probabilityX,
       y: probabilityY,
       probability: probabilityValue,
       threshold: runningThreshold,
-      maintenance: maintenanceFlag,
-      isAnomaly,
+      alert: alertFlag,
+      isAlert,
     });
   });
 
@@ -438,7 +483,7 @@ function drawTelemetry() {
   ctx.beginPath();
   let highlighting = false;
   probabilityPoints.forEach((point, index) => {
-    if (point.isAnomaly) {
+    if (point.isAlert) {
       if (!highlighting) {
         ctx.moveTo(point.x, point.y);
         highlighting = true;
@@ -459,15 +504,15 @@ function drawTelemetry() {
   ctx.save();
   ctx.fillStyle = "rgba(255, 120, 155, 0.95)";
   probabilityPoints.forEach((point) => {
-    if (!point.isAnomaly) return;
+    if (!point.isAlert) return;
     ctx.beginPath();
-    ctx.arc(point.x, point.y, point.maintenance ? 5.2 : 4.2, 0, Math.PI * 2);
+    ctx.arc(point.x, point.y, point.alert ? 5.0 : 4.2, 0, Math.PI * 2);
     ctx.fill();
-    if (point.maintenance) {
+    if (point.alert) {
       ctx.font = `600 11px ${getComputedStyle(document.documentElement).getPropertyValue("--font-mono").trim()}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "bottom";
-      ctx.fillText("MAINTENANCE", point.x, point.y - 12);
+      ctx.fillText("WARNING", point.x, point.y - 12);
     }
   });
   ctx.restore();
@@ -475,14 +520,12 @@ function drawTelemetry() {
 
 function pushTelemetry(point) {
   const normalized = { ...point };
-  const lastPoint = telemetryPoints[telemetryPoints.length - 1];
-  const fallbackThreshold = Number.isFinite(normalized.threshold)
-    ? clamp(normalized.threshold, 0, 1)
-    : Number.isFinite(lastPoint?.threshold)
-    ? clamp(lastPoint.threshold, 0, 1)
-    : DEMO_BASE_THRESHOLD;
-  normalized.threshold = fallbackThreshold;
-  normalized.maintenance = Boolean(point.maintenance);
+  const providedThreshold = Number.isFinite(normalized.threshold) ? clamp(normalized.threshold, 0, 1) : NaN;
+  if (!thresholdState.locked && Number.isFinite(providedThreshold)) {
+    setCanonicalThreshold(providedThreshold, { lock: true });
+  }
+  normalized.threshold = getCanonicalThreshold();
+  normalized.alert = Boolean(point.alert);
 
   telemetryPoints.push(normalized);
   if (telemetryPoints.length > MAX_TELEMETRY_POINTS) {
@@ -500,12 +543,17 @@ function randomBetween(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-function initializeDemoCycle() {
-  demoFailureCountdownInitial = Math.max(DEMO_BREAK_MIN, Math.floor(randomBetween(DEMO_BREAK_MIN, DEMO_BREAK_MAX + 1)));
-  demoFailureCountdown = demoFailureCountdownInitial;
-  demoMaintenancePending = false;
+function resetAlertCycle() {
+  alertCountdownInitial = Math.max(DEMO_ALERT_MIN, Math.floor(randomBetween(DEMO_ALERT_MIN, DEMO_ALERT_MAX + 1)));
+  alertCountdown = alertCountdownInitial;
   demoNormalStreak = 0;
   demoPrevProbability = null;
+}
+
+function ensureAlertCycle() {
+  if (alertCountdownInitial <= 0) {
+    resetAlertCycle();
+  }
 }
 
 function computeRampProbability(previous, threshold, progress) {
@@ -542,12 +590,12 @@ function createDemoReading(product, anomaly) {
   };
 }
 
-function createDemoResult({ probability, threshold, anomaly = false, maintenance = false }) {
-  const finalThreshold = Number.isFinite(threshold) ? clamp(threshold, 0, 1) : DEMO_BASE_THRESHOLD;
+function createDemoResult({ probability, threshold, alert = false }) {
+  const finalThreshold = Number.isFinite(threshold) ? clamp(threshold, 0, 1) : getCanonicalThreshold();
   const clampedProbability = Number.isFinite(probability) ? clamp(probability, 0, 1) : finalThreshold - 0.1;
   const product = ["L", "M", "H"][Math.floor(Math.random() * 3)] || "M";
-  const reading = createDemoReading(product, anomaly || maintenance);
-  const label = maintenance ? "Maintenance required" : anomaly ? "Failure" : "Normal";
+  const reading = createDemoReading(product, alert);
+  const label = alert ? "WARNING" : "NORMAL";
 
   return {
     probability: clampedProbability,
@@ -556,38 +604,36 @@ function createDemoResult({ probability, threshold, anomaly = false, maintenance
     latency: randomBetween(120, 420),
     reading,
     sequence: null,
-    origin: maintenance ? "Maintenance" : "Simulated Feed",
+    origin: "Simulated Feed",
     timestamp: new Date(),
     details: null,
-    maintenance,
+    alert,
   };
 }
 
 function seedDemoHistory() {
   if (demoSeeded || telemetryPoints.length || historyEntries.length) return;
   const now = Date.now();
-  const threshold = clamp(DEMO_BASE_THRESHOLD, 0.45, 0.85);
+  const threshold = clamp(getCanonicalThreshold(), 0.45, 0.85);
   demoPrevProbability = null;
-  DEMO_INITIAL_PATTERN.forEach((forceAnomaly, index) => {
+  DEMO_INITIAL_PATTERN.forEach((forceAlert, index) => {
     const progress = index / Math.max(DEMO_INITIAL_PATTERN.length - 1, 1);
     let probability = computeRampProbability(demoPrevProbability, threshold, progress);
-    if (forceAnomaly) {
+    if (forceAlert) {
       probability = clamp(threshold + randomBetween(0.05, 0.2), threshold + 0.03, 0.98);
     }
-    const result = createDemoResult({ probability, threshold, anomaly: forceAnomaly });
+    const result = createDemoResult({ probability, threshold, alert: forceAlert });
     result.timestamp = new Date(now - (DEMO_INITIAL_PATTERN.length - index) * 60000);
     applyPrediction(result);
     demoPrevProbability = probability;
   });
   demoSeeded = true;
-  initializeDemoCycle();
+  resetAlertCycle();
 }
 
 function startDemoSimulation() {
   if (demoTimer || isAutoSimulationActive) return;
-  if (demoMaintenancePending || demoFailureCountdown <= 0) {
-    initializeDemoCycle();
-  }
+  ensureAlertCycle();
   const initialDelay = randomBetween(DEMO_INTERVAL_MIN, DEMO_INTERVAL_MAX);
   demoTimer = window.setTimeout(generateDemoTelemetry, initialDelay);
 }
@@ -600,7 +646,7 @@ function stopDemoSimulation() {
 }
 
 function scheduleNextDemoStep() {
-  if (isAutoSimulationActive || demoMaintenancePending) {
+  if (isAutoSimulationActive) {
     stopDemoSimulation();
     return;
   }
@@ -612,44 +658,38 @@ function scheduleNextDemoStep() {
 }
 
 function generateDemoTelemetry() {
-  if (isAutoSimulationActive || demoMaintenancePending) {
+  if (isAutoSimulationActive) {
     stopDemoSimulation();
     return;
   }
 
-  if (demoFailureCountdownInitial === 0) {
-    initializeDemoCycle();
-  }
+  ensureAlertCycle();
 
-  const threshold = clamp(DEMO_BASE_THRESHOLD, 0.45, 0.9);
-  const progress = 1 - demoFailureCountdown / Math.max(demoFailureCountdownInitial, 1);
-  let probability = computeRampProbability(demoPrevProbability, threshold, progress);
-  probability = jitterProbability(probability, threshold, 0.02);
-  let maintenanceTriggered = false;
+  const threshold = clamp(getCanonicalThreshold(), 0.45, 0.9);
+  let probability;
+  let triggeredAlert = false;
 
-  if (demoFailureCountdown <= 1 || probability >= threshold - 0.01) {
-    maintenanceTriggered = true;
-    probability = clamp(threshold + randomBetween(0.04, 0.12), threshold + 0.03, 0.9);
+  if (alertCountdown <= 0) {
+    probability = clamp(threshold + randomBetween(0.05, 0.18), threshold + 0.03, 0.98);
+    triggeredAlert = true;
+    resetAlertCycle();
+    demoPrevProbability = probability;
+    demoNormalStreak = 0;
+  } else {
+    const progress = 1 - alertCountdown / Math.max(alertCountdownInitial, 1);
+    probability = jitterProbability(computeRampProbability(demoPrevProbability, threshold, progress), threshold, 0.02);
+    alertCountdown = Math.max(alertCountdown - 1, 0);
+    demoPrevProbability = probability;
+    demoNormalStreak = Math.min(demoNormalStreak + 1, 18);
   }
 
   const result = createDemoResult({
     probability,
     threshold,
-    anomaly: !maintenanceTriggered && probability >= threshold,
-    maintenance: maintenanceTriggered,
+    alert: triggeredAlert || probability >= threshold,
   });
   applyPrediction(result);
-  demoPrevProbability = maintenanceTriggered ? null : probability;
 
-  if (maintenanceTriggered) {
-    demoMaintenancePending = true;
-    stopDemoSimulation();
-    showToast("Maintenance required. Click start simulation to resume.", "warning", 3200);
-    return;
-  }
-
-  demoFailureCountdown = Math.max(demoFailureCountdown - 1, 0);
-  demoNormalStreak = Math.min(demoNormalStreak + 1, 12);
   scheduleNextDemoStep();
 }
 
@@ -683,14 +723,9 @@ function escapeHtml(value) {
 }
 
 /** History handling */
-function appendHistory(entry) {
+function renderHistoryEntries() {
   const body = byId(SELECTORS.historyBody);
   if (!body) return;
-  historyEntries.unshift(entry);
-  if (historyEntries.length > MAX_HISTORY) {
-    historyEntries = historyEntries.slice(0, MAX_HISTORY);
-  }
-
   body.innerHTML = "";
   historyEntries.forEach((item) => {
     const row = document.createElement("div");
@@ -702,11 +737,21 @@ function appendHistory(entry) {
       <span>${escapeHtml(item.probability)}</span>
       <span>${escapeHtml(item.threshold)}</span>
       <span>
-        <span class="badge ${item.alert ? "alert" : "safe"}">${item.alert ? "ALERTA" : "NORMAL"}</span>
+        <span class="badge ${item.alert ? "alert" : "safe"}">${item.alert ? "WARNING" : "NORMAL"}</span>
       </span>
     `;
     body.appendChild(row);
   });
+}
+
+function appendHistory(entry) {
+  const body = byId(SELECTORS.historyBody);
+  if (!body) return;
+  historyEntries.unshift(entry);
+  if (historyEntries.length > MAX_HISTORY) {
+    historyEntries = historyEntries.slice(0, MAX_HISTORY);
+  }
+  renderHistoryEntries();
 }
 
 /** Sequence modal */
@@ -792,6 +837,15 @@ function extractPrediction(payload, origin = "Manual") {
         : "Normal"
       : null;
   const resolvedLabel = rawLabel ?? fallbackLabel;
+  const labelNormalized = typeof resolvedLabel === "string" ? resolvedLabel.trim().toLowerCase() : "";
+  const explicitAlertFlag =
+    typeof payload.alert === "boolean"
+      ? payload.alert
+      : typeof payload.is_alert === "boolean"
+      ? payload.is_alert
+      : typeof payload.warning === "boolean"
+      ? payload.warning
+      : ["alert", "alerta", "failure", "fail", "fault"].includes(labelNormalized);
 
   const reading =
     payload.reading ??
@@ -814,6 +868,7 @@ function extractPrediction(payload, origin = "Manual") {
     probability: Number.isFinite(probability) ? clamp(probability, 0, 1) : NaN,
     threshold: Number.isFinite(threshold) ? clamp(threshold, 0, 1) : NaN,
     label: resolvedLabel,
+    alert: Boolean(explicitAlertFlag),
     latency,
     reading,
     sequence,
@@ -967,6 +1022,11 @@ async function loadMetadata() {
     } else if (data?.dataset_name) {
       datasetLabel = compactDatasetString(data.dataset_name);
     }
+    const defaultThreshold =
+      Number(data?.default_threshold ?? data?.threshold ?? data?.classification_threshold ?? data?.config?.threshold);
+    if (Number.isFinite(defaultThreshold)) {
+      setCanonicalThreshold(defaultThreshold, { lock: true });
+    }
     if (modelNode) modelNode.textContent = modelLabel;
     if (versionNode) versionNode.textContent = String(versionLabel);
     if (datasetNode) datasetNode.textContent = datasetLabel;
@@ -1026,18 +1086,25 @@ function toggleInteraction(state) {
 
 /** Apply model result to UI */
 function applyPrediction(result) {
-  const { probability, threshold, label, latency, origin, reading, sequence, details, timestamp, maintenance } = result;
-  const isMaintenance = Boolean(maintenance);
-  const isAlert = Number.isFinite(probability) && Number.isFinite(threshold) ? probability >= threshold : false;
-  updateGauge(Number.isFinite(probability) ? probability : 0, isAlert || isMaintenance);
-  updateVerdict(probability, threshold, label);
+  const { probability, threshold, label, latency, origin, reading, sequence, details, timestamp, alert } = result;
+  const explicitAlert = Boolean(alert);
+  ensureCanonicalThreshold(threshold);
+  const canonicalThreshold = getCanonicalThreshold();
+  const thresholdAlert = Number.isFinite(probability) && Number.isFinite(canonicalThreshold)
+    ? probability >= canonicalThreshold
+    : false;
+  const finalAlert = explicitAlert || thresholdAlert;
+  const verdictLabel = label ?? (finalAlert ? "WARNING" : "NORMAL");
+
+  updateGauge(Number.isFinite(probability) ? probability : 0, finalAlert);
+  updateVerdict(probability, canonicalThreshold, verdictLabel);
   updateLatency(latency);
 
   pushTelemetry({
     probability: Number.isFinite(probability) ? probability : NaN,
-    threshold: Number.isFinite(threshold) ? threshold : NaN,
+    threshold: canonicalThreshold,
     timestamp,
-    maintenance: isMaintenance,
+    alert: finalAlert,
   });
 
   sequenceCache = sequence ?? details ?? (reading ? { reading } : null);
@@ -1057,11 +1124,11 @@ function applyPrediction(result) {
 
   const historyEntry = {
     time: timeLabel,
-    source: isMaintenance ? "Maintenance" : origin,
+    source: origin ?? "Manual",
     product: normalized.product ?? "—",
     probability: Number.isFinite(probability) ? `${formatNumber(probability * 100, 1)}%` : "—",
-    threshold: Number.isFinite(threshold) ? `${formatNumber(threshold * 100, 1)}%` : "—",
-    alert: isAlert || isMaintenance,
+    threshold: Number.isFinite(canonicalThreshold) ? `${formatNumber(canonicalThreshold * 100, 1)}%` : "—",
+    alert: finalAlert,
   };
   appendHistory(historyEntry);
 }
@@ -1128,15 +1195,6 @@ function setProductType(value) {
 function toggleAutoSimulation() {
   const button = byId(SELECTORS.autoSimulateToggle);
   if (!button) return;
-  if (demoMaintenancePending && !isAutoSimulationActive) {
-    demoMaintenancePending = false;
-    button.classList.remove("active");
-    button.setAttribute("aria-pressed", "false");
-    initializeDemoCycle();
-    startDemoSimulation();
-    showToast("Simulation restarted after maintenance.", "success", 2400);
-    return;
-  }
   isAutoSimulationActive = !isAutoSimulationActive;
   button.setAttribute("aria-pressed", String(isAutoSimulationActive));
   if (isAutoSimulationActive) {
@@ -1153,6 +1211,7 @@ function toggleAutoSimulation() {
     clearInterval(autoSimTimer);
     autoSimTimer = null;
     showToast("Auto simulation stopped.", "info", 2000);
+    ensureAlertCycle();
     scheduleNextDemoStep();
   }
 }
