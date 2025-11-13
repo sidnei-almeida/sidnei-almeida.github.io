@@ -25,7 +25,6 @@ const DEMO_HISTORY_ENTRIES = [
   { sample: "demo-051", anomaly: false },
   { sample: "demo-052", anomaly: false },
 ];
-const DEMO_USER_THRESHOLD = 0.7325;
 const DEMO_TARGET_ANOMALY_RATIO = 0.35;
 
 const SELECTORS = {
@@ -79,7 +78,12 @@ const datasetState = {
   featureCount: 590,
   cursor: 0,
   source: "Embedded CSV",
-  defaultThreshold: 0.7325,
+  canonicalThreshold: 0.7325,
+};
+
+const controlState = {
+  thresholdOverride: 0.7325,
+  userModified: false,
 };
 
 const streamState = {
@@ -297,7 +301,10 @@ function applyMetadata(data) {
     datasetState.featureCount = featureCount;
   }
   if (Number.isFinite(defaultThreshold)) {
-    datasetState.defaultThreshold = defaultThreshold;
+    datasetState.canonicalThreshold = defaultThreshold;
+    if (!controlState.userModified) {
+      controlState.thresholdOverride = defaultThreshold;
+    }
   }
   if (Number.isFinite(timesteps) && timesteps > 0) {
     streamState.windowSize = timesteps;
@@ -317,8 +324,8 @@ function applyMetadata(data) {
   }
   const metaThresholdNode = byId(SELECTORS.metaThreshold);
   if (metaThresholdNode) {
-    metaThresholdNode.textContent = Number.isFinite(datasetState.defaultThreshold)
-      ? formatNumber(datasetState.defaultThreshold, 3)
+    metaThresholdNode.textContent = Number.isFinite(datasetState.canonicalThreshold)
+      ? formatNumber(datasetState.canonicalThreshold, 3)
       : "—";
   }
   const footerVersion = document.querySelector("[data-footer-version]");
@@ -326,39 +333,82 @@ function applyMetadata(data) {
     footerVersion.textContent = version;
   }
 
-  setThreshold(datasetState.defaultThreshold, { announce: false });
+  setCanonicalThreshold(datasetState.canonicalThreshold);
   updateStreamIndicators();
 }
 
 /** Threshold handling */
-function setThreshold(value, { syncSlider = true, syncNumber = true, announce = true } = {}) {
-  const normalized = clamp(Number(value), 0, 1.5);
-  datasetState.defaultThreshold = normalized;
-
+function syncThresholdInputs(value, { syncSlider = true, syncNumber = true } = {}) {
   if (syncSlider) {
     const slider = byId(SELECTORS.inputThreshold);
     if (slider) {
-      slider.value = String(normalized);
+      slider.value = String(value);
     }
   }
   if (syncNumber) {
     const numeric = byId(SELECTORS.inputThresholdNumber);
     if (numeric) {
-      numeric.value = String(normalized);
+      numeric.value = String(value);
     }
   }
   const label = byId(SELECTORS.labelThreshold);
   if (label) {
-    label.textContent = formatNumber(normalized, 3);
+    label.textContent = Number.isFinite(value) ? formatNumber(value, 3) : "—";
   }
+}
+
+function setCanonicalThreshold(value, { syncUi = true } = {}) {
+  const parsed = Number(value);
+  const normalized = Number.isFinite(parsed) ? clamp(parsed, 0, 1.5) : datasetState.canonicalThreshold;
+  datasetState.canonicalThreshold = normalized;
+  if (!controlState.userModified) {
+    controlState.thresholdOverride = normalized;
+    if (syncUi) {
+      syncThresholdInputs(normalized);
+      updateTelemetryMeta();
+    }
+  } else if (syncUi) {
+    syncThresholdInputs(controlState.thresholdOverride);
+    updateTelemetryMeta();
+  }
+}
+
+function setThreshold(value, { syncSlider = true, syncNumber = true, announce = true, userInitiated = true } = {}) {
+  const parsed = Number(value);
+  const normalized = Number.isFinite(parsed) ? clamp(parsed, 0, 1.5) : getActiveThreshold();
+  controlState.thresholdOverride = normalized;
+  if (userInitiated) {
+    controlState.userModified = true;
+  }
+  syncThresholdInputs(normalized, { syncSlider, syncNumber });
   if (announce) {
     showToast(`Threshold set to ${formatNumber(normalized, 3)}`, "info", 2200);
   }
   updateTelemetryMeta();
+
+  if (telemetryPoints.length) {
+    const latest = telemetryPoints[telemetryPoints.length - 1];
+    const probability = Number.isFinite(latest?.probability) ? latest.probability : null;
+    if (Number.isFinite(probability)) {
+      const isAnomaly = !latest?.synthetic && probability >= normalized;
+      latest.threshold = normalized;
+      latest.isAnomaly = isAnomaly;
+      updateVerdict(probability, normalized, isAnomaly);
+      updateGauge(probability, normalized, isAnomaly);
+    }
+    queueTelemetryRender();
+  } else {
+    updateVerdict(null, normalized, false);
+    updateGauge(null, normalized, false);
+  }
+}
+
+function getCanonicalThreshold() {
+  return datasetState.canonicalThreshold;
 }
 
 function getActiveThreshold() {
-  return datasetState.defaultThreshold;
+  return Number.isFinite(controlState.thresholdOverride) ? controlState.thresholdOverride : getCanonicalThreshold();
 }
 
 function handleThresholdSlider() {
@@ -535,8 +585,25 @@ function getDisplayBufferStats() {
 
 /** Telemetry */
 function pushTelemetry(point) {
-  console.log("[Stream] Telemetry point received:", point);
-  telemetryPoints.push(point);
+  if (!point) return;
+  const rawProbability = Number(point.probability);
+  const probability = Number.isFinite(rawProbability) ? rawProbability : null;
+  const thresholdCandidate = Number(point.threshold);
+  const threshold = Number.isFinite(thresholdCandidate) ? thresholdCandidate : getActiveThreshold();
+  const anomalyFlag =
+    typeof point.isAnomaly === "boolean"
+      ? point.isAnomaly
+      : Number.isFinite(probability) && Number.isFinite(threshold) && probability >= threshold;
+
+  const nextPoint = {
+    ...point,
+    probability,
+    threshold,
+    isAnomaly: anomalyFlag,
+  };
+
+  console.log("[Stream] Telemetry point received:", nextPoint);
+  telemetryPoints.push(nextPoint);
   if (telemetryPoints.length > MAX_TELEMETRY_POINTS) {
     telemetryPoints = telemetryPoints.slice(-MAX_TELEMETRY_POINTS);
   }
@@ -554,21 +621,24 @@ function seedDemoHistory() {
   const historyBody = byId(SELECTORS.historyBody);
   if (!historyBody || !DEMO_HISTORY_ENTRIES.length) return;
 
-  const baseThreshold = DEMO_USER_THRESHOLD;
+  const canonicalThreshold = getCanonicalThreshold();
+  const decisionThreshold = getActiveThreshold();
   const baseTimestamp = Date.now();
-  let previousProbability = baseThreshold - 0.04;
+  let previousProbability = canonicalThreshold - 0.04;
 
   const demoPoints = DEMO_HISTORY_ENTRIES.map((entry, index) => {
-    const threshold = baseThreshold;
-    const probability = entry.anomaly
-      ? nextScrapProbability(threshold, previousProbability)
-      : nextNormalProbability(threshold, previousProbability);
+    const scenarioAnomaly = entry.anomaly;
+    const probability = scenarioAnomaly
+      ? nextScrapProbability(canonicalThreshold, previousProbability)
+      : nextNormalProbability(canonicalThreshold, previousProbability);
     previousProbability = probability;
+    const anomaly = Number.isFinite(probability) && probability >= decisionThreshold;
     return {
       sample: entry.sample,
-      anomaly: entry.anomaly,
+      anomaly,
+      scenario: scenarioAnomaly,
       probability,
-      threshold,
+      threshold: decisionThreshold,
       timestamp: baseTimestamp - (DEMO_HISTORY_ENTRIES.length - index) * 60000,
     };
   });
@@ -582,12 +652,7 @@ function seedDemoHistory() {
   demoHighStreak = 0;
 
   demoPoints.forEach((entry) => {
-    pushTelemetry({
-      probability: entry.probability,
-      threshold: entry.threshold,
-      isAnomaly: entry.anomaly,
-      timestamp: entry.timestamp,
-    });
+    pushTelemetry(entry);
     streamState.ingested += 1;
     demoGeneratedCount += 1;
     if (entry.anomaly) {
@@ -599,7 +664,7 @@ function seedDemoHistory() {
     }
     appendHistory({
       time: formatTimestamp(new Date(entry.timestamp)),
-      source: entry.anomaly ? "Historical Incident" : "Historical Buffer",
+      source: entry.scenario ? "Historical Incident" : "Historical Buffer",
       sample: entry.sample,
       probability: entry.probability,
       threshold: entry.threshold,
@@ -649,29 +714,31 @@ function generateDemoTelemetry() {
     return;
   }
 
-  const threshold = getActiveThreshold();
+  const decisionThreshold = getActiveThreshold();
+  const canonicalThreshold = getCanonicalThreshold();
   const total = demoGeneratedCount;
   const anomalies = demoAnomalyCount;
   const currentRatio = total ? anomalies / total : 0;
   const allowAnomaly = (anomalies + 1) / (total + 1) <= DEMO_TARGET_ANOMALY_RATIO;
-  let anomaly = false;
+  let scenarioAnomaly = false;
 
   if (allowAnomaly) {
     const ratioGap = DEMO_TARGET_ANOMALY_RATIO - currentRatio;
     const baseChance = clamp(0.04 + ratioGap * 2.4, 0.05, 0.22);
-    anomaly = Math.random() < baseChance || demoHighStreak >= 12;
+    scenarioAnomaly = Math.random() < baseChance || demoHighStreak >= 12;
   }
 
   const previousProbability = telemetryPoints.length
     ? telemetryPoints[telemetryPoints.length - 1].probability
-    : threshold - 0.06;
-  const probability = anomaly
-    ? nextScrapProbability(threshold, previousProbability)
-    : nextNormalProbability(threshold, previousProbability);
+    : canonicalThreshold - 0.06;
+  const probability = scenarioAnomaly
+    ? nextScrapProbability(canonicalThreshold, previousProbability)
+    : nextNormalProbability(canonicalThreshold, previousProbability);
+  const isAnomaly = Number.isFinite(probability) && probability >= decisionThreshold;
 
   streamState.ingested += 1;
   demoGeneratedCount += 1;
-  if (anomaly) {
+  if (isAnomaly) {
     streamState.anomalies += 1;
     demoAnomalyCount += 1;
     demoHighStreak = 0;
@@ -682,22 +749,23 @@ function generateDemoTelemetry() {
   const sampleLabel = `demo-${String(60 + streamState.ingested).padStart(3, "0")}`;
   const entry = {
     probability,
-    threshold,
-    isAnomaly: anomaly,
+    threshold: decisionThreshold,
+    isAnomaly,
+    scenario: scenarioAnomaly,
     timestamp: Date.now(),
   };
 
   pushTelemetry(entry);
   appendHistory({
     time: formatTimestamp(new Date(entry.timestamp)),
-    source: anomaly ? "Scrap detected" : "Simulated Feed",
+    source: isAnomaly ? "Failure detected" : "Simulated Feed",
     sample: sampleLabel,
     probability,
-    threshold,
-    anomaly,
+    threshold: decisionThreshold,
+    anomaly: isAnomaly,
   });
-  updateVerdict(probability, threshold, anomaly);
-  updateGauge(probability, threshold, anomaly);
+  updateVerdict(probability, decisionThreshold, isAnomaly);
+  updateGauge(probability, decisionThreshold, isAnomaly);
   updateStreamIndicators();
 
   scheduleNextDemoStep();
@@ -904,7 +972,7 @@ function drawTelemetry() {
       ctx.beginPath();
       ctx.arc(x, y, 4.6, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillText("SCRAP", x, y - 10);
+      ctx.fillText("FAILURE", x, y - 10);
     });
     ctx.restore();
   }
@@ -1135,18 +1203,20 @@ async function performStreamStep() {
 
   const sample = nextDatasetSample();
   const timestamp = nextTimestamp();
-  const threshold = getActiveThreshold();
+  const canonicalThreshold = getCanonicalThreshold();
+  const decisionThreshold = getActiveThreshold();
   const payload = {
     reading: {
       timestamp,
       values: sample.values.slice(0, datasetState.featureCount),
     },
-    threshold,
+    threshold: canonicalThreshold,
     reset_buffer: streamState.resetPending,
   };
   console.log("[Stream] Dispatching /predict request:", {
     resetPending: streamState.resetPending,
-    threshold,
+    canonicalThreshold,
+    decisionThreshold,
     sampleIndex: sample.index,
     timestamp,
   });
@@ -1169,14 +1239,18 @@ async function performStreamStep() {
     const latency = performance.now() - started;
 
     const prediction = response?.prediction ?? null;
-    const usedThreshold = Number(prediction?.threshold ?? response?.threshold ?? threshold);
     const rawProbability = Number(prediction?.probability ?? prediction?.score);
-    const { probability: finalProbability, synthetic } = coerceProbability(rawProbability, usedThreshold);
-    const isAnomaly = !synthetic && Boolean(prediction?.is_anomaly ?? (Number.isFinite(rawProbability) && rawProbability > usedThreshold));
+    const { probability: finalProbability, synthetic } = coerceProbability(rawProbability, canonicalThreshold);
+    const baseProbability = Number.isFinite(rawProbability) ? rawProbability : finalProbability;
+    const isAnomaly =
+      !synthetic && Number.isFinite(baseProbability) && Number.isFinite(decisionThreshold)
+        ? baseProbability >= decisionThreshold
+        : false;
     console.log("[Stream] Parsed prediction:", {
       rawProbability,
       probability: finalProbability,
-      threshold: usedThreshold,
+      decisionThreshold,
+      canonicalThreshold,
       isAnomaly,
       synthetic,
       bufferSize: streamState.bufferSize,
@@ -1184,27 +1258,29 @@ async function performStreamStep() {
     });
 
     updateLatency(latency);
+    lastPayload = payload;
+    lastPrediction = response?.prediction ?? null;
     setApiState("live");
 
-    if (!synthetic && Number.isFinite(rawProbability) && rawProbability > 0 && isAnomaly) {
+    if (!synthetic && Number.isFinite(baseProbability) && baseProbability > 0 && isAnomaly) {
       streamState.anomalies += 1;
     }
     pushTelemetry({
       probability: finalProbability,
-      threshold: usedThreshold,
+      threshold: decisionThreshold,
       isAnomaly,
       synthetic,
       timestamp: Date.now(),
     });
-    updateVerdict(finalProbability, usedThreshold, isAnomaly);
-    updateGauge(finalProbability, usedThreshold, isAnomaly);
+    updateVerdict(finalProbability, decisionThreshold, isAnomaly);
+    updateGauge(finalProbability, decisionThreshold, isAnomaly);
     updateRecentFeatures(sample, finalProbability);
     appendHistory({
       time: formatTimestamp(new Date(prediction?.window_end_timestamp ?? timestamp)),
       source: synthetic ? "Fallback" : isWindowReady() ? "LSTM loop" : "Warmup",
       sample: sample.index,
       probability: finalProbability,
-      threshold: usedThreshold,
+      threshold: decisionThreshold,
       anomaly: isAnomaly,
     });
   } catch (error) {
