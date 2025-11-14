@@ -27,7 +27,8 @@ jobs:
 
       - name: Generate TMDB Config
         run: |
-          cat > tmdb-config.js << EOF
+          mkdir -p projects/tmdb-cinema
+          cat > projects/tmdb-cinema/tmdb-config.js << EOF
           window.TMDB_API_KEY = "${{ secrets.TMDB_API_KEY }}";
           window.TMDB_READ_TOKEN = "${{ secrets.TMDB_READ_TOKEN }}";
           EOF
