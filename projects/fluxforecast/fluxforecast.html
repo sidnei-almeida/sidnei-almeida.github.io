@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="FLUXFORECAST • LSTM liquid flow rate prediction cockpit. Stream riser pressure telemetry and forecast flow rates in real time."
+    />
+    <title>FLUXFORECAST • LSTM Flow Prediction</title>
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./fluxforecast.css" />
+  </head>
+  <body>
+    <div class="fluxbridge">
+      <header class="fb-header">
+        <div class="fb-brand">
+          <div class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 28 28" width="26" height="26">
+              <defs>
+                <linearGradient id="fluxAura" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6366f1" stop-opacity="0.9" />
+                  <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.85" />
+                </linearGradient>
+              </defs>
+              <rect width="28" height="28" rx="9" fill="#111" />
+              <rect x="3" y="3" width="22" height="22" rx="7" fill="#060606" />
+              <rect x="3" y="3" width="22" height="22" rx="7" stroke="url(#fluxAura)" stroke-width="1.5" fill="none" />
+              <path
+                d="M8 14h12M14 8v12m-4-4l8-8m0 8l-8 8"
+                fill="none"
+                stroke="url(#fluxAura)"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <div class="brand-copy">
+            <strong>FLUXFORECAST</strong>
+            <span>LSTM Flow Prediction</span>
+          </div>
+        </div>
+        <div class="fb-meta">
+          <div class="meta-chip">
+            <span>Model</span>
+            <strong id="metaModel">—</strong>
+          </div>
+          <div class="meta-chip">
+            <span>Input Features</span>
+            <strong id="metaFeatures">—</strong>
+          </div>
+          <div class="meta-chip">
+            <span>R² Score</span>
+            <strong id="metaR2">—</strong>
+          </div>
+        </div>
+        <div class="fb-actions">
+          <div class="status-chip" id="apiIndicator" aria-live="polite">
+            <span class="dot"></span>
+            <span>API</span>
+          </div>
+          <a class="ghost-btn" href="../../index.html">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M9.3 3.3a1 1 0 0 1 1.4 0l5.73 5.73a1 1 0 1 1-1.42 1.42L11 6.17V16a1 1 0 1 1-2 0V6.17L4.95 10.45a1 1 0 0 1-1.42-1.42Z" />
+            </svg>
+            <span>Back to portfolio</span>
+          </a>
+        </div>
+      </header>
+
+      <main class="fb-main">
+        <section class="panel telemetry">
+          <header>
+            <div class="section-intro">
+              <h2>Flow Rate Stream Monitor</h2>
+              <p>Stream riser pressure telemetry and watch LSTM flow rate predictions in real time.</p>
+            </div>
+            <div class="stream-indicators">
+              <div class="pill" id="bufferStatus">Buffer 0 / 0</div>
+              <div class="pill" id="streamMode">Idle</div>
+              <div class="pill" id="lastReading">Waiting feed…</div>
+            </div>
+          </header>
+          <div class="telemetry-stage">
+            <canvas id="telemetryCanvas" aria-hidden="true"></canvas>
+            <div class="telemetry-overlay" id="telemetrySkeleton">
+              <div class="skeleton-chart"></div>
+            </div>
+            <div class="telemetry-legend">
+              <div class="legend-item">
+                <span class="swatch primary"></span>
+                <span>Predicted flow rate</span>
+              </div>
+              <div class="legend-item">
+                <span class="swatch actual"></span>
+                <span>Actual flow rate</span>
+              </div>
+              <div class="legend-item">
+                <span class="swatch threshold-low"></span>
+                <span>Low threshold (P05)</span>
+              </div>
+              <div class="legend-item">
+                <span class="swatch threshold-high"></span>
+                <span>High threshold (P95)</span>
+              </div>
+              <div class="legend-item">
+                <span class="swatch warning"></span>
+                <span>Warning</span>
+              </div>
+            </div>
+          </div>
+          <div class="telemetry-meta">
+            <div>
+              <span>Samples processed</span>
+              <strong id="telemetrySteps">0</strong>
+            </div>
+            <div>
+              <span>Average error</span>
+              <strong id="telemetryError">—</strong>
+            </div>
+            <div>
+              <span>Latest prediction</span>
+              <strong id="telemetryLatest">—</strong>
+            </div>
+            <div>
+              <span>Low (P05)</span>
+              <strong id="telemetryLowThreshold">—</strong>
+            </div>
+            <div>
+              <span>High (P95)</span>
+              <strong id="telemetryHighThreshold">—</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel controls">
+          <header>
+            <div class="section-intro">
+              <h2>Streaming Controls</h2>
+              <p>Orchestrate the live riser pressure feed and prediction loop.</p>
+            </div>
+          </header>
+          <form class="control-grid" id="controlForm">
+            <fieldset class="threshold-fieldset">
+              <legend>Flow rate thresholds</legend>
+              <div class="threshold-grid">
+                <label>
+                  <div class="threshold-header">
+                    <span>Low (P05)</span>
+                    <output for="inputLowThreshold" id="labelLowThreshold">—</output>
+                  </div>
+                  <input type="range" min="0" max="1" step="0.001" id="inputLowThreshold" />
+                </label>
+                <label>
+                  <div class="threshold-header">
+                    <span>High (P95)</span>
+                    <output for="inputHighThreshold" id="labelHighThreshold">—</output>
+                  </div>
+                  <input type="range" min="0" max="1" step="0.001" id="inputHighThreshold" />
+                </label>
+              </div>
+              <p class="helper-copy">Flow rates below P05 or above P95 are flagged as warnings.</p>
+            </fieldset>
+            <fieldset class="streaming-fieldset">
+              <legend>Streaming loop</legend>
+              <div class="stream-status-grid">
+                <div>
+                  <span>Total ingested</span>
+                  <strong id="totalIngested">0</strong>
+                </div>
+                <div>
+                  <span>Feed cadence</span>
+                  <strong><span id="intervalLabel">2.4</span> s</strong>
+                </div>
+                <div>
+                  <span>Latency</span>
+                  <strong id="streamLatency">—</strong>
+                </div>
+              </div>
+              <div class="stream-buttons">
+                <button class="primary-btn" type="button" id="startStreamBtn">
+                  <span>Start stream</span>
+                </button>
+                <button class="ghost-btn" type="button" id="pauseStreamBtn">
+                  <span>Pause</span>
+                </button>
+                <button class="ghost-btn" type="button" id="resetStreamBtn">
+                  <span>Reset buffer</span>
+                </button>
+              </div>
+              <label class="inline-field">
+                <span>Interval (ms)</span>
+                <input type="range" min="800" max="6000" step="200" value="2400" id="intervalInput" />
+                <output for="intervalInput" id="intervalOutput">2.4s</output>
+              </label>
+              <p class="helper-copy">The model uses 7 normalized pressure values to predict liquid flow rate in real time.</p>
+            </fieldset>
+            <div class="dataset-loader compact">
+              <button class="ghost-btn small" type="button" id="uploadDatasetBtn">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M10 4a1 1 0 0 1 .78.37l3 3.6-1.56 1.3L11 7.73V14a1 1 0 1 1-2 0V7.73l-1.22 1.54-1.56-1.3 3-3.6A1 1 0 0 1 10 4Zm-6 9a2 2 0 0 1 2-2h1v2H6v3h8v-3h-1v-2h1a2 2 0 0 1 2 2v3.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 4 16.5Z" />
+                </svg>
+                <span>Upload CSV</span>
+              </button>
+              <input type="file" id="datasetFileInput" accept=".csv,text/csv" hidden />
+              <span class="dataset-status" id="datasetStatus">Loading dataset…</span>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel insights">
+          <header>
+            <div class="section-intro">
+              <h2>Latest Prediction</h2>
+              <p>Review the most recent flow rate forecast and model performance metrics.</p>
+            </div>
+          </header>
+          <div class="insight-grid">
+            <div class="insight-card verdict">
+              <span>Status</span>
+              <strong id="verdictLabel">—</strong>
+              <small id="verdictConfidence">—</small>
+            </div>
+            <div class="insight-card prediction">
+              <span>Predicted flow rate</span>
+              <strong id="predictionValue">—</strong>
+              <small>Normalized [0.0, 1.0]</small>
+            </div>
+            <div class="insight-card actual">
+              <span>Actual flow rate</span>
+              <strong id="actualValue">—</strong>
+              <small>From dataset</small>
+            </div>
+            <div class="insight-card error">
+              <span>Prediction error</span>
+              <strong id="errorValue">—</strong>
+              <small>Absolute difference</small>
+            </div>
+            <div class="insight-card latency">
+              <span>Latency</span>
+              <strong id="latencyValue">—</strong>
+              <small>Total pipeline time</small>
+            </div>
+          </div>
+          <section class="explanation">
+            <header>
+              <h3>Input pressure values</h3>
+              <button class="ghost-btn small" type="button" id="exportSampleBtn">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M5 3a2 2 0 0 0-2 2v8h2V5h10v8h2V5a2 2 0 0 0-2-2H5Zm4 6V5h2v4h3l-4 5-4-5h3Zm-4 7h10v2H5v-2Z" />
+                </svg>
+                <span>Export payload</span>
+              </button>
+            </header>
+            <ul class="reading-list" id="recentReadings"></ul>
+          </section>
+        </section>
+
+        <section class="panel history">
+          <header>
+            <div class="section-intro">
+              <h2>Prediction History</h2>
+              <p>Review the latest predictions, actual values, and error metrics.</p>
+            </div>
+          </header>
+          <div class="history-table" role="table" aria-label="Prediction history">
+            <div class="table-header" role="rowgroup">
+              <div role="row">
+                <span role="columnheader">Time</span>
+                <span role="columnheader">Source</span>
+                <span role="columnheader">Predicted</span>
+                <span role="columnheader">Actual</span>
+                <span role="columnheader">Error</span>
+                <span role="columnheader">Status</span>
+              </div>
+            </div>
+            <div class="table-body" id="historyBody" role="rowgroup"></div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="fb-footer">
+        <span>© <span id="footerYear"></span> FluxForecast</span>
+        <span>Version <strong data-footer-version>—</strong> • Shortcuts: Space start/pause • Shift+R reset buffer • Shift+E export</span>
+      </footer>
+    </div>
+
+    <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+    <div class="loading-overlay" id="loadingOverlay" hidden aria-live="polite" aria-atomic="true">
+      <div class="loading-card">
+        <div class="loading-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="42" height="42">
+            <circle class="halo" cx="16" cy="16" r="14" />
+            <path class="pulse" d="M6 18h6l2-6 4 12 2-6h6" />
+          </svg>
+        </div>
+        <div class="loading-copy">
+          <strong>Syncing riser telemetry…</strong>
+          <span>Checking API health, loading metadata, and preparing the riser dataset.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-shell" id="sequenceModal" hidden>
+      <div class="modal-backdrop" data-close="true"></div>
+      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="sequenceTitle">
+        <header>
+          <h2 id="sequenceTitle">Sample breakdown</h2>
+          <button type="button" class="modal-close" id="sequenceClose" aria-label="Close modal">
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M5 5l10 10m0-10L5 15" />
+            </svg>
+          </button>
+        </header>
+        <div class="modal-body">
+          <p>Inspect the normalized pressure vector sent to the LSTM model.</p>
+          <div class="sequence-scroll" id="sequenceScroll"></div>
+        </div>
+        <footer>
+          <button type="button" class="ghost-btn" data-close="true">Close</button>
+        </footer>
+      </section>
+    </div>
+
+    <script type="module" src="./fluxforecast.js"></script>
+  </body>
+</html>
+
