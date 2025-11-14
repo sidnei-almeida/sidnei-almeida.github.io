@@ -3,7 +3,7 @@
  */
 
 const API_BASE_URL = "https://salmeida-secom-production-anomaly.hf.space";
-const DATASET_PATH = "./data/secom_cleaned_dataset.csv";
+const DATASET_PATH = "../../data/secom_cleaned_dataset.csv";
 const FETCH_TIMEOUT_MS = 9000;
 const STREAM_TIMEOUT_MS = 14000;
 const MAX_TELEMETRY_POINTS = 180;

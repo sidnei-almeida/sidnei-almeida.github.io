@@ -253,13 +253,13 @@ function handleFileSelect(file) {
 
 async function preloadExampleFiles() {
   const examplePaths = [
-    { emotion: 'angry', path: './images/emotion_class/angry.jpg' },
-    { emotion: 'disgust', path: './images/emotion_class/disgust.jpg' },
-    { emotion: 'fear', path: './images/emotion_class/fear.jpg' },
-    { emotion: 'happy', path: './images/emotion_class/happy.jpg' },
-    { emotion: 'neutral', path: './images/emotion_class/neutral.jpg' },
-    { emotion: 'sad', path: './images/emotion_class/sad.jpg' },
-    { emotion: 'surprised', path: './images/emotion_class/surprised.jpg' }
+    { emotion: 'angry', path: '../../images/emotion_class/angry.jpg' },
+    { emotion: 'disgust', path: '../../images/emotion_class/disgust.jpg' },
+    { emotion: 'fear', path: '../../images/emotion_class/fear.jpg' },
+    { emotion: 'happy', path: '../../images/emotion_class/happy.jpg' },
+    { emotion: 'neutral', path: '../../images/emotion_class/neutral.jpg' },
+    { emotion: 'sad', path: '../../images/emotion_class/sad.jpg' },
+    { emotion: 'surprised', path: '../../images/emotion_class/surprised.jpg' }
   ];
   
   // Preload all example files
