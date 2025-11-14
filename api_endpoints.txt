@@ -1,79 +1,21 @@
-Base URL: https://salmeida-secom-production-anomaly.hf.space/
+Base URL
+--------
+https://keras-imdb-sentiment-lstm.onrender.com/
 
-1. GET /
-   Summary
-     - Returns metadata about the LSTM model, preprocessing configuration, default threshold and evaluation metrics.
-   Request
-     - No parameters.
-   Response shape
-     {
-       "project": "SECOM Failure Prediction",
-       "model_type": "LSTM",
-       "timesteps": 10,
-       "feature_count": 590,
-       "feature_names": ["f0", ..., "f589"],
-       "default_threshold": 0.7325,
-       "metrics": {
-         "accuracy": 0.9692,
-         "precision": 0.7311,
-         "recall": 0.8447,
-         "f1": 0.7838
-       }
-     }
+Available Endpoints
+-------------------
+GET /        -> Returns API metadata, configured paths, and model summary information.
+GET /health  -> Health check confirming that the model and tokenizer are loaded successfully.
+POST /predict
+  Request Body (JSON): { "text": "Movie review in English" }
+  Response: { "sentiment": "positive|negative", "confidence": <float>, "probability": <float> }
 
-2. GET /health
-   Summary
-     - Simple health probe used by deployment platforms.
-   Request
-     - No parameters.
-   Response shape
-     {"status": "ok"}
+Example Requests
+----------------
+Health Check:
+  curl https://keras-imdb-sentiment-lstm.onrender.com/health
 
-3. POST /preprocess
-   Summary
-     - Accepts a single raw sensor reading (timestamp + 590 features), applies Min-Max scaling using the saved training statistics, and returns the scaled vector.
-   Request body
-     {
-       "reading": {
-         "timestamp": "ISO-8601 string (optional)",
-         "values": [f0, f1, ..., f589]
-       }
-     }
-     - The `values` array must contain exactly 590 numbers in the order expected by the model.
-   Successful response
-     {
-       "scaled_values": [...590 scaled floats...],
-       "timestamp": "Normalized ISO timestamp or null"
-     }
-   Notes for frontend
-     - Use this endpoint when you need to visualise the scaled readings or debug the preprocessing layer without affecting the rolling prediction buffer.
-
-4. POST /predict
-   Summary
-     - Ingests a single reading, updates the rolling window of the last 10 scaled observations, and returns a prediction once the window is full.
-   Request body
-     {
-       "reading": {
-         "timestamp": "ISO-8601 string (optional)",
-         "values": [f0, f1, ..., f589]
-       },
-       "threshold": 0.7325,        // optional override
-       "reset_buffer": false       // optional, set true to clear the window before ingesting
-     }
-   Successful response
-     {
-       "scaled_values": [...],
-       "buffer_size": 7,          // how many readings are currently stored
-       "timesteps": 10,
-       "prediction": {
-         "probability": 0.84,
-         "is_anomaly": true,
-         "threshold": 0.7325,
-         "window_end_timestamp": "2025-11-12T12:09:00+00:00"
-       }
-     }
-     - `prediction` is null until `buffer_size` reaches 10.
-   Usage guidance
-     - Start a new simulation run by calling `/predict` with `"reset_buffer": true`, then stream one reading at a time (with timestamps increasing). After the 10th reading you will receive live probabilities.
-     - Keep sending readings to simulate the production feed; the window automatically slides forward.
-
+Prediction:
+  curl -X POST https://keras-imdb-sentiment-lstm.onrender.com/predict \
+       -H "Content-Type: application/json" \
+       -d '{"text": "This movie was absolutely fantastic!"}'
