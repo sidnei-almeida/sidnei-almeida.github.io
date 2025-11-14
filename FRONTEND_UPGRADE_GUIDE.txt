@@ -1,0 +1,421 @@
+================================================================================
+                    FRONTEND UPGRADE GUIDE - NEW API FORMAT
+================================================================================
+
+IMPORTANT: The API now accepts additional metadata fields (genre, year, title)
+that dramatically improve recommendation accuracy. Please update your code!
+
+================================================================================
+                           WHAT CHANGED
+================================================================================
+
+BEFORE (Old Format - Still Works, But Less Accurate):
+{
+  "synopsis": "Movie synopsis text here"
+}
+
+NOW (New Format - Recommended for Better Accuracy):
+{
+  "synopsis": "Movie synopsis text here",
+  "genre": "Horror, Mystery, Thriller",
+  "year": 2018,
+  "title": "Hereditary"
+}
+
+================================================================================
+                        WHY THIS MATTERS
+================================================================================
+
+The model was trained with "context-enriched" data in this format:
+"Genre: {genres}. Year: {year}. Title: {title}. Overview: {overview}"
+
+When you send only the synopsis, the model doesn't have the context to properly
+understand the semantic meaning. For example:
+- "family" in a Horror context ≠ "family" in a Romance context
+- Without genre, the model might recommend Romance movies for Horror films
+
+WITH METADATA: Much more accurate recommendations (scores 0.70-0.75+)
+WITHOUT METADATA: Less accurate (scores 0.60-0.65, may mix genres)
+
+================================================================================
+                      REQUIRED CHANGES TO FRONTEND
+================================================================================
+
+1. UPDATE YOUR REQUEST PAYLOAD
+   Add genre, year, and title fields when available from TMDB
+
+2. GET DATA FROM TMDB FIRST
+   You already fetch movie data from TMDB - use those fields!
+
+3. UPDATE TYPE DEFINITIONS
+   Add optional fields to your TypeScript interfaces
+
+================================================================================
+                    STEP-BY-STEP UPDATE GUIDE
+================================================================================
+
+STEP 1: Update Your Request Interface
+--------------------------------------
+
+OLD:
+interface RecommendationRequest {
+  synopsis: string;
+  top_k?: number;
+}
+
+NEW:
+interface RecommendationRequest {
+  synopsis: string;      // Required (10-5000 chars)
+  genre?: string;        // Optional but RECOMMENDED (e.g., "Horror, Mystery, Thriller")
+  year?: number;         // Optional but RECOMMENDED (1888-2100)
+  title?: string;        // Optional but RECOMMENDED (max 200 chars)
+  top_k?: number;        // Optional (1-50, default: 10)
+}
+
+STEP 2: Get Genre, Year, Title from TMDB
+------------------------------------------
+
+When user selects a movie, you already have TMDB data. Use these fields:
+
+From TMDB movie object:
+- genres: array of objects → convert to string: genres.map(g => g.name).join(', ')
+- release_date: string → extract year: release_date.split('-')[0] or new Date(release_date).getFullYear()
+- title: string → use directly
+
+Example:
+const tmdbMovie = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`);
+const movieData = await tmdbMovie.json();
+
+const genreString = movieData.genres.map(g => g.name).join(', ');  // "Horror, Mystery, Thriller"
+const year = parseInt(movieData.release_date.split('-')[0]);       // 2018
+const title = movieData.title;                                      // "Hereditary"
+const synopsis = movieData.overview;                                // "When Ellen..."
+
+STEP 3: Update Your API Call Function
+--------------------------------------
+
+OLD CODE:
+async function getRecommendations(synopsis: string, topK: number = 10) {
+  const response = await fetch('https://tmdb-semantic-recommender.onrender.com/api/v1/recommend', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      synopsis: synopsis,
+      top_k: topK
+    })
+  });
+  return await response.json();
+}
+
+NEW CODE:
+async function getRecommendations(
+  synopsis: string,
+  genre?: string,
+  year?: number,
+  title?: string,
+  topK: number = 10
+) {
+  const response = await fetch('https://tmdb-semantic-recommender.onrender.com/api/v1/recommend', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      synopsis: synopsis,
+      genre: genre,      // NEW
+      year: year,        // NEW
+      title: title,      // NEW
+      top_k: topK
+    })
+  });
+  return await response.json();
+}
+
+STEP 4: Update Where You Call the Function
+-------------------------------------------
+
+OLD:
+const recommendations = await getRecommendations(selectedMovie.overview, 10);
+
+NEW:
+const recommendations = await getRecommendations(
+  selectedMovie.overview,                                    // synopsis
+  selectedMovie.genres.map(g => g.name).join(', '),        // genre
+  parseInt(selectedMovie.release_date.split('-')[0]),       // year
+  selectedMovie.title,                                       // title
+  10                                                          // top_k
+);
+
+================================================================================
+                       COMPLETE INTEGRATION EXAMPLE
+================================================================================
+
+// Example: User clicks on a movie, get recommendations
+
+async function handleMovieSelection(tmdbMovieId: number) {
+  // 1. Get full movie details from TMDB
+  const tmdbResponse = await fetch(
+    `https://api.themoviedb.org/3/movie/${tmdbMovieId}?api_key=${YOUR_TMDB_API_KEY}`
+  );
+  const movieData = await tmdbResponse.json();
+  
+  // 2. Extract fields for recommendation API
+  const synopsis = movieData.overview;
+  const genre = movieData.genres.map((g: any) => g.name).join(', ');
+  const year = parseInt(movieData.release_date.split('-')[0]);
+  const title = movieData.title;
+  
+  // 3. Call recommendation API with all metadata
+  const recommendationResponse = await fetch(
+    'https://tmdb-semantic-recommender.onrender.com/api/v1/recommend',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        synopsis: synopsis,
+        genre: genre,        // IMPORTANT: Include this!
+        year: year,          // IMPORTANT: Include this!
+        title: title,        // IMPORTANT: Include this!
+        top_k: 10
+      })
+    }
+  );
+  
+  const { recommendations } = await recommendationResponse.json();
+  
+  // 4. Use movie_id from recommendations to fetch details from TMDB
+  // (same as before)
+}
+
+================================================================================
+                        REACT/COMPONENT EXAMPLE
+================================================================================
+
+// React Hook with TMDB integration
+
+function useMovieRecommendations() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [recommendations, setRecommendations] = useState([]);
+  
+  const getRecommendations = async (tmdbMovieId: number) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // 1. Get movie data from TMDB
+      const tmdbRes = await fetch(
+        `https://api.themoviedb.org/3/movie/${tmdbMovieId}?api_key=${TMDB_API_KEY}`
+      );
+      const movieData = await tmdbRes.json();
+      
+      // 2. Prepare metadata for recommendation API
+      const payload = {
+        synopsis: movieData.overview,
+        genre: movieData.genres.map((g: any) => g.name).join(', '),
+        year: parseInt(movieData.release_date.split('-')[0]),
+        title: movieData.title,
+        top_k: 10
+      };
+      
+      // 3. Get recommendations
+      const recRes = await fetch(
+        'https://tmdb-semantic-recommender.onrender.com/api/v1/recommend',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }
+      );
+      
+      const data = await recRes.json();
+      setRecommendations(data.recommendations);
+      
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  return { getRecommendations, loading, error, recommendations };
+}
+
+================================================================================
+                     BACKWARDS COMPATIBILITY
+================================================================================
+
+IMPORTANT: The API still works with just synopsis (backwards compatible).
+
+You can migrate gradually:
+- Phase 1: Keep old code, test new format in parallel
+- Phase 2: Update to always send metadata when available
+- Phase 3: Remove old code
+
+However, you WILL see better results immediately when you add metadata!
+
+================================================================================
+                           FIELD FORMATS
+================================================================================
+
+SYNOPSIS (Required):
+- Type: string
+- Length: 10-5000 characters
+- Example: "When Ellen, the matriarch of the Graham family, passes away..."
+
+GENRE (Optional but Recommended):
+- Type: string
+- Format: Comma-separated genre names
+- Example: "Horror, Mystery, Thriller"
+- How to get: movieData.genres.map(g => g.name).join(', ')
+
+YEAR (Optional but Recommended):
+- Type: integer
+- Range: 1888-2100
+- Example: 2018
+- How to get: parseInt(movieData.release_date.split('-')[0])
+
+TITLE (Optional but Recommended):
+- Type: string
+- Max length: 200 characters
+- Example: "Hereditary"
+- How to get: movieData.title
+
+TOP_K (Optional):
+- Type: integer
+- Range: 1-50
+- Default: 10
+- Example: 10
+
+================================================================================
+                        WHAT HAPPENS INTERNALLY
+================================================================================
+
+When you send:
+{
+  "synopsis": "...",
+  "genre": "Horror, Mystery, Thriller",
+  "year": 2018,
+  "title": "Hereditary"
+}
+
+The API internally builds this query:
+"Genre: Horror, Mystery, Thriller. Year: 2018. Title: Hereditary. Overview: ..."
+
+This matches the format the model was trained on, resulting in:
+- Better genre understanding
+- More accurate semantic matching
+- Higher similarity scores
+- More relevant recommendations
+
+================================================================================
+                           RESPONSE FORMAT
+================================================================================
+
+Response is the same format as before, but the "query" field shows what was used:
+
+With metadata:
+{
+  "query": "Genre: Horror, Mystery, Thriller. Year: 2018. Title: Hereditary. Overview: ...",
+  "recommendations": [...],
+  "count": 10
+}
+
+Without metadata:
+{
+  "query": "When Ellen, the matriarch...",
+  "recommendations": [...],
+  "count": 10
+}
+
+================================================================================
+                          SIMILARITY SCORES
+================================================================================
+
+With the new model:
+- 0.70-0.75+ = Excellent match (with metadata)
+- 0.65-0.70 = Good match
+- 0.60-0.65 = Fair match
+- < 0.60 = Poor match
+
+Note: Scores may appear slightly lower than before, but quality is MUCH better.
+The model is now more discerning and won't mix genres.
+
+================================================================================
+                      QUICK MIGRATION CHECKLIST
+================================================================================
+
+[ ] 1. Update TypeScript interface to include genre, year, title
+[ ] 2. Update API call function signature
+[ ] 3. Update function calls to pass genre, year, title from TMDB data
+[ ] 4. Test with a few movies to verify improved results
+[ ] 5. Update any error handling if needed
+[ ] 6. Remove old code once verified
+
+================================================================================
+                           TESTING
+================================================================================
+
+Test with Hereditary (TMDB ID: 508947 or similar):
+- Without metadata: You might get mixed genres
+- With metadata: You'll get proper Horror/Mystery recommendations
+
+Example test:
+1. Get TMDB data for Hereditary
+2. Call API with synopsis only → Note results
+3. Call API with synopsis + genre + year + title → Compare results
+4. You should see better thematic consistency with metadata
+
+================================================================================
+                          API ENDPOINT
+================================================================================
+
+URL: https://tmdb-semantic-recommender.onrender.com/api/v1/recommend
+Method: POST
+Content-Type: application/json
+
+Example cURL:
+curl -X POST https://tmdb-semantic-recommender.onrender.com/api/v1/recommend \
+  -H "Content-Type: application/json" \
+  -d '{
+    "synopsis": "When Ellen, the matriarch of the Graham family, passes away...",
+    "genre": "Horror, Mystery, Thriller",
+    "year": 2018,
+    "title": "Hereditary",
+    "top_k": 10
+  }'
+
+================================================================================
+                         SUPPORT & QUESTIONS
+================================================================================
+
+- Full API Documentation: API_DOCUMENTATION.md
+- Quick Reference: API_QUICK_REFERENCE.md
+- Interactive Docs: https://tmdb-semantic-recommender.onrender.com/docs
+
+If you have questions or issues:
+1. Check the interactive docs at /docs endpoint
+2. Verify you're sending data in the correct format
+3. Check that genre is comma-separated string (not array)
+4. Verify year is an integer, not a string
+
+================================================================================
+                           SUMMARY
+================================================================================
+
+WHAT TO DO:
+1. Get genre, year, title from TMDB movie data
+2. Include them in the API request
+3. Test and verify improved results
+
+WHY:
+- Much better recommendation accuracy
+- Prevents genre confusion
+- Higher quality matches
+
+WHEN:
+- As soon as possible! The API is live and ready.
+- Old format still works, but you're missing out on better results.
+
+================================================================================
+                           END OF GUIDE
+================================================================================
+
