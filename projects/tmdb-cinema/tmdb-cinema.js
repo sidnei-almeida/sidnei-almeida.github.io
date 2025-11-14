@@ -53,7 +53,7 @@ const state = {
   debounceTimer: null,
 };
 
-const OFFLINE_POSTER = "./images/movies_background.webp";
+const OFFLINE_POSTER = "../../images/movies_background.webp";
 
 function byId(id) {
   return document.getElementById(id);

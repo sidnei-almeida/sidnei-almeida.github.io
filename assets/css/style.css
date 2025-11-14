@@ -771,7 +771,7 @@ body::-webkit-scrollbar-thumb:hover {
   padding-top: 80px;
   background: 
     linear-gradient(rgba(0, 0, 0, 0.9), rgba(10, 10, 10, 0.85)),
-    url('./images/hero_background.jpg');
+    url('../images/hero_background.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

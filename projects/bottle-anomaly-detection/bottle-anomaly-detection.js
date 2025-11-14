@@ -11,12 +11,12 @@ const OVERLAY_FAILSAFE_MS = 12000;
 const INFER_TIMEOUT_MS = 16000;
 
 const SAMPLE_IMAGES = [
-  { label: "Reference Good", src: "./images/bottles/000.png" },
-  { label: "Anomaly 1", src: "./images/bottles/anomaly_1.png" },
-  { label: "Anomaly 2", src: "./images/bottles/anomaly_2.png" },
-  { label: "Anomaly 3", src: "./images/bottles/anomaly_3.png" },
-  { label: "Anomaly 4", src: "./images/bottles/anomaly_4.png" },
-  { label: "Anomaly 5", src: "./images/bottles/anomaly_5.png" },
+  { label: "Reference Good", src: "../../images/bottles/000.png" },
+  { label: "Anomaly 1", src: "../../images/bottles/anomaly_1.png" },
+  { label: "Anomaly 2", src: "../../images/bottles/anomaly_2.png" },
+  { label: "Anomaly 3", src: "../../images/bottles/anomaly_3.png" },
+  { label: "Anomaly 4", src: "../../images/bottles/anomaly_4.png" },
+  { label: "Anomaly 5", src: "../../images/bottles/anomaly_5.png" },
 ];
 
 const SELECTORS = {
