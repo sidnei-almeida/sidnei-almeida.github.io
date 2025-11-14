@@ -87,6 +87,28 @@
       50% { opacity: 0.95; }
     }
     
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+    
     /* Header */
     header {
       background: rgba(26, 26, 26, 0.90);
@@ -435,6 +457,14 @@
     }
     
     /* Loading */
+    .loading-status {
+      transition: opacity 0.2s ease;
+      color: var(--cs2-text-dim);
+      font-size: 0.9em;
+      font-weight: 400;
+      font-style: italic;
+    }
+    
     .loading {
       text-align: center;
       padding: 3rem;
@@ -1525,13 +1555,36 @@
     </div>
   </footer>
 
+  <script src="../../assets/js/render-api-utils.js"></script>
   <script>
     const API_BASE = 'https://cs2-valuation-api.onrender.com';
     const REQUEST_TIMEOUT_MS = 9000;
     const INVENTORY_TIMEOUT_MS = 16000;
     const PRICE_TIMEOUT_MS = 12000;
     
-    async function fetchWithTimeout(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
+    // Subtle status indicator that updates loading messages inline
+    let currentLoadingElement = null;
+    
+    function updateLoadingStatus(message) {
+      if (currentLoadingElement) {
+        const statusText = currentLoadingElement.querySelector('.loading-status');
+        if (statusText) {
+          // Add space before message and make it subtle
+          statusText.textContent = ' ' + message;
+          statusText.style.opacity = '0';
+          setTimeout(() => {
+            statusText.style.opacity = '1';
+          }, 150);
+        }
+      }
+    }
+    
+    function setLoadingElement(element) {
+      currentLoadingElement = element;
+    }
+    
+    // Use Render API utils if available, otherwise fallback
+    const fetchWithTimeout = window.RenderAPIUtils?.fetchWithRenderSupport || async function(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
       const controller = new AbortController();
       const timer = setTimeout(() => controller.abort(), timeout);
       try {
@@ -1544,19 +1597,47 @@
       } finally {
         clearTimeout(timer);
       }
-    }
+    };
     
     async function fetchJson(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
-      const response = await fetchWithTimeout(url, options, timeout);
-      if (!response.ok) {
-        const text = await response.text().catch(() => '');
-        throw new Error(text || `Status ${response.status}`);
-      }
+      // Create subtle progress callback that updates loading message inline
+      const progressCallback = (type, message) => {
+        if (type === 'warmup') {
+          updateLoadingStatus('(warming up API, this may take up to 60s)');
+        } else if (type === 'retry') {
+          // Extract just the retry info from message
+          const retryMatch = message.match(/Retry (\d+)\/(\d+)/);
+          if (retryMatch) {
+            updateLoadingStatus(`(retry ${retryMatch[1]}/${retryMatch[2]})`);
+          }
+        }
+      };
+      
       try {
+        const response = window.RenderAPIUtils?.fetchWithRetry 
+          ? await window.RenderAPIUtils.fetchWithRetry(url, options, timeout, progressCallback)
+          : await fetchWithTimeout(url, options, timeout);
+        
+        if (!response.ok) {
+          const text = await response.text().catch(() => '');
+          throw new Error(text || `Status ${response.status}`);
+        }
         return await response.json();
       } catch (error) {
-        throw new Error('Invalid response payload.');
+        if (error.message && !error.message.includes('Status')) {
+          throw error;
+        }
+        throw new Error(error.message || 'Invalid response payload.');
       }
+    }
+    
+    // Warmup API on page load
+    if (window.RenderAPIUtils) {
+      window.addEventListener('DOMContentLoaded', () => {
+        window.RenderAPIUtils.warmupAPI(API_BASE, '/health').catch(() => {
+          // Silently fail - warmup is best effort
+        });
+      });
     }
     
     // Scroll header effect
@@ -1651,9 +1732,13 @@
       resultsDiv.innerHTML = `
         <div class="loading">
           <div class="spinner"></div>
-          <p style="margin-top: 1rem; color: var(--cs2-text);">Loading inventory...</p>
+          <p style="margin-top: 1rem; color: var(--cs2-text);">Loading inventory<span class="loading-status"></span>...</p>
+          <p style="margin-top: 0.5rem; color: var(--cs2-text-dim); font-size: 0.9rem;">
+            <i class="fas fa-info-circle"></i> The first request may take up to 60 seconds if the API is "sleeping"
+          </p>
         </div>
       `;
+      setLoadingElement(resultsDiv.querySelector('.loading'));
       
       try {
         const endpoint = analysisType === 'full' 
@@ -1674,15 +1759,22 @@
         displayInventoryResults(data, analysisType);
         
       } catch (error) {
-        const message = error.message?.includes('Status 404')
+        let message = error.message?.includes('Status 404')
           ? 'Inventory not found or set to private.'
           : error.message;
+        
+        // Provide helpful message for timeout/cold start
+        if (message.includes('timed out') || message.includes('taking longer') || message.includes('wake up')) {
+          message = 'The API is taking longer to start. Please wait a few seconds and try again. Free services may take up to 60 seconds to "wake up" after 15 minutes of inactivity.';
+        }
+        
         resultsDiv.innerHTML = `
           <div class="error-message">
             <i class="fas fa-exclamation-triangle"></i>
             <h3>Error Loading Inventory</h3>
             <p>${message}</p>
             <p style="margin-top: 1rem;">Please verify that the Steam ID is correct and the inventory is public.</p>
+            ${message.includes('taking longer') || message.includes('wake up') ? '<p style="margin-top: 0.5rem; color: var(--cs2-gold);"><i class="fas fa-lightbulb"></i> Tip: Wait 30-60 seconds and try again.</p>' : ''}
           </div>
         `;
       }
@@ -1964,9 +2056,13 @@
       resultsDiv.innerHTML = `
         <div class="loading">
           <div class="spinner"></div>
-          <p style="margin-top: 1rem; color: var(--cs2-text);">Searching price...</p>
+          <p style="margin-top: 1rem; color: var(--cs2-text);">Searching price<span class="loading-status"></span>...</p>
+          <p style="margin-top: 0.5rem; color: var(--cs2-text-dim); font-size: 0.9rem;">
+            <i class="fas fa-info-circle"></i> The first request may take up to 60 seconds if the API is "sleeping"
+          </p>
         </div>
       `;
+      setLoadingElement(resultsDiv.querySelector('.loading'));
       
       try {
         const data = await fetchJson(
@@ -1982,12 +2078,19 @@
         displayPriceResults(data, itemName);
         
       } catch (error) {
-        const message = error.message?.includes('Status 404') ? 'Item not found' : error.message;
+        let message = error.message?.includes('Status 404') ? 'Item not found' : error.message;
+        
+        // Provide helpful message for timeout/cold start
+        if (message.includes('timed out') || message.includes('taking longer') || message.includes('wake up')) {
+          message = 'The API is taking longer to start. Please wait a few seconds and try again. Free services may take up to 60 seconds to "wake up" after 15 minutes of inactivity.';
+        }
+        
         resultsDiv.innerHTML = `
           <div class="error-message">
             <i class="fas fa-exclamation-triangle"></i>
             <h3>Item Not Found</h3>
             <p>${message}</p>
+            ${message.includes('taking longer') || message.includes('wake up') ? '<p style="margin-top: 0.5rem; color: var(--cs2-gold);"><i class="fas fa-lightbulb"></i> Tip: Wait 30-60 seconds and try again.</p>' : ''}
           </div>
         `;
       }
