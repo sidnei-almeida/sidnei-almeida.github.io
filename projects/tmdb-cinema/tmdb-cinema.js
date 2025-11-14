@@ -338,86 +338,38 @@ async function loadRecommendations(movieId) {
     const movieDetails = state.movieDetails || await fetchTmdb(`/movie/${movieId}`, { language: "en-US" }, REQUEST_TIMEOUT_MS);
     const synopsis = movieDetails?.overview || "";
     
-    // Fetch BERT and TMDB recommendations in parallel
+    // Fetch BERT recommendations only
     let bertRecommendations = [];
-    let tmdbRecommendations = [];
     
-    // Try to get BERT recommendations if synopsis is available
+    // Get BERT recommendations if synopsis is available
     // Pass movieDetails to include genre, year, title for better accuracy
     if (synopsis && synopsis.trim().length >= 10) {
       try {
         bertRecommendations = await fetchRecommendations(synopsis, movieDetails);
+        console.log("[CineScope] BERT recommendations:", bertRecommendations.length);
       } catch (error) {
-        console.warn("[CineScope] BERT recommendations failed, continuing with TMDB:", error);
+        console.error("[CineScope] BERT recommendations failed:", error);
+        showToast("Unable to load recommendations from BERT API.", "error");
+        renderRecommendations([]);
+        return;
       }
-    }
-    
-    // Always fetch TMDB recommendations to enrich results
-    try {
-      tmdbRecommendations = await fetchAllTmdbRecommendations(movieId);
-      console.log("[CineScope] TMDB recommendations fetched:", tmdbRecommendations.length);
-    } catch (error) {
-      console.warn("[CineScope] TMDB recommendations failed:", error);
-    }
-    
-    console.log("[CineScope] BERT recommendations:", bertRecommendations.length);
-    console.log("[CineScope] TMDB recommendations:", tmdbRecommendations.length);
-    
-    // Combine recommendations: mix BERT and TMDB (avoiding duplicates)
-    const combined = [];
-    const usedIds = new Set();
-    
-    // Strategy: Take up to 5 from BERT, then fill with TMDB
-    // This ensures we always have a mix of both sources
-    const maxBert = Math.min(5, bertRecommendations.length);
-    const maxTmdb = MAX_RECOMMENDATIONS - maxBert;
-    
-    // Add BERT recommendations first (they have similarity scores)
-    bertRecommendations.slice(0, maxBert).forEach((item) => {
-      if (!usedIds.has(item.id)) {
-        combined.push({ ...item, source: "bert" });
-        usedIds.add(item.id);
-      }
-    });
-    
-    // Add TMDB recommendations to fill remaining slots
-    tmdbRecommendations.slice(0, maxTmdb).forEach((item) => {
-      if (!usedIds.has(item.id) && combined.length < MAX_RECOMMENDATIONS) {
-        combined.push({ ...item, source: "tmdb" });
-        usedIds.add(item.id);
-      }
-    });
-    
-    // If we still have space and more BERT recommendations, add them
-    if (combined.length < MAX_RECOMMENDATIONS && bertRecommendations.length > maxBert) {
-      bertRecommendations.slice(maxBert).forEach((item) => {
-        if (!usedIds.has(item.id) && combined.length < MAX_RECOMMENDATIONS) {
-          combined.push({ ...item, source: "bert" });
-          usedIds.add(item.id);
-        }
-      });
-    }
-    
-    // If we still have space and more TMDB recommendations, add them
-    if (combined.length < MAX_RECOMMENDATIONS && tmdbRecommendations.length > maxTmdb) {
-      tmdbRecommendations.slice(maxTmdb).forEach((item) => {
-        if (!usedIds.has(item.id) && combined.length < MAX_RECOMMENDATIONS) {
-          combined.push({ ...item, source: "tmdb" });
-          usedIds.add(item.id);
-        }
-      });
-    }
-    
-    // If no recommendations at all, show empty state
-    if (combined.length === 0) {
+    } else {
+      console.warn("[CineScope] Synopsis too short or missing, cannot fetch BERT recommendations");
       renderRecommendations([]);
       return;
     }
     
-    // Log final combination
-    const bertCount = combined.filter(item => item.source === "bert").length;
-    const tmdbCount = combined.filter(item => item.source === "tmdb").length;
-    console.log("[CineScope] Final combination - BERT:", bertCount, "TMDB:", tmdbCount, "Total:", combined.length);
+    // If no recommendations, show empty state
+    if (bertRecommendations.length === 0) {
+      renderRecommendations([]);
+      return;
+    }
+    
+    // Map BERT recommendations to our format with source
+    const combined = bertRecommendations.map((item) => ({
+      ...item,
+      source: "bert"
+    }));
 
     // Filter out invalid movie IDs before fetching (TMDB IDs should be positive integers)
     const validRecommendations = combined.filter((item) => {
@@ -427,6 +379,8 @@ async function loadRecommendations(movieId) {
       }
       return isValid;
     });
+    
+    console.log("[CineScope] Valid BERT recommendations:", validRecommendations.length);
     
     // Fetch full movie details for all valid recommendations
     const details = await Promise.all(
@@ -448,7 +402,31 @@ async function loadRecommendations(movieId) {
       })
     );
 
-    state.recommendations = details.filter(Boolean);
+    // Filter out any invalid entries
+    const filteredDetails = details.filter((entry) => {
+      return entry && entry.movie;
+    });
+
+    console.log(`[CineScope] Valid movie details fetched: ${filteredDetails.length}`);
+
+    // Sort recommendations: first by match score (similarity), then by rating (vote_average)
+    // All recommendations are from BERT, so they all have match scores
+    const sortedRecommendations = filteredDetails.sort((a, b) => {
+      // Primary sort: by match score (similarity) - BERT recommendations have this
+      const scoreA = Number.isFinite(a.score) ? a.score : 0;
+      const scoreB = Number.isFinite(b.score) ? b.score : 0;
+      
+      if (scoreA !== scoreB) {
+        return scoreB - scoreA; // Descending order (highest match first)
+      }
+      
+      // Secondary sort: by rating (vote_average) when match scores are equal or both missing
+      const ratingA = Number.isFinite(a.movie.vote_average) ? a.movie.vote_average : 0;
+      const ratingB = Number.isFinite(b.movie.vote_average) ? b.movie.vote_average : 0;
+      return ratingB - ratingA; // Descending order (highest rating first)
+    });
+
+    state.recommendations = sortedRecommendations;
     renderRecommendations(state.recommendations);
   } catch (error) {
     console.error("[CineScope] recommendation loading failed:", error);
