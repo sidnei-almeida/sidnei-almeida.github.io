@@ -338,8 +338,9 @@ async function loadRecommendations(movieId) {
     const movieDetails = state.movieDetails || await fetchTmdb(`/movie/${movieId}`, { language: "en-US" }, REQUEST_TIMEOUT_MS);
     const synopsis = movieDetails?.overview || "";
     
-    // Fetch BERT recommendations only
+    // Fetch BERT recommendations first
     let bertRecommendations = [];
+    let usingFallback = false;
     
     // Get BERT recommendations if synopsis is available
     // Pass movieDetails to include genre, year, title for better accuracy
@@ -348,27 +349,47 @@ async function loadRecommendations(movieId) {
         bertRecommendations = await fetchRecommendations(synopsis, movieDetails);
         console.log("[CineScope] BERT recommendations:", bertRecommendations.length);
       } catch (error) {
-        console.error("[CineScope] BERT recommendations failed:", error);
-        showToast("Unable to load recommendations from BERT API.", "error");
-        renderRecommendations([]);
-        return;
+        console.warn("[CineScope] BERT API unavailable (likely cold start), using TMDB fallback:", error);
+        // Use TMDB as fallback when BERT API fails
+        try {
+          bertRecommendations = await fetchRecommendationsFromTmdb(movieId);
+          usingFallback = true;
+          console.log("[CineScope] Using TMDB fallback recommendations:", bertRecommendations.length);
+          showToast("Using TMDB recommendations while BERT API is warming up...", "info", 4000);
+        } catch (fallbackError) {
+          console.error("[CineScope] TMDB fallback also failed:", fallbackError);
+          showToast("Unable to load recommendations.", "error");
+          renderRecommendations([]);
+          list.classList.remove("is-loading");
+          return;
+        }
       }
     } else {
-      console.warn("[CineScope] Synopsis too short or missing, cannot fetch BERT recommendations");
-      renderRecommendations([]);
-      return;
+      // If no synopsis, use TMDB directly
+      console.warn("[CineScope] Synopsis too short or missing, using TMDB recommendations");
+      try {
+        bertRecommendations = await fetchRecommendationsFromTmdb(movieId);
+        usingFallback = true;
+        console.log("[CineScope] Using TMDB recommendations (no synopsis):", bertRecommendations.length);
+      } catch (fallbackError) {
+        console.error("[CineScope] TMDB recommendations failed:", fallbackError);
+        renderRecommendations([]);
+        list.classList.remove("is-loading");
+        return;
+      }
     }
     
     // If no recommendations, show empty state
     if (bertRecommendations.length === 0) {
       renderRecommendations([]);
+      list.classList.remove("is-loading");
       return;
     }
     
-    // Map BERT recommendations to our format with source
+    // Map recommendations to our format with source
     const combined = bertRecommendations.map((item) => ({
       ...item,
-      source: "bert"
+      source: usingFallback ? "tmdb" : "bert"
     }));
 
     // Filter out invalid movie IDs before fetching (TMDB IDs should be positive integers)
@@ -380,7 +401,7 @@ async function loadRecommendations(movieId) {
       return isValid;
     });
     
-    console.log("[CineScope] Valid BERT recommendations:", validRecommendations.length);
+    console.log(`[CineScope] Valid recommendations (${usingFallback ? 'TMDB' : 'BERT'}):`, validRecommendations.length);
     
     // Fetch full movie details for all valid recommendations
     const details = await Promise.all(
@@ -409,18 +430,21 @@ async function loadRecommendations(movieId) {
 
     console.log(`[CineScope] Valid movie details fetched: ${filteredDetails.length}`);
 
-    // Sort recommendations: first by match score (similarity), then by rating (vote_average)
-    // All recommendations are from BERT, so they all have match scores
+    // Sort recommendations: 
+    // For BERT: by match score (similarity), then by rating
+    // For TMDB: by rating (vote_average), as they don't have similarity scores
     const sortedRecommendations = filteredDetails.sort((a, b) => {
-      // Primary sort: by match score (similarity) - BERT recommendations have this
-      const scoreA = Number.isFinite(a.score) ? a.score : 0;
-      const scoreB = Number.isFinite(b.score) ? b.score : 0;
-      
-      if (scoreA !== scoreB) {
-        return scoreB - scoreA; // Descending order (highest match first)
+      // If using BERT, prioritize similarity scores
+      if (!usingFallback) {
+        const scoreA = Number.isFinite(a.score) ? a.score : 0;
+        const scoreB = Number.isFinite(b.score) ? b.score : 0;
+        
+        if (scoreA !== scoreB) {
+          return scoreB - scoreA; // Descending order (highest match first)
+        }
       }
       
-      // Secondary sort: by rating (vote_average) when match scores are equal or both missing
+      // Secondary sort: by rating (vote_average)
       const ratingA = Number.isFinite(a.movie.vote_average) ? a.movie.vote_average : 0;
       const ratingB = Number.isFinite(b.movie.vote_average) ? b.movie.vote_average : 0;
       return ratingB - ratingA; // Descending order (highest rating first)
