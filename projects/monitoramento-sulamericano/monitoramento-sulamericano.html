@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Economic Monitoring - South America | Professional Dashboard</title>
+  <meta name="description" content="Interactive dashboard for monitoring economic indicators of South American countries with professional visualizations and investment risk analysis." />
+  
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  
+  <!-- SheetJS (xlsx) for downloads -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  
+  <link rel="stylesheet" href="monitoramento-sulamericano.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <h1 class="dashboard-title">
+          <span class="title-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3v18h18"/>
+              <path d="M18 7v11"/>
+              <path d="M13 7v11"/>
+              <path d="M8 7v11"/>
+              <path d="M3 18l18-18"/>
+            </svg>
+          </span>
+          <span>Economic Monitoring - South America</span>
+        </h1>
+        <div class="header-meta">
+          <span class="update-time" id="updateTime">Loading...</span>
+          <button class="btn-refresh" id="refreshBtn" title="Refresh data">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Dashboard Layout (Horizontal) -->
+    <main class="dashboard-main">
+      <!-- Left Sidebar: Filters and Controls -->
+      <aside class="dashboard-sidebar">
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">View Mode</h2>
+          <div class="mode-toggle" id="modeToggle">
+            <button class="mode-btn active" data-mode="single" id="singleModeBtn">
+              <span class="mode-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                  <polyline points="17 6 23 6 23 12"/>
+                </svg>
+              </span>
+              Single Country
+            </button>
+            <button class="mode-btn" data-mode="compare" id="compareModeBtn">
+              <span class="mode-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="2" y1="12" x2="22" y2="12"/>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+              </span>
+              Compare
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Economic Indicator</h2>
+          <select class="select-indicator" id="indicatorSelect">
+            <option value="NY.GDP.MKTP.CD">GDP (current US$)</option>
+            <option value="FP.CPI.TOTL.ZG">Inflation (% annual)</option>
+            <option value="FR.INR.RINR">Real Interest Rate (%)</option>
+            <option value="SL.UEM.TOTL.ZS">Unemployment (% of labor force)</option>
+            <option value="PA.NUS.FCRF">Exchange Rate (LCU/US$)</option>
+          </select>
+        </div>
+
+        <div class="sidebar-section" id="singleCountrySection">
+          <h2 class="sidebar-title">Select Country</h2>
+          <select class="select-country" id="countrySelect">
+            <option value="">Loading countries...</option>
+          </select>
+        </div>
+
+        <div class="sidebar-section" id="compareCountriesSection" style="display: none;">
+          <h2 class="sidebar-title">Select Countries</h2>
+          <div class="multi-select-container" id="multiSelectContainer">
+            <!-- Countries will be added dynamically -->
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="info-badge">
+            <span class="info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+            </span>
+            <span>Data updated automatically every hour via World Bank API</span>
+          </div>
+        </div>
+
+        <div class="sidebar-social">
+          <a href="https://github.com/sidnei-almeida" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>
+          </a>
+          <a href="https://linkedin.com/in/saelmeida93" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>
+          </a>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <div class="dashboard-content">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay visible" id="loadingOverlay" aria-live="polite" aria-atomic="true">
+          <div class="loading-content">
+            <div class="loading-icon-wrapper">
+              <div class="loading-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <defs>
+                    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+                      <stop offset="50%" style="stop-color:#e0e0e0;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#bdbdbd;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M3 3v18h18" stroke="url(#iconGradient)"/>
+                  <path d="M18 7v11" stroke="url(#iconGradient)"/>
+                  <path d="M13 7v11" stroke="url(#iconGradient)"/>
+                  <path d="M8 7v11" stroke="url(#iconGradient)"/>
+                  <path d="M3 18l18-18" stroke="url(#iconGradient)"/>
+                </svg>
+              </div>
+              <div class="loading-glow"></div>
+            </div>
+            <h2 class="loading-title" id="loadingTitle">Loading Economic Data</h2>
+            <p class="loading-message" id="loadingMessage">
+              Fetching indicators from World Bank API and preparing visualizations...
+            </p>
+            <div class="loading-progress">
+              <div class="loading-progress-bar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single Country View -->
+        <div class="view-container" id="singleView">
+          <!-- Presidential Timeline -->
+          <div class="card timeline-card" id="timelineCard" style="display: none;">
+            <h3 class="card-title">Presidential Terms Timeline</h3>
+            <div id="timelineChart"></div>
+          </div>
+
+          <!-- Metrics Row -->
+          <div class="metrics-row">
+            <div class="metric-card">
+              <div class="metric-label">Current Value</div>
+              <div class="metric-value" id="currentValue">—</div>
+              <div class="metric-change" id="currentChange"></div>
+            </div>
+            <div class="metric-card risk-card">
+              <div class="metric-label">Risk Score</div>
+              <div class="metric-value risk-value" id="riskScore">—</div>
+              <div class="metric-category" id="riskCategory">—</div>
+              <div class="risk-bar">
+                <div class="risk-bar-fill" id="riskBarFill"></div>
+              </div>
+            </div>
+            <div class="metric-card stats-card">
+              <div class="metric-label">Mean</div>
+              <div class="metric-value" id="meanValue">—</div>
+              <div class="metric-label small">Median</div>
+              <div class="metric-value small" id="medianValue">—</div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="charts-row">
+            <div class="chart-container">
+              <div class="card">
+                <h3 class="card-title" id="mainChartTitle">Temporal Evolution</h3>
+                <div id="mainChart"></div>
+              </div>
+            </div>
+            <div class="chart-container">
+              <div class="card">
+                <h3 class="card-title">Comparison with Regional Average</h3>
+                <div id="regionalChart"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Secondary Charts -->
+          <div class="charts-row">
+            <div class="chart-container">
+              <div class="card">
+                <h3 class="card-title">Distribution</h3>
+                <div id="histogramChart"></div>
+              </div>
+            </div>
+            <div class="chart-container">
+              <div class="card">
+                <h3 class="card-title">Descriptive Statistics</h3>
+                <div class="stats-table-container">
+                  <table class="stats-table" id="statsTable">
+                    <thead>
+                      <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+                <div class="download-buttons">
+                  <button class="btn-download" id="downloadCsvBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    <span>Download CSV</span>
+                  </button>
+                  <button class="btn-download" id="downloadExcelBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 3v18h18"/>
+                      <path d="M18 7v11"/>
+                      <path d="M13 7v11"/>
+                      <path d="M8 7v11"/>
+                    </svg>
+                    <span>Download Excel</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compare Countries View -->
+        <div class="view-container" id="compareView" style="display: none;">
+          <!-- Tabs -->
+          <div class="tabs-container">
+            <button class="tab-btn active" data-tab="temporal">Temporal Comparison</button>
+            <button class="tab-btn" data-tab="ranking">Ranking</button>
+            <button class="tab-btn" data-tab="map">Map</button>
+            <button class="tab-btn" data-tab="risk">Risk Score</button>
+            <button class="tab-btn" data-tab="correlation">Correlation</button>
+          </div>
+
+          <!-- Tab Content -->
+          <div class="tab-content" id="temporalTab">
+            <div class="card">
+              <h3 class="card-title">Comparative Evolution</h3>
+              <div id="compareTemporalChart"></div>
+            </div>
+            <div class="card" id="correlationHeatmapCard" style="display: none;">
+              <h3 class="card-title">Correlation Matrix</h3>
+              <div id="correlationHeatmap"></div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="rankingTab" style="display: none;">
+            <div class="card">
+              <h3 class="card-title">Current Ranking</h3>
+              <div id="rankingChart"></div>
+            </div>
+            <div class="card">
+              <h3 class="card-title">Ranking Table</h3>
+              <div class="table-container">
+                <table class="data-table" id="rankingTable">
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Country</th>
+                      <th>Value</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="mapTab" style="display: none;">
+            <div class="card">
+              <h3 class="card-title">Geographic Distribution</h3>
+              <div id="mapChart"></div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="riskTab" style="display: none;">
+            <div class="card">
+              <h3 class="card-title">Risk Score by Country</h3>
+              <div id="riskChart"></div>
+            </div>
+            <div class="card">
+              <h3 class="card-title">Score Details</h3>
+              <div class="table-container">
+                <table class="data-table" id="riskTable">
+                  <thead>
+                    <tr>
+                      <th>Country</th>
+                      <th>Score</th>
+                      <th>Category</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card info-card">
+              <h3 class="card-title">Risk Score Methodology</h3>
+              <div class="methodology-content">
+                <p>The Investment Risk Score is calculated based on a weighted combination of economic indicators:</p>
+                <ul>
+                  <li><strong>GDP:</strong> Higher GDP means lower risk (negative weight)</li>
+                  <li><strong>Inflation:</strong> Higher inflation means higher risk (positive weight)</li>
+                  <li><strong>Real Interest Rate:</strong> Very high rates indicate higher risk (positive weight)</li>
+                  <li><strong>Unemployment:</strong> High unemployment levels increase risk (positive weight)</li>
+                </ul>
+                <p class="methodology-scale">
+                  <strong>Scale:</strong> 0-30 (Low Risk) | 30-60 (Moderate Risk) | 60-100 (High Risk)
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="correlationTab" style="display: none;">
+            <div class="card">
+              <h3 class="card-title">Indicators Correlation Matrix</h3>
+              <div id="indicatorsCorrelationChart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Data Source</h4>
+          <p>World Bank API - Economic Indicators</p>
+        </div>
+        <div class="footer-section">
+          <h4>Methodology</h4>
+          <p>Automated collection and processing with JavaScript</p>
+        </div>
+        <div class="footer-section">
+          <h4>Update</h4>
+          <p id="footerUpdateTime">Automatic every hour</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="monitoramento-sulamericano.js"></script>
+</body>
+</html>
+
