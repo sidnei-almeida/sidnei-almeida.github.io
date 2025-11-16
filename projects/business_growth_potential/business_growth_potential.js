@@ -586,14 +586,15 @@ const CHART_CONFIG = {
   },
   fonts: {
     family: '"Inter", system-ui, -apple-system, sans-serif',
-    size: 12,
-    sizeTitle: 14,
-    sizeLabel: 13
+    size: 10,
+    sizeTitle: 12,
+    sizeLabel: 11
   },
   layout: {
     plotBg: 'rgba(255, 255, 255, 0)',
     paperBg: 'rgba(255, 255, 255, 0)',
-    margin: { l: 80, r: 40, t: 40, b: 60 },
+    margin: { l: 60, r: 30, t: 30, b: 40 },
+    height: 220,
     showLegend: true,
     legend: {
       x: 1.02,
