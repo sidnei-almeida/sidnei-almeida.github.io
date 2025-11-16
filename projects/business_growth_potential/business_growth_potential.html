@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Growth Potential | Intelligent ML Analysis</title>
+  <meta name="description" content="Interactive dashboard for intelligent analysis of corporate growth potential using Machine Learning with Random Forest and financial indicators." />
+  
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  
+  <!-- SheetJS (xlsx) for downloads -->
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  
+  <link rel="stylesheet" href="business_growth_potential.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <h1 class="dashboard-title">
+          <span class="title-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </span>
+          <span>Business Growth Potential</span>
+        </h1>
+        <div class="header-meta">
+          <span class="update-time" id="updateTime">Ready</span>
+          <button class="btn-refresh" id="refreshBtn" title="Refresh data">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Dashboard Layout -->
+    <main class="dashboard-main">
+      <!-- Left Sidebar: Navigation and Filters -->
+      <aside class="dashboard-sidebar">
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Navigation</h2>
+          <nav class="nav-menu" id="navMenu">
+            <button class="nav-btn active" data-view="dashboard">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="20" x2="18" y2="10"/>
+                  <line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+              </span>
+              <span>Dashboard</span>
+            </button>
+            <button class="nav-btn" data-view="predictions">
+              <span class="nav-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                  <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+              </span>
+              <span>Predictions</span>
+            </button>
+          </nav>
+        </div>
+
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">System Status</h2>
+          <div class="status-indicator" id="modelStatus">
+            <span class="status-dot"></span>
+            <span class="status-text">Model: Loading...</span>
+          </div>
+          <div class="status-indicator" id="dataStatus">
+            <span class="status-dot"></span>
+            <span class="status-text">Data: Loading...</span>
+          </div>
+          <div class="status-indicator" id="apiStatus">
+            <span class="status-dot"></span>
+            <span class="status-text">API: Checking...</span>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="info-badge" id="modelInfoToggle" style="cursor: pointer;">
+            <span class="info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+            </span>
+            <span>Random Forest • 15+ features</span>
+          </div>
+          <div id="modelDetails" style="display: none; margin-top: 12px; padding: 12px; background: var(--bg-elevated); border-radius: var(--radius-md); font-size: 11px; color: var(--text-secondary);">
+            <div style="margin-bottom: 8px;"><strong>Algorithm:</strong> Random Forest</div>
+            <div style="margin-bottom: 8px;"><strong>Trees:</strong> <span id="modelNTrees">100</span></div>
+            <div style="margin-bottom: 8px;"><strong>Classes:</strong> Low, Medium, High</div>
+            <div><strong>Features:</strong> Financial + Macroeconomic</div>
+          </div>
+        </div>
+
+        <div class="sidebar-social">
+          <a href="https://github.com/sidnei-almeida" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/saaelmeida93/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>
+          </a>
+        </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <div class="dashboard-content">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay" aria-live="polite" aria-atomic="true">
+          <div class="loading-content">
+            <div class="loading-icon-wrapper">
+              <div class="loading-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+              </div>
+            </div>
+            <h2 class="loading-title" id="loadingTitle">Loading Data</h2>
+            <p class="loading-message" id="loadingMessage">Preparing visualizations...</p>
+            <div class="loading-progress">
+              <div class="loading-progress-bar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard View (Main Analysis Page) -->
+        <div class="view-container active" id="dashboardView">
+          <!-- Hero Section with Key Metrics -->
+          <div class="storytelling-section">
+            <h1 class="story-title">Business Growth Potential Analysis</h1>
+            <p class="story-subtitle">Uncovering investment opportunities through intelligent data analysis</p>
+          </div>
+
+          <!-- Key Metrics -->
+          <div class="metrics-row">
+            <div class="metric-card metric-highlight">
+              <div class="metric-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                </svg>
+              </div>
+              <div class="metric-label">High Potential Companies</div>
+              <div class="metric-value" id="highPotentialCount">—</div>
+              <div class="metric-sublabel" id="highPotentialPct">—</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="1" x2="12" y2="23"/>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+              </div>
+              <div class="metric-label">Average Market Cap</div>
+              <div class="metric-value" id="avgMarketCap">—</div>
+              <div class="metric-sublabel">Across all companies</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="2" y1="12" x2="22" y2="12"/>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+              </div>
+              <div class="metric-label">Countries Analyzed</div>
+              <div class="metric-value" id="countriesCount">—</div>
+              <div class="metric-sublabel">Global coverage</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"/>
+                  <line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+              </div>
+              <div class="metric-label">Total Companies</div>
+              <div class="metric-value" id="totalCompanies">—</div>
+              <div class="metric-sublabel">In dataset</div>
+            </div>
+          </div>
+
+          <!-- Dashboard Section Navigation -->
+          <div class="dashboard-section-nav">
+            <button class="section-nav-btn active" data-section="overview">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+              <span>Overview</span>
+            </button>
+            <button class="section-nav-btn" data-section="geographic">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="2" y1="12" x2="22" y2="12"/>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+              </svg>
+              <span>Geographic</span>
+            </button>
+            <button class="section-nav-btn" data-section="financial">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="1" x2="12" y2="23"/>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+              <span>Financial</span>
+            </button>
+            <button class="section-nav-btn" data-section="relationships">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                <path d="M9 14l2 2 4-4"/>
+              </svg>
+              <span>Relationships</span>
+            </button>
+            <button class="section-nav-btn" data-section="correlations">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/>
+              </svg>
+              <span>Correlations</span>
+            </button>
+            <button class="section-nav-btn" data-section="standouts">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <span>Standouts</span>
+            </button>
+          </div>
+
+          <!-- Overview Section -->
+          <div class="dashboard-section active" id="overviewSection">
+            <div class="storytelling-card">
+              <h2 class="story-heading">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+                Understanding Growth Potential
+              </h2>
+              <p class="story-text">Our analysis examines over <strong id="storyTotalCompanies">—</strong> companies across <strong id="storyCountries">—</strong> countries, identifying patterns and opportunities that drive business growth. By analyzing financial indicators, market conditions, and macroeconomic factors, we uncover companies with exceptional potential.</p>
+            </div>
+
+            <div class="charts-row">
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                      <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    </svg>
+                    Growth Potential Distribution
+                  </h3>
+                  <p class="card-description">How companies are classified across different growth potential levels</p>
+                  <div id="potentialDistributionChart"></div>
+                </div>
+              </div>
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="2" y1="12" x2="22" y2="12"/>
+                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    Top 15 Countries by Company Count
+                  </h3>
+                  <p class="card-description">Geographic distribution of analyzed companies</p>
+                  <div id="topCountriesChart"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Geographic Section -->
+          <div class="dashboard-section" id="geographicSection" style="display: none;">
+            <div class="storytelling-card">
+              <h2 class="story-heading">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                Geographic Patterns
+              </h2>
+              <p class="story-text">Different regions show distinct patterns in company growth potential. Explore how location and macroeconomic conditions influence business success.</p>
+            </div>
+
+            <div class="charts-row">
+              <div class="chart-container full-width">
+                <div class="card">
+                  <h3 class="card-title">Country Distribution & Potential Heatmap</h3>
+                  <p class="card-description">Distribution of growth potential across different countries</p>
+                  <div id="geographicHeatmapMain"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="charts-row">
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Average Potential by Country</h3>
+                  <p class="card-description">Countries ranked by average growth potential score</p>
+                  <div id="avgPotentialByCountry"></div>
+                </div>
+              </div>
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Countries Distribution</h3>
+                  <p class="card-description">Number of companies per country</p>
+                  <div id="countriesBarChart"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Financial Section -->
+          <div class="dashboard-section" id="financialSection" style="display: none;">
+            <div class="storytelling-card">
+              <h2 class="story-heading">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                  <line x1="12" y1="1" x2="12" y2="23"/>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+                Financial Performance Insights
+              </h2>
+              <p class="story-text">Financial metrics reveal strong correlations with growth potential. Companies with balanced financials and market positioning often show higher potential.</p>
+            </div>
+
+            <div class="charts-row">
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Market Capitalization by Potential</h3>
+                  <p class="card-description">Distribution of market cap across different potential levels</p>
+                  <div id="marketCapBoxChart"></div>
+                </div>
+              </div>
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Revenue Distribution by Potential</h3>
+                  <p class="card-description">Revenue patterns across growth potential categories</p>
+                  <div id="revenueBoxChart"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="charts-row">
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">P/E Ratio Analysis</h3>
+                  <p class="card-description">Price-to-earnings ratios by growth potential</p>
+                  <div id="peRatioChartMain"></div>
+                </div>
+              </div>
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Dividend Yield Patterns</h3>
+                  <p class="card-description">Dividend yields across different potential levels</p>
+                  <div id="dividendYieldChartMain"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Relationships Section -->
+          <div class="dashboard-section" id="relationshipsSection" style="display: none;">
+            <div class="storytelling-card">
+              <h2 class="story-heading">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                  <path d="M9 14l2 2 4-4"/>
+                </svg>
+                Key Relationships
+              </h2>
+              <p class="story-text">Understanding how different financial metrics relate to each other and to growth potential reveals investment opportunities.</p>
+            </div>
+
+            <div class="charts-row">
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Market Cap vs Revenue</h3>
+                  <p class="card-description">Relationship between company size and revenue generation</p>
+                  <div id="marketCapRevenueScatterMain"></div>
+                </div>
+              </div>
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">P/E Ratio vs Dividend Yield</h3>
+                  <p class="card-description">Valuation metrics and dividend patterns</p>
+                  <div id="peDividendScatterMain"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Correlations Section -->
+          <div class="dashboard-section" id="correlationsSection" style="display: none;">
+            <div class="storytelling-card">
+              <h2 class="story-heading">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/>
+                </svg>
+                What Drives Growth Potential?
+              </h2>
+              <p class="story-text">Correlation analysis reveals which factors most strongly influence growth potential classification.</p>
+            </div>
+
+            <div class="charts-row">
+              <div class="chart-container full-width">
+                <div class="card">
+                  <h3 class="card-title">Factors Correlation with Growth Potential</h3>
+                  <p class="card-description">Which indicators correlate most strongly with high growth potential?</p>
+                  <div id="potentialCorrelationChartMain"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="charts-row">
+              <div class="chart-container full-width">
+                <div class="card">
+                  <h3 class="card-title">Complete Correlation Matrix</h3>
+                  <p class="card-description">Relationships between all financial and macroeconomic indicators</p>
+                  <div id="correlationMatrixChartMain"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Standouts Section -->
+          <div class="dashboard-section" id="standoutsSection" style="display: none;">
+            <div class="storytelling-card">
+              <h2 class="story-heading">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                Standout Companies
+              </h2>
+              <p class="story-text">Identifying companies that stand out from the crowd - whether through exceptional metrics or unique characteristics that signal potential.</p>
+            </div>
+
+            <div class="charts-row">
+              <div class="chart-container full-width">
+                <div class="card">
+                  <h3 class="card-title">Top Companies by Market Cap</h3>
+                  <p class="card-description">Largest companies in the dataset</p>
+                  <div id="topCompaniesByMarketCap"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Predictions View -->
+        <div class="view-container" id="predictionsView">
+          <div class="view-header">
+            <h2 class="view-title">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+              Predictions Studio
+            </h2>
+            <p class="view-subtitle">Explore scenarios and quantify growth potential using the trained ML model</p>
+          </div>
+
+          <div class="storytelling-card">
+            <h2 class="story-heading">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                <circle cx="11" cy="11" r="7"/>
+                <line x1="16.65" y1="16.65" x2="21" y2="21"/>
+              </svg>
+              From insights to action
+            </h2>
+            <p class="story-text">
+              Use this prediction studio to validate investment theses, stress-test macro scenarios and compare companies side by side.
+              Each prediction returns a <strong>growth potential class</strong> (Low, Medium, High) and a <strong>probability profile</strong> so you can
+              balance upside and risk before making capital allocation decisions.
+            </p>
+          </div>
+
+          <div class="predictions-main-grid">
+            <div class="predictions-main-col">
+              <!-- Prediction Tabs -->
+              <div class="tabs-container">
+                <button class="tab-btn active" data-tab="individual">Individual Prediction</button>
+                <button class="tab-btn" data-tab="manual">Manual Input</button>
+                <button class="tab-btn" data-tab="batch">Batch Prediction</button>
+              </div>
+
+              <!-- Individual Prediction Tab -->
+              <div class="tab-content active" id="individualTab">
+                <div class="prediction-form-card">
+                  <h3 class="card-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                      <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                      <path d="M9 14l2 2 4-4"/>
+                    </svg>
+                    Select Company for Analysis
+                  </h3>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Select Country</label>
+                      <select class="form-select" id="predictionCountrySelect">
+                        <option value="">Loading...</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Select Company</label>
+                      <select class="form-select" id="predictionCompanySelect" disabled>
+                        <option value="">Select country first</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <button class="btn-primary" id="analyzeCompanyBtn" disabled>
+                        <span class="btn-icon">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="7"/>
+                            <line x1="16.65" y1="16.65" x2="21" y2="21"/>
+                          </svg>
+                        </span>
+                        <span>Analyze Potential</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div id="predictionResults" style="display: none;"></div>
+              </div>
+
+              <!-- Manual Input Tab -->
+              <div class="tab-content" id="manualTab">
+                <div class="prediction-form-card">
+                  <h3 class="card-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                      <path d="M4 19.5V4.5A2.5 2.5 0 0 1 6.5 2H14l6 6v11.5A2.5 2.5 0 0 1 17.5 22h-11A2.5 2.5 0 0 1 4 19.5z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    Enter Company Data
+                  </h3>
+                  <form id="manualPredictionForm">
+                    <div class="form-grid">
+                      <div class="form-group">
+                        <label>Dividend Yield (%)</label>
+                        <input type="number" step="0.01" class="form-input" id="manual_dividend_yield" value="2.5" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Earnings TTM (USD)</label>
+                        <input type="number" step="1000" class="form-input" id="manual_earnings_ttm" value="1000000" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Market Cap (USD)</label>
+                        <input type="number" step="1000000" class="form-input" id="manual_marketcap" value="1000000000" required>
+                      </div>
+                      <div class="form-group">
+                        <label>P/E Ratio</label>
+                        <input type="number" step="0.1" class="form-input" id="manual_pe_ratio" value="15.0" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Revenue TTM (USD)</label>
+                        <input type="number" step="1000000" class="form-input" id="manual_revenue_ttm" value="5000000000" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Stock Price (USD)</label>
+                        <input type="number" step="0.01" class="form-input" id="manual_price" value="50.0" required>
+                      </div>
+                      <div class="form-group">
+                        <label>GDP per Capita (USD)</label>
+                        <input type="number" step="100" class="form-input" id="manual_gdp_per_capita" value="50000" required>
+                      </div>
+                      <div class="form-group">
+                        <label>GDP Growth (%)</label>
+                        <input type="number" step="0.1" class="form-input" id="manual_gdp_growth" value="2.5" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Inflation (%)</label>
+                        <input type="number" step="0.1" class="form-input" id="manual_inflation_percent" value="2.5" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Interest Rate (%)</label>
+                        <input type="number" step="0.1" class="form-input" id="manual_interest_rate_percent" value="4.875" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Unemployment Rate (%)</label>
+                        <input type="number" step="0.1" class="form-input" id="manual_unemployment_rate_percent" value="3.7" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Exchange Rate to USD</label>
+                        <input type="number" step="0.01" class="form-input" id="manual_exchange_rate" value="1.0" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Inflation (Absolute)</label>
+                        <input type="number" step="0.1" class="form-input" id="manual_inflation" value="-2.5" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Interest Rate (Absolute)</label>
+                        <input type="number" step="0.1" class="form-input" id="manual_interest_rate_abs" value="-4.875" required>
+                      </div>
+                      <div class="form-group">
+                        <label>Unemployment (Absolute)</label>
+                        <input type="number" step="0.1" class="form-input" id="manual_unemployment" value="-3.7" required>
+                      </div>
+                    </div>
+                    <div class="form-actions">
+                      <button type="submit" class="btn-primary">
+                        <span class="btn-icon">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="7"/>
+                            <line x1="16.65" y1="16.65" x2="21" y2="21"/>
+                          </svg>
+                        </span>
+                        <span>Analyze Potential</span>
+                      </button>
+                      <button type="reset" class="btn-secondary">Reset</button>
+                    </div>
+                  </form>
+                </div>
+                <div id="manualPredictionResults" style="display: none;"></div>
+              </div>
+
+              <!-- Batch Prediction Tab -->
+              <div class="tab-content" id="batchTab">
+                <div class="prediction-form-card">
+                  <h3 class="card-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                      <rect x="3" y="3" width="7" height="7" rx="1"/>
+                      <rect x="14" y="3" width="7" height="7" rx="1"/>
+                      <rect x="14" y="14" width="7" height="7" rx="1"/>
+                      <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    </svg>
+                    Batch Prediction
+                  </h3>
+                  <p class="card-description">Upload a CSV file with multiple companies to score an entire universe or watchlist in one click.</p>
+                  <div class="upload-area" id="uploadArea">
+                    <input type="file" id="batchFileInput" accept=".csv" style="display: none;">
+                    <div class="upload-content">
+                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                      </svg>
+                      <p>Click to upload or drag and drop</p>
+                      <p class="upload-hint">CSV file with company data</p>
+                    </div>
+                  </div>
+                  <div id="batchResults" style="display: none;"></div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="predictions-side-col">
+              <div class="card predictions-side-card">
+                <h3 class="card-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 8v4l3 3"/>
+                  </svg>
+                  How to use this studio
+                </h3>
+                <p class="card-description">
+                  Combine the three modes below to explore the model: start from a real company, then stress‑test scenarios and finally
+                  upload your own universe in batch.
+                </p>
+                <ul class="predictions-side-list">
+                  <li><strong>Individual Prediction</strong> — pick a company from the dataset and see how the model scores it today.</li>
+                  <li><strong>Manual Input</strong> — design hypothetical balance sheets and macro environments to test edge cases.</li>
+                  <li><strong>Batch Prediction</strong> — upload a CSV with your watchlist and rank names by growth potential.</li>
+                </ul>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Data Source</h4>
+          <p>Company financial datasets</p>
+        </div>
+        <div class="footer-section">
+          <h4>Methodology</h4>
+          <p>Random Forest Classifier with preprocessing</p>
+        </div>
+        <div class="footer-section">
+          <h4>Update</h4>
+          <p id="footerUpdateTime">Ready</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="business_growth_potential.js"></script>
+</body>
+</html>
