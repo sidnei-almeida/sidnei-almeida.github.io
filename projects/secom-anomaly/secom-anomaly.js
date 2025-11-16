@@ -271,10 +271,12 @@ async function checkHealth() {
     if (!ok) {
       showToast("API responded but reported an unhealthy status.", "warning");
     }
+    return ok;
   } catch (error) {
     console.error("[AxiomFoundry] health check failed", error);
     setApiState("error");
     showToast("Unable to reach /health.", "error");
+    return false;
   }
 }
 
@@ -1443,9 +1445,38 @@ async function bootstrap() {
   updateStreamIndicators();
   updateTelemetryMeta();
 
-  await checkHealth();
-  console.log("[Bootstrap] Health check completed.");
-  await Promise.all([loadMetadata(), loadDataset()]);
+  // Wait for API to be healthy before loading metadata, to avoid empty top cards
+  let apiHealthy = false;
+  const maxAttempts = 5;
+  const backoffMs = 6000;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    apiHealthy = await checkHealth();
+    if (apiHealthy) break;
+    if (attempt < maxAttempts) {
+      showToast(
+        `Waiting for SECOM API to wake up on Render… retry ${attempt}/${maxAttempts - 1}`,
+        "warning",
+        backoffMs - 400
+      );
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((resolve) => setTimeout(resolve, backoffMs));
+    }
+  }
+
+  console.log("[Bootstrap] Health check completed. apiHealthy =", apiHealthy);
+
+  if (apiHealthy) {
+    await Promise.all([loadMetadata(), loadDataset()]);
+  } else {
+    showToast(
+      "SECOM API did not respond in time. The dashboard will use local demo data only. Refresh the page after the API is online.",
+      "error",
+      9000
+    );
+    await loadDataset();
+  }
   seedDemoHistory();
 
   disarmOverlayFailSafe();

@@ -273,16 +273,14 @@
       
       <div class="project-filters" role="group" aria-label="Filtros de projetos">
         <button class="filter-btn active" data-filter="all" aria-pressed="true" data-pt="Todos" data-en="All" data-es="Todos">Todos</button>
-        <button class="filter-btn" data-filter="deep-learning" aria-pressed="false" data-pt="Deep Learning" data-en="Deep Learning" data-es="Deep Learning">Deep Learning</button>
-        <button class="filter-btn" data-filter="computer-vision" aria-pressed="false" data-pt="Visão Computacional" data-en="Computer Vision" data-es="Visión Computacional">Visão Computacional</button>
-        <button class="filter-btn" data-filter="nlp" aria-pressed="false" data-pt="Processamento de Linguagem" data-en="Natural Language Processing" data-es="Procesamiento de Lenguaje">Processamento de Linguagem</button>
-        <button class="filter-btn" data-filter="analytics" aria-pressed="false" data-pt="Análise de Dados" data-en="Data Analytics" data-es="Análisis de Datos">Análise de Dados</button>
-        <button class="filter-btn" data-filter="automation" aria-pressed="false" data-pt="Automação & Scraping" data-en="Automation & Scraping" data-es="Automatización & Scraping">Automação & Scraping</button>
+        <button class="filter-btn" data-filter="machine-learning" aria-pressed="false" data-pt="ML &amp; IA" data-en="ML &amp; AI" data-es="ML &amp; IA">ML &amp; IA</button>
+        <button class="filter-btn" data-filter="analytics" aria-pressed="false" data-pt="Analytics &amp; Dashboards" data-en="Analytics &amp; Dashboards" data-es="Analytics &amp; Dashboards">Analytics &amp; Dashboards</button>
+        <button class="filter-btn" data-filter="web-app" aria-pressed="false" data-pt="Web Apps &amp; Ferramentas" data-en="Web Apps &amp; Tools" data-es="Web Apps &amp; Herramientas">Web Apps &amp; Ferramentas</button>
       </div>
 
       <div class="projects-grid">
         <!-- Projeto: DogBreed Vision - YOLOv8 -->
-        <div class="project-card" data-category="deep-learning computer-vision web-app">
+        <div class="project-card" data-category="machine-learning web-app">
           <div class="project-image">
             <img src="./images/woof.webp" alt="DogBreed Vision - Reconhecimento de Raças Caninas" loading="lazy" />
           </div>
@@ -344,7 +342,7 @@
         </div>
 
         <!-- Projeto: SECOM Failure Prediction -->
-        <div class="project-card" data-category="machine-learning analytics web-app">
+        <div class="project-card featured-top-2" data-category="machine-learning analytics web-app">
           <div class="project-image">
             <img src="./images/secom.webp" alt="Axiom Foundry • SECOM Anomaly Autoencoder" loading="lazy" />
           </div>
@@ -804,7 +802,7 @@
         </div>
 
         <!-- Projeto 3: Monitoramento Econômico -->
-        <div class="project-card" data-category="analytics web-app">
+        <div class="project-card featured-top-3" data-category="analytics web-app">
           <div class="project-image">
             <img src="./images/project-2.webp" alt="Monitoramento Econômico" loading="lazy" />
           </div>
@@ -854,7 +852,7 @@
             <div class="project-links">
               <a href="https://github.com/sidnei-almeida/sidnei-almeida.github.io/tree/main/projects/economic_monitoring_sa" class="project-link project-link-primary" target="_blank">
                 <i class="fab fa-github"></i>
-                <span data-pt="Código" data-en="Code" data-es="Código">Código</span>
+                    <span data-pt="Código" data-en="Code" data-es="Código">Código</span>
               </a>
               <a href="./projects/economic_monitoring_sa/economic_monitoring_sa.html" class="project-link project-link-secondary" target="_blank">
                 <i class="fas fa-external-link-alt"></i>
@@ -864,7 +862,78 @@
           </div>
         </div>
 
-        <!-- Projeto 6: Elite Skins CS2 -->
+        <!-- Projeto 6: Deep RL Trading Agent -->
+        <div class="project-card featured-top-1" data-category="machine-learning analytics web-app">
+          <div class="project-image">
+            <img src="./images/rt-invest.webp" alt="Deep RL Trading Agent – Live Portfolio Dashboard" loading="lazy" />
+          </div>
+          <div class="project-content">
+            <div class="project-header">
+              <h3 class="project-title" data-pt="Deep RL Trading Agent – Live Portfolio" data-en="Deep RL Trading Agent – Live Portfolio" data-es="Deep RL Trading Agent – Live Portfolio">Deep RL Trading Agent – Live Portfolio</h3>
+            <div class="project-status">
+              <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Ativo</span>
+              <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Destaque</span>
+            </div>
+            </div>
+            <div class="project-body">
+            <p class="project-description">
+                <span class="description-short"
+                  data-pt="Dashboard premium e horizontal para monitorar um agente de trading em Deep Reinforcement Learning que aloca um portfólio em grandes empresas de tecnologia, comparando sua performance com um benchmark Buy & Hold."
+                  data-en="Premium, horizontal dashboard to monitor a Deep Reinforcement Learning trading agent that allocates a portfolio across large tech stocks, comparing its performance against a Buy & Hold benchmark."
+                  data-es="Dashboard premium y horizontal para monitorear un agente de trading con Deep Reinforcement Learning que asigna un portafolio entre grandes empresas de tecnología, comparando su rendimiento con un benchmark Buy & Hold.">
+                  Dashboard premium e horizontal para monitorar um agente de trading em Deep Reinforcement Learning que aloca um portfólio em grandes empresas de tecnologia, comparando sua performance com um benchmark Buy & Hold.
+                </span>
+                <span class="description-full" style="display: none;"
+                  data-pt="Dashboard horizontal construída em HTML, CSS e JavaScript para acompanhar um agente de trading em Deep Reinforcement Learning (PPO/ONNX). A interface consome dados de uma API no Render, exibindo curva de patrimônio do agente vs Buy & Hold, perfil de drawdown, alocação atual do portfólio, evolução de preços por ticker e um insight em tempo real sobre onde o agente cria ou destrói valor. Design dark theme compacto e elegante, inspirado em plataformas profissionais de trading e research."
+                  data-en="Horizontal dashboard built with HTML, CSS and JavaScript to monitor a Deep Reinforcement Learning trading agent (PPO/ONNX). The UI consumes data from an API hosted on Render, displaying equity curve vs Buy & Hold, drawdown profile, current portfolio allocation, per‑ticker price evolution and a live insight explaining where the agent creates or destroys value. Compact and elegant dark theme, inspired by professional trading and research platforms."
+                  data-es="Dashboard horizontal construida con HTML, CSS y JavaScript para monitorear un agente de trading con Deep Reinforcement Learning (PPO/ONNX). La interfaz consume datos de una API en Render, mostrando la curva de patrimonio del agente vs Buy & Hold, perfil de drawdown, asignación actual del portafolio, evolución de precios por ticker y un insight en tiempo real sobre dónde el agente crea o destruye valor. Tema oscuro compacto y elegante, inspirado en plataformas profesionales de trading e investigación.">
+                  Dashboard horizontal construída em HTML, CSS e JavaScript para acompanhar um agente de trading em Deep Reinforcement Learning (PPO/ONNX). A interface consome dados de uma API no Render, exibindo curva de patrimônio do agente vs Buy & Hold, perfil de drawdown, alocação atual do portfólio, evolução de preços por ticker e um insight em tempo real sobre onde o agente cria ou destrói valor. Design dark theme compacto e elegante, inspirado em plataformas profissionais de trading e research.
+                </span>
+            </p>
+              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
+                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">Ver mais</span>
+              </button>
+            <div class="project-metrics">
+              <div class="metric">
+                  <i class="fas fa-robot"></i>
+                  <span data-pt="Agente RL" data-en="RL Agent" data-es="Agente RL">Agente RL</span>
+              </div>
+              <div class="metric">
+                  <i class="fas fa-chart-line"></i>
+                  <span data-pt="Equity vs Benchmark" data-en="Equity vs Benchmark" data-es="Equity vs Benchmark">Equity vs Benchmark</span>
+              </div>
+              <div class="metric">
+                  <i class="fas fa-balance-scale"></i>
+                  <span data-pt="Alocação de Portfólio" data-en="Portfolio Allocation" data-es="Asignación de Portafolio">Alocação de Portfólio</span>
+              </div>
+              <div class="metric">
+                  <i class="fas fa-exchange-alt"></i>
+                  <span data-pt="API Render" data-en="Render API" data-es="API Render">API Render</span>
+              </div>
+            </div>
+            <div class="project-tech">
+                <span class="tech-tag">Deep RL</span>
+                <span class="tech-tag">Plotly.js</span>
+                <span class="tech-tag">JavaScript</span>
+                <span class="tech-tag">HTML</span>
+                <span class="tech-tag">CSS</span>
+                <span class="tech-tag">Dashboard</span>
+              </div>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/sidnei-almeida/deep-rl-trading-agent" class="project-link project-link-primary" target="_blank">
+                <i class="fab fa-github"></i>
+                    <span data-pt="Código" data-en="Code" data-es="Código">Código</span>
+              </a>
+              <a href="./projects/rl_trading_dashboard/rl_trading_dashboard.html" class="project-link project-link-secondary" target="_blank">
+                <i class="fas fa-external-link-alt"></i>
+                <span data-pt="App" data-en="App" data-es="App">App</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projeto 7: Elite Skins CS2 -->
         <div class="project-card" data-category="web-app">
           <div class="project-image">
             <img src="./images/eliteskins.webp" alt="Elite Skins CS2" loading="lazy" />

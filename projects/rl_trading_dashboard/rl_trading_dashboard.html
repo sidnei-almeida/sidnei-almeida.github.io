@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deep RL Trading Agent | Portfolio Dashboard</title>
+  <meta name="description" content="Interactive dashboard to monitor a Deep Reinforcement Learning trading agent, compare its performance to a benchmark and analyze portfolio allocations over time." />
+
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+  <link rel="stylesheet" href="rl_trading_dashboard.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Header -->
+    <header class="dashboard-header">
+      <div class="header-content">
+        <h1 class="dashboard-title">
+          <span class="title-icon">
+            <svg width="26" height="26" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="logoStroke" x1="4" y1="36" x2="36" y2="4" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#22c55e"/>
+                  <stop offset="0.5" stop-color="#4ade80"/>
+                  <stop offset="1" stop-color="#a3e635"/>
+                </linearGradient>
+                <radialGradient id="logoGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(20 20) rotate(90) scale(18)">
+                  <stop stop-color="rgba(34,197,94,0.35)"/>
+                  <stop offset="1" stop-color="rgba(15,23,42,0)"/>
+                </radialGradient>
+              </defs>
+              <circle cx="20" cy="20" r="18" fill="rgba(15,23,42,0.90)" stroke="rgba(148, 163, 184, 0.25)" />
+              <circle cx="20" cy="20" r="18" fill="url(#logoGlow)"/>
+              <path d="M8 24L13 19L17.5 22.5L23 14.5L32 11" stroke="url(#logoStroke)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8 30H32" stroke="rgba(148,163,184,0.45)" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 4"/>
+            </svg>
+          </span>
+          <span>Deep RL Trading Agent</span>
+          <span class="title-badge">Live RL Portfolio</span>
+        </h1>
+        <div class="header-meta">
+          <span class="update-time" id="updateTime">Loading...</span>
+          <div class="api-status-chip" id="apiStatusChip">Checking API...</div>
+          <button class="btn-refresh" id="refreshBtn" title="Refresh data">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="dashboard-main">
+      <!-- Sidebar -->
+      <aside class="dashboard-sidebar">
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Storyline</h2>
+          <p class="sidebar-text">
+            Compact, visual dashboard to monitor a <strong>Reinforcement Learning</strong> trading agent: equity, drawdown, allocation and live performance insight.
+          </p>
+        </div>
+
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Focus</h2>
+          <div class="mode-toggle" id="viewModeToggle">
+            <button class="mode-btn active" data-mode="overview">Overview</button>
+            <button class="mode-btn" data-mode="allocation">Allocation</button>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Tickers</h2>
+          <div id="tickersList" class="tickers-list">
+            <!-- preenchido via JS -->
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h2 class="sidebar-title">Agent Settings</h2>
+          <div class="agent-settings">
+            <div class="agent-setting-row">
+              <span>Initial balance</span>
+              <span id="initialBalanceLabel">—</span>
+            </div>
+            <div class="agent-setting-row">
+              <span>Transaction cost</span>
+              <span id="transactionCostLabel">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="info-badge">
+            <span class="info-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="16" x2="12" y2="12"/>
+                <line x1="12" y1="8" x2="12.01" y2="8"/>
+              </svg>
+            </span>
+            <span>Data loaded from the `deep-rl-trading-agent` API hosted on Render.</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Content -->
+      <div class="dashboard-content">
+        <!-- Loading Overlay -->
+        <div class="loading-overlay visible" id="loadingOverlay" aria-live="polite" aria-atomic="true">
+          <div class="loading-content">
+            <div class="loading-icon-wrapper">
+              <div class="loading-icon">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="loaderStroke" x1="6" y1="34" x2="34" y2="6" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#22c55e"/>
+                      <stop offset="0.5" stop-color="#4ade80"/>
+                      <stop offset="1" stop-color="#a3e635"/>
+                    </linearGradient>
+                    <radialGradient id="loaderGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(20 20) rotate(90) scale(16)">
+                      <stop stop-color="rgba(34,197,94,0.4)"/>
+                      <stop offset="1" stop-color="rgba(15,23,42,0)"/>
+                    </radialGradient>
+                  </defs>
+                  <circle cx="20" cy="20" r="16" fill="rgba(15,23,42,0.95)" stroke="rgba(148, 163, 184, 0.35)"/>
+                  <circle cx="20" cy="20" r="16" fill="url(#loaderGlow)"/>
+                  <path d="M9 24L14 18L18.5 21.5L24 14L31 12" stroke="url(#loaderStroke)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M10 30H30" stroke="rgba(148,163,184,0.6)" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 4"/>
+                </svg>
+              </div>
+            </div>
+            <h2 class="loading-title" id="loadingTitle">Loading RL trading data</h2>
+            <p class="loading-message" id="loadingMessage">
+              Querying the RL agent, loading portfolio and benchmark history...
+            </p>
+            <div class="loading-progress">
+              <div class="loading-progress-bar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OVERVIEW VIEW -->
+        <div class="view-container" id="overviewView">
+          <div class="metrics-row">
+            <div class="metric-card">
+              <div class="metric-label">Final Agent Equity</div>
+              <div class="metric-value" id="finalAgentEquity">—</div>
+              <div class="metric-change" id="agentReturn">—</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Final Benchmark Equity</div>
+              <div class="metric-value" id="finalBenchmarkEquity">—</div>
+              <div class="metric-change" id="benchmarkReturn">—</div>
+            </div>
+            <div class="metric-card risk-card">
+              <div class="metric-label">Agent vs Benchmark</div>
+              <div class="metric-value" id="excessReturn">—</div>
+              <div class="metric-category" id="excessNarrative">—</div>
+              <div class="risk-bar">
+                <div class="risk-bar-fill" id="excessBarFill"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="charts-row">
+            <div class="chart-container">
+              <div class="card">
+                <h3 class="card-title">Equity Curve: Agent vs Buy & Hold</h3>
+                <div id="equityCurveChart"></div>
+              </div>
+            </div>
+            <div class="chart-container">
+              <div class="card">
+                <h3 class="card-title">Current Allocation Snapshot</h3>
+                <div id="allocationPieChart"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="charts-row">
+            <div class="chart-container">
+              <div class="card">
+                <h3 class="card-title">Drawdown Profile (Agent)</h3>
+                <div id="drawdownChart"></div>
+              </div>
+            </div>
+            <div class="chart-container">
+              <div class="card">
+                <h3 class="card-title">Live Agent Insight</h3>
+                <div class="story-card" id="storyCard">
+                  <p id="storyText">
+                    As soon as the data is loaded, we show here a live insight combining performance, drawdown and the agent's current allocation.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALLOCATION VIEW -->
+        <div class="view-container" id="allocationView" style="display: none;">
+          <div class="charts-row">
+            <div class="chart-container">
+              <div class="card">
+                <h3 class="card-title">Prices per Ticker</h3>
+                <div id="pricesChart"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="charts-row">
+            <div class="chart-container">
+              <div class="card">
+                <h3 class="card-title">Allocation Table</h3>
+                <div class="table-container">
+                  <table class="data-table" id="allocationTable">
+                    <thead>
+                      <tr>
+                        <th>Ticker</th>
+                        <th>Weight</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Model</h4>
+          <p>Deep Reinforcement Learning trading agent with portfolio allocation over multiple tech stocks.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Backend API</h4>
+          <p>Hosted on Render: deep-rl-trading-agent (`/` and `/api/v1/dashboard-data`).</p>
+        </div>
+        <div class="footer-section">
+          <h4>Last Update</h4>
+          <p id="footerUpdateTime">—</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="rl_trading_dashboard.js"></script>
+</body>
+</html>
+
+

@@ -13,7 +13,7 @@ const API_CONFIG = {
     predict: '/predict',
     predictBatch: '/predict-batch'
   },
-  timeout: 30000
+  timeout: 12000 // shorter timeout to avoid long hangs when Render is cold-starting
 };
 
 // Data URL - Local file in data folder
@@ -159,17 +159,31 @@ function updateStatus(element, status, text) {
   if (textElement) textElement.textContent = text;
 }
 
+async function fetchWithTimeout(url, options = {}, timeoutMs = API_CONFIG.timeout) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    return res;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
 // ============================================================================
 // API INTEGRATION
 // ============================================================================
 
 async function checkAPIHealth() {
   try {
-    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.health}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      signal: AbortSignal.timeout(5000)
-    });
+    const response = await fetchWithTimeout(
+      `${API_CONFIG.baseURL}${API_CONFIG.endpoints.health}`,
+      {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      },
+      8000
+    );
     
     if (response.ok) {
       const data = await response.json().catch(() => ({}));
@@ -187,8 +201,12 @@ async function checkAPIHealth() {
   } catch (error) {
     console.error('API health check error (browser side):', error);
     apiAvailable = false;
-    // Provavelmente CORS ou bloqueio de rede no navegador, mesmo com a API online
-    updateStatus(elements.apiStatus, 'warning', 'API: Unreachable from dashboard (check CORS)');
+    // Pode ser CORS, rede do navegador ou cold start no Render
+    updateStatus(
+      elements.apiStatus,
+      'warning',
+      'API: possivelmente acordando no Render (cold start). Tente novamente em alguns segundos.'
+    );
     return false;
   }
 }
