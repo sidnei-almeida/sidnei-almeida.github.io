@@ -1081,6 +1081,18 @@ body::-webkit-scrollbar-thumb:hover {
   position: relative;
 }
 
+.project-card.featured-top-1 {
+  order: -3;
+}
+
+.project-card.featured-top-2 {
+  order: -2;
+}
+
+.project-card.featured-top-3 {
+  order: -1;
+}
+
 /* Tablet - 2 colunas */
 @media (max-width: 1024px) {
   .projects-grid {

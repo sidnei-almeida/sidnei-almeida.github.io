@@ -1,0 +1,201 @@
+Guia para implementar a API na dashboard (frontend)
+
+1. Entender os endpoints disponíveis
+
+- Base URL da API:
+  https://deep-rl-trading-agent.onrender.com
+
+- Endpoint principal do dashboard:
+  GET /api/v1/dashboard-data
+
+- Endpoint de saúde (opcional, mas útil):
+  GET /
+
+2. Estrutura da resposta de /api/v1/dashboard-data
+
+Quando você fizer um GET em /api/v1/dashboard-data, receberá um JSON com a seguinte estrutura:
+
+- tickers: lista de strings, ex.: ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA"]
+- initial_balance: número (float), ex.: 100000.0
+- transaction_cost: número (float), ex.: 0.001
+- current_allocation: objeto { ticker: peso }, ex.:
+  {
+    "AAPL": 0.21,
+    "MSFT": 0.19,
+    "GOOGL": 0.18,
+    "AMZN": 0.22,
+    "NVDA": 0.20
+  }
+- agent_history: lista de floats, representando o valor da carteira do agente ao longo do tempo
+- benchmark_history: lista de floats, representando o valor da carteira Buy & Hold ao longo do tempo
+- price_history: lista de objetos, cada um com:
+  - Date: data (string, ex. "2024-03-01T00:00:00")
+  - um campo de preço para cada ticker (ex.: "AAPL", "MSFT", etc.)
+
+3. Como consumir o endpoint no frontend (passos gerais)
+
+Passo 1: Criar uma função de fetch
+
+Em qualquer framework (React, Next.js, Vue, etc.), você precisa de uma função que faça a chamada HTTP.
+
+Exemplo (pseudo-código JS):
+
+async function fetchDashboardData() {
+  const res = await fetch("https://deep-rl-trading-agent.onrender.com/api/v1/dashboard-data");
+  if (!res.ok) {
+    throw new Error("Failed to load dashboard data");
+  }
+  return res.json();
+}
+
+Passo 2: Chamar essa função ao carregar a página
+
+Em React/Next:
+- use um hook de efeito (useEffect) ou um carregamento em getServerSideProps / getStaticProps.
+
+Em Vue:
+- use mounted() ou um composable.
+
+A ideia é:
+- ao montar a tela, chamar fetchDashboardData()
+- guardar o resultado em estado (state) do frontend para renderização.
+
+Passo 3: Guardar os dados em estado
+
+Você pode ter algo como:
+
+- state.tickers
+- state.currentAllocation
+- state.agentHistory
+- state.benchmarkHistory
+- state.priceHistory
+
+Conceito (React):
+
+const [dashboardData, setDashboardData] = useState(null);
+
+useEffect(() => {
+  fetchDashboardData()
+    .then(data => setDashboardData(data))
+    .catch(err => setError(err));
+}, []);
+
+4. Como usar cada parte da resposta na UI
+
+a) current_allocation
+
+Use para mostrar:
+- gráfico de pizza / donut (peso por ativo)
+- tabela com:
+  - Ticker
+  - Peso (%)
+
+Transformação típica:
+- pegar o objeto current_allocation e convertê-lo em uma lista:
+  [{ ticker: "AAPL", weight: 0.21 }, ...]
+
+b) agent_history e benchmark_history
+
+Use para um gráfico de linha comparando:
+- valor da carteira do agente (série 1)
+- valor da carteira Buy & Hold (série 2)
+
+O número de pontos (tamanho das listas) deve ser semelhante.
+Para eixo X, use as datas de price_history (mesmo número de dias).
+
+c) price_history
+
+Use para:
+- gráfico de preço por ticker (linha de AAPL, MSFT, etc.)
+- mostrar preços em tooltips ao passar o mouse
+- sincronizar eixo X com agent_history e benchmark_history
+
+Estrutura:
+- cada item tem:
+  - Date
+  - AAPL, MSFT, GOOGL, AMZN, NVDA
+
+Você pode converter isso em dados para gráficos facilmente.
+
+5. Verificando saúde da API antes de carregar o dashboard (opcional, mas recomendado)
+
+Use o endpoint GET /:
+
+- URL:
+  https://deep-rl-trading-agent.onrender.com/
+
+- Resposta esperada (conceito):
+  {
+    "status": "ok",
+    "model_loaded": true,
+    ...
+  }
+
+Você pode:
+- chamar esse endpoint antes de buscar dashboard-data;
+- se status != "ok" ou model_loaded != true:
+  - mostrar uma mensagem de erro (“API offline” ou “Model not loaded”);
+  - desabilitar botões de refresh.
+
+6. Fluxo sugerido no frontend
+
+1) Ao abrir a página:
+   - chamar GET / para checar status.
+   - se OK, chamar GET /api/v1/dashboard-data.
+
+2) Mostrar:
+   - loader enquanto não tem dados.
+   - erro amigável se a requisição falhar.
+
+3) Com dados carregados:
+   - Header com:
+     - Saldo inicial (initial_balance)
+     - Valor final do agente (último de agent_history)
+     - Valor final B&H (último de benchmark_history)
+   - Gráfico de linha:
+     - X: datas (price_history.Date)
+     - Y1: agent_history
+     - Y2: benchmark_history
+   - Gráfico de pizza/tabela:
+     - current_allocation por ticker
+   - Gráficos de preço:
+     - usar price_history para cada ticker.
+
+7. Tratamento de erros no frontend
+
+Se fetchDashboardData lançar erro:
+- Exibir mensagem “Não foi possível carregar os dados do dashboard”.
+- Opcional: botão “Tentar novamente” que chama o fetch de novo.
+
+Se a API retornar erro 500:
+- mensagem genérica: “Erro no servidor. Tente novamente mais tarde.”
+
+Se a rede falhar:
+- mensagem de conexão: “Sem conexão com o backend ou internet.”
+
+8. Atualização/Refresh de dados
+
+Adicione um botão “Refresh” ou “Update data” na UI.
+
+Ao clicar:
+- chamar novamente GET /api/v1/dashboard-data;
+- substituir o estado com os novos dados.
+
+Opcional:
+- configurar um intervalo (ex.: a cada 5 ou 10 minutos) para atualizar automaticamente.
+
+9. Resumo rápido para quem for implementar
+
+- Endpoint único para o dashboard: GET /api/v1/dashboard-data.
+
+Passos:
+1) Fazer fetch da URL.
+2) Guardar o JSON em estado.
+3) Usar:
+   - current_allocation -> gráfico de pizza e tabela de pesos.
+   - agent_history vs benchmark_history -> gráfico de linha comparando performances.
+   - price_history -> gráfico de preços e sincronização de datas.
+4) Opcional: usar GET / para exibir status da API/modelo.
+5) Implementar tratamento de erro simples e um botão de refresh para uma boa UX.
+
+
