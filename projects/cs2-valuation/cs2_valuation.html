@@ -1488,8 +1488,66 @@
 
       <!-- Inventory Tab -->
       <div id="inventory-tab" class="tab-content active">
-        <div class="search-section">
+        <!-- Steam Authentication Section -->
+        <div id="auth-section" class="search-section" style="display: none;">
+          <h3><i class="fas fa-user-shield"></i> Steam Authentication</h3>
+          <p style="color: var(--cs2-text-dim); margin-bottom: 1.5rem; line-height: 1.6;">
+            Authenticate with Steam to analyze your own inventory, including items in Storage Units.
+          </p>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+            <button id="steam-login-btn" class="btn btn-primary" onclick="loginWithSteam()">
+              <i class="fab fa-steam"></i> Login with Steam
+            </button>
+            <button id="steam-logout-btn" class="btn btn-outline" onclick="logoutSteam()" style="display: none;">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+          <div id="auth-status" style="margin-top: 1rem; padding: 1rem; background: rgba(255, 215, 0, 0.05); border: 1px solid var(--cs2-border); border-radius: 8px; display: none;">
+            <p style="color: var(--cs2-text); margin: 0;">
+              <i class="fas fa-check-circle" style="color: var(--cs2-green); margin-right: 0.5rem;"></i>
+              <span id="auth-status-text">Authenticated</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Authenticated Inventory Analysis Section -->
+        <div id="my-inventory-section" class="search-section" style="display: none; margin-top: 2rem;">
+          <h3><i class="fas fa-box-open"></i> Analyze My Inventory</h3>
+          <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+            <button id="analyze-my-inventory-btn" class="btn btn-primary" style="width: 100%; max-width: 400px;">
+              <i class="fas fa-chart-line"></i> Analyze My Inventory
+            </button>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="checkbox" id="use-mock-data-checkbox" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--cs2-gold);">
+                <label for="use-mock-data-checkbox" style="color: var(--cs2-text); cursor: pointer; user-select: none;">
+                  Use demo data (16 skins)
+                </label>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                <label for="enable-price-history-select" style="color: var(--cs2-text); font-weight: 500; white-space: nowrap;">
+                  Price History:
+                </label>
+                <select id="enable-price-history-select" style="flex: 1; min-width: 250px; padding: 0.6rem 1rem; background: var(--cs2-bg-dark); border: 1px solid var(--cs2-border-subtle); border-radius: 6px; color: var(--cs2-text); font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; cursor: pointer;">
+                  <option value="no">No (Large inventories allowed)</option>
+                  <option value="yes">Yes (Max. 30 items)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div id="inventory-loading" style="display: none; text-align: center; padding: 2rem;">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem; color: var(--cs2-text);">Analyzing inventory<span class="loading-status"></span>...</p>
+          </div>
+          <div id="inventory-data" style="display: none;"></div>
+        </div>
+
+        <!-- Third-Party Inventory Search Section -->
+        <div class="search-section" style="margin-top: 2rem;">
           <h3><i class="fas fa-search"></i> Search Inventory</h3>
+          <p style="color: var(--cs2-text-dim); margin-bottom: 1rem; font-size: 0.9rem;">
+            Analyze any public Steam inventory by entering a Steam ID or profile URL.
+          </p>
           <form class="search-form" onsubmit="searchInventory(event)">
             <div class="form-group">
               <label for="steamid">Steam ID or Profile URL</label>
@@ -1557,7 +1615,7 @@
 
   <script src="../../assets/js/render-api-utils.js"></script>
   <script>
-    const API_BASE = 'https://cs2-valuation-api.onrender.com';
+    const API_BASE = 'https://cs2-valuation-api-1.onrender.com';
     const REQUEST_TIMEOUT_MS = 9000;
     const INVENTORY_TIMEOUT_MS = 16000;
     const PRICE_TIMEOUT_MS = 12000;
@@ -2329,6 +2387,1086 @@
           </div>
         </div>
       `;
+    }
+
+    // ============================================
+    // STEAM AUTHENTICATION & INVENTORY ANALYSIS
+    // ============================================
+    
+    // Auth token storage
+    let authToken = localStorage.getItem('steamAuthToken');
+    let lastInventoryData = null;
+    
+    // Constants
+    const CS2_APPID = 730;
+    const INVENTORY_CONTEXTID = 2;
+    const STEAM_TAX_FACTOR = 0.87; // Steam takes 13% fee
+    
+    // CORS Proxies for Steam Market fallback
+    const CORS_PROXIES = [
+      'https://api.allorigins.win/raw?url=',
+      'https://corsproxy.io/?',
+      'https://api.codetabs.com/v1/proxy?quest='
+    ];
+    
+    // Check authentication status on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      checkAuthStatus();
+      processSteamOpenIDCallback();
+      
+      // Setup analyze my inventory button
+      const analyzeBtn = document.getElementById('analyze-my-inventory-btn');
+      if (analyzeBtn) {
+        analyzeBtn.addEventListener('click', analyzeOwnInventory);
+      }
+    });
+    
+    // Check authentication status
+    function checkAuthStatus() {
+      const authSection = document.getElementById('auth-section');
+      const myInventorySection = document.getElementById('my-inventory-section');
+      const loginBtn = document.getElementById('steam-login-btn');
+      const logoutBtn = document.getElementById('steam-logout-btn');
+      const authStatus = document.getElementById('auth-status');
+      const authStatusText = document.getElementById('auth-status-text');
+      
+      if (authToken) {
+        try {
+          const tokenData = JSON.parse(atob(authToken));
+          const steamId = tokenData.steam_id;
+          
+          if (steamId && authSection && myInventorySection) {
+            authSection.style.display = 'block';
+            myInventorySection.style.display = 'block';
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+            if (authStatus) authStatus.style.display = 'block';
+            if (authStatusText) authStatusText.textContent = `Authenticated as Steam ID: ${steamId}`;
+          }
+        } catch (e) {
+          console.error('Error parsing auth token:', e);
+          logoutSteam();
+        }
+      } else {
+        if (authSection) authSection.style.display = 'block';
+        if (myInventorySection) myInventorySection.style.display = 'none';
+        if (loginBtn) loginBtn.style.display = 'inline-flex';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+        if (authStatus) authStatus.style.display = 'none';
+      }
+    }
+    
+    // Login with Steam
+    function loginWithSteam() {
+      const returnUrl = window.location.origin + window.location.pathname;
+      const realm = window.location.origin;
+      const nonce = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('steam_openid_nonce', nonce);
+      
+      const steamOpenIDUrl = `https://steamcommunity.com/openid/login?` +
+        `openid.ns=http://specs.openid.net/auth/2.0&` +
+        `openid.mode=checkid_setup&` +
+        `openid.return_to=${encodeURIComponent(returnUrl + '?steam_auth=callback')}&` +
+        `openid.realm=${encodeURIComponent(realm)}&` +
+        `openid.identity=http://specs.openid.net/auth/2.0/identifier_select&` +
+        `openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
+      
+      window.location.href = steamOpenIDUrl;
+    }
+    
+    // Logout Steam
+    function logoutSteam() {
+      localStorage.removeItem('steamAuthToken');
+      authToken = null;
+      checkAuthStatus();
+    }
+    
+    // Process Steam OpenID callback
+    function processSteamOpenIDCallback() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const steamAuth = urlParams.get('steam_auth');
+      
+      if (steamAuth === 'callback') {
+        const openidParams = {};
+        urlParams.forEach((value, key) => {
+          if (key.startsWith('openid.')) {
+            openidParams[key] = value;
+          }
+        });
+        
+        if (openidParams['openid.claimed_id']) {
+          const claimedId = openidParams['openid.claimed_id'];
+          const steamIdMatch = claimedId.match(/\/id\/(\d+)$/);
+          
+          if (steamIdMatch && steamIdMatch[1]) {
+            const steamId = steamIdMatch[1];
+            const mockToken = btoa(JSON.stringify({
+              steam_id: steamId,
+              exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60),
+              iat: Math.floor(Date.now() / 1000)
+            }));
+            
+            localStorage.setItem('steamAuthToken', mockToken);
+            authToken = mockToken;
+            checkAuthStatus();
+            
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({path: newUrl}, '', newUrl);
+          }
+        }
+      }
+    }
+    
+    // Get SteamID from token
+    function getSteamIDFromToken() {
+      if (!authToken) return null;
+      try {
+        const tokenData = JSON.parse(atob(authToken));
+        return tokenData.steam_id;
+      } catch (e) {
+        return null;
+      }
+    }
+    
+    // Format currency (USD)
+    function formatCurrency(value) {
+      return `$${value.toFixed(2)}`;
+    }
+    
+    // Analyze own inventory
+    async function analyzeOwnInventory() {
+      if (!authToken) {
+        alert('You need to be logged in to analyze your own inventory.');
+        return;
+      }
+
+      const useMockData = document.getElementById('use-mock-data-checkbox')?.checked || false;
+      const enableHistory = document.getElementById('enable-price-history-select')?.value === 'yes';
+
+      if (useMockData) {
+        const inventoryLoading = document.getElementById('inventory-loading');
+        const inventoryData = document.getElementById('inventory-data');
+        if (inventoryLoading) inventoryLoading.style.display = 'block';
+        if (inventoryData) inventoryData.style.display = 'none';
+        showMockInventoryData(enableHistory);
+        return;
+      }
+
+      const steamId = getSteamIDFromToken();
+      if (!steamId) {
+        alert('Unable to get SteamID. Please log in again.');
+        return;
+      }
+
+      const inventoryLoading = document.getElementById('inventory-loading');
+      const inventoryData = document.getElementById('inventory-data');
+      if (inventoryLoading) inventoryLoading.style.display = 'block';
+      if (inventoryData) inventoryData.style.display = 'none';
+
+      try {
+        const steamResult = await fetchSteamInventoryDirectly(steamId);
+        if (steamResult.success) {
+          let itemsToProcess = steamResult.items;
+          if (enableHistory && itemsToProcess.length > 30) {
+            itemsToProcess = itemsToProcess.slice(0, 30);
+            alert(`Price history enabled: Only the first 30 items will be analyzed. Your inventory has ${steamResult.items.length} items. To analyze all items, disable price history.`);
+          }
+
+          if (itemsToProcess.length > 0) {
+            await processSteamInventoryItems(itemsToProcess, null, enableHistory);
+          } else {
+            if (inventoryLoading) inventoryLoading.style.display = 'none';
+            if (inventoryData) {
+              inventoryData.style.display = 'block';
+              inventoryData.innerHTML = `
+                <div class="empty-state">
+                  <i class="fas fa-box-open"></i>
+                  <h3>Empty Inventory</h3>
+                  <p>You don't have any CS2 items in your inventory.</p>
+                  <p style="margin-top: 0.5rem; font-size: 0.9rem;">This is normal if you don't own Counter-Strike 2 or don't have items in your inventory.</p>
+                </div>
+              `;
+            }
+          }
+        } else {
+          if (inventoryLoading) inventoryLoading.style.display = 'none';
+          if (inventoryData) {
+            inventoryData.style.display = 'block';
+            inventoryData.innerHTML = `
+              <div class="error-message">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Error Accessing Inventory</h3>
+                <p>${steamResult.error || 'Unable to access inventory.'}</p>
+              </div>
+            `;
+          }
+        }
+      } catch (error) {
+        console.error('Error analyzing inventory:', error);
+        if (inventoryLoading) inventoryLoading.style.display = 'none';
+        if (inventoryData) {
+          inventoryData.style.display = 'block';
+          inventoryData.innerHTML = `
+            <div class="error-message">
+              <i class="fas fa-exclamation-triangle"></i>
+              <h3>Error</h3>
+              <p>${error.message || 'Unknown error accessing inventory.'}</p>
+            </div>
+          `;
+        }
+      }
+    }
+    
+    // Fetch Steam inventory directly (with CORS proxy fallback)
+    async function fetchSteamInventoryDirectly(steamId) {
+      const inventoryUrl = `https://steamcommunity.com/inventory/${steamId}/${CS2_APPID}/${INVENTORY_CONTEXTID}?l=english&count=5000`;
+      
+      async function tryWithProxy(proxyUrl) {
+        try {
+          const fullUrl = proxyUrl + encodeURIComponent(inventoryUrl);
+          const response = await fetch(fullUrl, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache'
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+          
+          const text = await response.text();
+          if (!text || text.trim() === '' || text === 'null') {
+            return { success: true, items: [], empty: true };
+          }
+          
+          try {
+            const data = JSON.parse(text);
+            if (data && data.assets && data.descriptions) {
+              const items = processInventoryData(data);
+              return { success: true, items: items };
+            } else if (data && data.success === false) {
+              return { success: false, error: 'Inventory is private or not accessible' };
+            } else {
+              return { success: true, items: [], empty: true };
+            }
+          } catch (parseError) {
+            if (text.includes('<html') || text.includes('<!DOCTYPE')) {
+              return { success: false, error: 'Inventory is private or not accessible' };
+            }
+            throw parseError;
+          }
+        } catch (error) {
+          throw error;
+        }
+      }
+      
+      for (const proxy of CORS_PROXIES) {
+        try {
+          const result = await tryWithProxy(proxy);
+          return result;
+        } catch (error) {
+          console.warn(`Proxy ${proxy} failed:`, error);
+          continue;
+        }
+      }
+      
+      return { success: false, error: 'Unable to fetch inventory. All proxies failed.' };
+    }
+    
+    // Process inventory data from Steam API response
+    function processInventoryData(data) {
+      const items = [];
+      const descriptionsMap = {};
+      
+      data.descriptions.forEach(desc => {
+        descriptionsMap[desc.classid] = desc;
+      });
+      
+      data.assets.forEach(asset => {
+        const desc = descriptionsMap[asset.classid];
+        if (desc && desc.market_hash_name) {
+          items.push({
+            assetid: asset.assetid,
+            classid: asset.classid,
+            instanceid: asset.instanceid,
+            name: desc.market_hash_name,
+            market_hash_name: desc.market_hash_name,
+            icon_url: desc.icon_url,
+            exterior: desc.tags?.find(t => t.category === 'Exterior')?.localized_tag_name || '',
+            stattrack: desc.market_hash_name.includes('StatTrak™'),
+            quantity: 1,
+            category: desc.tags?.find(t => t.category === 'Type')?.localized_tag_name || 'Other',
+            rarity: desc.tags?.find(t => t.category === 'Rarity')?.localized_tag_name || 'N/A'
+          });
+        }
+      });
+      
+      return items;
+    }
+    
+    // Process Steam inventory items (send to API for pricing)
+    async function processSteamInventoryItems(steamItems, storageUnitContents = null, enableHistory = false) {
+      console.log('Processing items collected from Steam:', steamItems.length);
+      
+      try {
+        const response = await fetch(`${API_BASE}/api/inventory/analyze-items`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`
+          },
+          body: JSON.stringify({ items: steamItems })
+        });
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`API Error: ${response.status} - ${errorText}`);
+        }
+        
+        const apiData = await response.json();
+        
+        if (apiData.items && apiData.items.length > 0) {
+          let totalValueUSD = 0;
+          const processedData = {
+            items: apiData.items.map(apiItem => {
+              let priceHistory = null;
+              if (enableHistory && apiItem.price_history) {
+                if (typeof apiItem.price_history === 'string') {
+                  try {
+                    priceHistory = JSON.parse(apiItem.price_history).map(entry => ({
+                      date: entry.date,
+                      price: parseFloat(entry.price || entry.price_usd || 0) * STEAM_TAX_FACTOR
+                    }));
+                  } catch (e) {
+                    console.warn('Error parsing price history (string):', e);
+                  }
+                } else if (Array.isArray(apiItem.price_history)) {
+                  priceHistory = apiItem.price_history.map(entry => ({
+                    date: entry.date,
+                    price: parseFloat(entry.price || entry.price_usd || 0) * STEAM_TAX_FACTOR
+                  }));
+                }
+              }
+              
+              const itemPriceUSD = parseFloat(apiItem.price_usd || 0) * STEAM_TAX_FACTOR;
+              const itemTotalUSD = itemPriceUSD * (apiItem.quantity || 1);
+              totalValueUSD += itemTotalUSD;
+              
+              return {
+                ...apiItem,
+                price: itemPriceUSD,
+                total: itemTotalUSD,
+                price_source: apiItem.price_source || 'API',
+                needsSteamMarketFallback: (itemPriceUSD === 0 && !apiItem.error),
+                price_history: priceHistory
+              };
+            }),
+            total_items: apiData.total_items || apiData.items.length,
+            total_value: totalValueUSD,
+            source: 'steam_direct',
+            has_price_history: enableHistory
+          };
+          
+          // Check if items need fallback
+          const itemsNeedingFallback = processedData.items.filter(item => item.needsSteamMarketFallback);
+          const hasItemsNeedingFallback = itemsNeedingFallback.length > 0;
+          
+          // Display initial data
+          displayInventoryData(processedData, false, null, !hasItemsNeedingFallback);
+          
+          // Fetch price history if requested
+          let historyCompleted = false;
+          let fallbackCompleted = false;
+          
+          const finalizeDisplay = () => {
+            if (historyCompleted && fallbackCompleted) {
+              displayInventoryData(processedData, false, null, true);
+            }
+          };
+          
+          if (enableHistory) {
+            fetchPriceHistoryForItems(processedData.items).then(() => {
+              processedData.has_price_history = true;
+              displayInventoryData(processedData, true, null, !hasItemsNeedingFallback);
+              historyCompleted = true;
+              finalizeDisplay();
+            }).catch(error => {
+              console.warn('Error fetching price history:', error);
+              processedData.has_price_history = false;
+              displayInventoryData(processedData, false, null, !hasItemsNeedingFallback);
+              historyCompleted = true;
+              finalizeDisplay();
+            });
+          } else {
+            processedData.has_price_history = false;
+            displayInventoryData(processedData, false, null, !hasItemsNeedingFallback);
+            historyCompleted = true;
+            finalizeDisplay();
+          }
+          
+          // Fetch prices from Steam Market for items without price
+          if (hasItemsNeedingFallback) {
+            fetchSteamMarketPrices(itemsNeedingFallback).then(() => {
+              const totalAfterFallback = processedData.items.reduce((sum, item) => sum + (item.total || 0), 0);
+              processedData.total_value = totalAfterFallback;
+              if (enableHistory && !processedData.has_price_history) {
+                processedData.has_price_history = true;
+              }
+              displayInventoryData(processedData, false, null, !enableHistory);
+              fallbackCompleted = true;
+              finalizeDisplay();
+            }).catch(error => {
+              console.error('Error fetching Steam Market prices:', error);
+              if (enableHistory && !processedData.has_price_history) {
+                processedData.has_price_history = true;
+              }
+              displayInventoryData(processedData, false, null, !enableHistory);
+              fallbackCompleted = true;
+              finalizeDisplay();
+            });
+          } else {
+            fallbackCompleted = true;
+            finalizeDisplay();
+          }
+        } else {
+          throw new Error('No items returned by API');
+        }
+      } catch (error) {
+        console.error('Error processing Steam items:', error);
+        const inventoryLoading = document.getElementById('inventory-loading');
+        const inventoryData = document.getElementById('inventory-data');
+        if (inventoryLoading) inventoryLoading.style.display = 'none';
+        if (inventoryData) {
+          inventoryData.style.display = 'block';
+          inventoryData.innerHTML = `
+            <div class="error-message">
+              <i class="fas fa-exclamation-triangle"></i>
+              <h3>Error Processing Inventory</h3>
+              <p>${error.message}</p>
+            </div>
+          `;
+        }
+      }
+    }
+    
+    // Display inventory data
+    function displayInventoryData(data, isMocked = false, errorMessage = null, hideLoading = true) {
+      const inventoryLoading = document.getElementById('inventory-loading');
+      const inventoryData = document.getElementById('inventory-data');
+      
+      if (hideLoading && inventoryLoading) {
+        inventoryLoading.style.display = 'none';
+      }
+      if (inventoryData) {
+        inventoryData.style.display = 'block';
+      }
+      
+      lastInventoryData = data;
+      
+      const totalValue = data.total_value || 0;
+      
+      let html = `
+        <div style="margin-bottom: 1.5rem;">
+          ${isMocked ? `
+          <div style="padding: 12px 16px; background: rgba(255,215,0,0.08); border-radius: 6px; border-left: 3px solid rgba(255,215,0,0.5); margin-bottom: 1rem;">
+            <p style="color: rgba(255,215,0,0.9); font-size: 0.9rem; margin: 0;">
+              ℹ️ Demo mode: using example inventory with real API prices
+            </p>
+          </div>
+          ` : ''}
+          <div style="margin-bottom: 1.5rem; padding: 15px; background: rgba(36, 36, 36, 0.5); border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+              <span>Total Items:</span>
+              <span style="font-weight: 600;">${data.total_items}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+              <span>Total Value:</span>
+              <span style="font-weight: 600; color: var(--cs2-gold);">${formatCurrency(totalValue)}</span>
+            </div>
+            ${data.total_items > 0 ? `
+            <div style="display: flex; justify-content: space-between;">
+              <span>Average Value per Item:</span>
+              <span style="font-weight: 600;">${formatCurrency(totalValue / data.total_items)}</span>
+            </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+      
+      if (data.items && data.items.length > 0) {
+        const sortedItems = [...data.items].sort((a, b) => (b.price || 0) - (a.price || 0));
+        
+        html += `
+          <div class="data-table-container">
+            <div class="data-table-header">
+              <h3><i class="fas fa-table"></i> Inventory Items</h3>
+              <button class="btn btn-primary" onclick="generateDashboard(lastInventoryData)">
+                <i class="fas fa-chart-bar"></i> Interactive Dashboard
+              </button>
+            </div>
+            <table class="professional-table">
+              <thead>
+                <tr>
+                  <th class="index-cell">#</th>
+                  <th>Image</th>
+                  <th>Item Name</th>
+                  <th>Category</th>
+                  <th>Rarity</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+        
+        sortedItems.forEach((item, index) => {
+          const price = item.price || 0;
+          const rarity = item.rarity || 'N/A';
+          const rarityClass = rarity.toLowerCase().replace(/\s+/g, '-');
+          const category = item.category || item.type || 'Other';
+          const itemName = item.name || item.market_hash_name || 'Item';
+          const imageUrl = item.image_url || item.icon_url || '';
+          
+          html += `
+            <tr>
+              <td class="index-cell">${index + 1}</td>
+              <td style="width: 80px; padding: 0.5rem;">
+                ${imageUrl ? `
+                  <img src="${imageUrl}" alt="${itemName}" class="item-image-small" onerror="this.style.display='none';">
+                ` : '<div style="width: 60px; height: 45px; background: rgba(36, 36, 36, 0.6); border: 1px solid var(--cs2-border-subtle); border-radius: 4px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-image" style="color: var(--cs2-text-darker); font-size: 0.8rem;"></i></div>'}
+              </td>
+              <td class="item-name-cell">${itemName}</td>
+              <td class="type-cell">${category}</td>
+              <td>
+                ${rarity !== 'N/A' ? `<span class="rarity-badge rarity-${rarityClass}">${rarity}</span>` : '<span style="color: var(--cs2-text-dim);">N/A</span>'}
+              </td>
+              <td class="price-cell">${formatCurrency(price)}</td>
+            </tr>
+          `;
+        });
+        
+        html += `
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      
+      if (inventoryData) {
+        inventoryData.innerHTML = html;
+      }
+      
+      // Save to localStorage
+      try {
+        const hasHistory = data.has_price_history === true;
+        const dataToSave = {
+          ...data,
+          has_price_history: hasHistory,
+          items: hasHistory ? data.items : data.items.map(item => {
+            const { price_history, ...itemWithoutHistory } = item;
+            return itemWithoutHistory;
+          })
+        };
+        localStorage.setItem('inventoryData', JSON.stringify(dataToSave));
+      } catch (error) {
+        if (error.name === 'QuotaExceededError') {
+          console.warn('LocalStorage quota exceeded. Clearing old data...');
+          try {
+            localStorage.removeItem('inventoryData');
+            const dataToSave = {
+              ...data,
+              has_price_history: false,
+              items: data.items.map(item => {
+                const { price_history, ...itemWithoutHistory } = item;
+                return itemWithoutHistory;
+              })
+            };
+            localStorage.setItem('inventoryData', JSON.stringify(dataToSave));
+          } catch (retryError) {
+            console.error('Unable to save to localStorage:', retryError);
+          }
+        }
+      }
+    }
+    
+    // Generate dashboard
+    function generateDashboard(data) {
+      if (!data || !data.items || data.items.length === 0) {
+        alert('No data available to generate dashboard. Please analyze an inventory first.');
+        return;
+      }
+      
+      try {
+        const hasHistory = data.has_price_history === true;
+        const dataToSave = {
+          ...data,
+          has_price_history: hasHistory,
+          items: hasHistory ? data.items : data.items.map(item => {
+            const { price_history, ...itemWithoutHistory } = item;
+            return itemWithoutHistory;
+          })
+        };
+        localStorage.setItem('inventoryData', JSON.stringify(dataToSave));
+      } catch (error) {
+        if (error.name === 'QuotaExceededError') {
+          console.warn('LocalStorage quota exceeded. Clearing old data...');
+          try {
+            localStorage.removeItem('inventoryData');
+            const dataToSave = {
+              ...data,
+              has_price_history: false,
+              items: data.items.map(item => {
+                const { price_history, ...itemWithoutHistory } = item;
+                return itemWithoutHistory;
+              })
+            };
+            localStorage.setItem('inventoryData', JSON.stringify(dataToSave));
+          } catch (retryError) {
+            alert('Unable to save data. Local storage is full. Please clear browser cache or use incognito mode.');
+            return;
+          }
+        }
+      }
+      
+      const hasHistory = data.has_price_history === true;
+      const dashboardFile = hasHistory ? 'dashboard_fin.html' : 'dashboard_basic.html';
+      console.log(`Opening ${hasHistory ? 'Financial' : 'Basic'} Dashboard: ${dashboardFile}`);
+      window.open(dashboardFile, '_blank');
+    }
+    
+    // Mock inventory data (16 skins)
+    async function showMockInventoryData(enableHistory = false) {
+      console.log('Using mock data and sending to API for real prices');
+      
+      const mockInventoryItems = [
+        { name: "AK-47 | Redline (Field-Tested)", market_hash_name: "AK-47 | Redline", exterior: "Field-Tested", stattrack: false, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678901", rarity: "Classified", category: "Rifle" },
+        { name: "AWP | Dragon Lore (Factory New)", market_hash_name: "AWP | Dragon Lore", exterior: "Factory New", stattrack: false, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678902", rarity: "Covert", category: "Sniper Rifle" },
+        { name: "StatTrak™ M4A4 | Howl (Minimal Wear)", market_hash_name: "M4A4 | Howl", exterior: "Minimal Wear", stattrack: true, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678903", rarity: "Contraband", category: "Rifle" },
+        { name: "Karambit | Fade (Factory New)", market_hash_name: "Karambit | Fade", exterior: "Factory New", stattrack: false, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678904", rarity: "Covert", category: "Knife" },
+        { name: "StatTrak™ Glock-18 | Fade (Factory New)", market_hash_name: "Glock-18 | Fade", exterior: "Factory New", stattrack: true, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E7t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678905", rarity: "Classified", category: "Pistol" },
+        { name: "AK-47 | Fire Serpent (Field-Tested)", market_hash_name: "AK-47 | Fire Serpent", exterior: "Field-Tested", stattrack: false, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678906", rarity: "Covert", category: "Rifle" },
+        { name: "AWP | Asiimov (Field-Tested)", market_hash_name: "AWP | Asiimov", exterior: "Field-Tested", stattrack: false, quantity: 2, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678907", rarity: "Classified", category: "Sniper Rifle" },
+        { name: "M4A1-S | Icarus Fell (Factory New)", market_hash_name: "M4A1-S | Icarus Fell", exterior: "Factory New", stattrack: false, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678908", rarity: "Classified", category: "Rifle" },
+        { name: "Desert Eagle | Blaze (Factory New)", market_hash_name: "Desert Eagle | Blaze", exterior: "Factory New", stattrack: false, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678909", rarity: "Covert", category: "Pistol" },
+        { name: "AK-47 | Vulcan (Minimal Wear)", market_hash_name: "AK-47 | Vulcan", exterior: "Minimal Wear", stattrack: false, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678910", rarity: "Classified", category: "Rifle" },
+        { name: "StatTrak™ AWP | Medusa (Field-Tested)", market_hash_name: "AWP | Medusa", exterior: "Field-Tested", stattrack: true, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678911", rarity: "Covert", category: "Sniper Rifle" },
+        { name: "M4A4 | Poseidon (Factory New)", market_hash_name: "M4A4 | Poseidon", exterior: "Factory New", stattrack: false, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678912", rarity: "Covert", category: "Rifle" },
+        { name: "Butterfly Knife | Fade (Factory New)", market_hash_name: "Butterfly Knife | Fade", exterior: "Factory New", stattrack: false, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678913", rarity: "Covert", category: "Knife" },
+        { name: "StatTrak™ AK-47 | Case Hardened (Well-Worn)", market_hash_name: "AK-47 | Case Hardened", exterior: "Well-Worn", stattrack: true, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678914", rarity: "Classified", category: "Rifle" },
+        { name: "USP-S | Kill Confirmed (Minimal Wear)", market_hash_name: "USP-S | Kill Confirmed", exterior: "Minimal Wear", stattrack: false, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678915", rarity: "Covert", category: "Pistol" },
+        { name: "AWP | Oni Taiji (Battle-Scarred)", market_hash_name: "AWP | Oni Taiji", exterior: "Battle-Scarred", stattrack: false, quantity: 1, icon_url: "-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5gZKKkuXLPr7Vn35cppwl3r3E9t2s3gHgqkE4Z2-mJ4fDc1M3Y1rV-lC_x-7s1sO5tJ7Nv3Rjz3Mh5CvDlQ", assetid: "12345678916", rarity: "Classified", category: "Sniper Rifle" }
+      ];
+      
+      // Send to API for pricing (similar to processSteamInventoryItems)
+      try {
+        const response = await fetch(`${API_BASE}/api/inventory/analyze-items`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken || 'mock'}`
+          },
+          body: JSON.stringify({ items: mockInventoryItems })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API Error: ${response.status}`);
+        }
+        
+        const apiData = await response.json();
+        
+        if (apiData.items && apiData.items.length > 0) {
+          let totalValueUSD = 0;
+          const processedData = {
+            items: apiData.items.map((apiItem, index) => {
+              const mockItem = mockInventoryItems[index];
+              const itemPriceUSD = parseFloat(apiItem.price_usd || 0) * STEAM_TAX_FACTOR;
+              const itemTotalUSD = itemPriceUSD * (apiItem.quantity || mockItem.quantity || 1);
+              totalValueUSD += itemTotalUSD;
+              
+              return {
+                ...mockItem,
+                ...apiItem,
+                name: apiItem.name || mockItem.name,
+                market_hash_name: apiItem.market_hash_name || mockItem.market_hash_name,
+                price: itemPriceUSD,
+                total: itemTotalUSD,
+                needsSteamMarketFallback: (itemPriceUSD === 0 && !apiItem.error),
+                image_url: apiItem.image_url || apiItem.icon_url || mockItem.icon_url,
+                icon_url: apiItem.icon_url || apiItem.image_url || mockItem.icon_url
+              };
+            }),
+            total_items: apiData.items.length,
+            total_value: totalValueUSD,
+            source: 'mock_data',
+            has_price_history: enableHistory
+          };
+          
+          const itemsNeedingFallback = processedData.items.filter(item => item.needsSteamMarketFallback);
+          const hasItemsNeedingFallback = itemsNeedingFallback.length > 0;
+          
+          displayInventoryData(processedData, true, null, !hasItemsNeedingFallback);
+          
+          if (hasItemsNeedingFallback) {
+            fetchSteamMarketPrices(itemsNeedingFallback).then(() => {
+              totalValueUSD = processedData.items.reduce((sum, item) => sum + (item.total || 0), 0);
+              processedData.total_value = totalValueUSD;
+              displayInventoryData(processedData, true, null, true);
+            }).catch(error => {
+              console.error('Error fetching Steam Market prices:', error);
+              displayInventoryData(processedData, true, null, true);
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching prices from API:', error);
+        const mockData = {
+          total_items: mockInventoryItems.length,
+          total_value: 0,
+          items: mockInventoryItems.map(item => ({
+            ...item,
+            price: 0,
+            total: 0,
+            error: 'Price not available - API did not respond correctly'
+          }))
+        };
+        displayInventoryData(mockData, true, error.message);
+      }
+    }
+    
+    // Fetch price history for items
+    async function fetchPriceHistoryForItems(items) {
+      if (!items || items.length === 0) {
+        console.warn('[PRICE_HISTORY] No items to fetch history for');
+        return;
+      }
+      
+      console.log(`📊 [PRICE_HISTORY] Fetching history for ${items.length} items...`);
+      
+      let successCount = 0;
+      let failCount = 0;
+      
+      // Process items sequentially (with delay between requests)
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        
+        // Add delay between requests
+        if (i > 0) {
+          await new Promise(resolve => setTimeout(resolve, 200)); // 200ms between requests
+        }
+        
+        // Only fetch history if item has necessary data
+        if (!item.market_hash_name || !item.exterior) {
+          console.warn(`⚠️ [PRICE_HISTORY] Item ${i + 1} missing market_hash_name or exterior:`, item.name);
+          continue;
+        }
+        
+        try {
+          const params = new URLSearchParams({
+            market_hash_name: item.market_hash_name,
+            exterior: item.exterior || 'Field-Tested',
+            stattrack: (item.stattrack || false).toString()
+          });
+          
+          const endpoint = `${API_BASE}/api/inventory/item-price?${params}`;
+          console.log(`📊 [PRICE_HISTORY] Fetching history for: ${item.name} (${i + 1}/${items.length})`);
+          
+          const response = await fetch(endpoint, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache'
+            },
+            mode: 'cors',
+            cache: 'no-cache'
+          });
+          
+          if (!response.ok) {
+            console.warn(`⚠️ [PRICE_HISTORY] HTTP ${response.status} for ${item.name}`);
+            failCount++;
+            continue;
+          }
+          
+          const data = await response.json();
+          
+          // Convert price_history from API to format expected by dashboard
+          if (data.price_history) {
+            let priceHistory = null;
+            
+            if (data.price_history.entries && Array.isArray(data.price_history.entries)) {
+              // API format: {entries: [{date, price_usd, ...}]}
+              priceHistory = data.price_history.entries.map(entry => ({
+                date: entry.date,
+                price: parseFloat(entry.price_usd || entry.price || 0) * STEAM_TAX_FACTOR
+              }));
+            } else if (Array.isArray(data.price_history)) {
+              // Already in expected format
+              priceHistory = data.price_history.map(entry => ({
+                date: entry.date,
+                price: parseFloat(entry.price || entry.price_usd || 0) * STEAM_TAX_FACTOR
+              }));
+            }
+            
+            if (priceHistory && priceHistory.length > 0) {
+              item.price_history = priceHistory;
+              successCount++;
+              console.log(`✅ [PRICE_HISTORY] History loaded for ${item.name}: ${priceHistory.length} entries`);
+            } else {
+              console.warn(`⚠️ [PRICE_HISTORY] Empty history for ${item.name}`);
+              failCount++;
+            }
+          } else {
+            console.warn(`⚠️ [PRICE_HISTORY] No price_history in response for ${item.name}`);
+            failCount++;
+          }
+        } catch (error) {
+          console.error(`❌ [PRICE_HISTORY] Error fetching history for ${item.name}:`, error);
+          failCount++;
+        }
+      }
+      
+      console.log(`📊 [PRICE_HISTORY] Summary: ${successCount} successes, ${failCount} failures`);
+    }
+    
+    // Fetch single item price from Steam Market
+    async function fetchSteamMarketPrice(item) {
+      try {
+        // Build full skin name for search
+        let searchName = item.name || item.market_hash_name || '';
+        
+        if (!searchName) {
+          console.warn('Item missing name for Steam Market search:', item);
+          return null;
+        }
+        
+        // Generate name variations to try different searches
+        const searchVariations = [];
+        
+        // Variation 1: Original name with StatTrak if needed
+        if (item.stattrack && !searchName.toLowerCase().includes('stattrak')) {
+          searchVariations.push('StatTrak™ ' + searchName);
+          searchVariations.push('StatTrak ' + searchName);
+        } else {
+          searchVariations.push(searchName);
+        }
+        
+        // Variation 2: Remove wear condition and try generic search
+        const nameWithoutWear = searchName.replace(/\s*\([^)]+\)\s*$/, '').trim();
+        if (nameWithoutWear !== searchName && nameWithoutWear.length > 0) {
+          if (item.stattrack && !nameWithoutWear.toLowerCase().includes('stattrak')) {
+            searchVariations.push('StatTrak™ ' + nameWithoutWear);
+            searchVariations.push('StatTrak ' + nameWithoutWear);
+          } else {
+            searchVariations.push(nameWithoutWear);
+          }
+        }
+        
+        // Variation 3: Only market_hash_name (without wear)
+        if (item.market_hash_name && item.market_hash_name !== searchName && item.market_hash_name !== nameWithoutWear) {
+          if (item.stattrack && !item.market_hash_name.toLowerCase().includes('stattrak')) {
+            searchVariations.push('StatTrak™ ' + item.market_hash_name);
+            searchVariations.push('StatTrak ' + item.market_hash_name);
+          } else {
+            searchVariations.push(item.market_hash_name);
+          }
+        }
+        
+        // Remove duplicates
+        const uniqueVariations = [...new Set(searchVariations)];
+        
+        console.log(`🔍 [FALLBACK] Item: ${item.name}, StatTrak: ${item.stattrack}`);
+        console.log(`🔍 [FALLBACK] Variations to try (${uniqueVariations.length}):`, uniqueVariations);
+        
+        // Try each variation with each proxy until finding a price
+        for (const variation of uniqueVariations) {
+          const searchUrl = `https://steamcommunity.com/market/search?q=${encodeURIComponent(variation)}`;
+          console.log(`🔍 [FALLBACK] Trying search: ${variation}`);
+          
+          // Try each proxy for this variation
+          for (let proxyIndex = 0; proxyIndex < CORS_PROXIES.length; proxyIndex++) {
+            const proxy = CORS_PROXIES[proxyIndex];
+            const proxyUrl = proxy + encodeURIComponent(searchUrl);
+            
+            try {
+              console.log(`📡 [FALLBACK] Trying proxy ${proxyIndex + 1}/${CORS_PROXIES.length} for: ${variation}`);
+              
+              const response = await fetch(proxyUrl, {
+                method: 'GET',
+                headers: {
+                  'Accept': 'text/html',
+                },
+                mode: 'cors',
+                cache: 'no-cache'
+              });
+              
+              if (!response.ok) {
+                console.warn(`⚠️ [FALLBACK] HTTP ${response.status} on proxy ${proxyIndex + 1} for variation: ${variation}`);
+                if (proxyIndex < CORS_PROXIES.length - 1) {
+                  continue; // Try next proxy
+                } else {
+                  break; // Try next variation
+                }
+              }
+              
+              const html = await response.text();
+              
+              // Check if received valid HTML (not proxy error)
+              if (!html || html.length < 100 || html.includes('Error') || html.includes('error')) {
+                console.warn(`⚠️ [FALLBACK] Invalid response from proxy ${proxyIndex + 1}`);
+                if (proxyIndex < CORS_PROXIES.length - 1) {
+                  continue; // Try next proxy
+                } else {
+                  break; // Try next variation
+                }
+              }
+              
+              // Extract price from Steam Market HTML
+              let priceUSD = null;
+              let pricesFound = [];
+              
+              // Priority 1: Search data-price (most reliable, in cents)
+              const dataPricePattern = /data-price="(\d+)"/gi;
+              const dataPriceMatches = html.matchAll(dataPricePattern);
+              for (const match of dataPriceMatches) {
+                if (match && match[1]) {
+                  // Convert from cents to dollars
+                  const priceInCents = parseInt(match[1]);
+                  const price = priceInCents / 100;
+                  if (price > 0 && price < 100000) {
+                    pricesFound.push(price);
+                    console.log(`✅ [FALLBACK] Price found via data-price: $${price} (${priceInCents} cents)`);
+                  }
+                }
+              }
+              
+              // Priority 2: Search text patterns if data-price doesn't work
+              if (pricesFound.length === 0) {
+                const pricePatterns = [
+                  /Starting at:\s*\$([\d,]+\.?\d*)/gi,
+                  /\$([\d,]+\.?\d*)\s*USD/gi,
+                  /"normal_price":"\$([\d,]+\.?\d*)"/gi,
+                  /<span[^>]*class="[^"]*normal_price[^"]*"[^>]*>\s*\$([\d,]+\.?\d*)/gi,
+                  /market_listing_price_with_fee[^>]*>\s*\$([\d,]+\.?\d*)/gi,
+                  /market_listing_price[^>]*>\s*\$([\d,]+\.?\d*)/gi,
+                  /data-price="([\d.]+)"/gi,
+                  /"price":"\$([\d,]+\.?\d*)"/gi
+                ];
+                
+                for (const pattern of pricePatterns) {
+                  try {
+                    const matches = html.matchAll(pattern);
+                    for (const match of matches) {
+                      if (match && match[1]) {
+                        const price = parseFloat(match[1].replace(/,/g, ''));
+                        if (price > 0 && price < 100000) {
+                          pricesFound.push(price);
+                          console.log(`✅ [FALLBACK] Price found via pattern: $${price}`);
+                        }
+                      }
+                    }
+                  } catch (e) {
+                    // Ignore regex errors
+                  }
+                }
+              }
+              
+              // If found prices, use the lowest (usually "Starting at")
+              if (pricesFound.length > 0) {
+                pricesFound.sort((a, b) => a - b);
+                priceUSD = pricesFound[0]; // Get lowest price
+                console.log(`✅ [FALLBACK] Prices found: ${pricesFound.join(', ')}, using: $${priceUSD}`);
+                console.log(`✅ [FALLBACK] Price found on Steam Market for ${item.name}: $${priceUSD} (variation: ${variation}, proxy: ${proxyIndex + 1})`);
+                return priceUSD;
+              } else {
+                console.log(`⚠️ [FALLBACK] No price found for variation "${variation}" on proxy ${proxyIndex + 1}`);
+                // Continue trying next proxy or variation
+              }
+            } catch (fetchError) {
+              console.warn(`⚠️ [FALLBACK] Error on proxy ${proxyIndex + 1} for variation "${variation}":`, fetchError.message);
+              if (proxyIndex < CORS_PROXIES.length - 1) {
+                continue; // Try next proxy
+              } else {
+                break; // Try next variation
+              }
+            }
+          }
+        }
+        
+        // If no variation worked
+        console.warn(`❌ [FALLBACK] Price not found on Steam Market for ${item.name} after trying ${uniqueVariations.length} variations with ${CORS_PROXIES.length} proxies`);
+        return null;
+        
+      } catch (error) {
+        console.error(`❌ [FALLBACK] Error fetching price from Steam Market for ${item.name}:`, error);
+        return null;
+      }
+    }
+    
+    // Fetch Steam Market prices (fallback) for multiple items
+    async function fetchSteamMarketPrices(items) {
+      if (!items || items.length === 0) {
+        console.warn('[FALLBACK] No items to search on Steam Market');
+        return;
+      }
+      
+      console.log(`🚀 [FALLBACK] Starting Steam Market search for ${items.length} items...`);
+      console.log(`🚀 [FALLBACK] Items:`, items.map(item => item.name));
+      
+      let successCount = 0;
+      let failCount = 0;
+      
+      // Process items sequentially (with delay between requests)
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        
+        // Add delay between requests to avoid overloading Steam Market
+        if (i > 0) {
+          console.log(`⏳ [FALLBACK] Waiting 1 second before next request...`);
+          await new Promise(resolve => setTimeout(resolve, 1000)); // 1 second between requests
+        }
+        
+        console.log(`📦 [FALLBACK] Processing item ${i + 1}/${items.length}: ${item.name}`);
+        const priceUSD = await fetchSteamMarketPrice(item);
+        
+        if (priceUSD && priceUSD > 0) {
+          // Preserve important API data (don't overwrite)
+          const originalImageUrl = item.image_url;
+          const originalIconUrl = item.icon_url;
+          const originalPriceHistory = item.price_history; // Preserve price history
+          
+          // Apply Steam tax (no currency conversion, already in USD)
+          item.price = priceUSD * STEAM_TAX_FACTOR;
+          item.total = item.price * (item.quantity || 1);
+          item.error = null;
+          item.needsSteamMarketFallback = false;
+          item.price_source = 'Steam Market (Fallback)';
+          
+          // Ensure API image is preserved
+          if (originalImageUrl) {
+            item.image_url = originalImageUrl;
+          }
+          if (originalIconUrl) {
+            item.icon_url = originalIconUrl;
+          }
+          
+          // Ensure price history is preserved
+          if (originalPriceHistory) {
+            item.price_history = originalPriceHistory;
+          }
+          
+          successCount++;
+          console.log(`✅ [FALLBACK] Price found for ${item.name}: $${priceUSD} USD = $${item.price.toFixed(2)} (after tax)`);
+          console.log(`🖼️ [FALLBACK] Image preserved: ${item.image_url || item.icon_url || 'none'}`);
+          console.log(`📊 [FALLBACK] History preserved: ${originalPriceHistory ? originalPriceHistory.length + ' entries' : 'none'}`);
+        } else {
+          failCount++;
+          console.warn(`❌ [FALLBACK] Price not found on Steam Market for ${item.name}`);
+        }
+      }
+      
+      // Recalculate total after fallback
+      const totalAfterFallback = items.reduce((sum, item) => sum + (item.total || 0), 0);
+      console.log(`📊 [FALLBACK] Summary: ${successCount} successes, ${failCount} failures`);
+      console.log(`💰 [FALLBACK] Total after fallback: $${totalAfterFallback.toFixed(2)}`);
     }
   </script>
 </body>
