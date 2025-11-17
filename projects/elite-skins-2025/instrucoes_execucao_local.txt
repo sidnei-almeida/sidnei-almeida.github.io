@@ -1,0 +1,94 @@
+# Instruções para Execução Local do Elite Skins
+
+Este arquivo contém as instruções para executar tanto a API quanto o site em ambiente local de desenvolvimento.
+
+## 1. Executando a API localmente
+
+A API foi modificada para aceitar requisições do localhost:5500 e está na pasta `cotacao_cs2`.
+
+### Pré-requisitos:
+- Python 3.7 ou superior instalado
+- Pip (gerenciador de pacotes do Python)
+
+### Instalação das dependências:
+```bash
+cd cotacao_cs2
+pip install -r requirements.txt
+```
+
+### Executando o servidor:
+```bash
+cd cotacao_cs2
+python main.py
+```
+
+A API será executada em: http://localhost:8000
+
+Você pode acessar a documentação interativa em: http://localhost:8000/docs
+
+Para verificar se a API está funcionando corretamente, acesse http://localhost:8000/api/status
+
+## 2. Acessando o site
+
+Agora que a API está rodando localmente, você pode abrir o arquivo `api.html` em um servidor web local.
+
+### Opções para executar um servidor web local:
+
+#### Usando Python:
+```bash
+# Na pasta raiz do projeto (certifique-se de estar fora da pasta cotacao_cs2)
+cd ..
+python -m http.server 5500
+```
+
+#### Usando a extensão Live Server do VSCode:
+1. Instale a extensão "Live Server"
+2. Clique com o botão direito no arquivo api.html
+3. Selecione "Open with Live Server"
+
+Isto normalmente abrirá o site em: http://localhost:5500/api.html
+
+#### Usando o XAMPP, WAMP ou outro servidor web:
+Coloque os arquivos na pasta do servidor web e acesse via navegador.
+
+## 3. Configuração CORS
+
+A API foi modificada para:
+- Aceitar requisições de http://localhost:5500 (desenvolvimento local)
+- Usar cabeçalhos CORS consistentes em todos os endpoints
+- Aplicar cabeçalhos CORS em todas as respostas
+
+### Testando a configuração CORS:
+Acesse http://localhost:8000/cors-test no navegador para verificar se os cabeçalhos CORS estão configurados corretamente.
+
+## 4. Autenticação
+
+A autenticação com a Steam foi configurada para funcionar com localhost. Ao clicar em "Login com Steam":
+1. Você será redirecionado para o login da Steam
+2. Após autenticar, a Steam redirecionará de volta para http://localhost:8000/auth/steam/callback
+3. O servidor API gerará um token JWT
+4. Você será redirecionado de volta para http://localhost:5500/api.html com o token na URL
+5. O script JavaScript no api.html extrairá o token e o armazenará no localStorage
+
+### Depurando problemas de autenticação:
+- Verifique o console da API para mensagens de depuração durante o redirecionamento
+- O endereço de callback deve ser detectado automaticamente com base no host da requisição
+
+## 5. Resolução de problemas
+
+### Erros CORS:
+Se encontrar erros como "Access to fetch at '...' from origin 'http://localhost:5500' has been blocked by CORS policy":
+- Verifique se a API está rodando no localhost:8000
+- Verifique se você está acessando o site pela URL correta (localhost:5500)
+- Verifique o console da API para mensagens de erro
+- Tente acessar http://localhost:8000/cors-test para testar os cabeçalhos CORS
+
+### Problemas de autenticação:
+- Se o redirecionamento após o login na Steam não funcionar, verifique os logs da API
+- Verifique se os tokens estão sendo gerados corretamente
+- Verifique o armazenamento local do navegador para confirmar se o token está sendo salvo
+
+### Problemas gerais:
+- Limpe o cache do navegador
+- Use o modo de navegação anônima/privada para evitar problemas de cache
+- Verifique os logs da API para mensagens de erro detalhadas 
