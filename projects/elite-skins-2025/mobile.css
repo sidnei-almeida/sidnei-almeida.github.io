@@ -1,0 +1,521 @@
+/* Elite Skins 2025 - Estilos para dispositivos móveis */
+
+/* Estes estilos só serão aplicados em telas menores que 768px */
+
+/* Fix para viewport em iPhones */
+@viewport {
+  width: device-width;
+  zoom: 1.0;
+}
+
+@-ms-viewport {
+  width: device-width;
+}
+
+@media (max-width: 768px) {
+  /* Ajustes no cabeçalho */
+  .header {
+    height: auto !important;
+    min-height: auto !important;
+    padding: 5px 0 !important;
+  }
+  
+  .header-inner {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 5px 0;
+    justify-content: center;
+  }
+  
+  /* Reduzir tamanho do logo */
+  .logo {
+    font-size: 20px !important;
+    letter-spacing: 1px !important;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  
+  /* Ajustes no menu de navegação */
+  .nav {
+    margin: 5px 0;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  
+  .nav a {
+    font-size: 10px !important;
+    padding: 2px 4px !important;
+    margin: 0 1px !important;
+  }
+  
+  /* Reduzir tamanho de textos em geral */
+  p, li, span:not([class="material-icons"]) {
+    font-size: 12px !important;
+  }
+  
+  /* Ajustes nos botões */
+  .btn {
+    padding: 6px 15px !important;
+    font-size: 0.9rem !important;
+    margin-top: 5px !important;
+  }
+  
+  .header .btn-primary {
+    margin: 0 auto;
+    display: block;
+    width: 80%;
+    max-width: 200px;
+  }
+  
+  /* Ajustes nas seções */
+  main {
+    padding-top: 70px !important;
+  }
+  
+  section {
+    padding: 30px 0 !important;
+  }
+  
+  /* Ajustes de tamanho para títulos */
+  h1 {
+    font-size: 18px !important;
+    line-height: 1.1 !important;
+  }
+  
+  h2 {
+    font-size: 16px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  h3 {
+    font-size: 14px !important;
+    margin-bottom: 5px !important;
+  }
+  
+  p {
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+    margin: 5px 0 !important;
+  }
+  
+  /* Ajustes específicos para a seção hero */
+  .hero {
+    padding-top: 40px !important; /* Reduzir o espau00e7amento para compactar o layout */
+    padding-bottom: 10px !important;
+    min-height: auto !important;
+    height: auto !important;
+    margin-top: 0 !important;
+  }
+  
+  /* Reorganizar layout do hero completamente para mobile */
+  .hero [style*="display:grid"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+  
+  /* Mover o texto para depois do efeito brilhante */
+  .hero h1 {
+    order: 2 !important;
+    font-size: 14px !important;
+    margin-top: 5px !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+  
+  /* Ajustar os botões para dentro do efeito brilhante */
+  .hero .btn,
+  [id="hero"] .btn {
+    display: inline-block !important;
+    margin: 3px auto !important;
+    width: auto !important;
+    min-width: 100px !important;
+    max-width: 150px !important;
+    text-align: center !important;
+    font-size: 8px !important;
+    padding: 4px 8px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 10 !important;
+  }
+  
+  /* Layout customizado para dispositivos mobile */
+  @media (max-width: 480px) {
+    /* Reorganizar hero completamente */
+    .hero [style*="display:grid; grid-template-columns"] {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0 !important;
+    }
+    
+    /* Espaço para o efeito brilhante centralizado */
+    .hero [style*="position: relative; padding: 30px 0"] {
+      order: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 5px 0 !important;
+    }
+    
+    /* Ajustes para o texto principal */
+    .hero h1 {
+      order: 3 !important;
+      font-size: 12px !important;
+      text-align: center !important;
+      margin: 5px auto !important;
+      line-height: 1.1 !important;
+      width: 80% !important;
+    }
+    
+    /* Centralizar e reduzir o texto abaixo do efeito brilhante */
+    .hero [style*="line-height: 1.2;"] {
+      font-size: 10px !important;
+      text-align: center !important;
+      line-height: 1.1 !important;
+      order: 4 !important;
+      margin: 0 auto !important;
+      width: 80% !important;
+    }
+  }
+  
+  /* Garantir que a primeira seção seja visível logo abaixo do header */
+  .hero [style*="position: relative; padding: 30px 0"] {
+    padding: 10px 0 !important;
+  }
+  
+  /* Ajustes no grid de cards */
+  [style*="grid-template-columns"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+    padding: 10px !important;
+  }
+  
+  /* Ajustes especu00edficos para cards em 'Por que participar' e 'Grupos e ofertas' */
+  [id="por-que-participar"] [style*="flex:1 1 250px"],
+  [id="ofertas"] [style*="flex:1 1 250px"],
+  [style*="flex:1 1 250px"] {
+    flex: 0 0 calc(50% - 10px) !important;
+    padding: 10px !important;
+    margin-bottom: 10px !important;
+    min-height: 0 !important;
+  }
+
+  /* Ajustes para o container flex que contém os cards */
+  [style*="display:flex; flex-wrap:wrap"],
+  [style*="display: flex; flex-wrap: wrap"] {
+    gap: 10px !important;
+    justify-content: space-between !important;
+  }
+  
+  /* Reduzir o tamanho dos u00edcones nos cards */
+  [style*="width: 70px; height: 70px"] {
+    width: 40px !important;
+    height: 40px !important;
+    margin-bottom: 5px !important;
+  }
+  
+  /* Reduzir tamanho dos ícones nos cards dos grupos */
+  [id="ofertas"] [style*="width:"] span,
+  [id="por-que-participar"] [style*="width:"] span,
+  [style*="font-size:2rem; color"] {
+    font-size: 1.2rem !important;
+  }
+  
+  /* Reduzir u00edcone do leu00e3o no topo e seu efeito brilhante */
+  [id="hero"] img,
+  [class="hero"] img {
+    max-width: 40% !important;
+    max-height: 60px !important;
+  }
+  
+  /* Modificar wrapper brilhante para deixa-lo invisivel mas preservar espaço */
+  [id="hero"] [style*="radial-gradient"],
+  [class="hero"] [style*="radial-gradient"],
+  [style*="glow effect"],
+  [style*="background: radial-gradient"] {
+    opacity: 0 !important; /* Tornar invisível mas manter o espaço */
+    background: transparent !important;
+    width: 40px !important;
+    height: 40px !important;
+    max-width: 40px !important;
+    max-height: 40px !important;
+    margin: 0 auto !important;
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* Simplificar containers mantendo a estrutura */
+  [id="hero"] [style*="border: 1px solid rgba(255,215,0,0.3)"],
+  [class="hero"] [style*="border: 1px solid rgba(255,215,0,0.3)"],
+  [style*="box-shadow: inset 0 0 30px"] {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+  
+  /* Ajustar o container principal da logo para ser menor mas manter a estrutura */
+  [id="hero"] [style*="width: 320px"][style*="height: 320px"],
+  [class="hero"] [style*="width: 320px"][style*="height: 320px"],
+  [style*="width: 320px"][style*="height: 320px"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    width: 100px !important; /* Tamanho reduzido mas suficiente */
+    height: 100px !important; /* Tamanho reduzido mas suficiente */
+    margin: 10px auto 20px !important; /* Espaço acima e abaixo */
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  [id="hero"] img,
+  [class="hero"] img {
+    max-width: 90% !important;
+    max-height: 32px !important;
+    margin: 0 auto !important;
+    display: block !important;
+  }
+  
+  /* Reduzir u00edcone do leu00e3o no footer */
+  [style*="height: 35px; margin-right: 10px"] {
+    height: 25px !important;
+    margin-right: 5px !important;
+  }
+  
+  /* Ajustar fontes nos cards - todos os tu00edtulos extremamente compactos */
+  [style*="flex:1 1 250px"] h3,
+  [id="como-funciona"] h3,
+  [id="como-funciona"] h4,
+  [id="faq"] h3 {
+    font-size: 8px !important;
+    margin-bottom: 1px !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    padding: 0 !important;
+    word-spacing: -1px !important;
+  }
+  
+  /* Redução específica para títulos na seção 'Grupos e ofertas' */
+  [id="ofertas"] h3 {
+    font-size: 7px !important;
+    margin-bottom: 0 !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    font-weight: bold !important;
+  }
+
+  [id="ofertas"] [style*="text-align:center; margin-bottom:3rem"] h2 {
+    font-size: 20px !important;
+  }
+  
+  [style*="flex:1 1 250px"] p {
+    font-size: 8px !important;
+    line-height: 1.1 !important;
+    margin: 2px 0 !important;
+  }
+  
+  /* Textos especialmente pequenos para os cards do grupo ofertas */
+  [id="ofertas"] [style*="flex:1 1 250px"] p {
+    font-size: 7px !important;
+    line-height: 1 !important;
+    margin: 1px 0 !important;
+  }
+  
+  /* Ajustes no footer */
+  [id="footer"] [style*="display:flex"], 
+  [id="footer"] [style*="display: flex"] {
+    flex-direction: column !important;
+    text-align: center;
+  }
+  
+  [id="footer"] [style*="flex:"] {
+    margin-bottom: 20px !important;
+  }
+  
+  /* Ajuste para tamanhos específicos de tela */
+  @media (max-width: 480px) {
+    .hero [style*="display:grid"], 
+    .hero [style*="display: grid"] {
+      grid-template-columns: 1fr !important;
+    }
+    
+    /* Manter dois cards por linha mesmo em telas pequenas */
+    [style*="grid-template-columns"] {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    /* Ajustes adicionais para telas muito pequenas */
+    .btn {
+      width: 100%;
+      margin: 5px 0;
+      box-sizing: border-box;
+    }
+    
+    /* Deixar o texto dos cards ainda menor em telas muito pequenas */
+    [style*="flex:1 1 250px"] h3 {
+      font-size: 12px !important;
+    }
+    
+    [style*="flex:1 1 250px"] p {
+      font-size: 10px !important;
+    }
+  }
+  
+  /* Ajustes específicos para iPhones e telas muito estreitas */
+  @media (max-width: 375px) {
+    /* Container principal mais estreito */
+    .container {
+      width: 95% !important;
+      padding: 0 8px !important;
+    }
+    
+    /* Ajuste para o header */
+    .logo {
+      font-size: 18px !important;
+    }
+    
+    .nav a {
+      font-size: 10px !important;
+      padding: 2px 3px !important;
+      margin: 0 1px !important;
+    }
+    
+    /* Ajustes para títulos */
+    h1 {
+      font-size: 20px !important;
+    }
+    
+    h2 {
+      font-size: 18px !important;
+    }
+    
+    /* Ajustes para cards */
+    [id="ofertas"] h3,
+    [id="por-que-participar"] h3 {
+      font-size: 10px !important;
+    }
+    
+    /* Reduzir mais o padding em cards */
+    [style*="flex:1 1 250px"] {
+      padding: 8px !important;
+    }
+    
+    /* Ajustes para ícones */
+    [style*="width: 70px; height: 70px"] {
+      width: 30px !important;
+      height: 30px !important;
+      margin-bottom: 3px !important;
+    }
+  }
+  
+  /* Ajustes especu00edficos para a setu00e7u00e3o FAQ */
+  [id="faq"] {
+    padding: 20px 0 !important;
+  }
+  
+  /* Centralizar os cards do FAQ */
+  [id="faq"] [style*="display:flex"],
+  [id="faq"] [style*="display: flex"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+  
+  /* Ajustar cada card do FAQ */
+  [id="faq"] [style*="margin-bottom: 20px"],
+  [id="faq"] [style*="max-width: 1000px"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 10px 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+  
+  /* Ajustar o padding interno dos cards do FAQ */
+  [id="faq"] [style*="padding: 20px"] {
+    padding: 15px !important;
+  }
+  
+  /* Ajustar o texto das perguntas no FAQ */
+  [id="faq"] [style*="font-weight: bold"] {
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+  }
+  
+  /* Ajustar o texto das respostas no FAQ */
+  [id="faq"] [style*="margin-top: 10px"] {
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+    margin-top: 8px !important;
+  }
+  
+  /* Melhorias na visualização do contador */
+  [id="countdown-sorteio"] {
+    font-size: 24px !important;
+  }
+  
+  /* Ajustes para o menu mobile */
+  .header {
+    position: relative;
+  }
+  
+  /* Ajustes para botão de voltar ao topo */
+  #btn-voltar-topo {
+    bottom: 10px !important;
+    right: 10px !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  /* Melhorias na visualização de imagens */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Melhorias nos cards */
+  [style*="clip-path: polygon"] {
+    clip-path: none !important;
+    border-radius: 5px !important;
+    border-width: 1px !important;
+  }
+  
+  /* Ajustes nos elementos decorativos dos cards */
+  [style*="position: absolute; top: 0; right: 0; width: 40px; height: 40px"],
+  [style*="clip-path: polygon(100% 0, 0 0, 100% 100%)"] {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  
+  /* Reduzir cantos decorativos */
+  [style*="position: absolute; top: 0; left: 0; width: 80px; height: 80px; border-top"],
+  [style*="position: absolute; bottom: 0; right: 0; width: 80px; height: 80px; border-bottom"] {
+    width: 40px !important;
+    height: 40px !important;
+    border-width: 2px !important;
+  }
+  
+  /* Reduzir divisores e linhas decorativas */
+  [style*="width: 100px; height: 4px"],
+  [style*="width: 80px; height: 4px"] {
+    height: 2px !important;
+    width: 50px !important;
+  }
+  
+  /* Ajustes para tabelas ou listas */
+  table, ul, ol {
+    width: 100% !important;
+    font-size: 14px !important;
+  }
+}

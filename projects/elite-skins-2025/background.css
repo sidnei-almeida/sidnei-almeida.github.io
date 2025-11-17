@@ -1,0 +1,10 @@
+/* Estilo para o fundo fixo do site */
+body {
+  position: relative;
+}
+
+body {
+  background: url('teste.png') no-repeat center center fixed;
+  background-size: cover;
+  background-color: var(--cs2-bg-dark); /* fallback se a imagem não carregar */
+}
