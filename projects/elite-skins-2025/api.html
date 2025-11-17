@@ -448,10 +448,30 @@
         <div id="user-info" style="display: none; font-family: 'Rajdhani', sans-serif; color: var(--cs2-text-light); background: rgba(10,14,18,0.5); padding: 8px 12px; border-radius: 4px; display: inline-block; margin-top: 10px;"></div>
         
         <!-- Botão para analisar próprio inventário (aparece apenas quando logado) -->
-        <div id="my-inventory-btn-container" style="display: none; margin-top: 15px;">
+        <div id="my-inventory-btn-container" style="display: none; margin-top: 15px; text-align: center;">
           <button id="my-inventory-btn" class="btn btn-primary" style="padding: 12px 28px; background: linear-gradient(135deg, var(--cs2-primary-gold) 0%, var(--cs2-accent-orange) 100%); color: var(--cs2-bg-dark); border: none; border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">
             Analisar Meu Inventário
           </button>
+          <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%;">
+            <!-- Checkbox para dados mockados -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
+              <input type="checkbox" id="use-mock-data-checkbox" style="width: 20px; height: 20px; min-width: 20px; min-height: 20px; cursor: pointer; accent-color: var(--cs2-primary-gold); flex-shrink: 0;">
+              <label for="use-mock-data-checkbox" style="color: var(--cs2-text-light); font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; opacity: 0.9; cursor: pointer; user-select: none;">
+                Usar dados de demonstração (16 skins)
+              </label>
+            </div>
+            
+            <!-- Selectbox para dados históricos -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; width: 100%; max-width: 400px;">
+              <label for="enable-price-history-select" style="color: var(--cs2-text-light); font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; opacity: 0.9; font-weight: 500; white-space: nowrap;">
+                Dados Históricos:
+              </label>
+              <select id="enable-price-history-select" style="flex: 1; min-width: 200px; padding: 8px 12px; background: rgba(19,30,43,0.8); border: 1px solid rgba(255,215,0,0.3); border-radius: 4px; color: var(--cs2-text-light); font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; cursor: pointer; outline: none; transition: all 0.3s ease;">
+                <option value="no">Não (Inventários grandes permitidos)</option>
+                <option value="yes">Sim (Máx. 30 itens)</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -473,39 +493,6 @@
             <div>
               <h3 style="font-family: 'Orbitron', sans-serif; color:var(--cs2-primary-gold); margin-bottom:1.5rem; font-size: 1.6rem; text-transform: uppercase; text-align: center;">Análise de Inventário</h3>
               <p style="font-family: 'Rajdhani', sans-serif; color: var(--cs2-text-light); margin-bottom: 1.5rem; line-height: 1.6; text-align: center;">Conecte sua conta Steam para obter uma análise completa do seu inventário de CS2, incluindo o valor total, itens mais valiosos e estatísticas detalhadas.</p>
-              
-              <div id="auth-section-container" style="display: none; flex-direction: column; align-items: center; justify-content: center; margin: 2rem 0;">
-                <!-- Autenticação Steam - Versão destaque -->
-                <div id="auth-section-highlight" style="text-align: center; margin-bottom: 2rem; background: linear-gradient(135deg, rgba(26,38,52,0.8) 0%, rgba(10,14,18,0.9) 100%); border-radius: 8px; padding: 30px; border: 1px solid rgba(255,215,0,0.3); max-width: 600px; width: 100%;">
-                  <h3 style="font-family: 'Orbitron', sans-serif; color:var(--cs2-primary-gold); margin-bottom:1rem; font-size: 1.6rem; text-transform: uppercase;">Autenticação Steam</h3>
-                  <p style="font-family: 'Rajdhani', sans-serif; color: var(--cs2-text-light); margin-bottom: 1.5rem; line-height: 1.6;">Conecte com sua conta Steam para acessar recursos avançados, incluindo análise completa do inventário com acesso às Unidades de Armazenamento.</p>
-                  
-                  <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 1rem;">
-                    <button class="login-btn-secondary btn" style="display: inline-flex; padding: 12px 30px; background: linear-gradient(135deg, #2f526f 0%, #1c2838 100%); color: var(--cs2-text-light); border: none; border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; cursor: pointer;">
-                      <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
-                        <img src="./images/steam.png" alt="Steam" style="height: 20px; width: 20px; display: block; margin-right: 10px;">
-                        <span style="display: block;">LOGIN COM STEAM</span>
-                      </div>
-                    </button>
-                    
-                    <button class="logout-btn-secondary btn" style="display: none; padding: 12px 30px; background: rgba(221,51,51,0.2); color: var(--cs2-danger-red); border: 1px solid var(--cs2-danger-red); border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; cursor: pointer;">
-                      Desconectar
-                    </button>
-                  </div>
-                  
-                  <div id="user-info" style="display: none; font-family: 'Rajdhani', sans-serif; color: var(--cs2-text-light); background: rgba(10,14,18,0.5); padding: 12px 20px; border-radius: 4px; display: inline-block; margin-top: 15px; font-size: 1.1rem;"></div>
-                </div>
-                
-                <!-- Botão para analisar próprio inventário (aparece apenas quando logado) -->
-                <div id="my-inventory-btn-container" style="display: none; margin-top: 15px; text-align: center;">
-                  <button id="my-inventory-btn" class="btn btn-primary" style="padding: 15px 40px; background: linear-gradient(135deg, var(--cs2-primary-gold) 0%, var(--cs2-accent-orange) 100%); color: var(--cs2-bg-dark); border: none; border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 1.3rem; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">
-                    Analisar Meu Inventário
-                  </button>
-                  <p style="margin-top: 10px; color: var(--cs2-text-light); font-family: 'Rajdhani', sans-serif; font-size: 0.9rem; opacity: 0.7;">
-                    Análise completa incluindo conteúdo das Unidades de Armazenamento
-                  </p>
-                </div>
-              </div>
               
               <div id="inventory-result" style="opacity: 0; display: flex; flex-direction: column; background: rgba(10,14,18,0.5); border-radius: 8px; border: 1px solid rgba(255,215,0,0.2); padding: 20px; transition: opacity 0.5s ease; max-width: 95%; width: 100%; margin: 0 auto;">
                 <div id="inventory-loading" style="display: none; text-align: center; padding: 2rem;">
@@ -802,6 +789,18 @@
       
       console.log(`Ambiente detectado: ${isLocalhost ? 'Desenvolvimento local' : 'Produção'}`);
       console.log(`Usando API: ${API_BASE_URL} (Render)`);
+      
+      // Verificar se não está usando URL antiga do Railway
+      if (API_BASE_URL.includes('railway') || API_BASE_URL.includes('cotacaocs2')) {
+        console.error('⚠️ ERRO: Detectada URL antiga do Railway!');
+        console.error('URL atual:', API_BASE_URL);
+        console.error('Por favor, verifique a configuração da API_BASE_URL');
+      }
+      
+      // Steam API Key - Para uso local de teste
+      const STEAM_API_KEY = '7724CBEAF12AFE4F537FCAF8C6CCCEEA';
+      const CS2_APPID = 730;
+      const INVENTORY_CONTEXTID = 2;
       
       // Auth token para armazenar após login
       let authToken = localStorage.getItem('steamAuthToken');
@@ -2066,37 +2065,13 @@
       
       // Analisar inventário (para o botão da interface) - Função mantida para compatibilidade
       function analyzeInventory() {
-        // Exibir mensagem para o usuário
-        inventoryResult.style.opacity = '1';
-        inventoryLoading.style.display = 'none';
-        inventoryData.style.display = 'block';
-        
-        // Exibir mensagem explicativa
-        inventorySummary.innerHTML = `
-          <div style="text-align: center; padding: 20px; background: rgba(19,30,43,0.7); border-radius: 8px; border-left: 3px solid var(--cs2-primary-gold);">
-            <p style="font-size: 1.1rem; margin-bottom: 10px; color: var(--cs2-primary-gold);">
-              <strong>Funcionalidade Atualizada</strong>
-            </p>
-            <p style="color: var(--cs2-text-light); margin-bottom: 15px;">
-              A análise de inventário de terceiros foi descontinuada. 
-              Para verificar um inventário, faça login com sua conta Steam.
-            </p>
-            <button id="redirect-login-btn" class="btn" style="padding: 8px 20px; background: linear-gradient(135deg, #2f526f 0%, #1c2838 100%); color: var(--cs2-text-light); border: none; border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 1rem; cursor: pointer;">
-              <img src="./images/steam.png" alt="Steam" style="height: 16px; width: 16px; display: inline-block; vertical-align: middle; margin-right: 8px;">
-              Login com Steam
-            </button>
-          </div>
-        `;
-        
-        inventoryItems.innerHTML = '';
-        
-        // Adicionar event listener para o botão de redirecionamento
-        setTimeout(() => {
-          const redirectBtn = document.getElementById('redirect-login-btn');
-          if (redirectBtn) {
-            redirectBtn.addEventListener('click', loginWithSteam);
-          }
-        }, 100);
+        // Esta função não é mais usada, mas mantemos para compatibilidade
+        // A análise de inventários agora é feita apenas via autenticação
+        if (authToken) {
+          analyzeOwnInventory();
+        } else {
+          alert('Você precisa estar logado para analisar seu inventário.');
+        }
       }
       
       // Função auxiliar para criar URL com proxy CORS
@@ -2907,10 +2882,269 @@
         }
       }
       
+      // Função para coletar inventário diretamente do Steam
+      async function fetchSteamInventoryDirectly(steamId) {
+        console.log('🔍 Tentando coletar inventário diretamente do Steam para SteamID:', steamId);
+        
+        // URL da API do Steam para inventários
+        // Formato: https://steamcommunity.com/inventory/{steamid64}/{appid}/{contextid}?l=portuguese&count=5000
+        const steamInventoryUrl = `https://steamcommunity.com/inventory/${steamId}/${CS2_APPID}/${INVENTORY_CONTEXTID}?l=portuguese&count=5000&_t=${Date.now()}`;
+        
+        // Tentar múltiplos proxies como fallback
+        const proxies = [
+          'https://api.allorigins.win/raw?url=',
+          'https://corsproxy.io/?',
+          'https://api.codetabs.com/v1/proxy?quest='
+        ];
+        
+        // Função para tentar com um proxy
+        const tryWithProxy = async (proxyIndex) => {
+          if (proxyIndex >= proxies.length) {
+            throw new Error('Todos os proxies falharam - Não foi possível acessar o inventário');
+          }
+          
+          const proxy = proxies[proxyIndex];
+          const proxiedUrl = proxy + encodeURIComponent(steamInventoryUrl);
+          
+          console.log(`📡 Tentando proxy ${proxyIndex + 1}/${proxies.length}: ${proxy.substring(0, 30)}...`);
+          console.log('🔗 URL completa:', proxiedUrl);
+          
+          try {
+            const response = await fetch(proxiedUrl, {
+              method: 'GET',
+              mode: 'cors',
+              credentials: 'omit'
+            });
+          
+            console.log('📊 Status da resposta:', response.status, response.statusText);
+            
+            if (!response.ok) {
+              // Se for 404, pode ser inventário privado ou SteamID inválido
+              if (response.status === 404) {
+                throw new Error('Inventário não encontrado - Pode estar privado ou o SteamID está incorreto');
+              }
+              // Se for erro do proxy (520, 502, etc), tentar próximo proxy
+              if (response.status >= 500 && proxyIndex < proxies.length - 1) {
+                console.log(`⚠️ Proxy ${proxyIndex + 1} retornou erro ${response.status}, tentando próximo...`);
+                return tryWithProxy(proxyIndex + 1);
+              }
+              throw new Error(`Steam API retornou status ${response.status}: ${response.statusText}`);
+            }
+            
+            // Primeiro, pegar a resposta como texto para ver o que realmente veio
+            const responseText = await response.text();
+            console.log('📄 Resposta recebida (primeiros 500 chars):', responseText.substring(0, 500));
+            
+            let data;
+            try {
+              data = JSON.parse(responseText);
+            } catch (jsonError) {
+              console.error('❌ Erro ao fazer parse do JSON:', jsonError);
+              console.error('📄 Resposta completa (primeiros 1000 chars):', responseText.substring(0, 1000));
+              
+              // Verificar se a resposta é HTML (pode ser página de erro do proxy)
+              if (responseText.trim().startsWith('<')) {
+                // Se não é o último proxy, tentar próximo
+                if (proxyIndex < proxies.length - 1) {
+                  console.log('⚠️ Resposta HTML recebida, tentando próximo proxy...');
+                  return tryWithProxy(proxyIndex + 1);
+                }
+                throw new Error('Resposta HTML recebida - O proxy pode estar bloqueando ou o inventário está privado');
+              }
+              
+              // Verificar se é uma string vazia ou null
+              if (!responseText || responseText.trim() === '' || responseText.trim() === 'null') {
+                // Inventário vazio é válido - pode ser que o usuário não tenha CS2 ou não tenha itens
+                console.log('ℹ️ Inventário vazio ou usuário não possui CS2');
+                return {
+                  success: true,
+                  items: [],
+                  total_items: 0,
+                  source: 'steam_direct',
+                  empty: true
+                };
+              }
+              
+              // Se não é o último proxy, tentar próximo
+              if (proxyIndex < proxies.length - 1) {
+                console.log('⚠️ Resposta inválida, tentando próximo proxy...');
+                return tryWithProxy(proxyIndex + 1);
+              }
+              
+              throw new Error('Resposta inválida do Steam API (não é JSON válido)');
+            }
+            
+            console.log('✅ Dados recebidos do Steam:', data);
+            
+            // Verificar se a resposta é válida
+            if (!data || data === null) {
+              // Inventário vazio é válido - pode ser que o usuário não tenha CS2 ou não tenha itens
+              console.log('ℹ️ Inventário vazio ou usuário não possui CS2');
+              return {
+                success: true,
+                items: [],
+                total_items: 0,
+                source: 'steam_direct',
+                empty: true
+              };
+            }
+            
+            // Verificar se tem a estrutura esperada
+            if (!data.assets || !data.descriptions) {
+            // Pode ser que o inventário esteja vazio ou privado
+            if (data.success === false || data.error) {
+              throw new Error(data.error || 'Inventário privado ou não acessível');
+            }
+            
+            // Verificar se é um objeto vazio
+            if (Object.keys(data).length === 0) {
+              throw new Error('Resposta vazia do Steam API - Inventário pode estar privado');
+            }
+            
+            // Se não tem assets mas tem descriptions, pode ser inventário vazio
+            if (data.descriptions && (!data.assets || data.assets.length === 0)) {
+              console.log('ℹ️ Inventário vazio (sem assets)');
+              return {
+                success: true,
+                items: [],
+                total_items: 0,
+                source: 'steam_direct'
+              };
+            }
+            
+            // Log da estrutura recebida para debug
+            console.warn('⚠️ Estrutura de dados não reconhecida:', Object.keys(data));
+            throw new Error('Resposta inválida do Steam API - Estrutura de dados não reconhecida. Chaves recebidas: ' + Object.keys(data).join(', '));
+          }
+          
+            // Processar os dados do inventário do Steam
+            const processedItems = [];
+            
+            // Mapear assets para descriptions
+            const descriptionsMap = {};
+            data.descriptions.forEach(desc => {
+              descriptionsMap[desc.classid + '_' + desc.instanceid] = desc;
+            });
+            
+            // Processar cada asset
+            data.assets.forEach(asset => {
+              const key = asset.classid + '_' + (asset.instanceid || '0');
+              const description = descriptionsMap[key];
+              
+              if (!description) {
+                console.warn('Descrição não encontrada para asset:', asset);
+                return;
+              }
+              
+              // Extrair informações do item
+              const marketHashName = description.market_hash_name || description.name || '';
+              const marketName = description.market_name || marketHashName;
+              
+              // Verificar se é um item de CS2 (não é sticker, graffitti, etc)
+              if (!marketHashName || marketHashName.includes('Sticker') || marketHashName.includes('Graffiti')) {
+                return; // Pular itens que não são skins
+              }
+              
+              // Extrair informações adicionais
+              const tags = description.tags || [];
+              const exteriorTag = tags.find(t => t.category === 'Exterior');
+              const typeTag = tags.find(t => t.category === 'Type');
+              const weaponTag = tags.find(t => t.category === 'Weapon');
+              const qualityTag = tags.find(t => t.category === 'Quality');
+              const statTrakTag = tags.find(t => t.category === 'Exterior' && description.name && description.name.includes('StatTrak™'));
+              
+              const exterior = exteriorTag ? exteriorTag.localized_tag_name : 'Unknown';
+              const category = weaponTag ? weaponTag.localized_tag_name : (typeTag ? typeTag.localized_tag_name : 'Unknown');
+              const rarity = qualityTag ? qualityTag.localized_tag_name : 'Unknown';
+              const isStatTrak = statTrakTag || (description.name && description.name.includes('StatTrak™'));
+              
+              processedItems.push({
+                assetid: asset.assetid,
+                classid: asset.classid,
+                instanceid: asset.instanceid,
+                name: marketName,
+                market_hash_name: marketHashName,
+                exterior: exterior,
+                category: category,
+                rarity: rarity,
+                stattrack: isStatTrak,
+                quantity: 1,
+                icon_url: description.icon_url || '',
+                icon_url_large: description.icon_url_large || description.icon_url || '',
+                tradable: description.tradable === 1,
+                marketable: description.marketable === 1
+              });
+            });
+            
+            console.log(`✅ Processados ${processedItems.length} itens do inventário Steam`);
+            return {
+              success: true,
+              items: processedItems,
+              total_items: processedItems.length,
+              source: 'steam_direct'
+            };
+            
+          } catch (error) {
+            console.error(`❌ Erro com proxy ${proxyIndex + 1}:`, error.message);
+            
+            // Se é erro de CORS/rede e não é o último proxy, tentar próximo
+            if ((error.message.includes('CORS') || 
+                 error.message.includes('NetworkError') || 
+                 error.message.includes('Failed to fetch')) && 
+                proxyIndex < proxies.length - 1) {
+              console.log(`🔄 Tentando próximo proxy...`);
+              return tryWithProxy(proxyIndex + 1);
+            }
+            
+            // Se é erro de inventário vazio, retornar sucesso com lista vazia
+            if (error.message.includes('vazia') || error.message.includes('null')) {
+              console.log('ℹ️ Inventário vazio detectado');
+              return {
+                success: true,
+                items: [],
+                total_items: 0,
+                source: 'steam_direct',
+                empty: true
+              };
+            }
+            
+            // Se é último proxy ou erro não recuperável, lançar erro
+            throw error;
+          }
+        };
+        
+        // Iniciar tentativa com primeiro proxy
+        try {
+          return await tryWithProxy(0);
+        } catch (error) {
+          console.error('❌ Erro ao coletar inventário diretamente do Steam:', error);
+          return {
+            success: false,
+            error: error.message,
+            items: []
+          };
+        }
+      }
+      
       // Função para analisar o próprio inventário
       function analyzeOwnInventory() {
         if (!authToken) {
           alert('Você precisa estar logado para analisar seu próprio inventário.');
+          return;
+        }
+        
+        // Verificar se o checkbox de dados mockados está marcado
+        const useMockData = document.getElementById('use-mock-data-checkbox')?.checked || false;
+        
+        // Verificar se histórico de preços está ativado
+        const enableHistory = document.getElementById('enable-price-history-select')?.value === 'yes';
+        
+        if (useMockData) {
+          console.log('📊 Usando dados mockados conforme solicitado');
+          inventoryResult.style.opacity = '1';
+          inventoryLoading.style.display = 'block';
+          inventoryData.style.display = 'none';
+          showMockInventoryData(enableHistory);
           return;
         }
         
@@ -2922,249 +3156,81 @@
         }
         
         console.log('Analisando inventário do SteamID:', steamId);
+        console.log('📊 Histórico de preços:', enableHistory ? 'ATIVADO (máx. 30 itens)' : 'DESATIVADO (inventários grandes permitidos)');
         
         // Exibir loading
         inventoryResult.style.opacity = '1';
         inventoryLoading.style.display = 'block';
         inventoryData.style.display = 'none';
         
-        // Verificar se a API está disponível
-        const apiStatus = apiStatusIndicator ? apiStatusIndicator.style.backgroundColor : '';
-        const isApiOffline = apiStatus === 'var(--cs2-danger-red)' || apiStatus === 'rgb(221, 51, 51)';
+        // Coletar inventário diretamente do Steam (frontend)
+        // Depois enviar para a API buscar preços
+        console.log('🔍 Coletando inventário diretamente do Steam...');
         
-        if (isApiOffline || !API_BASE_URL) {
-          // API offline, usar dados mockados
-          console.log('API offline, usando dados mockados');
-          showMockInventoryData();
-          return;
-        }
-        
-        // Primeiro, garantir que temos a taxa de câmbio atualizada
-        getExchangeRate().then(() => {
-          // Usar endpoint público com SteamID (não precisa de autenticação)
-          const endpoint = `${API_BASE_URL}/inventory/${steamId}`;
-          
-          console.log(`Fazendo requisição para: ${endpoint}`);
-          
-          fetch(endpoint, { 
-            method: 'GET',
-            headers: {
-              'Cache-Control': 'no-cache, no-store, must-revalidate',
-              'Pragma': 'no-cache',
-              'Expires': '0',
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            credentials: 'same-origin',
-            cache: 'no-cache',
-            mode: 'cors' // Mantemos 'cors' pois estamos usando parâmetro de URL
-          })
-            .then(response => {
-              console.log('Status da resposta:', response.status);
-              if (!response.ok) {
-                return response.json().then(error => {
-                  throw new Error(`Erro ${response.status}: ${error.detail || JSON.stringify(error)}`);
-                });
-              }
-              return response.json();
-            })
-            .then(data => {
-              console.log('Dados do inventário recebidos:', data);
+        fetchSteamInventoryDirectly(steamId).then(steamResult => {
+          if (steamResult.success) {
+            if (steamResult.items.length > 0) {
+              console.log(`✅ Inventário coletado: ${steamResult.items.length} itens`);
               
-              // Aplicar fator de correção para BRL usando a taxa atual
-              // Função melhorada para aplicar fator de correção a um item e filtrar outliers quando há múltiplas fontes
-              const applyPriceCorrection = (item) => {
-                if (item && item.price) {
-                  // Verificar se o item tem múltiplos preços
-                  if (item.price_sources && Array.isArray(item.price_sources) && item.price_sources.length > 1) {
-                    // Extrair os preços de diferentes fontes
-                    const prices = item.price_sources.map(source => source.price || 0);
-                    
-                    // Usar filtro de outliers para calcular o preço ajustado
-                    const filteredPrice = filterOutliersAndCalculateAverage(prices);
-                    
-                    // Atualizar informações do item
-                    item.original_price = item.price;
-                    item.price = filteredPrice;
-                    item.filtered = true;
-                    item.price_sources_count = item.price_sources.length;
-                    
-                    console.log(`Item filtrado: ${item.name}, Preço original: ${item.original_price}, Preço filtrado: ${item.price}`);
-                  }
-                  
-                  const originalPrice = parseFloat(item.price);
-                  // A API sempre retorna em USD, então sempre converter para BRL
-                  item.price = originalPrice * CURRENCY_RATES.USD_to_BRL * STEAM_TAX_FACTOR;
-                  if (item.total) {
-                    item.total = item.price * (item.quantity || 1);
-                  }
-                  
-                  // Converter também os preços de fontes individuais, se existirem
-                  if (item.price_sources && Array.isArray(item.price_sources)) {
-                    item.price_sources = item.price_sources.map(source => {
-                      if (source.price) {
-                        source.original_price_usd = source.price;
-                        source.price = parseFloat(source.price) * CURRENCY_RATES.USD_to_BRL * STEAM_TAX_FACTOR;
-                      }
-                      return source;
-                    });
-                  }
-                }
-                return item;
-              };
-              
-              // Aplicar correção a todos os itens
-              if (data.items && Array.isArray(data.items)) {
-                data.items = data.items.map(applyPriceCorrection);
+              // Se histórico estiver ativado, limitar a 30 itens
+              let itemsToProcess = steamResult.items;
+              if (enableHistory && itemsToProcess.length > 30) {
+                console.warn(`⚠️ Histórico ativado: Limitando inventário de ${itemsToProcess.length} para 30 itens`);
+                itemsToProcess = itemsToProcess.slice(0, 30);
+                alert(`⚠️ Histórico de preços ativado: Apenas os primeiros 30 itens serão analisados. Seu inventário tem ${steamResult.items.length} itens. Para analisar todos os itens, desative o histórico de preços.`);
               }
               
-              // Aplicar correção a todos os itens se usar unidades de armazenamento
-              if (data.all_items && Array.isArray(data.all_items)) {
-                data.all_items = data.all_items.map(applyPriceCorrection);
-              }
-              
-              // Aplicar correção às unidades de armazenamento
-              if (data.storage_unit_contents && Array.isArray(data.storage_unit_contents)) {
-                data.storage_unit_contents.forEach(unit => {
-                  if (unit.contents && unit.contents.items) {
-                    unit.contents.items = unit.contents.items.map(applyPriceCorrection);
-                    // Recalcular o valor total da unidade
-                    unit.contents.total_value = unit.contents.items.reduce((sum, item) => sum + (item.total || item.price || 0), 0);
-                  }
-                });
-                
-                // Recalcular o valor total das unidades
-                data.storage_units_content_value = data.storage_unit_contents.reduce(
-                  (sum, unit) => sum + (unit.contents?.total_value || 0), 0
-                );
-              }
-              
-              // Recalcular os totais
-              // A API sempre retorna em USD, então sempre converter para BRL
-              if (data.total_value !== undefined) {
-                data.total_value = data.total_value * CURRENCY_RATES.USD_to_BRL * STEAM_TAX_FACTOR;
-              }
-              
-              if (data.grand_total_value !== undefined) {
-                // Se o total já não incluir o valor corrigido das unidades
-                data.grand_total_value = data.total_value + (data.storage_units_content_value || 0);
-              }
-              
-              // Determina qual valor total mostrar com base no tipo de resposta
-              const totalValue = data.grand_total_value || data.total_value || 0;
-              inventoryTotalValue.textContent = formatCurrency(totalValue);
-              
-              // Armazenar dados para exportação
-              lastInventoryData = data;
-              
-              // Calcular estatísticas de filtragem de preços
-              const filteredItemsCount = data.items ? 
-                data.items.filter(item => item.filtered).length : 
-                (data.all_items ? data.all_items.filter(item => item.filtered).length : 0);
-              
-              // Preenche o resumo
-              let summaryHTML = `
-                <div style="margin-bottom: 1.5rem; padding: 15px; background: rgba(19,30,43,0.5); border-radius: 8px;">
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span>Total de Itens:</span>
-                    <span style="font-weight: 600;">${data.total_items || 0}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span>Valor Médio por Item:</span>
-                    <span style="font-weight: 600;">${formatCurrency((totalValue) / (data.total_items || 1))}</span>
-                  </div>`;
-                  
-              // Adicionar informações sobre a taxa de câmbio
-              summaryHTML += `
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                  <span>Taxa USD → BRL:</span>
-                  <span style="font-weight: 600;">1 USD = ${CURRENCY_RATES.USD_to_BRL.toFixed(2)} BRL</span>
-                </div>`;
-                
-              // Adicionar informação sobre itens com preços filtrados
-              if (filteredItemsCount > 0) {
-                summaryHTML += `
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span>Itens com preços filtrados:</span>
-                    <span style="font-weight: 600; color: var(--cs2-accent-green);">${filteredItemsCount}</span>
-                  </div>`;
-              }
-                  
-              // Adicionar informações sobre unidades de armazenamento se disponíveis
-              if (data.storage_units_content_value !== undefined) {
-                summaryHTML += `
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span>Valor em Unidades:</span>
-                    <span style="font-weight: 600;">${formatCurrency(data.storage_units_content_value)}</span>
-                  </div>
-                  <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <span>Valor em Inventário:</span>
-                    <span style="font-weight: 600;">${formatCurrency(data.total_value)}</span>
-                  </div>
-                `;
-              }
-              
-              // Adicionar item mais valioso se disponível
-              if (data.most_valuable_item) {
-                summaryHTML += `
-                  <div style="display: flex; justify-content: space-between;">
-                    <span>Item Mais Valioso:</span>
-                    <span style="font-weight: 600; color: var(--cs2-accent-orange);">${data.most_valuable_item?.name || 'N/A'}</span>
-                  </div>
-                `;
-              }
-              
-              summaryHTML += `</div>`;
-              inventorySummary.innerHTML = summaryHTML;
-              
-              // Preenche a lista de itens
-              let itemsHTML = '<h4 style="font-family: \'Orbitron\', sans-serif; color: var(--cs2-primary-gold); margin: 1rem 0; font-size: 1.1rem;">Itens Mais Valiosos</h4>';
-              
-              // Determinar quais itens mostrar com base no tipo de resposta
-              let itemsToShow = [];
-              
-              if (data.all_items && data.all_items.length > 0) {
-                // Resposta da análise com unidades de armazenamento
-                itemsToShow = data.all_items;
-              } else if (data.items && data.items.length > 0) {
-                // Resposta normal
-                itemsToShow = data.items;
-              }
-              
-              // Adiciona itens se disponíveis
-              if (itemsToShow.length > 0) {
-                itemsToShow.sort((a, b) => b.price - a.price).slice(0, 10).forEach(item => {
-                  itemsHTML += createItemCard(item);
-                });
-              } else {
-                itemsHTML += '<p style="color: var(--cs2-text-light); opacity: 0.7;">Nenhum item encontrado</p>';
-              }
-              
-              // Adicionar seção de unidades de armazenamento se disponível
-              if (data.storage_unit_contents && data.storage_unit_contents.length > 0) {
-                itemsHTML += `
-                  <h4 style="font-family: 'Orbitron', sans-serif; color: var(--cs2-primary-gold); margin: 1.5rem 0 1rem; font-size: 1.1rem; border-top: 1px solid rgba(255,215,0,0.2); padding-top: 1.5rem;">Unidades de Armazenamento</h4>
-                `;
-                
-                data.storage_unit_contents.forEach(unit => {
-                  itemsHTML += createStorageUnitCard(unit);
-                });
-              }
-              
-              inventoryItems.innerHTML = itemsHTML;
-              
-              // Exibe os dados
+              // Enviar itens para a API buscar preços
+              processSteamInventoryItems(itemsToProcess, null, enableHistory);
+            } else {
+              console.log('ℹ️ Inventário vazio (0 itens)');
+              // Mostrar mensagem de inventário vazio
               inventoryLoading.style.display = 'none';
               inventoryData.style.display = 'block';
-            })
-            .catch(error => {
-              console.error('Erro ao analisar inventário:', error);
-              console.log('API offline, usando dados mockados para demonstração');
-              
-              // Usar dados mockados quando a API estiver offline
-              showMockInventoryData();
-            });
-        }); // Fechar o .then() do getExchangeRate()
+              inventorySummary.innerHTML = `
+                <div style="margin-bottom: 1.5rem; padding: 20px; background: rgba(19,30,43,0.5); border-radius: 8px; text-align: center; border: 1px solid rgba(255,215,0,0.2);">
+                  <p style="color: var(--cs2-primary-gold); font-size: 1.2rem; margin-bottom: 10px; font-weight: 600;">📦 Inventário Vazio</p>
+                  <p style="color: var(--cs2-text-light); opacity: 0.8; margin-bottom: 8px;">Você não possui itens de CS2 no seu inventário.</p>
+                  <p style="color: var(--cs2-text-light); opacity: 0.6; font-size: 0.9rem;">Isso é normal se você não possui o Counter-Strike 2 ou não tem itens no inventário.</p>
+                </div>
+              `;
+              inventoryItems.innerHTML = '';
+              inventoryTotalValue.textContent = formatCurrency(0);
+            }
+          } else {
+            console.error('❌ Erro ao coletar inventário do Steam:', steamResult.error);
+            // Se falhar, mostrar mensagem de erro ao invés de mockados
+            inventoryLoading.style.display = 'none';
+            inventoryData.style.display = 'block';
+            inventorySummary.innerHTML = `
+              <div style="margin-bottom: 1.5rem; padding: 20px; background: rgba(221,51,51,0.2); border-radius: 8px; text-align: center; border-left: 3px solid var(--cs2-danger-red);">
+                <p style="color: var(--cs2-danger-red); font-size: 1.1rem; margin-bottom: 10px; font-weight: 600;">❌ Erro ao Acessar Inventário</p>
+                <p style="color: var(--cs2-text-light); opacity: 0.8; margin-bottom: 8px;">${steamResult.error || 'Não foi possível acessar o inventário.'}</p>
+                <p style="color: var(--cs2-text-light); opacity: 0.6; font-size: 0.9rem;">
+                  Possíveis causas:<br>
+                  • Inventário privado<br>
+                  • Problema de conexão<br>
+                  • Steam temporariamente indisponível
+                </p>
+              </div>
+            `;
+            inventoryItems.innerHTML = '';
+            inventoryTotalValue.textContent = formatCurrency(0);
+          }
+        }).catch(error => {
+          console.error('❌ Erro ao coletar inventário do Steam:', error);
+          // Se falhar, mostrar mensagem de erro ao invés de mockados
+          inventoryLoading.style.display = 'none';
+          inventoryData.style.display = 'block';
+          inventorySummary.innerHTML = `
+            <div style="margin-bottom: 1.5rem; padding: 20px; background: rgba(221,51,51,0.2); border-radius: 8px; text-align: center; border-left: 3px solid var(--cs2-danger-red);">
+              <p style="color: var(--cs2-danger-red); font-size: 1.1rem; margin-bottom: 10px; font-weight: 600;">❌ Erro</p>
+              <p style="color: var(--cs2-text-light); opacity: 0.8;">${error.message || 'Erro desconhecido ao acessar o inventário.'}</p>
+            </div>
+          `;
+          inventoryItems.innerHTML = '';
+          inventoryTotalValue.textContent = formatCurrency(0);
+        });
       }
       
       // Funções auxiliares para extrair informações do nome do item
@@ -3310,7 +3376,7 @@
           
           // Variação 2: Remover wear condition e tentar buscar genérico
           const nameWithoutWear = searchName.replace(/\s*\([^)]+\)\s*$/, '').trim();
-          if (nameWithoutWear !== searchName) {
+          if (nameWithoutWear !== searchName && nameWithoutWear.length > 0) {
             if (item.stattrack && !nameWithoutWear.toLowerCase().includes('stattrak')) {
               searchVariations.push('StatTrak™ ' + nameWithoutWear);
               searchVariations.push('StatTrak ' + nameWithoutWear);
@@ -3320,7 +3386,7 @@
           }
           
           // Variação 3: Apenas market_hash_name (sem wear)
-          if (item.market_hash_name && item.market_hash_name !== searchName) {
+          if (item.market_hash_name && item.market_hash_name !== searchName && item.market_hash_name !== nameWithoutWear) {
             if (item.stattrack && !item.market_hash_name.toLowerCase().includes('stattrak')) {
               searchVariations.push('StatTrak™ ' + item.market_hash_name);
               searchVariations.push('StatTrak ' + item.market_hash_name);
@@ -3329,109 +3395,164 @@
             }
           }
           
-          console.log(`🔍 [FALLBACK] Item: ${item.name}, StatTrak: ${item.stattrack}`);
-          console.log(`🔍 [FALLBACK] Variações para tentar:`, searchVariations);
-          
-          // Tentar cada variação até encontrar um preço
-          for (const variation of searchVariations) {
-            const searchUrl = `https://steamcommunity.com/market/search?q=${encodeURIComponent(variation)}`;
-            console.log(`🔍 [FALLBACK] Tentando busca: ${searchUrl}`);
-          
-            // Usar proxy CORS para fazer a requisição
-            const corsProxy = 'https://api.allorigins.win/raw?url=';
-            const proxyUrl = corsProxy + encodeURIComponent(searchUrl);
-            
-            try {
-              const response = await fetch(proxyUrl, {
-                method: 'GET',
-                headers: {
-                  'Accept': 'text/html',
-                },
-                cache: 'no-cache'
-              });
-              
-              if (!response.ok) {
-                console.warn(`HTTP ${response.status} para variação: ${variation}`);
-                continue; // Tentar próxima variação
+          // Variação 4: Remover "|" e tentar apenas o nome da arma + skin
+          const nameParts = searchName.split('|');
+          if (nameParts.length === 2) {
+            const weaponName = nameParts[0].trim();
+            const skinName = nameParts[1].replace(/\s*\([^)]+\)\s*$/, '').trim();
+            const simplifiedName = `${weaponName} | ${skinName}`;
+            if (simplifiedName !== searchName && !searchVariations.includes(simplifiedName)) {
+              if (item.stattrack) {
+                searchVariations.push('StatTrak™ ' + simplifiedName);
+                searchVariations.push('StatTrak ' + simplifiedName);
+              } else {
+                searchVariations.push(simplifiedName);
               }
+            }
+          }
+          
+          // Remover duplicatas
+          const uniqueVariations = [...new Set(searchVariations)];
+          
+          console.log(`🔍 [FALLBACK] Item: ${item.name}, StatTrak: ${item.stattrack}`);
+          console.log(`🔍 [FALLBACK] Variações para tentar (${uniqueVariations.length}):`, uniqueVariations);
+          
+          // Múltiplos proxies CORS para maior confiabilidade
+          const corsProxies = [
+            'https://api.allorigins.win/raw?url=',
+            'https://corsproxy.io/?',
+            'https://api.codetabs.com/v1/proxy?quest='
+          ];
+          
+          // Tentar cada variação com cada proxy até encontrar um preço
+          for (const variation of uniqueVariations) {
+            const searchUrl = `https://steamcommunity.com/market/search?q=${encodeURIComponent(variation)}`;
+            console.log(`🔍 [FALLBACK] Tentando busca: ${variation}`);
+            
+            // Tentar cada proxy para esta variação
+            for (let proxyIndex = 0; proxyIndex < corsProxies.length; proxyIndex++) {
+              const proxy = corsProxies[proxyIndex];
+              const proxyUrl = proxy + encodeURIComponent(searchUrl);
               
-              const html = await response.text();
-              
-              // Extrair preço do HTML do Steam Market
-              // O Steam Market usa data-price no formato centavos (ex: data-price="800" = $8.00)
-              // Vamos procurar por vários padrões diferentes
-              let priceUSD = null;
-              let pricesFound = [];
-              
-              // Prioridade 1: Buscar data-price (mais confiável, está em centavos)
-              const dataPricePattern = /data-price="(\d+)"/gi;
-              const dataPriceMatches = html.matchAll(dataPricePattern);
-              for (const match of dataPriceMatches) {
-                if (match && match[1]) {
-                  // Converter de centavos para dólares
-                  const priceInCents = parseInt(match[1]);
-                  const price = priceInCents / 100;
-                  if (price > 0 && price < 100000) {
-                    pricesFound.push(price);
-                    console.log(`✅ Preço encontrado via data-price: $${price} (${priceInCents} centavos)`);
+              try {
+                console.log(`📡 [FALLBACK] Tentando proxy ${proxyIndex + 1}/${corsProxies.length} para: ${variation}`);
+                
+                const response = await fetch(proxyUrl, {
+                  method: 'GET',
+                  headers: {
+                    'Accept': 'text/html',
+                  },
+                  mode: 'cors',
+                  cache: 'no-cache'
+                });
+                
+                if (!response.ok) {
+                  console.warn(`⚠️ [FALLBACK] HTTP ${response.status} no proxy ${proxyIndex + 1} para variação: ${variation}`);
+                  if (proxyIndex < corsProxies.length - 1) {
+                    continue; // Tentar próximo proxy
+                  } else {
+                    break; // Tentar próxima variação
                   }
                 }
-              }
-              
-              // Prioridade 2: Buscar padrões de texto se data-price não funcionar
-              if (pricesFound.length === 0) {
-                const pricePatterns = [
-                  // Padrão: Starting at: $X.XX
-                  /Starting at:\s*\$([\d,]+\.?\d*)/gi,
-                  // Padrão: $X.XX USD
-                  /\$([\d,]+\.?\d*)\s*USD/gi,
-                  // Padrão: normal_price no JSON
-                  /"normal_price":"\$([\d,]+\.?\d*)"/gi,
-                  // Padrão: span com normal_price
-                  /<span[^>]*class="[^"]*normal_price[^"]*"[^>]*>\s*\$([\d,]+\.?\d*)/gi,
-                  // Padrão: market_listing_price_with_fee
-                  /market_listing_price_with_fee[^>]*>\s*\$([\d,]+\.?\d*)/gi
-                ];
                 
-                for (const pattern of pricePatterns) {
-                  try {
-                    const matches = html.matchAll(pattern);
-                    for (const match of matches) {
-                      if (match && match[1]) {
-                        const price = parseFloat(match[1].replace(/,/g, ''));
-                        if (price > 0 && price < 100000) {
-                          pricesFound.push(price);
+                const html = await response.text();
+                
+                // Verificar se recebeu HTML válido (não erro do proxy)
+                if (!html || html.length < 100 || html.includes('Error') || html.includes('error')) {
+                  console.warn(`⚠️ [FALLBACK] Resposta inválida do proxy ${proxyIndex + 1}`);
+                  if (proxyIndex < corsProxies.length - 1) {
+                    continue; // Tentar próximo proxy
+                  } else {
+                    break; // Tentar próxima variação
+                  }
+                }
+                
+                // Extrair preço do HTML do Steam Market
+                let priceUSD = null;
+                let pricesFound = [];
+                
+                // Prioridade 1: Buscar data-price (mais confiável, está em centavos)
+                const dataPricePattern = /data-price="(\d+)"/gi;
+                const dataPriceMatches = html.matchAll(dataPricePattern);
+                for (const match of dataPriceMatches) {
+                  if (match && match[1]) {
+                    // Converter de centavos para dólares
+                    const priceInCents = parseInt(match[1]);
+                    const price = priceInCents / 100;
+                    if (price > 0 && price < 100000) {
+                      pricesFound.push(price);
+                      console.log(`✅ [FALLBACK] Preço encontrado via data-price: $${price} (${priceInCents} centavos)`);
+                    }
+                  }
+                }
+                
+                // Prioridade 2: Buscar padrões de texto se data-price não funcionar
+                if (pricesFound.length === 0) {
+                  const pricePatterns = [
+                    // Padrão: Starting at: $X.XX
+                    /Starting at:\s*\$([\d,]+\.?\d*)/gi,
+                    // Padrão: $X.XX USD
+                    /\$([\d,]+\.?\d*)\s*USD/gi,
+                    // Padrão: normal_price no JSON
+                    /"normal_price":"\$([\d,]+\.?\d*)"/gi,
+                    // Padrão: span com normal_price
+                    /<span[^>]*class="[^"]*normal_price[^"]*"[^>]*>\s*\$([\d,]+\.?\d*)/gi,
+                    // Padrão: market_listing_price_with_fee
+                    /market_listing_price_with_fee[^>]*>\s*\$([\d,]+\.?\d*)/gi,
+                    // Padrão: market_listing_price
+                    /market_listing_price[^>]*>\s*\$([\d,]+\.?\d*)/gi,
+                    // Padrão: data-price em outros formatos
+                    /data-price="([\d.]+)"/gi,
+                    // Padrão: price em JSON
+                    /"price":"\$([\d,]+\.?\d*)"/gi
+                  ];
+                  
+                  for (const pattern of pricePatterns) {
+                    try {
+                      const matches = html.matchAll(pattern);
+                      for (const match of matches) {
+                        if (match && match[1]) {
+                          const price = parseFloat(match[1].replace(/,/g, ''));
+                          if (price > 0 && price < 100000) {
+                            pricesFound.push(price);
+                            console.log(`✅ [FALLBACK] Preço encontrado via padrão: $${price}`);
+                          }
                         }
                       }
+                    } catch (e) {
+                      // Ignorar erros de regex
                     }
-                  } catch (e) {
-                    console.warn('Erro ao processar padrão regex:', e);
                   }
                 }
+                
+                // Se encontrou preços, usar o menor (geralmente é o "Starting at")
+                if (pricesFound.length > 0) {
+                  pricesFound.sort((a, b) => a - b);
+                  priceUSD = pricesFound[0]; // Pegar o menor preço
+                  console.log(`✅ [FALLBACK] Preços encontrados: ${pricesFound.join(', ')}, usando: $${priceUSD}`);
+                  console.log(`✅ [FALLBACK] Preço encontrado no Steam Market para ${item.name}: $${priceUSD} (variação: ${variation}, proxy: ${proxyIndex + 1})`);
+                  return priceUSD;
+                } else {
+                  console.log(`⚠️ [FALLBACK] Nenhum preço encontrado para variação "${variation}" no proxy ${proxyIndex + 1}`);
+                  // Continuar tentando próximo proxy ou variação
+                }
+              } catch (fetchError) {
+                console.warn(`⚠️ [FALLBACK] Erro no proxy ${proxyIndex + 1} para variação "${variation}":`, fetchError.message);
+                if (proxyIndex < corsProxies.length - 1) {
+                  continue; // Tentar próximo proxy
+                } else {
+                  break; // Tentar próxima variação
+                }
               }
-              
-              // Se encontrou preços, usar o menor (geralmente é o "Starting at")
-              if (pricesFound.length > 0) {
-                pricesFound.sort((a, b) => a - b);
-                priceUSD = pricesFound[0]; // Pegar o menor preço
-                console.log(`✅ Preços encontrados: ${pricesFound.join(', ')}, usando: $${priceUSD} (variação: ${variation})`);
-                console.log(`✅ Preço encontrado no Steam Market para ${item.name}: $${priceUSD}`);
-                return priceUSD;
-              } else {
-                console.log(`⚠️ Nenhum preço encontrado para variação: ${variation}`);
-              }
-            } catch (fetchError) {
-              console.warn(`Erro ao buscar variação "${variation}":`, fetchError);
-              continue; // Tentar próxima variação
             }
           }
           
           // Se nenhuma variação funcionou
-          console.warn(`❌ Preço não encontrado no Steam Market para ${item.name} após tentar ${searchVariations.length} variações`);
+          console.warn(`❌ [FALLBACK] Preço não encontrado no Steam Market para ${item.name} após tentar ${uniqueVariations.length} variações com ${corsProxies.length} proxies`);
           return null;
           
         } catch (error) {
-          console.error(`Erro ao buscar preço no Steam Market para ${item.name}:`, error);
+          console.error(`❌ [FALLBACK] Erro ao buscar preço no Steam Market para ${item.name}:`, error);
           return null;
         }
       }
@@ -3505,8 +3626,205 @@
       }
       
       // Função para mostrar dados mockados e enviar para a API
-      async function showMockInventoryData() {
+      // Função para processar itens coletados diretamente do Steam
+      async function processSteamInventoryItems(steamItems, storageUnitContents = null, enableHistory = false) {
+        console.log('📦 Processando itens coletados do Steam:', steamItems.length);
+        
+        // Garantir que temos a taxa de câmbio atualizada
+        await getExchangeRate();
+        
+        // Preparar itens para enviar à API
+        const itemsForAPI = steamItems.map(item => ({
+          name: item.name,
+          market_hash_name: item.market_hash_name,
+          exterior: item.exterior || 'Field-Tested',
+          stattrack: item.stattrack || false,
+          quantity: item.quantity || 1,
+          category: item.category,
+          rarity: item.rarity,
+          icon_url: item.icon_url || item.icon_url_large || '',
+          assetid: item.assetid
+        }));
+        
+        try {
+          // Enviar para a API para buscar preços reais
+          const apiUrl = `${API_BASE_URL}/api/inventory/analyze-items`;
+          console.log('=== ENVIANDO ITENS DO STEAM PARA API ===');
+          console.log('API_BASE_URL:', API_BASE_URL);
+          console.log('URL completa:', apiUrl);
+          console.log('Itens enviados:', itemsForAPI.length);
+          
+          // Verificar se não está usando URL antiga do Railway
+          if (API_BASE_URL.includes('railway') || API_BASE_URL.includes('cotacaocs2')) {
+            console.error('⚠️ ATENÇÃO: Detectada URL antiga do Railway! URL atual:', API_BASE_URL);
+          }
+          
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0'
+            },
+            body: JSON.stringify({
+              items: itemsForAPI
+            }),
+            credentials: 'same-origin',
+            cache: 'no-cache',
+            mode: 'cors'
+          });
+          
+          console.log('Status da resposta:', response.status);
+          
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Erro na resposta:', errorText);
+            
+            // Tratar especificamente erro 502 (Bad Gateway)
+            if (response.status === 502) {
+              throw new Error(`502_BAD_GATEWAY: O servidor backend está temporariamente indisponível ou sobrecarregado. Tente novamente em alguns instantes.`);
+            }
+            
+            throw new Error(`Erro ${response.status}: ${errorText}`);
+          }
+          
+          const apiData = await response.json();
+          console.log('✅ Resposta da API recebida:', apiData);
+          
+          // Processar os dados da API (similar ao que é feito em showMockInventoryData)
+          if (apiData.items && apiData.items.length > 0) {
+            // Converter preços para BRL e aplicar correções
+            const processedData = {
+              items: apiData.items.map(item => {
+                const price = parseFloat(item.price || 0) * CURRENCY_RATES.USD_to_BRL * STEAM_TAX_FACTOR;
+                return {
+                  ...item,
+                  price: price,
+                  total: price * (item.quantity || 1),
+                  image_url: item.image_url || item.icon_url || '',
+                  icon_url: item.icon_url || item.image_url || '',
+                  needsSteamMarketFallback: (price === 0 && !item.error) // Marcar para fallback se preço for 0 e não houver erro
+                };
+              }),
+              total_items: apiData.total_items || apiData.items.length,
+              total_value: apiData.total_value_usd ? 
+                parseFloat(apiData.total_value_usd) * CURRENCY_RATES.USD_to_BRL * STEAM_TAX_FACTOR : 0,
+              source: 'steam_direct',
+              has_price_history: enableHistory // Definir desde o início baseado na seleção do usuário
+            };
+            
+            // Adicionar Storage Units se disponíveis
+            if (storageUnitContents && storageUnitContents.length > 0) {
+              processedData.storage_unit_contents = storageUnitContents;
+              
+              // Calcular valor total das Storage Units
+              const storageUnitsValue = storageUnitContents.reduce((sum, unit) => {
+                return sum + (unit.contents?.total_value || 0);
+              }, 0);
+              
+              processedData.storage_units_content_value = storageUnitsValue;
+              processedData.grand_total_value = processedData.total_value + storageUnitsValue;
+            }
+            
+            // Verificar se há itens que precisam de fallback
+            const itemsNeedingFallback = processedData.items.filter(item => item.needsSteamMarketFallback);
+            const hasItemsNeedingFallback = itemsNeedingFallback.length > 0;
+            
+            // Exibir os dados processados inicialmente (sem esconder loading se houver fallback pendente)
+            displayInventoryData(processedData, false, null, !hasItemsNeedingFallback);
+            
+            // Criar uma função para finalizar (esconder loading) após histórico E fallback terminarem
+            let historyCompleted = false;
+            let fallbackCompleted = false;
+            
+            const finalizeDisplay = () => {
+              if (historyCompleted && fallbackCompleted) {
+                console.log('✅ [FINALIZE] Histórico e fallback concluídos. Escondendo loading...');
+                displayInventoryData(processedData, false, null, true);
+              }
+            };
+            
+            // Buscar histórico de preços se solicitado pelo usuário
+            if (enableHistory) {
+              console.log('📊 [HISTORY] Buscando histórico de preços conforme solicitado...');
+              fetchPriceHistoryForItems(processedData.items).then(() => {
+                console.log('✅ [HISTORY] Histórico de preços carregado para todos os itens');
+                processedData.has_price_history = true;
+                // Não esconder loading ainda se houver fallback pendente
+                displayInventoryData(processedData, true, null, !hasItemsNeedingFallback);
+                console.log('💾 [HISTORY] Dados salvos no localStorage com histórico de preços');
+                historyCompleted = true;
+                finalizeDisplay();
+              }).catch(error => {
+                console.warn('⚠️ [HISTORY] Erro ao buscar histórico de preços:', error);
+                processedData.has_price_history = false;
+                // Não esconder loading ainda se houver fallback pendente
+                displayInventoryData(processedData, false, null, !hasItemsNeedingFallback);
+                historyCompleted = true;
+                finalizeDisplay();
+              });
+            } else {
+              processedData.has_price_history = false;
+              // Não esconder loading ainda se houver fallback pendente
+              displayInventoryData(processedData, false, null, !hasItemsNeedingFallback);
+              console.log('💾 Dados salvos no localStorage (sem histórico de preços)');
+              historyCompleted = true; // Histórico não foi solicitado, então está "completo"
+              finalizeDisplay();
+            }
+            
+            // Buscar preços no Steam Market para itens sem preço (aguardar antes de esconder loading)
+            if (hasItemsNeedingFallback) {
+              console.log(`⏳ [FALLBACK] Buscando preços no Steam Market para ${itemsNeedingFallback.length} itens antes de esconder loading...`);
+              
+              // Executar fallback e só esconder loading quando terminar
+              fetchSteamMarketPrices(itemsNeedingFallback).then(() => {
+                // Recalcular total após fallback
+                const totalAfterFallback = processedData.items.reduce((sum, item) => sum + (item.total || 0), 0);
+                processedData.total_value = totalAfterFallback;
+                
+                // Preservar has_price_history se já foi definido
+                if (enableHistory && !processedData.has_price_history) {
+                  processedData.has_price_history = true;
+                }
+                
+                console.log(`✅ [FALLBACK] Fallback concluído. Total recalculado: R$ ${totalAfterFallback.toFixed(2)}`);
+                console.log(`✅ [FALLBACK] Itens atualizados: ${itemsNeedingFallback.filter(item => item.price > 0).length}/${itemsNeedingFallback.length}`);
+                
+                // Atualizar exibição com os novos preços (mas não esconder loading ainda se histórico estiver pendente)
+                displayInventoryData(processedData, false, null, !enableHistory);
+                fallbackCompleted = true;
+                finalizeDisplay();
+              }).catch(error => {
+                console.error('❌ [FALLBACK] Erro ao buscar preços no Steam Market:', error);
+                // Preservar has_price_history se já foi definido
+                if (enableHistory && !processedData.has_price_history) {
+                  processedData.has_price_history = true;
+                }
+                // Mesmo com erro, atualizar exibição (mas não esconder loading ainda se histórico estiver pendente)
+                displayInventoryData(processedData, false, null, !enableHistory);
+                fallbackCompleted = true;
+                finalizeDisplay();
+              });
+            } else {
+              fallbackCompleted = true; // Não há fallback necessário, então está "completo"
+              finalizeDisplay();
+            }
+            
+          } else {
+            throw new Error('Nenhum item retornado pela API');
+          }
+          
+        } catch (error) {
+          console.error('❌ Erro ao processar itens do Steam:', error);
+          alert('Erro ao processar inventário: ' + error.message);
+          inventoryLoading.style.display = 'none';
+        }
+      }
+      
+      async function showMockInventoryData(enableHistory = false) {
         console.log('Usando dados mockados e enviando para API para buscar preços reais');
+        console.log('📊 Histórico de preços:', enableHistory ? 'ATIVADO' : 'DESATIVADO');
         
         // Dados mockados elaborados com todas as informações necessárias
         const mockInventoryItems = [
@@ -3826,6 +4144,8 @@
           const processedData = {
             total_items: apiData.total_items || apiData.items.length || mockInventoryItems.length,
             total_value: apiData.total_value || totalValueBRL || 0,
+            source: 'mock_data',
+            has_price_history: enableHistory, // Definir desde o início baseado na seleção do usuário
             items: apiData.items.map((apiItem, index) => {
               const mockItem = mockInventoryItems[index] || {};
               
@@ -3870,50 +4190,88 @@
             })
           };
           
-          // Exibir os dados iniciais (com itens que já têm preço)
-          displayInventoryData(processedData, true);
-          
-          // Buscar histórico de preços para cada item (em background)
-          console.log('📊 Buscando histórico de preços para os itens...');
-          fetchPriceHistoryForItems(processedData.items).then(() => {
-            console.log('✅ Histórico de preços carregado para todos os itens');
-            
-            // Verificar quantos itens têm histórico
-            const itemsWithHistory = processedData.items.filter(item => item.price_history && item.price_history.length > 0);
-            console.log(`📊 Itens com histórico: ${itemsWithHistory.length} de ${processedData.items.length}`);
-            if (itemsWithHistory.length > 0) {
-              console.log('Exemplo de item com histórico:', {
-                name: itemsWithHistory[0].name,
-                historyLength: itemsWithHistory[0].price_history.length,
-                firstEntry: itemsWithHistory[0].price_history[0],
-                lastEntry: itemsWithHistory[0].price_history[itemsWithHistory[0].price_history.length - 1]
-              });
-            }
-            
-            // Atualizar exibição e salvar no localStorage com histórico
-            displayInventoryData(processedData, true);
-            console.log('💾 Dados salvos no localStorage com histórico de preços');
-          }).catch(error => {
-            console.warn('⚠️ Erro ao buscar histórico de preços:', error);
-          });
-          
-          // Buscar preços no Steam Market para itens sem preço (em background)
+          // Verificar se há itens que precisam de fallback
           const itemsNeedingFallback = processedData.items.filter(item => item.needsSteamMarketFallback);
-          if (itemsNeedingFallback.length > 0) {
-            console.log(`Buscando preços no Steam Market para ${itemsNeedingFallback.length} itens...`);
+          const hasItemsNeedingFallback = itemsNeedingFallback.length > 0;
+          
+          // Exibir dados inicialmente (sem esconder loading se houver fallback pendente)
+          displayInventoryData(processedData, false, null, !hasItemsNeedingFallback);
+          
+          // Criar uma função para finalizar (esconder loading) após histórico E fallback terminarem
+          let historyCompleted = false;
+          let fallbackCompleted = false;
+          
+          const finalizeDisplay = () => {
+            if (historyCompleted && fallbackCompleted) {
+              console.log('✅ [FINALIZE] Histórico e fallback concluídos. Escondendo loading...');
+              displayInventoryData(processedData, false, null, true);
+            }
+          };
+          
+          // Buscar histórico de preços se solicitado pelo usuário
+          if (enableHistory) {
+            console.log('📊 [HISTORY] Buscando histórico de preços conforme solicitado...');
+            fetchPriceHistoryForItems(processedData.items).then(() => {
+              console.log('✅ [HISTORY] Histórico de preços carregado para todos os itens');
+              processedData.has_price_history = true;
+              // Não esconder loading ainda se houver fallback pendente
+              displayInventoryData(processedData, true, null, !hasItemsNeedingFallback);
+              console.log('💾 [HISTORY] Dados salvos no localStorage com histórico de preços');
+              historyCompleted = true;
+              finalizeDisplay();
+            }).catch(error => {
+              console.warn('⚠️ [HISTORY] Erro ao buscar histórico de preços:', error);
+              processedData.has_price_history = false;
+              // Não esconder loading ainda se houver fallback pendente
+              displayInventoryData(processedData, false, null, !hasItemsNeedingFallback);
+              historyCompleted = true;
+              finalizeDisplay();
+            });
+          } else {
+            processedData.has_price_history = false;
+            // Não esconder loading ainda se houver fallback pendente
+            displayInventoryData(processedData, false, null, !hasItemsNeedingFallback);
+            console.log('💾 Dados salvos no localStorage (sem histórico de preços)');
+            historyCompleted = true; // Histórico não foi solicitado, então está "completo"
+            finalizeDisplay();
+          }
+          
+          // Buscar preços no Steam Market para itens sem preço (aguardar antes de esconder loading)
+          if (hasItemsNeedingFallback) {
+            console.log(`⏳ [FALLBACK] Buscando preços no Steam Market para ${itemsNeedingFallback.length} itens antes de esconder loading...`);
             
-            // Executar fallback em background e atualizar quando terminar
+            // Executar fallback e só esconder loading quando terminar
             fetchSteamMarketPrices(itemsNeedingFallback).then(() => {
               // Recalcular total após fallback
               totalValueBRL = processedData.items.reduce((sum, item) => sum + (item.total || 0), 0);
               processedData.total_value = totalValueBRL;
               
-              console.log('Total value BRL recalculado (após fallback):', totalValueBRL);
-              console.log('Itens atualizados após fallback:', itemsNeedingFallback.filter(item => item.price > 0).length);
+              // Preservar has_price_history se já foi definido
+              if (enableHistory && !processedData.has_price_history) {
+                processedData.has_price_history = true;
+              }
               
-              // Atualizar exibição com os novos preços
-              displayInventoryData(processedData, true);
+              console.log(`✅ [FALLBACK] Fallback concluído. Total recalculado: R$ ${totalValueBRL.toFixed(2)}`);
+              console.log(`✅ [FALLBACK] Itens atualizados: ${itemsNeedingFallback.filter(item => item.price > 0).length}/${itemsNeedingFallback.length}`);
+              
+              // Atualizar exibição com os novos preços (mas não esconder loading ainda se histórico estiver pendente)
+              displayInventoryData(processedData, true, null, !enableHistory);
+              fallbackCompleted = true;
+              finalizeDisplay();
+            }).catch(error => {
+              console.error('❌ [FALLBACK] Erro ao buscar preços no Steam Market:', error);
+              // Preservar has_price_history se já foi definido
+              if (enableHistory && !processedData.has_price_history) {
+                processedData.has_price_history = true;
+              }
+              // Mesmo com erro, atualizar exibição (mas não esconder loading ainda se histórico estiver pendente)
+              displayInventoryData(processedData, true, null, !enableHistory);
+              fallbackCompleted = true;
+              finalizeDisplay();
             });
+          } else {
+            fallbackCompleted = true; // Não há fallback necessário, então está "completo"
+            finalizeDisplay();
           }
           
         } catch (error) {
@@ -3921,28 +4279,41 @@
           console.error('Stack trace:', error.stack);
           console.log('Exibindo dados mockados sem preços da API');
           
-          // Verificar se é erro de CORS
+          // Verificar se é erro 502 (Bad Gateway) primeiro
           let errorMessage = error.message || 'Erro desconhecido ao buscar preços';
           let isCorsError = false;
+          let isServerError = false;
           
-          if (error.message && (
+          if (error.message && error.message.includes('502_BAD_GATEWAY')) {
+            isServerError = true;
+            errorMessage = 'O servidor backend está temporariamente indisponível ou sobrecarregado (erro 502). Por favor, tente novamente em alguns instantes.';
+            console.error('⚠️ ERRO 502: Servidor backend indisponível');
+          } else if (error.message && (
             error.message.includes('CORS') || 
             error.message.includes('cors') ||
             error.message.includes('Access-Control') ||
-            error.message.includes('NetworkError') ||
-            error.message.includes('Failed to fetch') ||
-            error.name === 'TypeError'
+            (error.message.includes('NetworkError') && !error.message.includes('502')) ||
+            (error.message.includes('Failed to fetch') && !error.message.includes('502')) ||
+            (error.name === 'TypeError' && !error.message.includes('502'))
           )) {
-            isCorsError = true;
-            errorMessage = 'Erro de CORS: A API não está configurada para aceitar requisições deste domínio. É necessário configurar CORS no backend da API.';
-            console.error('⚠️ ERRO DE CORS DETECTADO');
-            console.error('A API precisa permitir requisições do domínio:', window.location.origin);
-            console.error('Configure o backend para aceitar requisições de:', [
-              window.location.origin,
-              'https://sidnei-almeida.github.io',
-              'http://localhost:8000',
-              'http://127.0.0.1:8000'
-            ]);
+            // Só considerar CORS se não for erro 502
+            // Verificar se o erro pode ser 502 mascarado como CORS
+            const statusMatch = error.message.match(/status.*?(\d{3})/i);
+            if (!statusMatch || statusMatch[1] !== '502') {
+              isCorsError = true;
+              errorMessage = 'Erro de CORS: A API não está configurada para aceitar requisições deste domínio. É necessário configurar CORS no backend da API.';
+              console.error('⚠️ ERRO DE CORS DETECTADO');
+              console.error('A API precisa permitir requisições do domínio:', window.location.origin);
+              console.error('Configure o backend para aceitar requisições de:', [
+                window.location.origin,
+                'https://sidnei-almeida.github.io',
+                'http://localhost:8000',
+                'http://127.0.0.1:8000'
+              ]);
+            } else {
+              isServerError = true;
+              errorMessage = 'O servidor backend está temporariamente indisponível ou sobrecarregado (erro 502). Por favor, tente novamente em alguns instantes.';
+            }
           }
           
           // Se a API falhar, exibir dados mockados sem preços reais
@@ -3953,7 +4324,7 @@
               ...item,
               price: 0,
               total: 0,
-              error: isCorsError ? 'CORS bloqueado' : (error.message || 'Preço não disponível - API não respondeu corretamente')
+              error: isServerError ? 'Servidor indisponível (502)' : (isCorsError ? 'CORS bloqueado' : (error.message || 'Preço não disponível - API não respondeu corretamente'))
             }))
           };
           
@@ -3964,8 +4335,10 @@
       }
       
       // Função auxiliar para exibir dados do inventário
-      function displayInventoryData(data, isMocked = false, errorMessage = null) {
-        inventoryLoading.style.display = 'none';
+      function displayInventoryData(data, isMocked = false, errorMessage = null, hideLoading = true) {
+        if (hideLoading) {
+          inventoryLoading.style.display = 'none';
+        }
         inventoryData.style.display = 'block';
         
         const totalValue = data.total_value || 0;
@@ -4056,8 +4429,46 @@
         
         inventoryItems.innerHTML = itemsHTML;
         
-        // Salvar no localStorage para o dashboard
-        localStorage.setItem('inventoryData', JSON.stringify(data));
+        // Salvar no localStorage para o dashboard (com tratamento de quota)
+        try {
+          // Se histórico foi solicitado, preservar; caso contrário, remover para economizar espaço
+          const hasHistory = data.has_price_history === true;
+          const dataToSave = {
+            ...data,
+            has_price_history: hasHistory,
+            items: hasHistory ? data.items : data.items.map(item => {
+              const { price_history, ...itemWithoutHistory } = item;
+              return itemWithoutHistory;
+            })
+          };
+          localStorage.setItem('inventoryData', JSON.stringify(dataToSave));
+        } catch (error) {
+          if (error.name === 'QuotaExceededError' || error.message?.includes('quota')) {
+            console.warn('⚠️ LocalStorage quota excedida. Limpando dados antigos...');
+            try {
+              // Limpar dados antigos
+              localStorage.removeItem('inventoryData');
+              localStorage.removeItem('exchange_rates');
+              localStorage.removeItem('exchange_rate_timestamp');
+              // Tentar salvar novamente sem histórico (mesmo se tinha histórico antes)
+              const dataToSave = {
+                ...data,
+                has_price_history: false,
+                items: data.items.map(item => {
+                  const { price_history, ...itemWithoutHistory } = item;
+                  return itemWithoutHistory;
+                })
+              };
+              localStorage.setItem('inventoryData', JSON.stringify(dataToSave));
+              console.log('✅ Dados salvos após limpeza (sem histórico de preços)');
+            } catch (retryError) {
+              console.error('❌ Não foi possível salvar no localStorage:', retryError);
+              console.warn('💡 O dashboard pode não funcionar, mas os dados estão exibidos na tela');
+            }
+          } else {
+            console.warn('Erro ao salvar no localStorage:', error);
+          }
+        }
       }
       
       // Função auxiliar para obter cor da raridade
@@ -4476,10 +4887,51 @@
       console.log('Gerando dashboard interativa...');
       
       // Armazenar os dados no localStorage para que o dashboard.html possa acessá-los
-      localStorage.setItem('inventoryData', JSON.stringify(data));
+      try {
+        // Se histórico foi solicitado, preservar; caso contrário, remover para economizar espaço
+        const hasHistory = data.has_price_history === true;
+        const dataToSave = {
+          ...data,
+          has_price_history: hasHistory,
+          items: hasHistory ? data.items : data.items.map(item => {
+            const { price_history, ...itemWithoutHistory } = item;
+            return itemWithoutHistory;
+          })
+        };
+        localStorage.setItem('inventoryData', JSON.stringify(dataToSave));
+      } catch (error) {
+        if (error.name === 'QuotaExceededError' || error.message?.includes('quota')) {
+          console.warn('⚠️ LocalStorage quota excedida. Limpando dados antigos...');
+          try {
+            localStorage.removeItem('inventoryData');
+            localStorage.removeItem('exchange_rates');
+            localStorage.removeItem('exchange_rate_timestamp');
+            // Tentar salvar novamente sem histórico (mesmo se tinha histórico antes)
+            const dataToSave = {
+              ...data,
+              has_price_history: false,
+              items: data.items.map(item => {
+                const { price_history, ...itemWithoutHistory } = item;
+                return itemWithoutHistory;
+              })
+            };
+            localStorage.setItem('inventoryData', JSON.stringify(dataToSave));
+            console.log('✅ Dados salvos após limpeza');
+          } catch (retryError) {
+            alert('⚠️ Não foi possível salvar os dados. O armazenamento local está cheio. Limpe o cache do navegador ou use o modo anônimo.');
+            return; // Não abrir dashboard se não conseguiu salvar
+          }
+        } else {
+          throw error; // Re-lançar se não for erro de quota
+        }
+      }
       
-      // Abrir o dashboard em uma nova janela
-      window.open('dashboard.html', '_blank');
+      // Abrir o dashboard correto baseado em se há histórico ou não
+      const hasHistory = data.has_price_history === true;
+      const dashboardFile = hasHistory ? 'dashboard_fin.html' : 'dashboard_basic.html';
+      console.log(`📊 [DASHBOARD] has_price_history: ${data.has_price_history}, tipo: ${typeof data.has_price_history}`);
+      console.log(`📊 [DASHBOARD] Abrindo ${hasHistory ? 'Dashboard Financeiro' : 'Dashboard Básico'}: ${dashboardFile}`);
+      window.open(dashboardFile, '_blank');
     }
   </script>
 
