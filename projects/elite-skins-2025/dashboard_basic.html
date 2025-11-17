@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Trading - Elite Skins</title>
+  <title>Dashboard Básico - Elite Skins</title>
   <link rel="icon" type="image/png" href="images/favicon.png">
   <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -854,9 +854,9 @@
           <path d="M7 16L12 11L16 15L21 10" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M21 10V6H17" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Dashboard Trading CS2
+        Dashboard Básico CS2
       </h1>
-      <p>Elite Skins - Insights profissionais para traders de skins</p>
+      <p>Elite Skins - Análise básica do inventário (sem histórico de preços)</p>
       <div id="mock-data-warning" style="margin-top: 15px; padding: 12px; background: rgba(255, 215, 0, 0.1); border: 1px solid var(--cs2-primary-gold); border-radius: 6px; display: none;">
         <span style="color: var(--cs2-primary-gold); font-weight: 600;">⚠️ Modo Demonstração:</span>
         <span style="color: var(--cs2-text-light); margin-left: 8px;">Exibindo dados mockados para demonstração. Conecte-se à API para ver seu inventário real.</span>
@@ -867,7 +867,6 @@
       <div class="stat-card">
         <div class="stat-label">Valor Total</div>
         <div class="stat-value" id="total-value">R$ 0,00</div>
-        <div class="stat-change" id="total-change">-</div>
         <div class="stat-desc">Valor estimado do inventário</div>
       </div>
       
@@ -875,20 +874,6 @@
         <div class="stat-label">Total de Itens</div>
         <div class="stat-value" id="total-items">0</div>
         <div class="stat-desc">Número de skins e itens</div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-label">ROI Total</div>
-        <div class="stat-value" id="total-roi">0,00%</div>
-        <div class="stat-change" id="roi-change">-</div>
-        <div class="stat-desc">Retorno sobre investimento</div>
-      </div>
-      
-      <div class="stat-card">
-        <div class="stat-label">Lucro/Perda Estimado</div>
-        <div class="stat-value" id="total-profit">R$ 0,00</div>
-        <div class="stat-change" id="profit-change">-</div>
-        <div class="stat-desc">Baseado na média histórica</div>
       </div>
       
       <div class="stat-card">
@@ -902,94 +887,29 @@
         <div class="stat-value" id="max-value">R$ 0,00</div>
         <div class="stat-desc" id="max-item-name">Nenhum item</div>
       </div>
-    </div>
-    
-    <!-- Alertas e Dicas em Tempo Real -->
-    <div class="alerts-container" id="alerts-container">
-      <!-- Alertas serão inseridos aqui dinamicamente -->
+      
+      <div class="stat-card">
+        <div class="stat-label">Item menos valioso</div>
+        <div class="stat-value" id="min-value">R$ 0,00</div>
+        <div class="stat-desc" id="min-item-name">Nenhum item</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Categorias</div>
+        <div class="stat-value" id="total-categories">0</div>
+        <div class="stat-desc">Número de categorias diferentes</div>
+      </div>
     </div>
     
     <!-- Tabs -->
     <div class="view-tabs">
-      <button class="view-tab active" data-tab="insights">Insights de Trading</button>
-      <button class="view-tab" data-tab="trends">Tendências</button>
+      <button class="view-tab active" data-tab="overview">Visão Geral</button>
       <button class="view-tab" data-tab="items">Itens do Inventário</button>
     </div>
     
-    <!-- Visualização 1: Insights de Trading -->
-    <div id="insights-view" class="view-content active">
+    <!-- Visualização 1: Visão Geral -->
+    <div id="overview-view" class="view-content active">
       <div class="dashboard-grid">
-        <div class="dashboard-card dashboard-wide">
-          <h3>
-            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 3V21H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M7 16L12 11L16 15L21 10" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M21 10V6H17" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Tendência de Valor do Inventário
-          </h3>
-          <div class="time-filter">
-            <button class="time-filter-btn" data-days="7">7 dias</button>
-            <button class="time-filter-btn active" data-days="30">30 dias</button>
-            <button class="time-filter-btn" data-days="90">90 dias</button>
-          </div>
-          <div id="inventory-trend-chart" class="chart-container chart-container-large"></div>
-        </div>
-        
-        <div class="dashboard-card">
-          <h3>
-            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 3V21H21" stroke="#4B9E2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M7 12L12 7L16 11L21 6" stroke="#4B9E2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M21 6V3H18" stroke="#4B9E2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Maior Valorização
-          </h3>
-          <ul class="insight-list" id="top-appreciation-list">
-            <!-- Será preenchido dinamicamente -->
-          </ul>
-        </div>
-        
-        <div class="dashboard-card">
-          <h3>
-            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 3V21H21" stroke="#DD3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M7 6L12 11L16 7L21 12" stroke="#DD3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M21 12V15H18" stroke="#DD3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Maior Desvalorização
-          </h3>
-          <ul class="insight-list" id="top-depreciation-list">
-            <!-- Será preenchido dinamicamente -->
-          </ul>
-        </div>
-        
-        <div class="dashboard-card dashboard-wide">
-          <h3>
-            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="10" stroke="#FFD700" stroke-width="2"/>
-              <path d="M12 6V12L16 14" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
-              <path d="M8 8C8 6.89543 8.89543 6 10 6H14C15.1046 6 16 6.89543 16 8C16 9.10457 15.1046 10 14 10H10C8.89543 10 8 10.8954 8 12C8 13.1046 8.89543 14 10 14H14C15.1046 14 16 14.8954 16 16C16 17.1046 15.1046 18 14 18H10C8.89543 18 8 17.1046 8 16" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            Oportunidades de Venda
-          </h3>
-          <ul class="insight-list" id="sell-opportunities-list">
-            <!-- Será preenchido dinamicamente -->
-          </ul>
-        </div>
-        
-        <div class="dashboard-card">
-          <h3>
-            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#FF6600" stroke="#FF6600" stroke-width="1.5" stroke-linejoin="round"/>
-            </svg>
-            Itens Mais Voláteis
-          </h3>
-          <ul class="insight-list" id="volatile-items-list">
-            <!-- Será preenchido dinamicamente -->
-          </ul>
-        </div>
-        
         <div class="dashboard-card">
           <h3>
             <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1021,35 +941,8 @@
           </h3>
           <div id="price-distribution-chart" class="chart-container"></div>
         </div>
-      </div>
-    </div>
-    
-    <!-- Visualização 2: Tendências -->
-    <div id="trends-view" class="view-content">
-      <div class="dashboard-grid">
-        <div class="dashboard-card dashboard-wide">
-          <h3>
-            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 3V21H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M7 16L12 11L16 15L21 10" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M21 10V6H17" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Evolução Histórica de Todas as Skins
-          </h3>
-          <div class="skin-filter-controls">
-            <div class="filter-buttons">
-              <button id="select-all-skins" class="filter-btn">Selecionar Todas</button>
-              <button id="deselect-all-skins" class="filter-btn">Desselecionar Todas</button>
-              <input type="text" id="skin-search-input" class="skin-search-input" placeholder="Buscar skin...">
-            </div>
-            <div id="skin-filter-list" class="skin-filter-list">
-              <!-- Checkboxes serão inseridos aqui dinamicamente -->
-            </div>
-          </div>
-          <div id="top-items-trend-chart" class="chart-container chart-container-large"></div>
-        </div>
         
-        <div class="dashboard-card dashboard-wide">
+        <div class="dashboard-card">
           <h3>
             <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="3" y="3" width="18" height="18" rx="2" stroke="#FFD700" stroke-width="2"/>
@@ -1059,9 +952,24 @@
               <rect x="10.5" y="8" width="3" height="10" fill="#2389DA" opacity="0.8"/>
               <rect x="15" y="6" width="3" height="12" fill="#FFD700" opacity="0.8"/>
             </svg>
-            Comparação: Preço Atual vs Média Histórica
+            Distribuição por Desgaste
           </h3>
-          <div id="price-comparison-chart" class="chart-container chart-container-large"></div>
+          <div id="exterior-chart" class="chart-container"></div>
+        </div>
+        
+        <div class="dashboard-card">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke="#FFD700" stroke-width="2"/>
+              <path d="M3 9H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 3V21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <rect x="6" y="12" width="3" height="6" fill="#FFD700" opacity="0.8"/>
+              <rect x="10.5" y="8" width="3" height="10" fill="#2389DA" opacity="0.8"/>
+              <rect x="15" y="6" width="3" height="12" fill="#FFD700" opacity="0.8"/>
+            </svg>
+            Distribuição por Raridade
+          </h3>
+          <div id="rarity-chart" class="chart-container"></div>
         </div>
       </div>
     </div>
@@ -1081,8 +989,8 @@
         <div class="sort-controls">
           <button id="sort-price-desc" class="sort-button">Preço ↓</button>
           <button id="sort-price-asc" class="sort-button">Preço ↑</button>
-          <button id="sort-appreciation" class="sort-button">Valorização ↓</button>
           <button id="sort-name" class="sort-button">Nome</button>
+          <button id="sort-category" class="sort-button">Categoria</button>
         </div>
       </div>
       
@@ -1157,15 +1065,11 @@
     // Flag para indicar se estamos usando dados mockados
     let isUsingMockData = false;
     
-    // Verificar se há histórico de preços disponível
-    const hasPriceHistory = inventoryData?.has_price_history === true;
-    
     // Se não houver dados no localStorage ou se estiver vazio, usar dados mockados
     if (!inventoryData || !inventoryData.items || inventoryData.items.length === 0) {
       console.log('Usando dados mockados para demonstração');
       inventoryData = MOCK_INVENTORY_DATA;
       isUsingMockData = true;
-      inventoryData.has_price_history = true; // Mock data sempre tem histórico
       localStorage.setItem('inventoryData', JSON.stringify(MOCK_INVENTORY_DATA));
       
       const warningEl = document.getElementById('mock-data-warning');
@@ -1174,333 +1078,8 @@
       }
     }
     
-    // Esconder seções que dependem de histórico se não houver histórico
-    if (!hasPriceHistory) {
-      console.log('⚠️ Histórico de preços não disponível. Mostrando apenas análises simples.');
-      // Esconder botão da aba Tendências
-      const trendsTabButton = document.querySelector('[data-tab="trends"]');
-      if (trendsTabButton) {
-        trendsTabButton.style.display = 'none';
-      }
-      // Esconder conteúdo da aba Tendências
-      const trendsView = document.getElementById('trends-view');
-      if (trendsView) {
-        trendsView.style.display = 'none';
-      }
-      // Adicionar aviso na dashboard
-      const dashboardContainer = document.querySelector('.dashboard-container');
-      if (dashboardContainer) {
-        const warningDiv = document.createElement('div');
-        warningDiv.style.cssText = 'margin: 20px; padding: 15px; background: rgba(255,193,7,0.2); border-left: 3px solid #ffc107; border-radius: 4px; color: var(--cs2-text-light);';
-        warningDiv.innerHTML = '<strong>⚠️ Modo Simplificado:</strong> Histórico de preços não foi solicitado. Apenas análises básicas estão disponíveis. Para ver tendências e análises financeiras, ative o histórico de preços na análise.';
-        dashboardContainer.insertBefore(warningDiv, dashboardContainer.firstChild);
-      }
-    }
-    
-    // Processar dados históricos de forma eficiente (agregação)
-    function processPriceHistory(items, days = 30) {
-      if (!items || items.length === 0) return null;
-      
-      const now = new Date();
-      now.setHours(0, 0, 0, 0); // Normalizar para início do dia
-      const cutoffDate = new Date(now);
-      cutoffDate.setDate(cutoffDate.getDate() - days);
-      
-      // Gerar todas as datas no período
-      const allDates = [];
-      const currentDate = new Date(cutoffDate);
-      while (currentDate <= now) {
-        allDates.push(new Date(currentDate));
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-      
-      // Para cada item, preparar histórico ordenado
-      const itemsWithHistory = items.map(item => {
-        let history = [];
-        if (item.price_history && Array.isArray(item.price_history) && item.price_history.length > 0) {
-          // Ordenar histórico por data
-          history = [...item.price_history].sort((a, b) => a.date.localeCompare(b.date));
-        }
-        return {
-          item,
-          history,
-          currentPrice: item.price || 0,
-          quantity: item.quantity || 1
-        };
-      });
-      
-      // Para cada data, calcular o valor total do inventário
-      const dailyTotals = [];
-      
-      allDates.forEach(targetDate => {
-        const dateKey = targetDate.toISOString().split('T')[0];
-        let totalValue = 0;
-        
-        itemsWithHistory.forEach(({ item, history, currentPrice, quantity }) => {
-          let priceForDate = currentPrice; // Fallback para preço atual
-          
-          if (history.length > 0) {
-            // Encontrar o último preço conhecido até esta data
-            let lastKnownPrice = null;
-            for (let i = history.length - 1; i >= 0; i--) {
-              const entryDate = new Date(history[i].date);
-              entryDate.setHours(0, 0, 0, 0);
-              
-              if (entryDate <= targetDate) {
-                lastKnownPrice = history[i].price || 0;
-                break;
-              }
-            }
-            
-            // Se encontrou um preço histórico, usar ele; senão usar preço atual
-            if (lastKnownPrice !== null && lastKnownPrice > 0) {
-              priceForDate = lastKnownPrice;
-            }
-          }
-          
-          totalValue += priceForDate * quantity;
-        });
-        
-        dailyTotals.push({
-          date: dateKey,
-          value: totalValue
-        });
-      });
-      
-      return dailyTotals;
-    }
-    
-    // Calcular métricas de trading
-    function calculateTradingMetrics(items) {
-      const metrics = {
-        appreciation: [],
-        depreciation: [],
-        sellOpportunities: [],
-        volatile: [],
-        allItems: [] // Todos os itens com métricas completas
-      };
-      
-      let totalROI = 0;
-      let totalProfit = 0;
-      let totalInvested = 0;
-      
-      items.forEach(item => {
-        const currentPrice = item.price || 0;
-        const quantity = item.quantity || 1;
-        const totalValue = currentPrice * quantity;
-        
-        // Calcular ROI e métricas básicas mesmo sem histórico
-        let roi = 0;
-        let profit = 0;
-        let avgPrice = currentPrice;
-        let priceChangePercent = 0;
-        let priceVsAvg = 0;
-        let volatilityPercent = 0;
-        let riskScore = 50; // Score padrão (médio)
-        let oldestPrice = currentPrice;
-        let priceChange = 0;
-        
-        if (item.price_history && Array.isArray(item.price_history) && item.price_history.length >= 2) {
-          const history = item.price_history.sort((a, b) => a.date.localeCompare(b.date));
-          oldestPrice = history[0].price || currentPrice;
-          priceChange = currentPrice - oldestPrice;
-          priceChangePercent = oldestPrice > 0 ? (priceChange / oldestPrice) * 100 : 0;
-          
-          // Calcular média histórica (últimos 30 dias ou todo histórico se menor)
-          const recentHistory = history.slice(-30);
-          avgPrice = recentHistory.reduce((sum, e) => sum + (e.price || 0), 0) / recentHistory.length;
-          priceVsAvg = avgPrice > 0 ? ((currentPrice - avgPrice) / avgPrice) * 100 : 0;
-          
-          // Calcular volatilidade (desvio padrão)
-          const prices = recentHistory.map(e => e.price || 0);
-          const mean = prices.reduce((a, b) => a + b, 0) / prices.length;
-          const variance = prices.reduce((sum, p) => sum + Math.pow(p - mean, 2), 0) / prices.length;
-          const volatility = Math.sqrt(variance);
-          volatilityPercent = mean > 0 ? (volatility / mean) * 100 : 0;
-          
-          // Calcular ROI (usando média histórica como preço de compra estimado)
-          const estimatedPurchasePrice = avgPrice;
-          profit = (currentPrice - estimatedPurchasePrice) * quantity;
-          roi = estimatedPurchasePrice > 0 ? ((currentPrice - estimatedPurchasePrice) / estimatedPurchasePrice) * 100 : 0;
-          
-          // Calcular score de risco (0-100)
-          // Baseado em: volatilidade (40%), variação de preço (30%), preço vs média (30%)
-          const volatilityScore = Math.min(volatilityPercent * 2, 40); // Máximo 40 pontos
-          const priceChangeScore = Math.min(Math.abs(priceChangePercent) * 0.3, 30); // Máximo 30 pontos
-          const priceVsAvgScore = Math.min(Math.abs(priceVsAvg) * 0.3, 30); // Máximo 30 pontos
-          riskScore = Math.min(volatilityScore + priceChangeScore + priceVsAvgScore, 100);
-        } else {
-          // Sem histórico: usar preço atual como referência
-          avgPrice = currentPrice;
-          riskScore = 30; // Risco menor quando não há histórico (menos incerteza)
-        }
-        
-        totalInvested += avgPrice * quantity;
-        totalProfit += profit;
-        
-        const itemMetric = {
-          name: item.name,
-          currentPrice,
-          avgPrice,
-          oldestPrice,
-          priceChange,
-          priceChangePercent,
-          priceVsAvg,
-          volatility: volatilityPercent,
-          roi,
-          profit,
-          riskScore,
-          totalValue,
-          quantity,
-          hasHistory: item.price_history && item.price_history.length >= 2
-        };
-        
-        metrics.allItems.push(itemMetric);
-        
-        // Classificar apenas itens com histórico
-        if (item.price_history && item.price_history.length >= 2) {
-          if (priceChangePercent > 5) {
-            metrics.appreciation.push(itemMetric);
-          } else if (priceChangePercent < -5) {
-            metrics.depreciation.push(itemMetric);
-          }
-          
-          if (priceVsAvg > 10) {
-            metrics.sellOpportunities.push(itemMetric);
-          }
-          
-          if (volatilityPercent > 15) {
-            metrics.volatile.push(itemMetric);
-          }
-        }
-      });
-      
-      // Calcular ROI total
-      metrics.totalROI = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
-      metrics.totalProfit = totalProfit;
-      metrics.totalInvested = totalInvested;
-      
-      // Ordenar
-      metrics.appreciation.sort((a, b) => b.priceChangePercent - a.priceChangePercent);
-      metrics.depreciation.sort((a, b) => a.priceChangePercent - b.priceChangePercent);
-      metrics.sellOpportunities.sort((a, b) => b.priceVsAvg - a.priceVsAvg);
-      metrics.volatile.sort((a, b) => b.volatility - a.volatility);
-      metrics.allItems.sort((a, b) => b.totalValue - a.totalValue); // Ordenar por valor total
-      
-      return metrics;
-    }
-    
-    // Gerar alertas e dicas
-    function generateTradingAlerts(metrics, inventoryData) {
-      const alerts = [];
-      
-      // Alerta de ROI total
-      if (metrics.totalROI !== undefined && Math.abs(metrics.totalROI) > 5) {
-        alerts.push({
-          type: metrics.totalROI > 0 ? 'buy' : 'warning',
-          icon: metrics.totalROI > 0 ? '📊' : '⚠️',
-          title: 'ROI do Inventário',
-          message: `ROI total: ${formatPercent(metrics.totalROI)}. ${metrics.totalROI > 0 ? 'Lucro estimado' : 'Perda estimada'}: ${formatCurrency(Math.abs(metrics.totalProfit))}.`
-        });
-      }
-      
-      // Alerta de oportunidades de venda (com ROI)
-      if (metrics.sellOpportunities.length > 0) {
-        const topSell = metrics.sellOpportunities[0];
-        const roiText = topSell.roi !== undefined ? ` (ROI: ${formatPercent(topSell.roi)})` : '';
-        alerts.push({
-          type: 'sell',
-          icon: '💰',
-          title: 'Oportunidade de Venda',
-          message: `${topSell.name} está ${topSell.priceVsAvg.toFixed(1)}% acima da média histórica${roiText}. Considere vender para maximizar lucros.`
-        });
-      }
-      
-      // Alerta de melhor ROI positivo
-      const bestROI = metrics.allItems
-        .filter(item => item.hasHistory && item.roi > 10)
-        .sort((a, b) => b.roi - a.roi)[0];
-      
-      if (bestROI) {
-        alerts.push({
-          type: 'buy',
-          icon: '📈',
-          title: 'Melhor Performance',
-          message: `${bestROI.name} apresenta ROI de ${formatPercent(bestROI.roi)}. Lucro estimado: ${formatCurrency(bestROI.profit)}.`
-        });
-      }
-      
-      // Alerta de itens de alto risco
-      const highRiskItems = metrics.allItems
-        .filter(item => item.hasHistory && item.riskScore >= 70)
-        .sort((a, b) => b.riskScore - a.riskScore)
-        .slice(0, 3);
-      
-      if (highRiskItems.length > 0) {
-        const riskNames = highRiskItems.map(item => item.name).join(', ');
-        alerts.push({
-          type: 'warning',
-          icon: '⚡',
-          title: 'Itens de Alto Risco',
-          message: `${riskNames} apresentam alto risco (score ≥70). Monitore de perto ou considere reduzir exposição.`
-        });
-      }
-      
-      // Alerta de valorização
-      if (metrics.appreciation.length > 0) {
-        const topApp = metrics.appreciation[0];
-        alerts.push({
-          type: 'buy',
-          icon: '📈',
-          title: 'Item em Alta',
-          message: `${topApp.name} valorizou ${topApp.priceChangePercent.toFixed(1)}% nos últimos dias. Pode ser um bom momento para monitorar.`
-        });
-      }
-      
-      // Alerta de tendência geral
-      const totalValue = inventoryData.items.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
-      const historyData = processPriceHistory(inventoryData.items, 30);
-      if (historyData && historyData.length >= 2) {
-        const firstValue = historyData[0].value;
-        const lastValue = historyData[historyData.length - 1].value;
-        const trend = ((lastValue - firstValue) / firstValue) * 100;
-        
-        if (Math.abs(trend) > 5) {
-          alerts.push({
-            type: trend > 0 ? 'buy' : 'warning',
-            icon: trend > 0 ? '📊' : '⚠️',
-            title: 'Tendência do Inventário',
-            message: `Seu inventário ${trend > 0 ? 'valorizou' : 'desvalorizou'} ${Math.abs(trend).toFixed(1)}% nos últimos 30 dias.`
-          });
-        }
-      }
-      
-      return alerts;
-    }
-    
-    // Renderizar alertas
-    function renderAlerts(alerts) {
-      const container = document.getElementById('alerts-container');
-      container.innerHTML = '';
-      
-      if (alerts.length === 0) {
-        container.innerHTML = '<p style="text-align: center; opacity: 0.7; padding: 20px;">Nenhum alerta no momento. Seu inventário está estável.</p>';
-        return;
-      }
-      
-      alerts.forEach(alert => {
-        const alertCard = document.createElement('div');
-        alertCard.className = `alert-card alert-${alert.type}`;
-        alertCard.innerHTML = `
-          <div class="alert-icon">${alert.icon}</div>
-          <div class="alert-content">
-            <div class="alert-title">${alert.title}</div>
-            <div class="alert-message">${alert.message}</div>
-          </div>
-        `;
-        container.appendChild(alertCard);
-      });
-    }
+    // Dashboard básico - não usa histórico
+    console.log('📊 Dashboard Básico - Análises simples sem histórico de preços');
     
     // Formatar valores monetários
     function formatCurrency(value) {
@@ -1579,14 +1158,8 @@
           // Redimensionar gráficos quando as abas são ativadas
           setTimeout(() => {
             let chartIds = [];
-            if (tabId === 'trends') {
-              chartIds = ['top-items-trend-chart', 'price-comparison-chart'];
-              // Garantir que o gráfico de tendências seja renderizado quando a aba for ativada
-              if (typeof window.renderTrendsChart === 'function') {
-                window.renderTrendsChart();
-              }
-            } else if (tabId === 'insights') {
-              chartIds = ['inventory-trend-chart', 'category-chart', 'price-distribution-chart'];
+            if (tabId === 'overview') {
+              chartIds = ['category-chart', 'price-distribution-chart', 'exterior-chart', 'rarity-chart'];
             }
             
             chartIds.forEach(id => {
@@ -1600,20 +1173,15 @@
       });
       
       // Redimensionar gráficos quando as abas se tornam visíveis (usando MutationObserver)
-      const trendsView = document.getElementById('trends-view');
-      const insightsView = document.getElementById('insights-view');
+      const overviewView = document.getElementById('overview-view');
       
-      function setupViewObserver(view, chartIds, isTrendsView = false) {
+      function setupViewObserver(view, chartIds) {
         if (view) {
           const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
               if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                 if (view.classList.contains('active')) {
                   setTimeout(() => {
-                    // Se for a aba trends, garantir que o gráfico seja renderizado
-                    if (isTrendsView && typeof window.renderTrendsChart === 'function') {
-                      window.renderTrendsChart();
-                    }
                     chartIds.forEach(id => {
                       const chartEl = document.getElementById(id);
                       if (chartEl && chartEl.children.length > 0) {
@@ -1633,73 +1201,11 @@
         }
       }
       
-      setupViewObserver(trendsView, ['top-items-trend-chart', 'price-comparison-chart'], true);
-      setupViewObserver(insightsView, ['inventory-trend-chart', 'category-chart', 'price-distribution-chart'], false);
+      setupViewObserver(overviewView, ['category-chart', 'price-distribution-chart', 'exterior-chart', 'rarity-chart']);
     }
     
-    // Setup time filters
-    function setupTimeFilters() {
-      const buttons = document.querySelectorAll('.time-filter-btn');
-      buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          buttons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const days = parseInt(btn.getAttribute('data-days'));
-          updateInventoryTrendChart(days);
-        });
-      });
-    }
     
-    // Atualizar gráfico de tendência
-    function updateInventoryTrendChart(days = 30) {
-      const historyData = processPriceHistory(inventoryData.items, days);
-      
-      if (!historyData || historyData.length === 0) {
-        document.getElementById('inventory-trend-chart').innerHTML = '<p style="text-align: center; padding: 50px; opacity: 0.7;">Dados históricos não disponíveis</p>';
-        return;
-      }
-      
-      const dates = historyData.map(d => d.date);
-      const values = historyData.map(d => d.value);
-      
-      // Calcular tendência
-      const firstValue = values[0];
-      const lastValue = values[values.length - 1];
-      const trend = firstValue > 0 ? ((lastValue - firstValue) / firstValue) * 100 : 0;
-      const trendColor = trend >= 0 ? '#4B9E2A' : '#DD3333';
-      
-      // Atualizar stat card
-      const changeEl = document.getElementById('total-change');
-      changeEl.textContent = formatPercent(trend);
-      changeEl.className = `stat-change ${trend >= 0 ? 'positive' : 'negative'}`;
-      
-      Plotly.newPlot("inventory-trend-chart", [{
-        type: "scatter",
-        mode: "lines+markers",
-        x: dates,
-        y: values,
-        name: "Valor do Inventário",
-        line: {color: trendColor, width: 3},
-        marker: {size: 6, color: trendColor},
-        hovertemplate: 'Data: %{x}<br>Valor: R$ %{y:,.2f}<extra></extra>'
-      }], {
-        ...chartConfig,
-        xaxis: {
-          title: 'Data',
-          automargin: true
-        },
-        yaxis: {
-          title: 'Valor Total (R$)',
-          automargin: true
-        },
-        title: {
-          text: `Tendência de ${days} dias`,
-          font: {size: 16, color: '#FFD700'}
-        }
-      });
-    }
-    
-    // Gerar cards de skins
+    // Gerar cards de skins (versão simplificada sem histórico)
     function renderSkinCards(items) {
       const skinsGrid = document.getElementById('skins-grid');
       skinsGrid.innerHTML = '';
@@ -1709,75 +1215,17 @@
         return;
       }
       
-      const metrics = calculateTradingMetrics(items);
-      
       items.forEach(item => {
         const rarityColor = '#FFD700'; // Simplificado
         const card = document.createElement('div');
         card.className = 'skin-card';
         card.style.borderLeft = `3px solid ${rarityColor}`;
         
-        // Calcular mudança de preço
-        let priceChange = 0;
-        let priceChangePercent = 0;
-        let sellBadge = '';
-        let volatileBadge = '';
-        
-        if (item.price_history && item.price_history.length >= 2) {
-          const history = item.price_history.sort((a, b) => a.date.localeCompare(b.date));
-          const oldPrice = history[0].price || item.price || 0;
-          const currentPrice = item.price || 0;
-          priceChange = currentPrice - oldPrice;
-          priceChangePercent = oldPrice > 0 ? (priceChange / oldPrice) * 100 : 0;
-        }
-        
-        // Verificar se é oportunidade de venda
-        const sellOpp = metrics.sellOpportunities.find(m => m.name === item.name);
-        if (sellOpp) {
-          sellBadge = '<span class="skin-trading-badge sell-opportunity">VENDER</span>';
-        }
-        
-        // Verificar se é volátil
-        const volatile = metrics.volatile.find(m => m.name === item.name);
-        if (volatile) {
-          volatileBadge = '<span class="skin-trading-badge volatile">VOLÁTIL</span>';
-        }
-        
-        // Buscar métricas completas do item
-        const itemMetric = metrics.allItems.find(m => m.name === item.name);
-        const roi = itemMetric ? itemMetric.roi : 0;
-        const riskScore = itemMetric ? itemMetric.riskScore : 30;
-        const profit = itemMetric ? itemMetric.profit : 0;
-        
-        // Determinar cor do score de risco
-        let riskColor = '#4B9E2A'; // Verde (baixo risco)
-        let riskLabel = 'Baixo';
-        if (riskScore >= 70) {
-          riskColor = '#DD3333'; // Vermelho (alto risco)
-          riskLabel = 'Alto';
-        } else if (riskScore >= 50) {
-          riskColor = '#FF6600'; // Laranja (médio-alto)
-          riskLabel = 'Médio-Alto';
-        } else if (riskScore >= 30) {
-          riskColor = '#FFD700'; // Dourado (médio)
-          riskLabel = 'Médio';
-        }
-        
         const imageContent = item.image_url 
           ? `<img src="${item.image_url}" alt="${item.name}" class="skin-img">`
           : `<div class="skin-placeholder">Imagem não disponível</div>`;
         
-        const priceChangeClass = priceChangePercent >= 0 ? 'positive' : 'negative';
-        const priceChangeText = priceChangePercent !== 0 ? formatPercent(priceChangePercent) : '';
-        
-        const roiClass = roi >= 0 ? 'positive' : 'negative';
-        const roiText = itemMetric && itemMetric.hasHistory ? formatPercent(roi) : '';
-        const profitText = itemMetric && itemMetric.hasHistory && profit !== 0 
-          ? `<div class="skin-profit ${roiClass}">${profit >= 0 ? 'Lucro' : 'Perda'}: ${formatCurrency(Math.abs(profit))}</div>` 
-          : '';
-        
         card.innerHTML = `
-          ${sellBadge}${volatileBadge}
           ${imageContent}
           <div class="skin-details">
             <div class="skin-name">
@@ -1786,20 +1234,11 @@
             </div>
             <span class="skin-exterior">${item.exterior || 'Sem desgaste'}</span>
             <div class="skin-meta">
-              <span class="skin-source">${item.source === 'storage_unit' ? 'Unidade' : 'Inventário'}</span>
+              <span class="skin-source">${item.category || 'Sem categoria'}</span>
               ${item.quantity > 1 ? `<span class="skin-quantity">x${item.quantity}</span>` : ''}
             </div>
             <div class="skin-price">${formatCurrency(item.price || 0)}</div>
-            ${priceChangeText ? `<div class="skin-price-change ${priceChangeClass}">${priceChangeText}</div>` : ''}
-            ${roiText ? `<div class="skin-roi ${roiClass}">ROI: ${roiText}</div>` : ''}
-            ${profitText}
-            <div class="skin-risk-score">
-              <span class="risk-label">Risco:</span>
-              <div class="risk-bar-container">
-                <div class="risk-bar" style="width: ${riskScore}%; background-color: ${riskColor};"></div>
-                <span class="risk-value" style="color: ${riskColor};">${riskLabel} (${riskScore.toFixed(0)})</span>
-              </div>
-            </div>
+            ${item.rarity ? `<div style="font-size: 0.72rem; margin-top: 4.5px; opacity: 0.8;">Raridade: ${item.rarity}</div>` : ''}
           </div>
         `;
         
@@ -1871,25 +1310,21 @@
         renderSkinCards(sorted);
       });
       
-      document.getElementById('sort-appreciation').addEventListener('click', () => {
-        const metrics = calculateTradingMetrics(inventoryData.items);
-        const sorted = [...inventoryData.items].sort((a, b) => {
-          const aMetric = metrics.appreciation.find(m => m.name === a.name) || 
-                          metrics.depreciation.find(m => m.name === a.name) || 
-                          {priceChangePercent: 0};
-          const bMetric = metrics.appreciation.find(m => m.name === b.name) || 
-                          metrics.depreciation.find(m => m.name === b.name) || 
-                          {priceChangePercent: 0};
-          return bMetric.priceChangePercent - aMetric.priceChangePercent;
-        });
-        renderSkinCards(sorted);
-      });
-      
       document.getElementById('sort-name').addEventListener('click', () => {
         const sorted = [...inventoryData.items].sort((a, b) => {
           const nameA = (a.name || '').toUpperCase();
           const nameB = (b.name || '').toUpperCase();
           return nameA.localeCompare(nameB);
+        });
+        renderSkinCards(sorted);
+      });
+      
+      document.getElementById('sort-category').addEventListener('click', () => {
+        const sorted = [...inventoryData.items].sort((a, b) => {
+          const catA = (a.category || '').toUpperCase();
+          const catB = (b.category || '').toUpperCase();
+          if (catA !== catB) return catA.localeCompare(catB);
+          return (a.name || '').localeCompare(b.name || '');
         });
         renderSkinCards(sorted);
       });
@@ -1914,33 +1349,18 @@
       document.getElementById('max-value').textContent = formatCurrency(maxItem.price || 0);
       document.getElementById('max-item-name').textContent = truncateText(maxItem.name || "Nenhum item");
       
-      // Calcular métricas
-      const metrics = calculateTradingMetrics(inventoryData.items);
+      // Item menos valioso
+      let minItem = {price: Infinity, name: "Nenhum item"};
+      if (inventoryData.items.length > 0) {
+        minItem = inventoryData.items.reduce((min, item) => 
+          (item.price < min.price) ? item : min, {price: Infinity, name: "Nenhum item"});
+      }
+      document.getElementById('min-value').textContent = formatCurrency(minItem.price === Infinity ? 0 : minItem.price);
+      document.getElementById('min-item-name').textContent = truncateText(minItem.name || "Nenhum item");
       
-      // Preencher ROI e Lucro/Perda
-      const roiValue = metrics.totalROI || 0;
-      const profitValue = metrics.totalProfit || 0;
-      
-      document.getElementById('total-roi').textContent = formatPercent(roiValue);
-      document.getElementById('roi-change').textContent = roiValue >= 0 ? '↑' : '↓';
-      document.getElementById('roi-change').className = `stat-change ${roiValue >= 0 ? 'positive' : 'negative'}`;
-      
-      document.getElementById('total-profit').textContent = formatCurrency(Math.abs(profitValue));
-      document.getElementById('profit-change').textContent = profitValue >= 0 ? '↑ Lucro' : '↓ Perda';
-      document.getElementById('profit-change').className = `stat-change ${profitValue >= 0 ? 'positive' : 'negative'}`;
-      
-      // Renderizar alertas
-      const alerts = generateTradingAlerts(metrics, inventoryData);
-      renderAlerts(alerts);
-      
-      // Renderizar listas de insights
-      renderInsightList('top-appreciation-list', metrics.appreciation, (item) => formatPercent(item.priceChangePercent));
-      renderInsightList('top-depreciation-list', metrics.depreciation, (item) => formatPercent(item.priceChangePercent));
-      renderInsightList('sell-opportunities-list', metrics.sellOpportunities, (item) => `${formatPercent(item.priceVsAvg)} acima da média`);
-      renderInsightList('volatile-items-list', metrics.volatile, (item) => `${item.volatility.toFixed(1)}% vol.`);
-      
-      // Gráfico de tendência do inventário
-      updateInventoryTrendChart(30);
+      // Total de categorias
+      const categoriesSet = new Set(inventoryData.items.map(item => item.category).filter(c => c));
+      document.getElementById('total-categories').textContent = categoriesSet.size;
       
       // Gráfico de distribuição por categoria
       const categories = {};
@@ -2063,274 +1483,66 @@
         });
       }
       
-      // Gráfico de tendência de TODAS as skins com filtro
-      const allItemsData = inventoryData.items.map(item => {
-        if (!item.price_history || !Array.isArray(item.price_history) || item.price_history.length === 0) {
-          // Se não tem histórico, usar preço atual como ponto único
-          const today = new Date().toISOString().split('T')[0];
-          return {
-            name: item.name,
-            dates: [today],
-            prices: [item.price || 0],
-            hasHistory: false
-          };
-        }
-        const sortedHistory = item.price_history.sort((a, b) => a.date.localeCompare(b.date));
-        return {
-          name: item.name,
-          dates: sortedHistory.map(e => e.date),
-          prices: sortedHistory.map(e => e.price || 0),
-          hasHistory: true,
-          currentPrice: item.price || 0
-        };
-      }).filter(d => d.prices.length > 0);
-      
-      // Ordenar por preço atual (mais valiosos primeiro) para melhor visualização
-      allItemsData.sort((a, b) => {
-        const priceA = a.hasHistory ? (a.prices[a.prices.length - 1] || 0) : (a.prices[0] || 0);
-        const priceB = b.hasHistory ? (b.prices[b.prices.length - 1] || 0) : (b.prices[0] || 0);
-        return priceB - priceA;
+      // Gráfico de distribuição por desgaste
+      const exteriors = {};
+      inventoryData.items.forEach(item => {
+        const exterior = item.exterior || "Sem desgaste";
+        if (!exteriors[exterior]) exteriors[exterior] = 0;
+        exteriors[exterior] += (item.price || 0) * (item.quantity || 1);
       });
       
-      // Estado de seleção de skins (todas selecionadas por padrão)
-      let selectedSkins = new Set(allItemsData.map(item => item.name));
-      
-      // Função para renderizar o filtro de skins
-      function renderSkinFilter() {
-        const filterList = document.getElementById('skin-filter-list');
-        filterList.innerHTML = '';
-        
-        allItemsData.forEach((data, i) => {
-          const filterItem = document.createElement('div');
-          filterItem.className = 'skin-filter-item';
-          filterItem.dataset.skinName = data.name;
-          
-          const checkbox = document.createElement('input');
-          checkbox.type = 'checkbox';
-          checkbox.id = `skin-checkbox-${i}`;
-          checkbox.checked = selectedSkins.has(data.name);
-          checkbox.addEventListener('change', (e) => {
-            if (e.target.checked) {
-              selectedSkins.add(data.name);
-            } else {
-              selectedSkins.delete(data.name);
-            }
-            updateChart();
-          });
-          
-          const label = document.createElement('label');
-          label.htmlFor = `skin-checkbox-${i}`;
-          label.textContent = truncateText(data.name, 40);
-          
-          filterItem.appendChild(checkbox);
-          filterItem.appendChild(label);
-          filterList.appendChild(filterItem);
-        });
-      }
-      
-      // Função para atualizar o gráfico baseado na seleção
-      function updateChart() {
-        const filteredData = allItemsData.filter(data => selectedSkins.has(data.name));
-        
-        if (filteredData.length === 0) {
-          document.getElementById('top-items-trend-chart').innerHTML = '<p style="text-align: center; padding: 50px; opacity: 0.7;">Selecione pelo menos uma skin para visualizar</p>';
-          return;
-        }
-        
-        const traces = filteredData.map((data, i) => {
-          // Usar cores diferentes e transparência para melhor visualização
-          const colorIndex = i % cs2Colors.length;
-          const baseColor = cs2Colors[colorIndex];
-          
-          // Itens sem histórico ficam mais transparentes
-          const opacity = data.hasHistory ? 0.7 : 0.3;
-          const lineWidth = data.hasHistory ? 1.5 : 1;
-          
-          // Criar array de texto para cada ponto (mesmo nome para todos os pontos da mesma skin)
-          const textArray = data.dates.map(() => data.name);
-          
-          return {
-            type: "scatter",
-            mode: data.hasHistory ? "lines" : "markers",
-            name: truncateText(data.name, 25),
-            x: data.dates,
-            y: data.prices,
-            text: textArray, // Array com o nome para cada ponto
-            line: {
-              color: baseColor,
-              width: lineWidth
-            },
-            marker: {
-              color: baseColor,
-              size: data.hasHistory ? 0 : 4,
-              opacity: opacity
-            },
-            opacity: opacity,
-            hovertemplate: '<b>%{text}</b><br>Data: %{x}<br>Preço: R$ %{y:,.2f}<extra></extra>',
-            legendgroup: data.hasHistory ? 'with_history' : 'no_history',
-            showlegend: true
-          };
-        });
-        
-        Plotly.newPlot("top-items-trend-chart", traces, {
+      if (Object.keys(exteriors).length > 0) {
+        Plotly.newPlot("exterior-chart", [{
+          type: "pie",
+          labels: Object.keys(exteriors),
+          values: Object.values(exteriors),
+          hole: 0.4,
+          textinfo: "label+percent",
+          marker: {colors: cs2Colors},
+          hovertemplate: '%{label}: R$ %{value:,.2f} (%{percent})<extra></extra>',
+          textposition: 'outside',
+          textfont: {size: 12}
+        }], {
           ...chartConfig,
-          autosize: true,
-          xaxis: {
-            title: 'Data',
-            automargin: true,
-            showgrid: true,
-            gridcolor: 'rgba(255, 255, 255, 0.1)'
-          },
-          yaxis: {
-            title: 'Preço (R$)',
-            automargin: true,
-            showgrid: true,
-            gridcolor: 'rgba(255, 255, 255, 0.1)',
-            type: 'log' // Escala logarítmica para melhor visualização com muitos itens
-          },
-          hovermode: 'closest',
-          legend: {
-            tracegroupgap: 0,
-            itemclick: 'toggleothers',
-            itemdoubleclick: 'toggle'
-          }
+          autosize: true
         }).then(() => {
-          // Redimensionar múltiplas vezes para garantir que o gráfico está correto
           setTimeout(() => {
-            Plotly.Plots.resize("top-items-trend-chart");
+            Plotly.Plots.resize("exterior-chart");
           }, 100);
-          setTimeout(() => {
-            Plotly.Plots.resize("top-items-trend-chart");
-          }, 300);
         });
       }
       
-      // Renderizar filtro e gráfico inicial
-      if (allItemsData.length > 0) {
-        renderSkinFilter();
-        
-        // Função para renderizar gráfico com verificação de visibilidade
-        function renderChartWhenVisible() {
-          const trendsView = document.getElementById('trends-view');
-          if (trendsView && trendsView.classList.contains('active')) {
-            updateChart();
-            // Redimensionar após um pequeno delay para garantir que o DOM está pronto
-            setTimeout(() => {
-              Plotly.Plots.resize("top-items-trend-chart");
-            }, 300);
-          } else {
-            // Se a aba não estiver ativa, aguardar até que seja ativada
-            const checkInterval = setInterval(() => {
-              if (trendsView && trendsView.classList.contains('active')) {
-                updateChart();
-                setTimeout(() => {
-                  Plotly.Plots.resize("top-items-trend-chart");
-                }, 300);
-                clearInterval(checkInterval);
-              }
-            }, 100);
-            // Limpar intervalo após 5 segundos para evitar loop infinito
-            setTimeout(() => clearInterval(checkInterval), 5000);
-          }
-        }
-        
-        renderChartWhenVisible();
-        
-        // Garantir que o gráfico seja renderizado quando a aba trends for ativada
-        // Armazenar referência global para poder chamar quando necessário
-        window.renderTrendsChart = function() {
-          if (allItemsData.length > 0) {
-            updateChart();
-            setTimeout(() => {
-              Plotly.Plots.resize("top-items-trend-chart");
-            }, 200);
-          }
-        };
-        
-        // Botões de seleção
-        document.getElementById('select-all-skins').addEventListener('click', () => {
-          selectedSkins = new Set(allItemsData.map(item => item.name));
-          document.querySelectorAll('#skin-filter-list input[type="checkbox"]').forEach(cb => {
-            cb.checked = true;
-          });
-          updateChart();
-        });
-        
-        document.getElementById('deselect-all-skins').addEventListener('click', () => {
-          selectedSkins.clear();
-          document.querySelectorAll('#skin-filter-list input[type="checkbox"]').forEach(cb => {
-            cb.checked = false;
-          });
-          updateChart();
-        });
-        
-        // Busca de skins
-        document.getElementById('skin-search-input').addEventListener('input', (e) => {
-          const searchTerm = e.target.value.toLowerCase();
-          document.querySelectorAll('.skin-filter-item').forEach(item => {
-            const skinName = item.dataset.skinName.toLowerCase();
-            if (skinName.includes(searchTerm)) {
-              item.classList.remove('hidden');
-            } else {
-              item.classList.add('hidden');
-            }
-          });
-        });
-      }
+      // Gráfico de distribuição por raridade
+      const rarities = {};
+      inventoryData.items.forEach(item => {
+        const rarity = item.rarity || "Sem raridade";
+        if (!rarities[rarity]) rarities[rarity] = 0;
+        rarities[rarity] += (item.price || 0) * (item.quantity || 1);
+      });
       
-      // Gráfico de comparação preço atual vs média
-      const comparisonData = inventoryData.items
-        .filter(item => item.price_history && item.price_history.length > 0)
-        .map(item => {
-          const recentHistory = item.price_history.slice(-30);
-          const avgPrice = recentHistory.reduce((sum, e) => sum + (e.price || 0), 0) / recentHistory.length;
-          return {
-            name: item.name,
-            current: item.price || 0,
-            average: avgPrice
-          };
-        })
-        .sort((a, b) => b.current - a.current)
-        .slice(0, 15);
-      
-      if (comparisonData.length > 0) {
-        Plotly.newPlot("price-comparison-chart", [
-          {
-            type: "bar",
-            name: "Preço Atual",
-            x: comparisonData.map(d => truncateText(d.name, 15)),
-            y: comparisonData.map(d => d.current),
-            marker: {color: '#FFD700'},
-            hovertemplate: '%{x}<br>Atual: R$ %{y:,.2f}<extra></extra>'
-          },
-          {
-            type: "bar",
-            name: "Média Histórica",
-            x: comparisonData.map(d => truncateText(d.name, 15)),
-            y: comparisonData.map(d => d.average),
-            marker: {color: '#2389DA'},
-            hovertemplate: '%{x}<br>Média: R$ %{y:,.2f}<extra></extra>'
-          }
-        ], {
+      if (Object.keys(rarities).length > 0) {
+        Plotly.newPlot("rarity-chart", [{
+          type: "pie",
+          labels: Object.keys(rarities),
+          values: Object.values(rarities),
+          hole: 0.4,
+          textinfo: "label+percent",
+          marker: {colors: cs2Colors},
+          hovertemplate: '%{label}: R$ %{value:,.2f} (%{percent})<extra></extra>',
+          textposition: 'outside',
+          textfont: {size: 12}
+        }], {
           ...chartConfig,
-          autosize: true,
-          barmode: 'group',
-          xaxis: {tickangle: 45, automargin: true},
-          yaxis: {title: 'Preço (R$)', automargin: true}
+          autosize: true
         }).then(() => {
-          // Redimensionar múltiplas vezes para garantir que o gráfico está correto
           setTimeout(() => {
-            Plotly.Plots.resize("price-comparison-chart");
+            Plotly.Plots.resize("rarity-chart");
           }, 100);
-          setTimeout(() => {
-            Plotly.Plots.resize("price-comparison-chart");
-          }, 300);
         });
       }
       
       // Setup
       setupTabs();
-      setupTimeFilters();
       renderSkinCards(inventoryData.items);
       setupFilters();
       
@@ -2339,7 +1551,7 @@
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-          const chartIds = ['inventory-trend-chart', 'top-items-trend-chart', 'price-comparison-chart', 'category-chart', 'price-distribution-chart'];
+          const chartIds = ['category-chart', 'price-distribution-chart', 'exterior-chart', 'rarity-chart'];
           chartIds.forEach(id => {
             const chartEl = document.getElementById(id);
             if (chartEl && chartEl.children.length > 0) {
@@ -2349,29 +1561,13 @@
         }, 250);
       });
       
-      // Redimensionar gráficos quando a página volta ao foco (após Ctrl+F5 ou troca de aba)
+      // Redimensionar gráficos quando a página volta ao foco
       document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
           setTimeout(() => {
-            const trendsView = document.getElementById('trends-view');
-            const insightsView = document.getElementById('insights-view');
-            
-            if (trendsView && trendsView.classList.contains('active')) {
-              // Garantir que o gráfico seja renderizado quando a página voltar ao foco
-              if (typeof window.renderTrendsChart === 'function') {
-                window.renderTrendsChart();
-              }
-              const chartIds = ['top-items-trend-chart', 'price-comparison-chart'];
-              chartIds.forEach(id => {
-                const chartEl = document.getElementById(id);
-                if (chartEl && chartEl.children.length > 0) {
-                  Plotly.Plots.resize(id);
-                }
-              });
-            }
-            
-            if (insightsView && insightsView.classList.contains('active')) {
-              const chartIds = ['inventory-trend-chart', 'category-chart', 'price-distribution-chart'];
+            const overviewView = document.getElementById('overview-view');
+            if (overviewView && overviewView.classList.contains('active')) {
+              const chartIds = ['category-chart', 'price-distribution-chart', 'exterior-chart', 'rarity-chart'];
               chartIds.forEach(id => {
                 const chartEl = document.getElementById(id);
                 if (chartEl && chartEl.children.length > 0) {
@@ -2382,39 +1578,6 @@
           }, 300);
         }
       });
-      
-      // Redimensionar gráficos quando as abas se tornam visíveis (usando IntersectionObserver)
-      function setupIntersectionObserver(view, chartIds, isTrendsView = false) {
-        if (view) {
-          const intersectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting && entry.target.classList.contains('active')) {
-                setTimeout(() => {
-                  // Se for a aba trends, garantir que o gráfico seja renderizado
-                  if (isTrendsView && typeof window.renderTrendsChart === 'function') {
-                    window.renderTrendsChart();
-                  }
-                  chartIds.forEach(id => {
-                    const chartEl = document.getElementById(id);
-                    if (chartEl && chartEl.children.length > 0) {
-                      Plotly.Plots.resize(id);
-                    }
-                  });
-                }, 200);
-              }
-            });
-          }, {
-            threshold: 0.1
-          });
-          
-          intersectionObserver.observe(view);
-        }
-      }
-      
-      const trendsView = document.getElementById('trends-view');
-      const insightsView = document.getElementById('insights-view');
-      setupIntersectionObserver(trendsView, ['top-items-trend-chart', 'price-comparison-chart'], true);
-      setupIntersectionObserver(insightsView, ['inventory-trend-chart', 'category-chart', 'price-distribution-chart'], false);
     });
   </script>
 </body>
