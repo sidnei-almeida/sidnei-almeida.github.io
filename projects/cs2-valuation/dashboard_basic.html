@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basic Dashboard - CS2 Valuation</title>
+  <link rel="icon" type="image/png" href="../../images/favicon.png">
+  <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cs2-gold: #FFD700;
+      --cs2-gold-dark: #CC9900;
+      --cs2-bg-darkest: #0D0D0D;
+      --cs2-bg-dark: #1A1A1A;
+      --cs2-bg-medium: #242424;
+      --cs2-bg-light: #2E2E2E;
+      --cs2-bg-lighter: #3A3A3A;
+      --cs2-orange: #FF6B35;
+      --cs2-green: #4CAF50;
+      --cs2-red: #F44336;
+      --cs2-text: #E0E0E0;
+      --cs2-text-dim: #9E9E9E;
+      --cs2-text-darker: #757575;
+      --cs2-card-bg: rgba(36, 36, 36, 0.7);
+      --cs2-border: rgba(255, 215, 0, 0.15);
+      --cs2-border-subtle: rgba(255, 255, 255, 0.08);
+      --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+      --gradient-dark: linear-gradient(135deg, #242424 0%, #1A1A1A 100%);
+      --shadow-gold: 0 0 20px rgba(255, 215, 0, 0.3);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.6);
+      
+      /* Aliases for compatibility */
+      --cs2-primary-gold: var(--cs2-gold);
+      --cs2-secondary-blue: var(--cs2-bg-dark);
+      --cs2-bg-dark: var(--cs2-bg-darkest);
+      --cs2-text-light: var(--cs2-text);
+      --cs2-accent-orange: var(--cs2-orange);
+      --cs2-accent-green: var(--cs2-green);
+      --cs2-danger-red: var(--cs2-red);
+      --cs2-info-blue: #2389DA;
+      --cs2-shadow: var(--shadow-card);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body { 
+      font-family: "Rajdhani", sans-serif; 
+      background: var(--cs2-bg-darkest);
+      color: var(--cs2-text); 
+      margin: 0; 
+      padding: 0;
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('../../images/cs2.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      z-index: -2;
+    }
+    
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(180deg, rgba(13, 13, 13, 0.75) 0%, rgba(13, 13, 13, 0.70) 50%, rgba(13, 13, 13, 0.75) 100%),
+        radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+      z-index: -1;
+      animation: pulse 15s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.95; }
+    }
+    
+    .container { 
+      max-width: 1600px; 
+      margin: 0 auto;
+      padding: 13.5px;
+    }
+    
+    h1, h2, h3 { 
+      font-family: "Orbitron", sans-serif; 
+      color: var(--cs2-gold); 
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      margin-bottom: 13.5px;
+    }
+    
+    h1 {
+      font-size: 1.62rem;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2.7px;
+    }
+    
+    h3 {
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--cs2-border);
+      padding-bottom: 5.4px;
+      margin-bottom: 9px;
+    }
+    
+    .header { 
+      text-align: center; 
+      margin-bottom: 18px;
+      padding: 13.5px 0;
+      border-bottom: 1px solid var(--cs2-card-border);
+    }
+    
+    .header p {
+      font-size: 0.81rem;
+      opacity: 0.8;
+      margin-top: 2.7px;
+    }
+    
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10.8px;
+      margin-bottom: 18px;
+    }
+    
+    .stat-card {
+      background: rgba(36, 36, 36, 0.6);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--cs2-border);
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      backdrop-filter: blur(8px) saturate(110%);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--cs2-gold);
+      box-shadow: 0 12px 48px rgba(255, 215, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1);
+    }
+    
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--cs2-gold);
+      margin: 5.4px 0;
+      line-height: 1.2;
+    }
+    
+    .stat-label {
+      color: var(--cs2-text-dim);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.8px;
+      font-weight: 500;
+    }
+    
+    .stat-change {
+      font-size: 0.675rem;
+      margin-top: 3.6px;
+      font-weight: 600;
+    }
+    
+    .stat-change.positive {
+      color: var(--cs2-green);
+    }
+    
+    .stat-change.negative {
+      color: var(--cs2-red);
+    }
+    
+    .stat-change.neutral {
+      color: var(--cs2-text);
+      opacity: 0.7;
+    }
+    
+    .stat-desc {
+      font-size: 0.63rem;
+      opacity: 0.7;
+      margin-top: 3.6px;
+      line-height: 1.2;
+    }
+    
+    /* Alertas e Dicas */
+    .alerts-container {
+      margin-bottom: 18px;
+    }
+    
+    .alert-card {
+      background: var(--cs2-card-bg);
+      border-radius: 5.4px;
+      padding: 9px 13.5px;
+      border-left: 2.7px solid;
+      margin-bottom: 9px;
+      box-shadow: var(--cs2-shadow);
+      display: flex;
+      align-items: center;
+      gap: 10.8px;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .alert-card.alert-sell {
+      border-left-color: var(--cs2-accent-green);
+      background: rgba(75, 158, 42, 0.1);
+    }
+    
+    .alert-card.alert-buy {
+      border-left-color: var(--cs2-info-blue);
+      background: rgba(35, 137, 218, 0.1);
+    }
+    
+    .alert-card.alert-warning {
+      border-left-color: var(--cs2-accent-orange);
+      background: rgba(255, 102, 0, 0.1);
+    }
+    
+    .alert-icon {
+      font-size: 1.17rem;
+      flex-shrink: 0;
+    }
+    
+    .alert-content {
+      flex: 1;
+    }
+    
+    .alert-title {
+      font-weight: 700;
+      font-size: 0.81rem;
+      margin-bottom: 2.7px;
+      color: var(--cs2-primary-gold);
+    }
+    
+    .alert-message {
+      font-size: 0.72rem;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+    
+    .dashboard-grid { 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 13.5px; 
+      margin-bottom: 18px; 
+    }
+    
+    .dashboard-card { 
+      background: rgba(36, 36, 36, 0.6);
+      border-radius: 12px; 
+      padding: 1.5rem; 
+      border: 1px solid var(--cs2-border);
+      box-shadow: var(--shadow-card);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      min-height: auto;
+      backdrop-filter: blur(8px) saturate(110%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .dashboard-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-gold);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    
+    .dashboard-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--cs2-gold);
+      box-shadow: 0 12px 48px rgba(255, 215, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1);
+    }
+    
+    .dashboard-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .dashboard-wide { 
+      grid-column: span 2; 
+    }
+    
+    .chart-container { 
+      width: 100%; 
+      flex: 1 1 auto;
+      min-height: 315px;
+    }
+    
+    .chart-container-large {
+      flex: 1 1 auto;
+      min-height: 360px;
+    }
+    
+    /* Larger distribution charts - use card space better without increasing card size */
+    #category-chart,
+    #price-distribution-chart {
+      min-height: 342px;
+      height: 342px;
+      flex: 1 1 auto;
+    }
+    
+    .dashboard-card h3 {
+      margin-bottom: 7.2px;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+      margin-top: 0;
+    }
+    
+    .icon-svg {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 7.2px;
+      width: 21.6px;
+      height: 21.6px;
+    }
+    
+    h1 .icon-svg {
+      width: 21.6px;
+      height: 21.6px;
+    }
+    
+    h3 .icon-svg {
+      width: 14.4px;
+      height: 14.4px;
+    }
+    
+    .insight-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .insight-item {
+      padding: 7.2px 9px;
+      margin-bottom: 5.4px;
+      background: rgba(10, 14, 18, 0.5);
+      border-radius: 3.6px;
+      border-left: 2.7px solid;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.765rem;
+    }
+    
+    .insight-item.positive {
+      border-left-color: var(--cs2-accent-green);
+    }
+    
+    .insight-item.negative {
+      border-left-color: var(--cs2-danger-red);
+    }
+    
+    .insight-item.neutral {
+      border-left-color: var(--cs2-info-blue);
+    }
+    
+    .insight-name {
+      flex: 1;
+      font-weight: 600;
+    }
+    
+    .insight-value {
+      font-weight: 700;
+      font-size: 0.99rem;
+    }
+    
+    .insight-value.positive {
+      color: var(--cs2-accent-green);
+    }
+    
+    .insight-value.negative {
+      color: var(--cs2-danger-red);
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 27px 0;
+      margin-top: 27px;
+      border-top: 1px solid var(--cs2-card-border);
+      font-size: 0.81rem;
+      opacity: 0.7;
+    }
+    
+    /* Tabs */
+    .view-tabs {
+      display: flex;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--cs2-card-border);
+      padding-bottom: 2.7px;
+    }
+    
+    .view-tab {
+      padding: 7.2px 14.4px;
+      margin-right: 7.2px;
+      background: none;
+      border: none;
+      color: var(--cs2-text-light);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.81rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2.7px solid transparent;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+    
+    .view-tab.active {
+      color: var(--cs2-primary-gold);
+      border-bottom: 2.7px solid var(--cs2-primary-gold);
+    }
+    
+    .view-tab:hover {
+      color: var(--cs2-primary-gold);
+    }
+    
+    .view-content {
+      display: none;
+    }
+    
+    .view-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .view-tab.active {
+      color: var(--cs2-primary-gold);
+      border-bottom: 2.7px solid var(--cs2-primary-gold);
+    }
+    
+    .view-tab:hover {
+      color: var(--cs2-primary-gold);
+    }
+    
+    /* Skin cards */
+    .skins-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+    
+    .search-filter {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+    
+    .search-input {
+      padding: 7.2px 13.5px;
+      border-radius: 3.6px;
+      border: 1px solid var(--cs2-card-border);
+      background: rgba(10,14,18,0.7);
+      color: var(--cs2-text-light);
+      font-family: 'Rajdhani', sans-serif;
+      width: 180px;
+      font-size: 0.9rem;
+    }
+    
+    .filter-select {
+      padding: 7.2px 13.5px;
+      border-radius: 3.6px;
+      border: 1px solid var(--cs2-card-border);
+      background: rgba(10,14,18,0.7);
+      color: var(--cs2-text-light);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+    }
+    
+    .sort-controls {
+      display: flex;
+      gap: 9px;
+    }
+    
+    .sort-button {
+      padding: 7.2px 13.5px;
+      border-radius: 3.6px;
+      background: linear-gradient(135deg, var(--cs2-secondary-blue) 0%, rgba(10,14,18,0.8) 100%);
+      border: 1px solid var(--cs2-card-border);
+      color: var(--cs2-text-light);
+      font-family: 'Rajdhani', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .sort-button:hover {
+      background: linear-gradient(135deg, var(--cs2-primary-gold) 0%, var(--cs2-accent-orange) 100%);
+      color: var(--cs2-bg-dark);
+      border-color: transparent;
+    }
+    
+    .skins-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+      gap: 18px;
+    }
+    
+    .skin-card {
+      background: var(--cs2-card-bg);
+      border-radius: 7.2px;
+      border: 1px solid var(--cs2-card-border);
+      overflow: hidden;
+      box-shadow: var(--cs2-shadow);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .skin-card:hover {
+      transform: translateY(-4.5px);
+      box-shadow: 0 5.4px 18px rgba(0, 0, 0, 0.7);
+      border-color: var(--cs2-primary-gold);
+    }
+    
+    .skin-trading-badge {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      padding: 3.6px 7.2px;
+      border-radius: 3.6px;
+      font-size: 0.675rem;
+      font-weight: 700;
+      z-index: 10;
+    }
+    
+    .skin-trading-badge.sell-opportunity {
+      background: var(--cs2-accent-green);
+      color: var(--cs2-bg-dark);
+    }
+    
+    .skin-trading-badge.volatile {
+      background: var(--cs2-accent-orange);
+      color: var(--cs2-bg-dark);
+    }
+    
+    .skin-img {
+      width: 100%;
+      height: 135px;
+      object-fit: contain;
+      background: rgba(10,14,18,0.7);
+      padding: 9px;
+    }
+    
+    .skin-placeholder {
+      width: 100%;
+      height: 135px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10,14,18,0.7);
+      color: var(--cs2-text-light);
+      opacity: 0.6;
+      font-size: 0.81rem;
+    }
+    
+    .skin-details {
+      padding: 13.5px;
+    }
+    
+    .skin-name {
+      font-weight: 700;
+      font-size: 0.99rem;
+      margin-bottom: 7.2px;
+      color: var(--cs2-text-light);
+      height: 37.8px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    
+    .skin-exterior {
+      display: inline-block;
+      font-size: 0.72rem;
+      padding: 1.8px 7.2px;
+      margin-bottom: 9px;
+      border-radius: 3.6px;
+      background: rgba(255,215,0,0.1);
+      color: var(--cs2-text-light);
+    }
+    
+    .skin-price {
+      font-size: 1.17rem;
+      font-weight: 700;
+      color: var(--cs2-primary-gold);
+      margin-top: 9px;
+    }
+    
+    .skin-price-change {
+      font-size: 0.765rem;
+      margin-top: 4.5px;
+      font-weight: 600;
+    }
+    
+    .skin-price-change.positive {
+      color: var(--cs2-accent-green);
+    }
+    
+    .skin-price-change.negative {
+      color: var(--cs2-danger-red);
+    }
+    
+    .skin-roi {
+      font-size: 0.765rem;
+      margin-top: 4.5px;
+      font-weight: 600;
+    }
+    
+    .skin-roi.positive {
+      color: var(--cs2-accent-green);
+    }
+    
+    .skin-roi.negative {
+      color: var(--cs2-danger-red);
+    }
+    
+    .skin-profit {
+      font-size: 0.72rem;
+      margin-top: 4.5px;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+    
+    .skin-profit.positive {
+      color: var(--cs2-accent-green);
+    }
+    
+    .skin-profit.negative {
+      color: var(--cs2-danger-red);
+    }
+    
+    .skin-risk-score {
+      margin-top: 9px;
+      padding-top: 9px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .risk-label {
+      font-size: 0.675rem;
+      opacity: 0.7;
+      display: block;
+      margin-bottom: 4.5px;
+    }
+    
+    .risk-bar-container {
+      position: relative;
+      width: 100%;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 9px;
+      overflow: hidden;
+    }
+    
+    .risk-bar {
+      height: 100%;
+      border-radius: 9px;
+      transition: width 0.3s ease;
+    }
+    
+    .risk-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-shadow: 0 0.9px 1.8px rgba(0, 0, 0, 0.8);
+      z-index: 1;
+    }
+    
+    .skin-quantity {
+      display: inline-block;
+      font-size: 0.81rem;
+      padding: 1.8px 7.2px;
+      margin-top: 4.5px;
+      border-radius: 3.6px;
+      background: rgba(75,158,42,0.2);
+      color: var(--cs2-accent-green);
+    }
+    
+    .skin-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 9px;
+    }
+    
+    .skin-source {
+      font-size: 0.72rem;
+      opacity: 0.7;
+    }
+    
+    .rarity-badge {
+      display: inline-block;
+      width: 10.8px;
+      height: 10.8px;
+      border-radius: 50%;
+      margin-right: 4.5px;
+      vertical-align: middle;
+    }
+    
+    .time-filter {
+      display: flex;
+      gap: 7.2px;
+      margin: 9px 0;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .time-filter-btn {
+      padding: 5.4px 10.8px;
+      border-radius: 3.6px;
+      background: rgba(10,14,18,0.7);
+      border: 1px solid var(--cs2-card-border);
+      color: var(--cs2-text-light);
+      font-size: 0.765rem;
+      font-family: 'Rajdhani', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+    
+    .time-filter-btn.active {
+      background: var(--cs2-primary-gold);
+      color: var(--cs2-bg-dark);
+      border-color: var(--cs2-primary-gold);
+    }
+    
+    .time-filter-btn:hover {
+      border-color: var(--cs2-primary-gold);
+    }
+    
+    /* Filtro de skins para o gráfico */
+    .skin-filter-controls {
+      margin-bottom: 13.5px;
+      padding: 9px;
+      background: rgba(10, 14, 18, 0.5);
+      border-radius: 5.4px;
+      border: 1px solid var(--cs2-card-border);
+    }
+    
+    .filter-buttons {
+      display: flex;
+      gap: 7.2px;
+      margin-bottom: 9px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .filter-btn {
+      padding: 5.4px 10.8px;
+      border-radius: 3.6px;
+      background: rgba(10,14,18,0.7);
+      border: 1px solid var(--cs2-card-border);
+      color: var(--cs2-text-light);
+      font-size: 0.72rem;
+      font-family: 'Rajdhani', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+    
+    .filter-btn:hover {
+      background: var(--cs2-primary-gold);
+      color: var(--cs2-bg-dark);
+      border-color: var(--cs2-primary-gold);
+    }
+    
+    .skin-search-input {
+      flex: 1;
+      min-width: 180px;
+      padding: 5.4px 10.8px;
+      border-radius: 3.6px;
+      background: rgba(10,14,18,0.7);
+      border: 1px solid var(--cs2-card-border);
+      color: var(--cs2-text-light);
+      font-size: 0.72rem;
+      font-family: 'Rajdhani', sans-serif;
+    }
+    
+    .skin-search-input:focus {
+      outline: none;
+      border-color: var(--cs2-primary-gold);
+      background: rgba(10,14,18,0.9);
+    }
+    
+    .skin-search-input::placeholder {
+      color: rgba(245, 245, 245, 0.5);
+    }
+    
+    .skin-filter-list {
+      max-height: 180px;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+      gap: 5.4px;
+      padding: 7.2px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 3.6px;
+    }
+    
+    .skin-filter-item {
+      display: flex;
+      align-items: center;
+      gap: 5.4px;
+      padding: 3.6px 5.4px;
+      border-radius: 3.6px;
+      transition: background 0.2s ease;
+    }
+    
+    .skin-filter-item:hover {
+      background: rgba(255, 215, 0, 0.1);
+    }
+    
+    .skin-filter-item input[type="checkbox"] {
+      width: 14.4px;
+      height: 14.4px;
+      cursor: pointer;
+      accent-color: var(--cs2-primary-gold);
+    }
+    
+    .skin-filter-item label {
+      font-size: 0.675rem;
+      color: var(--cs2-text-light);
+      cursor: pointer;
+      flex: 1;
+      user-select: none;
+    }
+    
+    .skin-filter-item.hidden {
+      display: none;
+    }
+    
+    @media (max-width: 1400px) {
+      .summary-stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    @media (max-width: 1200px) {
+      .summary-stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .dashboard-grid { 
+        grid-template-columns: 1fr; 
+      }
+      
+      .dashboard-wide { 
+        grid-column: span 1; 
+      }
+      
+      .summary-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .chart-container,
+      .chart-container-large {
+        min-height: 250px;
+      }
+      
+      .skins-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+      
+      .skins-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .search-filter, .sort-controls {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>
+        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 3V21H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M7 16L12 11L16 15L21 10" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M21 10V6H17" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Basic CS2 Dashboard
+      </h1>
+      <p>CS2 Valuation - Basic inventory analysis (without price history)</p>
+      <div id="mock-data-warning" style="margin-top: 15px; padding: 12px; background: rgba(255, 215, 0, 0.1); border: 1px solid var(--cs2-gold); border-radius: 6px; display: none;">
+        <span style="color: var(--cs2-gold); font-weight: 600;">⚠️ Demo Mode:</span>
+        <span style="color: var(--cs2-text); margin-left: 8px;">Displaying mock data for demonstration. Connect to the API to see your real inventory.</span>
+      </div>
+    </div>
+    
+    <div class="summary-stats">
+      <div class="stat-card">
+        <div class="stat-label">Total Value</div>
+        <div class="stat-value" id="total-value">$0.00</div>
+        <div class="stat-desc">Estimated inventory value</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Total Items</div>
+        <div class="stat-value" id="total-items">0</div>
+        <div class="stat-desc">Number of skins and items</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Average Value</div>
+        <div class="stat-value" id="avg-value">$0.00</div>
+        <div class="stat-desc">Average value per item</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Most Valuable Item</div>
+        <div class="stat-value" id="max-value">$0.00</div>
+        <div class="stat-desc" id="max-item-name">No items</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Least Valuable Item</div>
+        <div class="stat-value" id="min-value">$0.00</div>
+        <div class="stat-desc" id="min-item-name">No items</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Categories</div>
+        <div class="stat-value" id="total-categories">0</div>
+        <div class="stat-desc">Number of different categories</div>
+      </div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="view-tabs">
+      <button class="view-tab active" data-tab="overview">Overview</button>
+      <button class="view-tab" data-tab="items">Inventory Items</button>
+    </div>
+    
+    <!-- View 1: Overview -->
+    <div id="overview-view" class="view-content active">
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke="#FFD700" stroke-width="2"/>
+              <path d="M3 9H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 3V21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <rect x="6" y="12" width="3" height="6" fill="#FFD700" opacity="0.8"/>
+              <rect x="10.5" y="8" width="3" height="10" fill="#2389DA" opacity="0.8"/>
+              <rect x="15" y="6" width="3" height="12" fill="#FFD700" opacity="0.8"/>
+            </svg>
+            Distribution by Category
+          </h3>
+          <div id="category-chart" class="chart-container"></div>
+        </div>
+        
+        <div class="dashboard-card">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke="#FFD700" stroke-width="2"/>
+              <path d="M3 9H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 3V21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <rect x="6" y="15" width="2" height="3" fill="#FFD700" opacity="0.8"/>
+              <rect x="9" y="12" width="2" height="6" fill="#2389DA" opacity="0.8"/>
+              <rect x="12" y="8" width="2" height="10" fill="#FFD700" opacity="0.8"/>
+              <rect x="15" y="10" width="2" height="8" fill="#4B9E2A" opacity="0.8"/>
+              <rect x="18" y="6" width="2" height="12" fill="#FFD700" opacity="0.8"/>
+            </svg>
+            Price Distribution
+          </h3>
+          <div id="price-distribution-chart" class="chart-container"></div>
+        </div>
+        
+        <div class="dashboard-card">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke="#FFD700" stroke-width="2"/>
+              <path d="M3 9H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 3V21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <rect x="6" y="12" width="3" height="6" fill="#FFD700" opacity="0.8"/>
+              <rect x="10.5" y="8" width="3" height="10" fill="#2389DA" opacity="0.8"/>
+              <rect x="15" y="6" width="3" height="12" fill="#FFD700" opacity="0.8"/>
+            </svg>
+            Distribution by Wear
+          </h3>
+          <div id="exterior-chart" class="chart-container"></div>
+        </div>
+        
+        <div class="dashboard-card">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke="#FFD700" stroke-width="2"/>
+              <path d="M3 9H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 3V21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <rect x="6" y="12" width="3" height="6" fill="#FFD700" opacity="0.8"/>
+              <rect x="10.5" y="8" width="3" height="10" fill="#2389DA" opacity="0.8"/>
+              <rect x="15" y="6" width="3" height="12" fill="#FFD700" opacity="0.8"/>
+            </svg>
+            Distribution by Rarity
+          </h3>
+          <div id="rarity-chart" class="chart-container"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- View 3: Item Cards -->
+    <div id="items-view" class="view-content">
+      <div class="skins-controls">
+        <div class="search-filter">
+          <input type="text" id="search-input" class="search-input" placeholder="Search by name...">
+          <select id="category-filter" class="filter-select">
+            <option value="">All categories</option>
+          </select>
+          <select id="exterior-filter" class="filter-select">
+            <option value="">All wear conditions</option>
+          </select>
+        </div>
+        <div class="sort-controls">
+          <button id="sort-price-desc" class="sort-button">Price ↓</button>
+          <button id="sort-price-asc" class="sort-button">Price ↑</button>
+          <button id="sort-name" class="sort-button">Name</button>
+          <button id="sort-category" class="sort-button">Category</button>
+        </div>
+      </div>
+      
+      <div id="skins-grid" class="skins-grid">
+        <!-- Skin cards will be generated dynamically here -->
+      </div>
+    </div>
+    
+    <div class="footer">
+      CS2 Valuation Dashboard © 2025 | Professional CS2 market analysis
+    </div>
+  </div>
+
+  <script>
+    // Mock data for demonstration
+    const MOCK_INVENTORY_DATA = {
+      items: [
+        {
+          name: "AK-47 | Redline (Field-Tested)",
+          price: 45.50,
+          quantity: 1,
+          category: "Rifle",
+          exterior: "Field-Tested",
+          rarity: "Classified",
+          source: "inventory",
+          price_history: generateMockHistory(45.50, 30)
+        },
+        {
+          name: "AWP | Dragon Lore (Factory New)",
+          price: 12500.00,
+          quantity: 1,
+          category: "Sniper Rifle",
+          exterior: "Factory New",
+          rarity: "Covert",
+          source: "inventory",
+          price_history: generateMockHistory(12500.00, 30)
+        },
+        {
+          name: "M4A4 | Howl (Minimal Wear)",
+          price: 8500.00,
+          quantity: 1,
+          category: "Rifle",
+          exterior: "Minimal Wear",
+          rarity: "Contraband",
+          source: "inventory",
+          price_history: generateMockHistory(8500.00, 30)
+        }
+      ]
+    };
+    
+    // Função auxiliar para gerar histórico mockado
+    function generateMockHistory(basePrice, days) {
+      const history = [];
+      const now = new Date();
+      for (let i = days; i >= 0; i--) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        // Variação aleatória de ±5%
+        const variation = (Math.random() - 0.5) * 0.1;
+        const price = basePrice * (1 + variation);
+        history.push({
+          date: date.toISOString().split('T')[0],
+          price: Math.max(price, basePrice * 0.5) // Garantir que não fique muito baixo
+        });
+      }
+      return history;
+    }
+    
+    // Os dados do inventário serão recebidos via localStorage
+    let inventoryData = JSON.parse(localStorage.getItem('inventoryData'));
+    
+    // Flag para indicar se estamos usando dados mockados
+    let isUsingMockData = false;
+    
+    // Se não houver dados no localStorage ou se estiver vazio, usar dados mockados
+    if (!inventoryData || !inventoryData.items || inventoryData.items.length === 0) {
+      console.log('Using mock data for demonstration');
+      inventoryData = MOCK_INVENTORY_DATA;
+      isUsingMockData = true;
+      localStorage.setItem('inventoryData', JSON.stringify(MOCK_INVENTORY_DATA));
+      
+      const warningEl = document.getElementById('mock-data-warning');
+      if (warningEl) {
+        warningEl.style.display = 'block';
+      }
+    }
+    
+    // Basic dashboard - doesn't use history
+    console.log('📊 Basic Dashboard - Simple analyses without price history');
+    
+    // Format currency values (USD)
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('en-US', { 
+        style: 'currency', 
+        currency: 'USD' 
+      }).format(value);
+    }
+    
+    // Formatar percentual
+    function formatPercent(value) {
+      const sign = value >= 0 ? '+' : '';
+      return `${sign}${value.toFixed(2)}%`;
+    }
+    
+    // Truncar textos
+    function truncateText(text, maxLength = 20) {
+      if (!text) return "N/A";
+      if (text.length <= maxLength) return text;
+      return text.substring(0, maxLength - 3) + '...';
+    }
+    
+    // Cores para gráficos
+    const cs2Colors = ["#FFD700", "#FF6600", "#4B9E2A", "#2389DA", "#DD3333", "#8847ff", "#00B3E6"];
+    
+    // Configurações de gráficos
+    const chartConfig = {
+      responsive: true,
+      autosize: true,
+      displayModeBar: false,
+      staticPlot: false,
+      hovermode: 'closest',
+      font: {family: '"Rajdhani", sans-serif', color: "#F5F5F5"},
+      hoverlabel: {bgcolor: "#131E2B", font: {family: '"Rajdhani", sans-serif', size: 14}},
+      paper_bgcolor: "rgba(0,0,0,0)",
+      plot_bgcolor: "rgba(0,0,0,0)"
+    };
+    
+    // Renderizar lista de insights
+    function renderInsightList(containerId, items, formatFn, maxItems = 5) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      
+      if (!items || items.length === 0) {
+        container.innerHTML = '<li class="insight-item neutral"><span class="insight-name">No items found</span></li>';
+        return;
+      }
+      
+      items.slice(0, maxItems).forEach(item => {
+        const li = document.createElement('li');
+        const isPositive = item.priceChangePercent >= 0;
+        li.className = `insight-item ${isPositive ? 'positive' : 'negative'}`;
+        li.innerHTML = `
+          <span class="insight-name">${truncateText(item.name, 30)}</span>
+          <span class="insight-value ${isPositive ? 'positive' : 'negative'}">${formatFn(item)}</span>
+        `;
+        container.appendChild(li);
+      });
+    }
+    
+    // Setup tabs
+    function setupTabs() {
+      const tabs = document.querySelectorAll('.view-tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          const tabId = tab.getAttribute('data-tab');
+          document.querySelectorAll('.view-content').forEach(content => {
+            content.classList.remove('active');
+          });
+          const activeView = document.getElementById(`${tabId}-view`);
+          activeView.classList.add('active');
+          
+          // Redimensionar gráficos quando as abas são ativadas
+          setTimeout(() => {
+            let chartIds = [];
+            if (tabId === 'overview') {
+              chartIds = ['category-chart', 'price-distribution-chart', 'exterior-chart', 'rarity-chart'];
+            }
+            
+            chartIds.forEach(id => {
+              const chartEl = document.getElementById(id);
+              if (chartEl && chartEl.children.length > 0) {
+                Plotly.Plots.resize(id);
+              }
+            });
+          }, 100);
+        });
+      });
+      
+      // Redimensionar gráficos quando as abas se tornam visíveis (usando MutationObserver)
+      const overviewView = document.getElementById('overview-view');
+      
+      function setupViewObserver(view, chartIds) {
+        if (view) {
+          const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                if (view.classList.contains('active')) {
+                  setTimeout(() => {
+                    chartIds.forEach(id => {
+                      const chartEl = document.getElementById(id);
+                      if (chartEl && chartEl.children.length > 0) {
+                        Plotly.Plots.resize(id);
+                      }
+                    });
+                  }, 150);
+                }
+              }
+            });
+          });
+          
+          observer.observe(view, {
+            attributes: true,
+            attributeFilter: ['class']
+          });
+        }
+      }
+      
+      setupViewObserver(overviewView, ['category-chart', 'price-distribution-chart', 'exterior-chart', 'rarity-chart']);
+    }
+    
+    
+    // Gerar cards de skins (versão simplificada sem histórico)
+    function renderSkinCards(items) {
+      const skinsGrid = document.getElementById('skins-grid');
+      skinsGrid.innerHTML = '';
+      
+      if (!items || items.length === 0) {
+        skinsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 50px 0;">No items found</p>';
+        return;
+      }
+      
+      items.forEach(item => {
+        const rarityColor = '#FFD700'; // Simplificado
+        const card = document.createElement('div');
+        card.className = 'skin-card';
+        card.style.borderLeft = `3px solid ${rarityColor}`;
+        
+        const imageContent = item.image_url 
+          ? `<img src="${item.image_url}" alt="${item.name}" class="skin-img">`
+          : `<div class="skin-placeholder">Image not available</div>`;
+        
+        card.innerHTML = `
+          ${imageContent}
+          <div class="skin-details">
+            <div class="skin-name">
+              <span class="rarity-badge" style="background-color: ${rarityColor}"></span>
+              ${item.name || 'Unknown name'}
+            </div>
+            <span class="skin-exterior">${item.exterior || 'No wear'}</span>
+            <div class="skin-meta">
+              <span class="skin-source">${item.category || 'No category'}</span>
+              ${item.quantity > 1 ? `<span class="skin-quantity">x${item.quantity}</span>` : ''}
+            </div>
+            <div class="skin-price">${formatCurrency(item.price || 0)}</div>
+            ${item.rarity ? `<div style="font-size: 0.72rem; margin-top: 4.5px; opacity: 0.8;">Rarity: ${item.rarity}</div>` : ''}
+          </div>
+        `;
+        
+        skinsGrid.appendChild(card);
+      });
+    }
+    
+    // Configurar filtros
+    function setupFilters() {
+      const categories = new Set();
+      const exteriors = new Set();
+      
+      inventoryData.items.forEach(item => {
+        if (item.category) categories.add(item.category);
+        if (item.exterior) exteriors.add(item.exterior);
+      });
+      
+      const categoryFilter = document.getElementById('category-filter');
+      categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+      });
+      
+      const exteriorFilter = document.getElementById('exterior-filter');
+      exteriors.forEach(exterior => {
+        const option = document.createElement('option');
+        option.value = exterior;
+        option.textContent = exterior;
+        exteriorFilter.appendChild(option);
+      });
+      
+      function applyFilters() {
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        const categoryValue = document.getElementById('category-filter').value;
+        const exteriorValue = document.getElementById('exterior-filter').value;
+        
+        let filteredItems = [...inventoryData.items];
+        
+        if (searchTerm) {
+          filteredItems = filteredItems.filter(item => 
+            (item.name && item.name.toLowerCase().includes(searchTerm))
+          );
+        }
+        
+        if (categoryValue) {
+          filteredItems = filteredItems.filter(item => item.category === categoryValue);
+        }
+        
+        if (exteriorValue) {
+          filteredItems = filteredItems.filter(item => item.exterior === exteriorValue);
+        }
+        
+        renderSkinCards(filteredItems);
+      }
+      
+      document.getElementById('search-input').addEventListener('input', applyFilters);
+      document.getElementById('category-filter').addEventListener('change', applyFilters);
+      document.getElementById('exterior-filter').addEventListener('change', applyFilters);
+      
+      document.getElementById('sort-price-desc').addEventListener('click', () => {
+        const sorted = [...inventoryData.items].sort((a, b) => (b.price || 0) - (a.price || 0));
+        renderSkinCards(sorted);
+      });
+      
+      document.getElementById('sort-price-asc').addEventListener('click', () => {
+        const sorted = [...inventoryData.items].sort((a, b) => (a.price || 0) - (b.price || 0));
+        renderSkinCards(sorted);
+      });
+      
+      document.getElementById('sort-name').addEventListener('click', () => {
+        const sorted = [...inventoryData.items].sort((a, b) => {
+          const nameA = (a.name || '').toUpperCase();
+          const nameB = (b.name || '').toUpperCase();
+          return nameA.localeCompare(nameB);
+        });
+        renderSkinCards(sorted);
+      });
+      
+      document.getElementById('sort-category').addEventListener('click', () => {
+        const sorted = [...inventoryData.items].sort((a, b) => {
+          const catA = (a.category || '').toUpperCase();
+          const catB = (b.category || '').toUpperCase();
+          if (catA !== catB) return catA.localeCompare(catB);
+          return (a.name || '').localeCompare(b.name || '');
+        });
+        renderSkinCards(sorted);
+      });
+    }
+    
+    // Inicialização
+    document.addEventListener("DOMContentLoaded", function() {
+      // Preencher estatísticas
+      const totalValue = inventoryData.items.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
+      const totalItems = inventoryData.items.length;
+      const avgValue = totalItems > 0 ? totalValue / totalItems : 0;
+      
+      let maxItem = {price: 0, name: "No items"};
+      if (inventoryData.items.length > 0) {
+        maxItem = inventoryData.items.reduce((max, item) => 
+          (item.price > max.price) ? item : max, {price: 0, name: "No items"});
+      }
+      
+      document.getElementById('total-value').textContent = formatCurrency(totalValue);
+      document.getElementById('total-items').textContent = totalItems;
+      document.getElementById('avg-value').textContent = formatCurrency(avgValue);
+      document.getElementById('max-value').textContent = formatCurrency(maxItem.price || 0);
+      document.getElementById('max-item-name').textContent = truncateText(maxItem.name || "No items");
+      
+      // Least valuable item
+      let minItem = {price: Infinity, name: "No items"};
+      if (inventoryData.items.length > 0) {
+        minItem = inventoryData.items.reduce((min, item) => 
+          (item.price < min.price) ? item : min, {price: Infinity, name: "No items"});
+      }
+      document.getElementById('min-value').textContent = formatCurrency(minItem.price === Infinity ? 0 : minItem.price);
+      document.getElementById('min-item-name').textContent = truncateText(minItem.name || "No items");
+      
+      // Total categories
+      const categoriesSet = new Set(inventoryData.items.map(item => item.category).filter(c => c));
+      document.getElementById('total-categories').textContent = categoriesSet.size;
+      
+      // Distribution chart by category
+      const categories = {};
+      inventoryData.items.forEach(item => {
+        const category = item.category || "Other";
+        if (!categories[category]) categories[category] = 0;
+        categories[category] += (item.price || 0) * (item.quantity || 1);
+      });
+      
+      Plotly.newPlot("category-chart", [{
+        type: "pie",
+        labels: Object.keys(categories),
+        values: Object.values(categories),
+        hole: 0.4,
+        textinfo: "label+percent",
+        marker: {colors: cs2Colors},
+        hovertemplate: '%{label}: $%{value:,.2f} (%{percent})<extra></extra>',
+        textposition: 'outside',
+        textfont: {size: 12}
+      }], {
+        ...chartConfig,
+        autosize: true
+      }).then(() => {
+        setTimeout(() => {
+          Plotly.Plots.resize("category-chart");
+        }, 100);
+      });
+      
+      // Histograma de distribuição de preços
+      const prices = inventoryData.items.map(item => item.price || 0).filter(p => p > 0);
+      if (prices.length > 0) {
+        // Criar bins para o histograma (usar escala logarítmica se houver grande variação)
+        const maxPrice = Math.max(...prices);
+        const minPrice = Math.min(...prices);
+        const numBins = Math.min(20, Math.ceil(Math.sqrt(prices.length)));
+        
+        // Se a variação for muito grande, usar escala logarítmica
+        const useLogScale = maxPrice / minPrice > 100;
+        
+        let bins, binLabels;
+        if (useLogScale) {
+          // Escala logarítmica
+          const logMin = Math.log10(minPrice);
+          const logMax = Math.log10(maxPrice);
+          const logStep = (logMax - logMin) / numBins;
+          bins = [];
+          binLabels = [];
+          
+          for (let i = 0; i < numBins; i++) {
+            const binStart = Math.pow(10, logMin + i * logStep);
+            const binEnd = Math.pow(10, logMin + (i + 1) * logStep);
+            bins.push([binStart, binEnd]);
+            binLabels.push(`${formatCurrency(binStart)} - ${formatCurrency(binEnd)}`);
+          }
+        } else {
+          // Escala linear
+          const step = (maxPrice - minPrice) / numBins;
+          bins = [];
+          binLabels = [];
+          
+          for (let i = 0; i < numBins; i++) {
+            const binStart = minPrice + i * step;
+            const binEnd = minPrice + (i + 1) * step;
+            bins.push([binStart, binEnd]);
+            binLabels.push(`${formatCurrency(binStart)} - ${formatCurrency(binEnd)}`);
+          }
+        }
+        
+        // Contar itens em cada bin
+        const counts = new Array(bins.length).fill(0);
+        prices.forEach(price => {
+          for (let i = 0; i < bins.length; i++) {
+            if (price >= bins[i][0] && (i === bins.length - 1 || price < bins[i][1])) {
+              counts[i]++;
+              break;
+            }
+          }
+        });
+        
+        // Criar labels mais legíveis
+        const xLabels = bins.map((bin, i) => {
+          if (i === bins.length - 1) {
+            return `≥${formatCurrency(bin[0])}`;
+          }
+          return formatCurrency(bin[0]);
+        });
+        
+        Plotly.newPlot("price-distribution-chart", [{
+          type: "bar",
+          x: xLabels,
+          y: counts,
+          marker: {
+            color: counts.map(c => {
+              // Gradiente de cor baseado na frequência
+              const maxCount = Math.max(...counts);
+              const intensity = c / maxCount;
+              if (intensity > 0.7) return '#FFD700';
+              if (intensity > 0.4) return '#FF6600';
+              return '#2389DA';
+            }),
+            line: {color: 'rgba(255, 215, 0, 0.3)', width: 1}
+          },
+          hovertemplate: 'Range: %{x}<br>Quantity: %{y} items<extra></extra>'
+        }], {
+          ...chartConfig,
+          autosize: true,
+          xaxis: {
+            title: 'Price Range (USD)',
+            automargin: true,
+            tickangle: -45
+          },
+          yaxis: {
+            title: 'Number of Items',
+            automargin: true
+          }
+        }).then(() => {
+          setTimeout(() => {
+            Plotly.Plots.resize("price-distribution-chart");
+          }, 100);
+        });
+      }
+      
+      // Distribution chart by wear
+      const exteriors = {};
+      inventoryData.items.forEach(item => {
+        const exterior = item.exterior || "No wear";
+        if (!exteriors[exterior]) exteriors[exterior] = 0;
+        exteriors[exterior] += (item.price || 0) * (item.quantity || 1);
+      });
+      
+      if (Object.keys(exteriors).length > 0) {
+        Plotly.newPlot("exterior-chart", [{
+          type: "pie",
+          labels: Object.keys(exteriors),
+          values: Object.values(exteriors),
+          hole: 0.4,
+          textinfo: "label+percent",
+          marker: {colors: cs2Colors},
+          hovertemplate: '%{label}: $%{value:,.2f} (%{percent})<extra></extra>',
+          textposition: 'outside',
+          textfont: {size: 12}
+        }], {
+          ...chartConfig,
+          autosize: true
+        }).then(() => {
+          setTimeout(() => {
+            Plotly.Plots.resize("exterior-chart");
+          }, 100);
+        });
+      }
+      
+      // Distribution chart by rarity
+      const rarities = {};
+      inventoryData.items.forEach(item => {
+        const rarity = item.rarity || "No rarity";
+        if (!rarities[rarity]) rarities[rarity] = 0;
+        rarities[rarity] += (item.price || 0) * (item.quantity || 1);
+      });
+      
+      if (Object.keys(rarities).length > 0) {
+        Plotly.newPlot("rarity-chart", [{
+          type: "pie",
+          labels: Object.keys(rarities),
+          values: Object.values(rarities),
+          hole: 0.4,
+          textinfo: "label+percent",
+          marker: {colors: cs2Colors},
+          hovertemplate: '%{label}: $%{value:,.2f} (%{percent})<extra></extra>',
+          textposition: 'outside',
+          textfont: {size: 12}
+        }], {
+          ...chartConfig,
+          autosize: true
+        }).then(() => {
+          setTimeout(() => {
+            Plotly.Plots.resize("rarity-chart");
+          }, 100);
+        });
+      }
+      
+      // Setup
+      setupTabs();
+      renderSkinCards(inventoryData.items);
+      setupFilters();
+      
+      // Redimensionar gráficos quando a janela mudar de tamanho
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          const chartIds = ['category-chart', 'price-distribution-chart', 'exterior-chart', 'rarity-chart'];
+          chartIds.forEach(id => {
+            const chartEl = document.getElementById(id);
+            if (chartEl && chartEl.children.length > 0) {
+              Plotly.Plots.resize(id);
+            }
+          });
+        }, 250);
+      });
+      
+      // Redimensionar gráficos quando a página volta ao foco
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          setTimeout(() => {
+            const overviewView = document.getElementById('overview-view');
+            if (overviewView && overviewView.classList.contains('active')) {
+              const chartIds = ['category-chart', 'price-distribution-chart', 'exterior-chart', 'rarity-chart'];
+              chartIds.forEach(id => {
+                const chartEl = document.getElementById(id);
+                if (chartEl && chartEl.children.length > 0) {
+                  Plotly.Plots.resize(id);
+                }
+              });
+            }
+          }, 300);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

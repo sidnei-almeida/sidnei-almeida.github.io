@@ -1,0 +1,2500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Dashboard - CS2 Valuation</title>
+  <link rel="icon" type="image/png" href="../../images/favicon.png">
+  <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cs2-gold: #FFD700;
+      --cs2-gold-dark: #CC9900;
+      --cs2-bg-darkest: #0D0D0D;
+      --cs2-bg-dark: #1A1A1A;
+      --cs2-bg-medium: #242424;
+      --cs2-bg-light: #2E2E2E;
+      --cs2-bg-lighter: #3A3A3A;
+      --cs2-orange: #FF6B35;
+      --cs2-green: #4CAF50;
+      --cs2-red: #F44336;
+      --cs2-text: #E0E0E0;
+      --cs2-text-dim: #9E9E9E;
+      --cs2-text-darker: #757575;
+      --cs2-card-bg: rgba(36, 36, 36, 0.7);
+      --cs2-border: rgba(255, 215, 0, 0.15);
+      --cs2-border-subtle: rgba(255, 255, 255, 0.08);
+      --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+      --gradient-dark: linear-gradient(135deg, #242424 0%, #1A1A1A 100%);
+      --shadow-gold: 0 0 20px rgba(255, 215, 0, 0.3);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.6);
+      
+      /* Aliases for compatibility */
+      --cs2-primary-gold: var(--cs2-gold);
+      --cs2-secondary-blue: var(--cs2-bg-dark);
+      --cs2-bg-dark: var(--cs2-bg-darkest);
+      --cs2-text-light: var(--cs2-text);
+      --cs2-accent-orange: var(--cs2-orange);
+      --cs2-accent-green: var(--cs2-green);
+      --cs2-danger-red: var(--cs2-red);
+      --cs2-info-blue: #2389DA;
+      --cs2-shadow: var(--shadow-card);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body { 
+      font-family: "Rajdhani", sans-serif; 
+      background: var(--cs2-bg-darkest);
+      color: var(--cs2-text); 
+      margin: 0; 
+      padding: 0;
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('../../images/cs2.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      z-index: -2;
+    }
+    
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(180deg, rgba(13, 13, 13, 0.75) 0%, rgba(13, 13, 13, 0.70) 50%, rgba(13, 13, 13, 0.75) 100%),
+        radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+      z-index: -1;
+      animation: pulse 15s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.95; }
+    }
+    
+    .container { 
+      max-width: 1600px; 
+      margin: 0 auto;
+      padding: 13.5px;
+    }
+    
+    h1, h2, h3 { 
+      font-family: "Orbitron", sans-serif; 
+      color: var(--cs2-gold); 
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      margin-bottom: 13.5px;
+    }
+    
+    h1 {
+      font-size: 1.62rem;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2.7px;
+    }
+    
+    h3 {
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--cs2-border);
+      padding-bottom: 5.4px;
+      margin-bottom: 9px;
+    }
+    
+    .header { 
+      text-align: center; 
+      margin-bottom: 18px;
+      padding: 13.5px 0;
+      border-bottom: 1px solid var(--cs2-card-border);
+    }
+    
+    .header p {
+      font-size: 0.81rem;
+      opacity: 0.8;
+      margin-top: 2.7px;
+    }
+    
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10.8px;
+      margin-bottom: 18px;
+    }
+    
+    .stat-card {
+      background: rgba(36, 36, 36, 0.6);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--cs2-border);
+      text-align: center;
+      box-shadow: var(--shadow-card);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      backdrop-filter: blur(8px) saturate(110%);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--cs2-gold);
+      box-shadow: 0 12px 48px rgba(255, 215, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1);
+    }
+    
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--cs2-gold);
+      margin: 5.4px 0;
+      line-height: 1.2;
+    }
+    
+    .stat-label {
+      color: var(--cs2-text-dim);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.8px;
+      font-weight: 500;
+    }
+    
+    .stat-change {
+      font-size: 0.675rem;
+      margin-top: 3.6px;
+      font-weight: 600;
+    }
+    
+    .stat-change.positive {
+      color: var(--cs2-green);
+    }
+    
+    .stat-change.negative {
+      color: var(--cs2-red);
+    }
+    
+    .stat-change.neutral {
+      color: var(--cs2-text);
+      opacity: 0.7;
+    }
+    
+    .stat-desc {
+      font-size: 0.63rem;
+      opacity: 0.7;
+      margin-top: 3.6px;
+      line-height: 1.2;
+    }
+    
+    /* Alertas e Dicas */
+    .alerts-container {
+      margin-bottom: 18px;
+    }
+    
+    .alert-card {
+      background: var(--cs2-card-bg);
+      border-radius: 5.4px;
+      padding: 9px 13.5px;
+      border-left: 2.7px solid;
+      margin-bottom: 9px;
+      box-shadow: var(--cs2-shadow);
+      display: flex;
+      align-items: center;
+      gap: 10.8px;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    .alert-card.alert-sell {
+      border-left-color: var(--cs2-accent-green);
+      background: rgba(75, 158, 42, 0.1);
+    }
+    
+    .alert-card.alert-buy {
+      border-left-color: var(--cs2-info-blue);
+      background: rgba(35, 137, 218, 0.1);
+    }
+    
+    .alert-card.alert-warning {
+      border-left-color: var(--cs2-accent-orange);
+      background: rgba(255, 102, 0, 0.1);
+    }
+    
+    .alert-icon {
+      font-size: 1.17rem;
+      flex-shrink: 0;
+    }
+    
+    .alert-content {
+      flex: 1;
+    }
+    
+    .alert-title {
+      font-weight: 700;
+      font-size: 0.81rem;
+      margin-bottom: 2.7px;
+      color: var(--cs2-primary-gold);
+    }
+    
+    .alert-message {
+      font-size: 0.72rem;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+    
+    .dashboard-grid { 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 13.5px; 
+      margin-bottom: 18px; 
+    }
+    
+    .dashboard-card { 
+      background: rgba(36, 36, 36, 0.6);
+      border-radius: 12px; 
+      padding: 1.5rem; 
+      border: 1px solid var(--cs2-border);
+      box-shadow: var(--shadow-card);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      min-height: auto;
+      backdrop-filter: blur(8px) saturate(110%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .dashboard-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-gold);
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+    
+    .dashboard-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--cs2-gold);
+      box-shadow: 0 12px 48px rgba(255, 215, 0, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.1);
+    }
+    
+    .dashboard-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .dashboard-wide { 
+      grid-column: span 2; 
+    }
+    
+    .chart-container { 
+      width: 100%; 
+      flex: 1 1 auto;
+      min-height: 315px;
+    }
+    
+    .chart-container-large {
+      flex: 1 1 auto;
+      min-height: 360px;
+    }
+    
+    /* Gráficos de distribuição maiores - usar melhor o espaço do card sem aumentar o card */
+    #category-chart,
+    #price-distribution-chart {
+      min-height: 342px;
+      height: 342px;
+      flex: 1 1 auto;
+    }
+    
+    .dashboard-card h3 {
+      margin-bottom: 7.2px;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+      margin-top: 0;
+    }
+    
+    .icon-svg {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 7.2px;
+      width: 21.6px;
+      height: 21.6px;
+    }
+    
+    h1 .icon-svg {
+      width: 21.6px;
+      height: 21.6px;
+    }
+    
+    h3 .icon-svg {
+      width: 14.4px;
+      height: 14.4px;
+    }
+    
+    .insight-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .insight-item {
+      padding: 7.2px 9px;
+      margin-bottom: 5.4px;
+      background: rgba(10, 14, 18, 0.5);
+      border-radius: 3.6px;
+      border-left: 2.7px solid;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.765rem;
+    }
+    
+    .insight-item.positive {
+      border-left-color: var(--cs2-accent-green);
+    }
+    
+    .insight-item.negative {
+      border-left-color: var(--cs2-danger-red);
+    }
+    
+    .insight-item.neutral {
+      border-left-color: var(--cs2-info-blue);
+    }
+    
+    .insight-name {
+      flex: 1;
+      font-weight: 600;
+    }
+    
+    .insight-value {
+      font-weight: 700;
+      font-size: 0.99rem;
+    }
+    
+    .insight-value.positive {
+      color: var(--cs2-accent-green);
+    }
+    
+    .insight-value.negative {
+      color: var(--cs2-danger-red);
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 27px 0;
+      margin-top: 27px;
+      border-top: 1px solid var(--cs2-card-border);
+      font-size: 0.81rem;
+      opacity: 0.7;
+    }
+    
+    /* Tabs */
+    .view-tabs {
+      display: flex;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--cs2-card-border);
+      padding-bottom: 2.7px;
+    }
+    
+    .view-tab {
+      padding: 7.2px 14.4px;
+      margin-right: 7.2px;
+      background: none;
+      border: none;
+      color: var(--cs2-text-light);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.81rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2.7px solid transparent;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+    }
+    
+    .view-tab.active {
+      color: var(--cs2-primary-gold);
+      border-bottom: 2.7px solid var(--cs2-primary-gold);
+    }
+    
+    .view-tab:hover {
+      color: var(--cs2-primary-gold);
+    }
+    
+    .view-content {
+      display: none;
+    }
+    
+    .view-content.active {
+      display: block;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .view-tab.active {
+      color: var(--cs2-primary-gold);
+      border-bottom: 2.7px solid var(--cs2-primary-gold);
+    }
+    
+    .view-tab:hover {
+      color: var(--cs2-primary-gold);
+    }
+    
+    /* Cards de skins */
+    .skins-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+    
+    .search-filter {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+    
+    .search-input {
+      padding: 7.2px 13.5px;
+      border-radius: 3.6px;
+      border: 1px solid var(--cs2-card-border);
+      background: rgba(10,14,18,0.7);
+      color: var(--cs2-text-light);
+      font-family: 'Rajdhani', sans-serif;
+      width: 180px;
+      font-size: 0.9rem;
+    }
+    
+    .filter-select {
+      padding: 7.2px 13.5px;
+      border-radius: 3.6px;
+      border: 1px solid var(--cs2-card-border);
+      background: rgba(10,14,18,0.7);
+      color: var(--cs2-text-light);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.9rem;
+    }
+    
+    .sort-controls {
+      display: flex;
+      gap: 9px;
+    }
+    
+    .sort-button {
+      padding: 7.2px 13.5px;
+      border-radius: 3.6px;
+      background: linear-gradient(135deg, var(--cs2-secondary-blue) 0%, rgba(10,14,18,0.8) 100%);
+      border: 1px solid var(--cs2-card-border);
+      color: var(--cs2-text-light);
+      font-family: 'Rajdhani', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .sort-button:hover {
+      background: linear-gradient(135deg, var(--cs2-primary-gold) 0%, var(--cs2-accent-orange) 100%);
+      color: var(--cs2-bg-dark);
+      border-color: transparent;
+    }
+    
+    .skins-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+      gap: 18px;
+    }
+    
+    .skin-card {
+      background: var(--cs2-card-bg);
+      border-radius: 7.2px;
+      border: 1px solid var(--cs2-card-border);
+      overflow: hidden;
+      box-shadow: var(--cs2-shadow);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .skin-card:hover {
+      transform: translateY(-4.5px);
+      box-shadow: 0 5.4px 18px rgba(0, 0, 0, 0.7);
+      border-color: var(--cs2-primary-gold);
+    }
+    
+    .skin-trading-badge {
+      position: absolute;
+      top: 9px;
+      right: 9px;
+      padding: 3.6px 7.2px;
+      border-radius: 3.6px;
+      font-size: 0.675rem;
+      font-weight: 700;
+      z-index: 10;
+    }
+    
+    .skin-trading-badge.sell-opportunity {
+      background: var(--cs2-accent-green);
+      color: var(--cs2-bg-dark);
+    }
+    
+    .skin-trading-badge.volatile {
+      background: var(--cs2-accent-orange);
+      color: var(--cs2-bg-dark);
+    }
+    
+    .skin-img {
+      width: 100%;
+      height: 135px;
+      object-fit: contain;
+      background: rgba(10,14,18,0.7);
+      padding: 9px;
+    }
+    
+    .skin-placeholder {
+      width: 100%;
+      height: 135px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10,14,18,0.7);
+      color: var(--cs2-text-light);
+      opacity: 0.6;
+      font-size: 0.81rem;
+    }
+    
+    .skin-details {
+      padding: 13.5px;
+    }
+    
+    .skin-name {
+      font-weight: 700;
+      font-size: 0.99rem;
+      margin-bottom: 7.2px;
+      color: var(--cs2-text-light);
+      height: 37.8px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    
+    .skin-exterior {
+      display: inline-block;
+      font-size: 0.72rem;
+      padding: 1.8px 7.2px;
+      margin-bottom: 9px;
+      border-radius: 3.6px;
+      background: rgba(255,215,0,0.1);
+      color: var(--cs2-text-light);
+    }
+    
+    .skin-price {
+      font-size: 1.17rem;
+      font-weight: 700;
+      color: var(--cs2-primary-gold);
+      margin-top: 9px;
+    }
+    
+    .skin-price-change {
+      font-size: 0.765rem;
+      margin-top: 4.5px;
+      font-weight: 600;
+    }
+    
+    .skin-price-change.positive {
+      color: var(--cs2-accent-green);
+    }
+    
+    .skin-price-change.negative {
+      color: var(--cs2-danger-red);
+    }
+    
+    .skin-roi {
+      font-size: 0.765rem;
+      margin-top: 4.5px;
+      font-weight: 600;
+    }
+    
+    .skin-roi.positive {
+      color: var(--cs2-accent-green);
+    }
+    
+    .skin-roi.negative {
+      color: var(--cs2-danger-red);
+    }
+    
+    .skin-profit {
+      font-size: 0.72rem;
+      margin-top: 4.5px;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+    
+    .skin-profit.positive {
+      color: var(--cs2-accent-green);
+    }
+    
+    .skin-profit.negative {
+      color: var(--cs2-danger-red);
+    }
+    
+    .skin-risk-score {
+      margin-top: 9px;
+      padding-top: 9px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .risk-label {
+      font-size: 0.675rem;
+      opacity: 0.7;
+      display: block;
+      margin-bottom: 4.5px;
+    }
+    
+    .risk-bar-container {
+      position: relative;
+      width: 100%;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 9px;
+      overflow: hidden;
+    }
+    
+    .risk-bar {
+      height: 100%;
+      border-radius: 9px;
+      transition: width 0.3s ease;
+    }
+    
+    .risk-value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-shadow: 0 0.9px 1.8px rgba(0, 0, 0, 0.8);
+      z-index: 1;
+    }
+    
+    .skin-quantity {
+      display: inline-block;
+      font-size: 0.81rem;
+      padding: 1.8px 7.2px;
+      margin-top: 4.5px;
+      border-radius: 3.6px;
+      background: rgba(75,158,42,0.2);
+      color: var(--cs2-accent-green);
+    }
+    
+    .skin-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 9px;
+    }
+    
+    .skin-source {
+      font-size: 0.72rem;
+      opacity: 0.7;
+    }
+    
+    .rarity-badge {
+      display: inline-block;
+      width: 10.8px;
+      height: 10.8px;
+      border-radius: 50%;
+      margin-right: 4.5px;
+      vertical-align: middle;
+    }
+    
+    .time-filter {
+      display: flex;
+      gap: 7.2px;
+      margin: 9px 0;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .time-filter-btn {
+      padding: 5.4px 10.8px;
+      border-radius: 3.6px;
+      background: rgba(10,14,18,0.7);
+      border: 1px solid var(--cs2-card-border);
+      color: var(--cs2-text-light);
+      font-size: 0.765rem;
+      font-family: 'Rajdhani', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+    
+    .time-filter-btn.active {
+      background: var(--cs2-primary-gold);
+      color: var(--cs2-bg-dark);
+      border-color: var(--cs2-primary-gold);
+    }
+    
+    .time-filter-btn:hover {
+      border-color: var(--cs2-primary-gold);
+    }
+    
+    /* Filtro de skins para o gráfico */
+    .skin-filter-controls {
+      margin-bottom: 13.5px;
+      padding: 9px;
+      background: rgba(10, 14, 18, 0.5);
+      border-radius: 5.4px;
+      border: 1px solid var(--cs2-card-border);
+    }
+    
+    .filter-buttons {
+      display: flex;
+      gap: 7.2px;
+      margin-bottom: 9px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .filter-btn {
+      padding: 5.4px 10.8px;
+      border-radius: 3.6px;
+      background: rgba(10,14,18,0.7);
+      border: 1px solid var(--cs2-card-border);
+      color: var(--cs2-text-light);
+      font-size: 0.72rem;
+      font-family: 'Rajdhani', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+    
+    .filter-btn:hover {
+      background: var(--cs2-primary-gold);
+      color: var(--cs2-bg-dark);
+      border-color: var(--cs2-primary-gold);
+    }
+    
+    .skin-search-input {
+      flex: 1;
+      min-width: 180px;
+      padding: 5.4px 10.8px;
+      border-radius: 3.6px;
+      background: rgba(10,14,18,0.7);
+      border: 1px solid var(--cs2-card-border);
+      color: var(--cs2-text-light);
+      font-size: 0.72rem;
+      font-family: 'Rajdhani', sans-serif;
+    }
+    
+    .skin-search-input:focus {
+      outline: none;
+      border-color: var(--cs2-primary-gold);
+      background: rgba(10,14,18,0.9);
+    }
+    
+    .skin-search-input::placeholder {
+      color: rgba(245, 245, 245, 0.5);
+    }
+    
+    .skin-filter-list {
+      max-height: 180px;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+      gap: 5.4px;
+      padding: 7.2px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 3.6px;
+    }
+    
+    .skin-filter-item {
+      display: flex;
+      align-items: center;
+      gap: 5.4px;
+      padding: 3.6px 5.4px;
+      border-radius: 3.6px;
+      transition: background 0.2s ease;
+    }
+    
+    .skin-filter-item:hover {
+      background: rgba(255, 215, 0, 0.1);
+    }
+    
+    .skin-filter-item input[type="checkbox"] {
+      width: 14.4px;
+      height: 14.4px;
+      cursor: pointer;
+      accent-color: var(--cs2-primary-gold);
+    }
+    
+    .skin-filter-item label {
+      font-size: 0.675rem;
+      color: var(--cs2-text-light);
+      cursor: pointer;
+      flex: 1;
+      user-select: none;
+    }
+    
+    .skin-filter-item.hidden {
+      display: none;
+    }
+    
+    @media (max-width: 1400px) {
+      .summary-stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    @media (max-width: 1200px) {
+      .summary-stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .dashboard-grid { 
+        grid-template-columns: 1fr; 
+      }
+      
+      .dashboard-wide { 
+        grid-column: span 1; 
+      }
+      
+      .summary-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .chart-container,
+      .chart-container-large {
+        min-height: 250px;
+      }
+      
+      .skins-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+      
+      .skins-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .search-filter, .sort-controls {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>
+        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 3V21H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M7 16L12 11L16 15L21 10" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M21 10V6H17" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Financial CS2 Dashboard
+      </h1>
+      <p>CS2 Valuation - Professional insights for skin traders</p>
+      <div id="mock-data-warning" style="margin-top: 15px; padding: 12px; background: rgba(255, 215, 0, 0.1); border: 1px solid var(--cs2-primary-gold); border-radius: 6px; display: none;">
+        <span style="color: var(--cs2-gold); font-weight: 600;">⚠️ Demo Mode:</span>
+        <span style="color: var(--cs2-text); margin-left: 8px;">Displaying mock data for demonstration. Connect to the API to see your real inventory.</span>
+      </div>
+    </div>
+    
+    <div class="summary-stats">
+      <div class="stat-card">
+        <div class="stat-label">Total Value</div>
+        <div class="stat-value" id="total-value">$0.00</div>
+        <div class="stat-change" id="total-change">-</div>
+        <div class="stat-desc">Valor estimado do inventário</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Total de Itens</div>
+        <div class="stat-value" id="total-items">0</div>
+        <div class="stat-desc">Número de skins e itens</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">ROI Total</div>
+        <div class="stat-value" id="total-roi">0,00%</div>
+        <div class="stat-change" id="roi-change">-</div>
+        <div class="stat-desc">Retorno sobre investimento</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Lucro/Perda Estimado</div>
+        <div class="stat-value" id="total-profit">R$ 0,00</div>
+        <div class="stat-change" id="profit-change">-</div>
+        <div class="stat-desc">Baseado na média histórica</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Valor Médio</div>
+        <div class="stat-value" id="avg-value">R$ 0,00</div>
+        <div class="stat-desc">Valor médio por item</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-label">Item mais valioso</div>
+        <div class="stat-value" id="max-value">R$ 0,00</div>
+        <div class="stat-desc" id="max-item-name">Nenhum item</div>
+      </div>
+    </div>
+    
+    <!-- Alertas e Dicas em Tempo Real -->
+    <div class="alerts-container" id="alerts-container">
+      <!-- Alertas serão inseridos aqui dinamicamente -->
+    </div>
+    
+    <!-- Tabs -->
+    <div class="view-tabs">
+      <button class="view-tab active" data-tab="insights">Trading Insights</button>
+      <button class="view-tab" data-tab="trends">Trends</button>
+      <button class="view-tab" data-tab="items">Inventory Items</button>
+    </div>
+    
+    <!-- Visualização 1: Insights de Trading -->
+    <div id="insights-view" class="view-content active">
+      <div class="dashboard-grid">
+        <div class="dashboard-card dashboard-wide">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3V21H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7 16L12 11L16 15L21 10" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 10V6H17" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Inventory Value Trend
+          </h3>
+          <div class="time-filter">
+            <button class="time-filter-btn" data-days="7">7 days</button>
+            <button class="time-filter-btn active" data-days="30">30 days</button>
+            <button class="time-filter-btn" data-days="90">90 days</button>
+          </div>
+          <div id="inventory-trend-chart" class="chart-container chart-container-large"></div>
+        </div>
+        
+        <div class="dashboard-card">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3V21H21" stroke="#4B9E2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7 12L12 7L16 11L21 6" stroke="#4B9E2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 6V3H18" stroke="#4B9E2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Top Appreciation
+          </h3>
+          <ul class="insight-list" id="top-appreciation-list">
+            <!-- Será preenchido dinamicamente -->
+          </ul>
+        </div>
+        
+        <div class="dashboard-card">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3V21H21" stroke="#DD3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7 6L12 11L16 7L21 12" stroke="#DD3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 12V15H18" stroke="#DD3333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Top Depreciation
+          </h3>
+          <ul class="insight-list" id="top-depreciation-list">
+            <!-- Será preenchido dinamicamente -->
+          </ul>
+        </div>
+        
+        <div class="dashboard-card dashboard-wide">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="#FFD700" stroke-width="2"/>
+              <path d="M12 6V12L16 14" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <path d="M8 8C8 6.89543 8.89543 6 10 6H14C15.1046 6 16 6.89543 16 8C16 9.10457 15.1046 10 14 10H10C8.89543 10 8 10.8954 8 12C8 13.1046 8.89543 14 10 14H14C15.1046 14 16 14.8954 16 16C16 17.1046 15.1046 18 14 18H10C8.89543 18 8 17.1046 8 16" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Sell Opportunities
+          </h3>
+          <ul class="insight-list" id="sell-opportunities-list">
+            <!-- Será preenchido dinamicamente -->
+          </ul>
+        </div>
+        
+        <div class="dashboard-card">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="#FF6600" stroke="#FF6600" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+            Most Volatile Items
+          </h3>
+          <ul class="insight-list" id="volatile-items-list">
+            <!-- Será preenchido dinamicamente -->
+          </ul>
+        </div>
+        
+        <div class="dashboard-card">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke="#FFD700" stroke-width="2"/>
+              <path d="M3 9H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 3V21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <rect x="6" y="12" width="3" height="6" fill="#FFD700" opacity="0.8"/>
+              <rect x="10.5" y="8" width="3" height="10" fill="#2389DA" opacity="0.8"/>
+              <rect x="15" y="6" width="3" height="12" fill="#FFD700" opacity="0.8"/>
+            </svg>
+            Category Distribution
+          </h3>
+          <div id="category-chart" class="chart-container"></div>
+        </div>
+        
+        <div class="dashboard-card">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke="#FFD700" stroke-width="2"/>
+              <path d="M3 9H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 3V21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <rect x="6" y="15" width="2" height="3" fill="#FFD700" opacity="0.8"/>
+              <rect x="9" y="12" width="2" height="6" fill="#2389DA" opacity="0.8"/>
+              <rect x="12" y="8" width="2" height="10" fill="#FFD700" opacity="0.8"/>
+              <rect x="15" y="10" width="2" height="8" fill="#4B9E2A" opacity="0.8"/>
+              <rect x="18" y="6" width="2" height="12" fill="#FFD700" opacity="0.8"/>
+            </svg>
+            Price Distribution
+          </h3>
+          <div id="price-distribution-chart" class="chart-container"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Visualização 2: Tendências -->
+    <div id="trends-view" class="view-content">
+      <div class="dashboard-grid">
+        <div class="dashboard-card dashboard-wide">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3V21H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7 16L12 11L16 15L21 10" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M21 10V6H17" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Historical Evolution of All Skins
+          </h3>
+          <div class="skin-filter-controls">
+            <div class="filter-buttons">
+              <button id="select-all-skins" class="filter-btn">Select All</button>
+              <button id="deselect-all-skins" class="filter-btn">Deselect All</button>
+              <input type="text" id="skin-search-input" class="skin-search-input" placeholder="Search skin...">
+            </div>
+            <div id="skin-filter-list" class="skin-filter-list">
+              <!-- Checkboxes serão inseridos aqui dinamicamente -->
+            </div>
+          </div>
+          <div id="top-items-trend-chart" class="chart-container chart-container-large"></div>
+        </div>
+        
+        <div class="dashboard-card dashboard-wide">
+          <h3>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="18" height="18" rx="2" stroke="#FFD700" stroke-width="2"/>
+              <path d="M3 9H21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 3V21" stroke="#FFD700" stroke-width="2" stroke-linecap="round"/>
+              <rect x="6" y="12" width="3" height="6" fill="#FFD700" opacity="0.8"/>
+              <rect x="10.5" y="8" width="3" height="10" fill="#2389DA" opacity="0.8"/>
+              <rect x="15" y="6" width="3" height="12" fill="#FFD700" opacity="0.8"/>
+            </svg>
+            Comparison: Current Price vs Historical Average
+          </h3>
+          <div id="price-comparison-chart" class="chart-container chart-container-large"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Visualização 3: Cards de Itens -->
+    <div id="items-view" class="view-content">
+      <div class="skins-controls">
+        <div class="search-filter">
+          <input type="text" id="search-input" class="search-input" placeholder="Search by name...">
+          <select id="category-filter" class="filter-select">
+            <option value="">All categories</option>
+          </select>
+          <select id="exterior-filter" class="filter-select">
+            <option value="">All wear conditions</option>
+          </select>
+        </div>
+        <div class="sort-controls">
+          <button id="sort-price-desc" class="sort-button">Price ↓</button>
+          <button id="sort-price-asc" class="sort-button">Price ↑</button>
+          <button id="sort-appreciation" class="sort-button">Appreciation ↓</button>
+          <button id="sort-name" class="sort-button">Name</button>
+        </div>
+      </div>
+      
+      <div id="skins-grid" class="skins-grid">
+        <!-- Cards de skins serão gerados dinamicamente aqui -->
+      </div>
+    </div>
+    
+    <div class="footer">
+      CS2 Valuation Dashboard © 2025 | Professional CS2 market analysis
+    </div>
+  </div>
+
+  <script>
+    // Dados mockados para demonstração
+    const MOCK_INVENTORY_DATA = {
+      items: [
+        {
+          name: "AK-47 | Redline (Field-Tested)",
+          price: 45.50,
+          quantity: 1,
+          category: "Rifle",
+          exterior: "Field-Tested",
+          rarity: "Classified",
+          source: "inventory",
+          price_history: generateMockHistory(45.50, 30)
+        },
+        {
+          name: "AWP | Dragon Lore (Factory New)",
+          price: 12500.00,
+          quantity: 1,
+          category: "Sniper Rifle",
+          exterior: "Factory New",
+          rarity: "Covert",
+          source: "inventory",
+          price_history: generateMockHistory(12500.00, 30)
+        },
+        {
+          name: "M4A4 | Howl (Minimal Wear)",
+          price: 8500.00,
+          quantity: 1,
+          category: "Rifle",
+          exterior: "Minimal Wear",
+          rarity: "Contraband",
+          source: "inventory",
+          price_history: generateMockHistory(8500.00, 30)
+        }
+      ]
+    };
+    
+    // Função auxiliar para gerar histórico mockado
+    function generateMockHistory(basePrice, days) {
+      const history = [];
+      const now = new Date();
+      for (let i = days; i >= 0; i--) {
+        const date = new Date(now);
+        date.setDate(date.getDate() - i);
+        // Variação aleatória de ±5%
+        const variation = (Math.random() - 0.5) * 0.1;
+        const price = basePrice * (1 + variation);
+        history.push({
+          date: date.toISOString().split('T')[0],
+          price: Math.max(price, basePrice * 0.5) // Garantir que não fique muito baixo
+        });
+      }
+      return history;
+    }
+    
+    // Os dados do inventário serão recebidos via localStorage
+    let inventoryData = JSON.parse(localStorage.getItem('inventoryData'));
+    
+    // Flag para indicar se estamos usando dados mockados
+    let isUsingMockData = false;
+    
+    // Verificar se há histórico de preços disponível
+    const hasPriceHistory = inventoryData?.has_price_history === true;
+    
+    // Se não houver dados no localStorage ou se estiver vazio, usar dados mockados
+    if (!inventoryData || !inventoryData.items || inventoryData.items.length === 0) {
+      console.log('Usando dados mockados para demonstração');
+      inventoryData = MOCK_INVENTORY_DATA;
+      isUsingMockData = true;
+      inventoryData.has_price_history = true; // Mock data sempre tem histórico
+      localStorage.setItem('inventoryData', JSON.stringify(MOCK_INVENTORY_DATA));
+      
+      const warningEl = document.getElementById('mock-data-warning');
+      if (warningEl) {
+        warningEl.style.display = 'block';
+      }
+    }
+    
+    // Esconder seções que dependem de histórico se não houver histórico
+    if (!hasPriceHistory) {
+      console.log('⚠️ Histórico de preços não disponível. Mostrando apenas análises simples.');
+      // Esconder botão da aba Tendências
+      const trendsTabButton = document.querySelector('[data-tab="trends"]');
+      if (trendsTabButton) {
+        trendsTabButton.style.display = 'none';
+      }
+      // Esconder conteúdo da aba Tendências
+      const trendsView = document.getElementById('trends-view');
+      if (trendsView) {
+        trendsView.style.display = 'none';
+      }
+      // Adicionar aviso na dashboard
+      const dashboardContainer = document.querySelector('.dashboard-container');
+      if (dashboardContainer) {
+        const warningDiv = document.createElement('div');
+        warningDiv.style.cssText = 'margin: 20px; padding: 15px; background: rgba(255,193,7,0.2); border-left: 3px solid #ffc107; border-radius: 4px; color: var(--cs2-text-light);';
+        warningDiv.innerHTML = '<strong>⚠️ Modo Simplificado:</strong> Histórico de preços não foi solicitado. Apenas análises básicas estão disponíveis. Para ver tendências e análises financeiras, ative o histórico de preços na análise.';
+        dashboardContainer.insertBefore(warningDiv, dashboardContainer.firstChild);
+      }
+    }
+    
+    // Processar dados históricos de forma eficiente (agregação)
+    function processPriceHistory(items, days = 30) {
+      if (!items || items.length === 0) return null;
+      
+      const now = new Date();
+      now.setHours(0, 0, 0, 0); // Normalizar para início do dia
+      const cutoffDate = new Date(now);
+      cutoffDate.setDate(cutoffDate.getDate() - days);
+      
+      // Gerar todas as datas no período
+      const allDates = [];
+      const currentDate = new Date(cutoffDate);
+      while (currentDate <= now) {
+        allDates.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      
+      // Para cada item, preparar histórico ordenado
+      const itemsWithHistory = items.map(item => {
+        let history = [];
+        if (item.price_history && Array.isArray(item.price_history) && item.price_history.length > 0) {
+          // Ordenar histórico por data
+          history = [...item.price_history].sort((a, b) => a.date.localeCompare(b.date));
+        }
+        return {
+          item,
+          history,
+          currentPrice: item.price || 0,
+          quantity: item.quantity || 1
+        };
+      });
+      
+      // Para cada data, calcular o valor total do inventário
+      const dailyTotals = [];
+      
+      allDates.forEach(targetDate => {
+        const dateKey = targetDate.toISOString().split('T')[0];
+        let totalValue = 0;
+        
+        itemsWithHistory.forEach(({ item, history, currentPrice, quantity }) => {
+          let priceForDate = currentPrice; // Fallback para preço atual
+          
+          if (history.length > 0) {
+            // Encontrar o último preço conhecido até esta data
+            let lastKnownPrice = null;
+            for (let i = history.length - 1; i >= 0; i--) {
+              const entryDate = new Date(history[i].date);
+              entryDate.setHours(0, 0, 0, 0);
+              
+              if (entryDate <= targetDate) {
+                lastKnownPrice = history[i].price || 0;
+                break;
+              }
+            }
+            
+            // Se encontrou um preço histórico, usar ele; senão usar preço atual
+            if (lastKnownPrice !== null && lastKnownPrice > 0) {
+              priceForDate = lastKnownPrice;
+            }
+          }
+          
+          totalValue += priceForDate * quantity;
+        });
+        
+        dailyTotals.push({
+          date: dateKey,
+          value: totalValue
+        });
+      });
+      
+      return dailyTotals;
+    }
+    
+    // Calcular métricas de trading
+    function calculateTradingMetrics(items) {
+      const metrics = {
+        appreciation: [],
+        depreciation: [],
+        sellOpportunities: [],
+        volatile: [],
+        allItems: [] // Todos os itens com métricas completas
+      };
+      
+      let totalROI = 0;
+      let totalProfit = 0;
+      let totalInvested = 0;
+      
+      items.forEach(item => {
+        const currentPrice = item.price || 0;
+        const quantity = item.quantity || 1;
+        const totalValue = currentPrice * quantity;
+        
+        // Calcular ROI e métricas básicas mesmo sem histórico
+        let roi = 0;
+        let profit = 0;
+        let avgPrice = currentPrice;
+        let priceChangePercent = 0;
+        let priceVsAvg = 0;
+        let volatilityPercent = 0;
+        let riskScore = 50; // Score padrão (médio)
+        let oldestPrice = currentPrice;
+        let priceChange = 0;
+        
+        if (item.price_history && Array.isArray(item.price_history) && item.price_history.length >= 2) {
+          const history = item.price_history.sort((a, b) => a.date.localeCompare(b.date));
+          oldestPrice = history[0].price || currentPrice;
+          priceChange = currentPrice - oldestPrice;
+          priceChangePercent = oldestPrice > 0 ? (priceChange / oldestPrice) * 100 : 0;
+          
+          // Calcular média histórica (últimos 30 dias ou todo histórico se menor)
+          const recentHistory = history.slice(-30);
+          avgPrice = recentHistory.reduce((sum, e) => sum + (e.price || 0), 0) / recentHistory.length;
+          priceVsAvg = avgPrice > 0 ? ((currentPrice - avgPrice) / avgPrice) * 100 : 0;
+          
+          // Calcular volatilidade (desvio padrão)
+          const prices = recentHistory.map(e => e.price || 0);
+          const mean = prices.reduce((a, b) => a + b, 0) / prices.length;
+          const variance = prices.reduce((sum, p) => sum + Math.pow(p - mean, 2), 0) / prices.length;
+          const volatility = Math.sqrt(variance);
+          volatilityPercent = mean > 0 ? (volatility / mean) * 100 : 0;
+          
+          // Calcular ROI (usando média histórica como preço de compra estimado)
+          const estimatedPurchasePrice = avgPrice;
+          profit = (currentPrice - estimatedPurchasePrice) * quantity;
+          roi = estimatedPurchasePrice > 0 ? ((currentPrice - estimatedPurchasePrice) / estimatedPurchasePrice) * 100 : 0;
+          
+          // Calcular score de risco (0-100)
+          // Baseado em: volatilidade (40%), variação de preço (30%), preço vs média (30%)
+          const volatilityScore = Math.min(volatilityPercent * 2, 40); // Máximo 40 pontos
+          const priceChangeScore = Math.min(Math.abs(priceChangePercent) * 0.3, 30); // Máximo 30 pontos
+          const priceVsAvgScore = Math.min(Math.abs(priceVsAvg) * 0.3, 30); // Máximo 30 pontos
+          riskScore = Math.min(volatilityScore + priceChangeScore + priceVsAvgScore, 100);
+        } else {
+          // Sem histórico: usar preço atual como referência
+          avgPrice = currentPrice;
+          riskScore = 30; // Risco menor quando não há histórico (menos incerteza)
+        }
+        
+        totalInvested += avgPrice * quantity;
+        totalProfit += profit;
+        
+        const itemMetric = {
+          name: item.name,
+          currentPrice,
+          avgPrice,
+          oldestPrice,
+          priceChange,
+          priceChangePercent,
+          priceVsAvg,
+          volatility: volatilityPercent,
+          roi,
+          profit,
+          riskScore,
+          totalValue,
+          quantity,
+          hasHistory: item.price_history && item.price_history.length >= 2
+        };
+        
+        metrics.allItems.push(itemMetric);
+        
+        // Classificar apenas itens com histórico
+        if (item.price_history && item.price_history.length >= 2) {
+          if (priceChangePercent > 5) {
+            metrics.appreciation.push(itemMetric);
+          } else if (priceChangePercent < -5) {
+            metrics.depreciation.push(itemMetric);
+          }
+          
+          if (priceVsAvg > 10) {
+            metrics.sellOpportunities.push(itemMetric);
+          }
+          
+          if (volatilityPercent > 15) {
+            metrics.volatile.push(itemMetric);
+          }
+        }
+      });
+      
+      // Calcular ROI total
+      metrics.totalROI = totalInvested > 0 ? (totalProfit / totalInvested) * 100 : 0;
+      metrics.totalProfit = totalProfit;
+      metrics.totalInvested = totalInvested;
+      
+      // Ordenar
+      metrics.appreciation.sort((a, b) => b.priceChangePercent - a.priceChangePercent);
+      metrics.depreciation.sort((a, b) => a.priceChangePercent - b.priceChangePercent);
+      metrics.sellOpportunities.sort((a, b) => b.priceVsAvg - a.priceVsAvg);
+      metrics.volatile.sort((a, b) => b.volatility - a.volatility);
+      metrics.allItems.sort((a, b) => b.totalValue - a.totalValue); // Ordenar por valor total
+      
+      return metrics;
+    }
+    
+    // Gerar alertas e dicas
+    function generateTradingAlerts(metrics, inventoryData) {
+      const alerts = [];
+      
+      // Alerta de ROI total
+      if (metrics.totalROI !== undefined && Math.abs(metrics.totalROI) > 5) {
+        alerts.push({
+          type: metrics.totalROI > 0 ? 'buy' : 'warning',
+          icon: metrics.totalROI > 0 ? '📊' : '⚠️',
+          title: 'ROI do Inventário',
+          message: `ROI total: ${formatPercent(metrics.totalROI)}. ${metrics.totalROI > 0 ? 'Lucro estimado' : 'Perda estimada'}: ${formatCurrency(Math.abs(metrics.totalProfit))}.`
+        });
+      }
+      
+      // Alerta de oportunidades de venda (com ROI)
+      if (metrics.sellOpportunities.length > 0) {
+        const topSell = metrics.sellOpportunities[0];
+        const roiText = topSell.roi !== undefined ? ` (ROI: ${formatPercent(topSell.roi)})` : '';
+        alerts.push({
+          type: 'sell',
+          icon: '💰',
+          title: 'Sell Opportunity',
+          message: `${topSell.name} is ${topSell.priceVsAvg.toFixed(1)}% above historical average${roiText}. Consider selling to maximize profits.`
+        });
+      }
+      
+      // Alerta de melhor ROI positivo
+      const bestROI = metrics.allItems
+        .filter(item => item.hasHistory && item.roi > 10)
+        .sort((a, b) => b.roi - a.roi)[0];
+      
+      if (bestROI) {
+        alerts.push({
+          type: 'buy',
+          icon: '📈',
+          title: 'Best Performance',
+          message: `${bestROI.name} has ROI of ${formatPercent(bestROI.roi)}. Estimated profit: ${formatCurrency(bestROI.profit)}.`
+        });
+      }
+      
+      // Alerta de itens de alto risco
+      const highRiskItems = metrics.allItems
+        .filter(item => item.hasHistory && item.riskScore >= 70)
+        .sort((a, b) => b.riskScore - a.riskScore)
+        .slice(0, 3);
+      
+      if (highRiskItems.length > 0) {
+        const riskNames = highRiskItems.map(item => item.name).join(', ');
+        alerts.push({
+          type: 'warning',
+          icon: '⚡',
+          title: 'High Risk Items',
+          message: `${riskNames} have high risk (score ≥70). Monitor closely or consider reducing exposure.`
+        });
+      }
+      
+      // Alerta de valorização
+      if (metrics.appreciation.length > 0) {
+        const topApp = metrics.appreciation[0];
+        alerts.push({
+          type: 'buy',
+          icon: '📈',
+          title: 'Rising Item',
+          message: `${topApp.name} appreciated ${topApp.priceChangePercent.toFixed(1)}% in recent days. May be a good time to monitor.`
+        });
+      }
+      
+      // Alerta de tendência geral
+      const totalValue = inventoryData.items.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
+      const historyData = processPriceHistory(inventoryData.items, 30);
+      if (historyData && historyData.length >= 2) {
+        const firstValue = historyData[0].value;
+        const lastValue = historyData[historyData.length - 1].value;
+        const trend = ((lastValue - firstValue) / firstValue) * 100;
+        
+        if (Math.abs(trend) > 5) {
+          alerts.push({
+            type: trend > 0 ? 'buy' : 'warning',
+            icon: trend > 0 ? '📊' : '⚠️',
+            title: 'Inventory Trend',
+            message: `Your inventory ${trend > 0 ? 'appreciated' : 'depreciated'} ${Math.abs(trend).toFixed(1)}% in the last 30 days.`
+          });
+        }
+      }
+      
+      return alerts;
+    }
+    
+    // Renderizar alertas
+    function renderAlerts(alerts) {
+      const container = document.getElementById('alerts-container');
+      container.innerHTML = '';
+      
+      if (alerts.length === 0) {
+        container.innerHTML = '<p style="text-align: center; opacity: 0.7; padding: 20px;">Nenhum alerta no momento. Seu inventário está estável.</p>';
+        return;
+      }
+      
+      alerts.forEach(alert => {
+        const alertCard = document.createElement('div');
+        alertCard.className = `alert-card alert-${alert.type}`;
+        alertCard.innerHTML = `
+          <div class="alert-icon">${alert.icon}</div>
+          <div class="alert-content">
+            <div class="alert-title">${alert.title}</div>
+            <div class="alert-message">${alert.message}</div>
+          </div>
+        `;
+        container.appendChild(alertCard);
+      });
+    }
+    
+    // Formatar valores monetários
+    function formatCurrency(value) {
+      return new Intl.NumberFormat('en-US', { 
+        style: 'currency', 
+        currency: 'USD' 
+      }).format(value);
+    }
+    
+    // Formatar percentual
+    function formatPercent(value) {
+      const sign = value >= 0 ? '+' : '';
+      return `${sign}${value.toFixed(2)}%`;
+    }
+    
+    // Truncar textos
+    function truncateText(text, maxLength = 20) {
+      if (!text) return "N/A";
+      if (text.length <= maxLength) return text;
+      return text.substring(0, maxLength - 3) + '...';
+    }
+    
+    // Cores para gráficos
+    const cs2Colors = ["#FFD700", "#FF6600", "#4B9E2A", "#2389DA", "#DD3333", "#8847ff", "#00B3E6"];
+    
+    // Configurações de gráficos
+    const chartConfig = {
+      responsive: true,
+      autosize: true,
+      displayModeBar: false,
+      staticPlot: false,
+      hovermode: 'closest',
+      font: {family: '"Rajdhani", sans-serif', color: "#F5F5F5"},
+      hoverlabel: {bgcolor: "#131E2B", font: {family: '"Rajdhani", sans-serif', size: 14}},
+      paper_bgcolor: "rgba(0,0,0,0)",
+      plot_bgcolor: "rgba(0,0,0,0)"
+    };
+    
+    // Renderizar lista de insights
+    function renderInsightList(containerId, items, formatFn, maxItems = 5) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      
+      if (!items || items.length === 0) {
+        container.innerHTML = '<li class="insight-item neutral"><span class="insight-name">No items found</span></li>';
+        return;
+      }
+      
+      items.slice(0, maxItems).forEach(item => {
+        const li = document.createElement('li');
+        const isPositive = item.priceChangePercent >= 0;
+        li.className = `insight-item ${isPositive ? 'positive' : 'negative'}`;
+        li.innerHTML = `
+          <span class="insight-name">${truncateText(item.name, 30)}</span>
+          <span class="insight-value ${isPositive ? 'positive' : 'negative'}">${formatFn(item)}</span>
+        `;
+        container.appendChild(li);
+      });
+    }
+    
+    // Setup tabs
+    function setupTabs() {
+      const tabs = document.querySelectorAll('.view-tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          
+          const tabId = tab.getAttribute('data-tab');
+          document.querySelectorAll('.view-content').forEach(content => {
+            content.classList.remove('active');
+          });
+          const activeView = document.getElementById(`${tabId}-view`);
+          activeView.classList.add('active');
+          
+          // Redimensionar gráficos quando as abas são ativadas
+          setTimeout(() => {
+            let chartIds = [];
+            if (tabId === 'trends') {
+              chartIds = ['top-items-trend-chart', 'price-comparison-chart'];
+              // Garantir que o gráfico de tendências seja renderizado quando a aba for ativada
+              if (typeof window.renderTrendsChart === 'function') {
+                window.renderTrendsChart();
+              }
+            } else if (tabId === 'insights') {
+              chartIds = ['inventory-trend-chart', 'category-chart', 'price-distribution-chart'];
+            }
+            
+            chartIds.forEach(id => {
+              const chartEl = document.getElementById(id);
+              if (chartEl && chartEl.children.length > 0) {
+                Plotly.Plots.resize(id);
+              }
+            });
+          }, 100);
+        });
+      });
+      
+      // Redimensionar gráficos quando as abas se tornam visíveis (usando MutationObserver)
+      const trendsView = document.getElementById('trends-view');
+      const insightsView = document.getElementById('insights-view');
+      
+      function setupViewObserver(view, chartIds, isTrendsView = false) {
+        if (view) {
+          const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                if (view.classList.contains('active')) {
+                  setTimeout(() => {
+                    // Se for a aba trends, garantir que o gráfico seja renderizado
+                    if (isTrendsView && typeof window.renderTrendsChart === 'function') {
+                      window.renderTrendsChart();
+                    }
+                    chartIds.forEach(id => {
+                      const chartEl = document.getElementById(id);
+                      if (chartEl && chartEl.children.length > 0) {
+                        Plotly.Plots.resize(id);
+                      }
+                    });
+                  }, 150);
+                }
+              }
+            });
+          });
+          
+          observer.observe(view, {
+            attributes: true,
+            attributeFilter: ['class']
+          });
+        }
+      }
+      
+      setupViewObserver(trendsView, ['top-items-trend-chart', 'price-comparison-chart'], true);
+      setupViewObserver(insightsView, ['inventory-trend-chart', 'category-chart', 'price-distribution-chart'], false);
+    }
+    
+    // Setup time filters
+    function setupTimeFilters() {
+      const buttons = document.querySelectorAll('.time-filter-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const days = parseInt(btn.getAttribute('data-days'));
+          updateInventoryTrendChart(days);
+        });
+      });
+    }
+    
+    // Atualizar gráfico de tendência
+    function updateInventoryTrendChart(days = 30) {
+      const historyData = processPriceHistory(inventoryData.items, days);
+      
+      if (!historyData || historyData.length === 0) {
+        document.getElementById('inventory-trend-chart').innerHTML = '<p style="text-align: center; padding: 50px; opacity: 0.7;">Dados históricos não disponíveis</p>';
+        return;
+      }
+      
+      const dates = historyData.map(d => d.date);
+      const values = historyData.map(d => d.value);
+      
+      // Calcular tendência
+      const firstValue = values[0];
+      const lastValue = values[values.length - 1];
+      const trend = firstValue > 0 ? ((lastValue - firstValue) / firstValue) * 100 : 0;
+      const trendColor = trend >= 0 ? '#4B9E2A' : '#DD3333';
+      
+      // Atualizar stat card
+      const changeEl = document.getElementById('total-change');
+      changeEl.textContent = formatPercent(trend);
+      changeEl.className = `stat-change ${trend >= 0 ? 'positive' : 'negative'}`;
+      
+      Plotly.newPlot("inventory-trend-chart", [{
+        type: "scatter",
+        mode: "lines+markers",
+        x: dates,
+        y: values,
+        name: "Inventory Value",
+        line: {color: trendColor, width: 3},
+        marker: {size: 6, color: trendColor},
+        hovertemplate: 'Date: %{x}<br>Value: $%{y:,.2f}<extra></extra>'
+      }], {
+        ...chartConfig,
+        xaxis: {
+          title: 'Data',
+          automargin: true
+        },
+        yaxis: {
+          title: 'Total Value (USD)',
+          automargin: true
+        },
+        title: {
+          text: `${days} Day Trend`,
+          font: {size: 16, color: '#FFD700'}
+        }
+      });
+    }
+    
+    // Gerar cards de skins
+    function renderSkinCards(items) {
+      const skinsGrid = document.getElementById('skins-grid');
+      skinsGrid.innerHTML = '';
+      
+      if (!items || items.length === 0) {
+        skinsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 50px 0;">No items found</p>';
+        return;
+      }
+      
+      const metrics = calculateTradingMetrics(items);
+      
+      items.forEach(item => {
+        const rarityColor = '#FFD700'; // Simplificado
+        const card = document.createElement('div');
+        card.className = 'skin-card';
+        card.style.borderLeft = `3px solid ${rarityColor}`;
+        
+        // Calcular mudança de preço
+        let priceChange = 0;
+        let priceChangePercent = 0;
+        let sellBadge = '';
+        let volatileBadge = '';
+        
+        if (item.price_history && item.price_history.length >= 2) {
+          const history = item.price_history.sort((a, b) => a.date.localeCompare(b.date));
+          const oldPrice = history[0].price || item.price || 0;
+          const currentPrice = item.price || 0;
+          priceChange = currentPrice - oldPrice;
+          priceChangePercent = oldPrice > 0 ? (priceChange / oldPrice) * 100 : 0;
+        }
+        
+        // Verificar se é oportunidade de venda
+        const sellOpp = metrics.sellOpportunities.find(m => m.name === item.name);
+        if (sellOpp) {
+          sellBadge = '<span class="skin-trading-badge sell-opportunity">SELL</span>';
+        }
+        
+        // Verificar se é volátil
+        const volatile = metrics.volatile.find(m => m.name === item.name);
+        if (volatile) {
+          volatileBadge = '<span class="skin-trading-badge volatile">VOLATILE</span>';
+        }
+        
+        // Buscar métricas completas do item
+        const itemMetric = metrics.allItems.find(m => m.name === item.name);
+        const roi = itemMetric ? itemMetric.roi : 0;
+        const riskScore = itemMetric ? itemMetric.riskScore : 30;
+        const profit = itemMetric ? itemMetric.profit : 0;
+        
+        // Determinar cor do score de risco
+        let riskColor = '#4B9E2A'; // Verde (baixo risco)
+        let riskLabel = 'Low';
+        if (riskScore >= 70) {
+          riskColor = '#DD3333'; // Red (high risk)
+          riskLabel = 'High';
+        } else if (riskScore >= 50) {
+          riskColor = '#FF6600'; // Orange (medium-high)
+          riskLabel = 'Medium-High';
+        } else if (riskScore >= 30) {
+          riskColor = '#FFD700'; // Gold (medium)
+          riskLabel = 'Medium';
+        }
+        
+        const imageContent = item.image_url 
+          ? `<img src="${item.image_url}" alt="${item.name}" class="skin-img">`
+          : `<div class="skin-placeholder">Image not available</div>`;
+        
+        const priceChangeClass = priceChangePercent >= 0 ? 'positive' : 'negative';
+        const priceChangeText = priceChangePercent !== 0 ? formatPercent(priceChangePercent) : '';
+        
+        const roiClass = roi >= 0 ? 'positive' : 'negative';
+        const roiText = itemMetric && itemMetric.hasHistory ? formatPercent(roi) : '';
+        const profitText = itemMetric && itemMetric.hasHistory && profit !== 0 
+          ? `<div class="skin-profit ${roiClass}">${profit >= 0 ? 'Profit' : 'Loss'}: ${formatCurrency(Math.abs(profit))}</div>` 
+          : '';
+        
+        card.innerHTML = `
+          ${sellBadge}${volatileBadge}
+          ${imageContent}
+          <div class="skin-details">
+            <div class="skin-name">
+              <span class="rarity-badge" style="background-color: ${rarityColor}"></span>
+              ${item.name || 'Unknown name'}
+            </div>
+            <span class="skin-exterior">${item.exterior || 'No wear'}</span>
+            <div class="skin-meta">
+              <span class="skin-source">${item.source === 'storage_unit' ? 'Storage Unit' : 'Inventory'}</span>
+              ${item.quantity > 1 ? `<span class="skin-quantity">x${item.quantity}</span>` : ''}
+            </div>
+            <div class="skin-price">${formatCurrency(item.price || 0)}</div>
+            ${priceChangeText ? `<div class="skin-price-change ${priceChangeClass}">${priceChangeText}</div>` : ''}
+            ${roiText ? `<div class="skin-roi ${roiClass}">ROI: ${roiText}</div>` : ''}
+            ${profitText}
+            <div class="skin-risk-score">
+              <span class="risk-label">Risk:</span>
+              <div class="risk-bar-container">
+                <div class="risk-bar" style="width: ${riskScore}%; background-color: ${riskColor};"></div>
+                <span class="risk-value" style="color: ${riskColor};">${riskLabel} (${riskScore.toFixed(0)})</span>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        skinsGrid.appendChild(card);
+      });
+    }
+    
+    // Configurar filtros
+    function setupFilters() {
+      const categories = new Set();
+      const exteriors = new Set();
+      
+      inventoryData.items.forEach(item => {
+        if (item.category) categories.add(item.category);
+        if (item.exterior) exteriors.add(item.exterior);
+      });
+      
+      const categoryFilter = document.getElementById('category-filter');
+      categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categoryFilter.appendChild(option);
+      });
+      
+      const exteriorFilter = document.getElementById('exterior-filter');
+      exteriors.forEach(exterior => {
+        const option = document.createElement('option');
+        option.value = exterior;
+        option.textContent = exterior;
+        exteriorFilter.appendChild(option);
+      });
+      
+      function applyFilters() {
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        const categoryValue = document.getElementById('category-filter').value;
+        const exteriorValue = document.getElementById('exterior-filter').value;
+        
+        let filteredItems = [...inventoryData.items];
+        
+        if (searchTerm) {
+          filteredItems = filteredItems.filter(item => 
+            (item.name && item.name.toLowerCase().includes(searchTerm))
+          );
+        }
+        
+        if (categoryValue) {
+          filteredItems = filteredItems.filter(item => item.category === categoryValue);
+        }
+        
+        if (exteriorValue) {
+          filteredItems = filteredItems.filter(item => item.exterior === exteriorValue);
+        }
+        
+        renderSkinCards(filteredItems);
+      }
+      
+      document.getElementById('search-input').addEventListener('input', applyFilters);
+      document.getElementById('category-filter').addEventListener('change', applyFilters);
+      document.getElementById('exterior-filter').addEventListener('change', applyFilters);
+      
+      document.getElementById('sort-price-desc').addEventListener('click', () => {
+        const sorted = [...inventoryData.items].sort((a, b) => (b.price || 0) - (a.price || 0));
+        renderSkinCards(sorted);
+      });
+      
+      document.getElementById('sort-price-asc').addEventListener('click', () => {
+        const sorted = [...inventoryData.items].sort((a, b) => (a.price || 0) - (b.price || 0));
+        renderSkinCards(sorted);
+      });
+      
+      document.getElementById('sort-appreciation').addEventListener('click', () => {
+        const metrics = calculateTradingMetrics(inventoryData.items);
+        const sorted = [...inventoryData.items].sort((a, b) => {
+          const aMetric = metrics.appreciation.find(m => m.name === a.name) || 
+                          metrics.depreciation.find(m => m.name === a.name) || 
+                          {priceChangePercent: 0};
+          const bMetric = metrics.appreciation.find(m => m.name === b.name) || 
+                          metrics.depreciation.find(m => m.name === b.name) || 
+                          {priceChangePercent: 0};
+          return bMetric.priceChangePercent - aMetric.priceChangePercent;
+        });
+        renderSkinCards(sorted);
+      });
+      
+      document.getElementById('sort-name').addEventListener('click', () => {
+        const sorted = [...inventoryData.items].sort((a, b) => {
+          const nameA = (a.name || '').toUpperCase();
+          const nameB = (b.name || '').toUpperCase();
+          return nameA.localeCompare(nameB);
+        });
+        renderSkinCards(sorted);
+      });
+    }
+    
+    // Inicialização
+    document.addEventListener("DOMContentLoaded", function() {
+      // Preencher estatísticas
+      const totalValue = inventoryData.items.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
+      const totalItems = inventoryData.items.length;
+      const avgValue = totalItems > 0 ? totalValue / totalItems : 0;
+      
+      let maxItem = {price: 0, name: "No items"};
+      if (inventoryData.items.length > 0) {
+        maxItem = inventoryData.items.reduce((max, item) => 
+          (item.price > max.price) ? item : max, {price: 0, name: "No items"});
+      }
+      
+      document.getElementById('total-value').textContent = formatCurrency(totalValue);
+      document.getElementById('total-items').textContent = totalItems;
+      document.getElementById('avg-value').textContent = formatCurrency(avgValue);
+      document.getElementById('max-value').textContent = formatCurrency(maxItem.price || 0);
+      document.getElementById('max-item-name').textContent = truncateText(maxItem.name || "No items");
+      
+      // Calcular métricas
+      const metrics = calculateTradingMetrics(inventoryData.items);
+      
+      // Preencher ROI e Lucro/Perda
+      const roiValue = metrics.totalROI || 0;
+      const profitValue = metrics.totalProfit || 0;
+      
+      document.getElementById('total-roi').textContent = formatPercent(roiValue);
+      document.getElementById('roi-change').textContent = roiValue >= 0 ? '↑' : '↓';
+      document.getElementById('roi-change').className = `stat-change ${roiValue >= 0 ? 'positive' : 'negative'}`;
+      
+      document.getElementById('total-profit').textContent = formatCurrency(Math.abs(profitValue));
+      document.getElementById('profit-change').textContent = profitValue >= 0 ? '↑ Profit' : '↓ Loss';
+      document.getElementById('profit-change').className = `stat-change ${profitValue >= 0 ? 'positive' : 'negative'}`;
+      
+      // Renderizar alertas
+      const alerts = generateTradingAlerts(metrics, inventoryData);
+      renderAlerts(alerts);
+      
+      // Renderizar listas de insights
+      renderInsightList('top-appreciation-list', metrics.appreciation, (item) => formatPercent(item.priceChangePercent));
+      renderInsightList('top-depreciation-list', metrics.depreciation, (item) => formatPercent(item.priceChangePercent));
+      renderInsightList('sell-opportunities-list', metrics.sellOpportunities, (item) => `${formatPercent(item.priceVsAvg)} above average`);
+      renderInsightList('volatile-items-list', metrics.volatile, (item) => `${item.volatility.toFixed(1)}% vol.`);
+      
+      // Gráfico de tendência do inventário
+      updateInventoryTrendChart(30);
+      
+      // Gráfico de distribuição por categoria
+      const categories = {};
+      inventoryData.items.forEach(item => {
+        const category = item.category || "Other";
+        if (!categories[category]) categories[category] = 0;
+        categories[category] += (item.price || 0) * (item.quantity || 1);
+      });
+      
+      Plotly.newPlot("category-chart", [{
+        type: "pie",
+        labels: Object.keys(categories),
+        values: Object.values(categories),
+        hole: 0.4,
+        textinfo: "label+percent",
+        marker: {colors: cs2Colors},
+        hovertemplate: '%{label}: $%{value:,.2f} (%{percent})<extra></extra>',
+        textposition: 'outside',
+        textfont: {size: 12}
+      }], {
+        ...chartConfig,
+        autosize: true
+      }).then(() => {
+        setTimeout(() => {
+          Plotly.Plots.resize("category-chart");
+        }, 100);
+      });
+      
+      // Histograma de distribuição de preços
+      const prices = inventoryData.items.map(item => item.price || 0).filter(p => p > 0);
+      if (prices.length > 0) {
+        // Criar bins para o histograma (usar escala logarítmica se houver grande variação)
+        const maxPrice = Math.max(...prices);
+        const minPrice = Math.min(...prices);
+        const numBins = Math.min(20, Math.ceil(Math.sqrt(prices.length)));
+        
+        // Se a variação for muito grande, usar escala logarítmica
+        const useLogScale = maxPrice / minPrice > 100;
+        
+        let bins, binLabels;
+        if (useLogScale) {
+          // Escala logarítmica
+          const logMin = Math.log10(minPrice);
+          const logMax = Math.log10(maxPrice);
+          const logStep = (logMax - logMin) / numBins;
+          bins = [];
+          binLabels = [];
+          
+          for (let i = 0; i < numBins; i++) {
+            const binStart = Math.pow(10, logMin + i * logStep);
+            const binEnd = Math.pow(10, logMin + (i + 1) * logStep);
+            bins.push([binStart, binEnd]);
+            binLabels.push(`${formatCurrency(binStart)} - ${formatCurrency(binEnd)}`);
+          }
+        } else {
+          // Escala linear
+          const step = (maxPrice - minPrice) / numBins;
+          bins = [];
+          binLabels = [];
+          
+          for (let i = 0; i < numBins; i++) {
+            const binStart = minPrice + i * step;
+            const binEnd = minPrice + (i + 1) * step;
+            bins.push([binStart, binEnd]);
+            binLabels.push(`${formatCurrency(binStart)} - ${formatCurrency(binEnd)}`);
+          }
+        }
+        
+        // Contar itens em cada bin
+        const counts = new Array(bins.length).fill(0);
+        prices.forEach(price => {
+          for (let i = 0; i < bins.length; i++) {
+            if (price >= bins[i][0] && (i === bins.length - 1 || price < bins[i][1])) {
+              counts[i]++;
+              break;
+            }
+          }
+        });
+        
+        // Criar labels mais legíveis
+        const xLabels = bins.map((bin, i) => {
+          if (i === bins.length - 1) {
+            return `≥${formatCurrency(bin[0])}`;
+          }
+          return formatCurrency(bin[0]);
+        });
+        
+        Plotly.newPlot("price-distribution-chart", [{
+          type: "bar",
+          x: xLabels,
+          y: counts,
+          marker: {
+            color: counts.map(c => {
+              // Gradiente de cor baseado na frequência
+              const maxCount = Math.max(...counts);
+              const intensity = c / maxCount;
+              if (intensity > 0.7) return '#FFD700';
+              if (intensity > 0.4) return '#FF6600';
+              return '#2389DA';
+            }),
+            line: {color: 'rgba(255, 215, 0, 0.3)', width: 1}
+          },
+          hovertemplate: 'Range: %{x}<br>Quantity: %{y} items<extra></extra>'
+        }], {
+          ...chartConfig,
+          autosize: true,
+          xaxis: {
+            title: 'Price Range (USD)',
+            automargin: true,
+            tickangle: -45
+          },
+          yaxis: {
+            title: 'Number of Items',
+            automargin: true
+          }
+        }).then(() => {
+          setTimeout(() => {
+            Plotly.Plots.resize("price-distribution-chart");
+          }, 100);
+        });
+      }
+      
+      // Gráfico de tendência de TODAS as skins com filtro
+      const allItemsData = inventoryData.items.map(item => {
+        if (!item.price_history || !Array.isArray(item.price_history) || item.price_history.length === 0) {
+          // Se não tem histórico, usar preço atual como ponto único
+          const today = new Date().toISOString().split('T')[0];
+          return {
+            name: item.name,
+            dates: [today],
+            prices: [item.price || 0],
+            hasHistory: false
+          };
+        }
+        const sortedHistory = item.price_history.sort((a, b) => a.date.localeCompare(b.date));
+        return {
+          name: item.name,
+          dates: sortedHistory.map(e => e.date),
+          prices: sortedHistory.map(e => e.price || 0),
+          hasHistory: true,
+          currentPrice: item.price || 0
+        };
+      }).filter(d => d.prices.length > 0);
+      
+      // Ordenar por preço atual (mais valiosos primeiro) para melhor visualização
+      allItemsData.sort((a, b) => {
+        const priceA = a.hasHistory ? (a.prices[a.prices.length - 1] || 0) : (a.prices[0] || 0);
+        const priceB = b.hasHistory ? (b.prices[b.prices.length - 1] || 0) : (b.prices[0] || 0);
+        return priceB - priceA;
+      });
+      
+      // Estado de seleção de skins (todas selecionadas por padrão)
+      let selectedSkins = new Set(allItemsData.map(item => item.name));
+      
+      // Função para renderizar o filtro de skins
+      function renderSkinFilter() {
+        const filterList = document.getElementById('skin-filter-list');
+        filterList.innerHTML = '';
+        
+        allItemsData.forEach((data, i) => {
+          const filterItem = document.createElement('div');
+          filterItem.className = 'skin-filter-item';
+          filterItem.dataset.skinName = data.name;
+          
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.id = `skin-checkbox-${i}`;
+          checkbox.checked = selectedSkins.has(data.name);
+          checkbox.addEventListener('change', (e) => {
+            if (e.target.checked) {
+              selectedSkins.add(data.name);
+            } else {
+              selectedSkins.delete(data.name);
+            }
+            updateChart();
+          });
+          
+          const label = document.createElement('label');
+          label.htmlFor = `skin-checkbox-${i}`;
+          label.textContent = truncateText(data.name, 40);
+          
+          filterItem.appendChild(checkbox);
+          filterItem.appendChild(label);
+          filterList.appendChild(filterItem);
+        });
+      }
+      
+      // Função para atualizar o gráfico baseado na seleção
+      function updateChart() {
+        const filteredData = allItemsData.filter(data => selectedSkins.has(data.name));
+        
+        if (filteredData.length === 0) {
+          document.getElementById('top-items-trend-chart').innerHTML = '<p style="text-align: center; padding: 50px; opacity: 0.7;">Select at least one skin to visualize</p>';
+          return;
+        }
+        
+        const traces = filteredData.map((data, i) => {
+          // Usar cores diferentes e transparência para melhor visualização
+          const colorIndex = i % cs2Colors.length;
+          const baseColor = cs2Colors[colorIndex];
+          
+          // Itens sem histórico ficam mais transparentes
+          const opacity = data.hasHistory ? 0.7 : 0.3;
+          const lineWidth = data.hasHistory ? 1.5 : 1;
+          
+          // Criar array de texto para cada ponto (mesmo nome para todos os pontos da mesma skin)
+          const textArray = data.dates.map(() => data.name);
+          
+          return {
+            type: "scatter",
+            mode: data.hasHistory ? "lines" : "markers",
+            name: truncateText(data.name, 25),
+            x: data.dates,
+            y: data.prices,
+            text: textArray, // Array com o nome para cada ponto
+            line: {
+              color: baseColor,
+              width: lineWidth
+            },
+            marker: {
+              color: baseColor,
+              size: data.hasHistory ? 0 : 4,
+              opacity: opacity
+            },
+            opacity: opacity,
+            hovertemplate: '<b>%{text}</b><br>Date: %{x}<br>Price: $%{y:,.2f}<extra></extra>',
+            legendgroup: data.hasHistory ? 'with_history' : 'no_history',
+            showlegend: true
+          };
+        });
+        
+        Plotly.newPlot("top-items-trend-chart", traces, {
+          ...chartConfig,
+          autosize: true,
+          xaxis: {
+            title: 'Date',
+            automargin: true,
+            showgrid: true,
+            gridcolor: 'rgba(255, 255, 255, 0.1)'
+          },
+          yaxis: {
+            title: 'Price (USD)',
+            automargin: true,
+            showgrid: true,
+            gridcolor: 'rgba(255, 255, 255, 0.1)',
+            type: 'log' // Escala logarítmica para melhor visualização com muitos itens
+          },
+          hovermode: 'closest',
+          legend: {
+            tracegroupgap: 0,
+            itemclick: 'toggleothers',
+            itemdoubleclick: 'toggle'
+          }
+        }).then(() => {
+          // Redimensionar múltiplas vezes para garantir que o gráfico está correto
+          setTimeout(() => {
+            Plotly.Plots.resize("top-items-trend-chart");
+          }, 100);
+          setTimeout(() => {
+            Plotly.Plots.resize("top-items-trend-chart");
+          }, 300);
+        });
+      }
+      
+      // Renderizar filtro e gráfico inicial
+      if (allItemsData.length > 0) {
+        renderSkinFilter();
+        
+        // Função para renderizar gráfico com verificação de visibilidade
+        function renderChartWhenVisible() {
+          const trendsView = document.getElementById('trends-view');
+          if (trendsView && trendsView.classList.contains('active')) {
+            updateChart();
+            // Redimensionar após um pequeno delay para garantir que o DOM está pronto
+            setTimeout(() => {
+              Plotly.Plots.resize("top-items-trend-chart");
+            }, 300);
+          } else {
+            // Se a aba não estiver ativa, aguardar até que seja ativada
+            const checkInterval = setInterval(() => {
+              if (trendsView && trendsView.classList.contains('active')) {
+                updateChart();
+                setTimeout(() => {
+                  Plotly.Plots.resize("top-items-trend-chart");
+                }, 300);
+                clearInterval(checkInterval);
+              }
+            }, 100);
+            // Limpar intervalo após 5 segundos para evitar loop infinito
+            setTimeout(() => clearInterval(checkInterval), 5000);
+          }
+        }
+        
+        renderChartWhenVisible();
+        
+        // Garantir que o gráfico seja renderizado quando a aba trends for ativada
+        // Armazenar referência global para poder chamar quando necessário
+        window.renderTrendsChart = function() {
+          if (allItemsData.length > 0) {
+            updateChart();
+            setTimeout(() => {
+              Plotly.Plots.resize("top-items-trend-chart");
+            }, 200);
+          }
+        };
+        
+        // Botões de seleção
+        document.getElementById('select-all-skins').addEventListener('click', () => {
+          selectedSkins = new Set(allItemsData.map(item => item.name));
+          document.querySelectorAll('#skin-filter-list input[type="checkbox"]').forEach(cb => {
+            cb.checked = true;
+          });
+          updateChart();
+        });
+        
+        document.getElementById('deselect-all-skins').addEventListener('click', () => {
+          selectedSkins.clear();
+          document.querySelectorAll('#skin-filter-list input[type="checkbox"]').forEach(cb => {
+            cb.checked = false;
+          });
+          updateChart();
+        });
+        
+        // Busca de skins
+        document.getElementById('skin-search-input').addEventListener('input', (e) => {
+          const searchTerm = e.target.value.toLowerCase();
+          document.querySelectorAll('.skin-filter-item').forEach(item => {
+            const skinName = item.dataset.skinName.toLowerCase();
+            if (skinName.includes(searchTerm)) {
+              item.classList.remove('hidden');
+            } else {
+              item.classList.add('hidden');
+            }
+          });
+        });
+      }
+      
+      // Gráfico de comparação preço atual vs média
+      const comparisonData = inventoryData.items
+        .filter(item => item.price_history && item.price_history.length > 0)
+        .map(item => {
+          const recentHistory = item.price_history.slice(-30);
+          const avgPrice = recentHistory.reduce((sum, e) => sum + (e.price || 0), 0) / recentHistory.length;
+          return {
+            name: item.name,
+            current: item.price || 0,
+            average: avgPrice
+          };
+        })
+        .sort((a, b) => b.current - a.current)
+        .slice(0, 15);
+      
+      if (comparisonData.length > 0) {
+        Plotly.newPlot("price-comparison-chart", [
+          {
+            type: "bar",
+            name: "Current Price",
+            x: comparisonData.map(d => truncateText(d.name, 15)),
+            y: comparisonData.map(d => d.current),
+            marker: {color: '#FFD700'},
+            hovertemplate: '%{x}<br>Current: $%{y:,.2f}<extra></extra>'
+          },
+          {
+            type: "bar",
+            name: "Historical Average",
+            x: comparisonData.map(d => truncateText(d.name, 15)),
+            y: comparisonData.map(d => d.average),
+            marker: {color: '#2389DA'},
+            hovertemplate: '%{x}<br>Average: $%{y:,.2f}<extra></extra>'
+          }
+        ], {
+          ...chartConfig,
+          autosize: true,
+          barmode: 'group',
+          xaxis: {tickangle: 45, automargin: true},
+          yaxis: {title: 'Price (USD)', automargin: true}
+        }).then(() => {
+          // Redimensionar múltiplas vezes para garantir que o gráfico está correto
+          setTimeout(() => {
+            Plotly.Plots.resize("price-comparison-chart");
+          }, 100);
+          setTimeout(() => {
+            Plotly.Plots.resize("price-comparison-chart");
+          }, 300);
+        });
+      }
+      
+      // Setup
+      setupTabs();
+      setupTimeFilters();
+      renderSkinCards(inventoryData.items);
+      setupFilters();
+      
+      // Redimensionar gráficos quando a janela mudar de tamanho
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          const chartIds = ['inventory-trend-chart', 'top-items-trend-chart', 'price-comparison-chart', 'category-chart', 'price-distribution-chart'];
+          chartIds.forEach(id => {
+            const chartEl = document.getElementById(id);
+            if (chartEl && chartEl.children.length > 0) {
+              Plotly.Plots.resize(id);
+            }
+          });
+        }, 250);
+      });
+      
+      // Redimensionar gráficos quando a página volta ao foco (após Ctrl+F5 ou troca de aba)
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          setTimeout(() => {
+            const trendsView = document.getElementById('trends-view');
+            const insightsView = document.getElementById('insights-view');
+            
+            if (trendsView && trendsView.classList.contains('active')) {
+              // Garantir que o gráfico seja renderizado quando a página voltar ao foco
+              if (typeof window.renderTrendsChart === 'function') {
+                window.renderTrendsChart();
+              }
+              const chartIds = ['top-items-trend-chart', 'price-comparison-chart'];
+              chartIds.forEach(id => {
+                const chartEl = document.getElementById(id);
+                if (chartEl && chartEl.children.length > 0) {
+                  Plotly.Plots.resize(id);
+                }
+              });
+            }
+            
+            if (insightsView && insightsView.classList.contains('active')) {
+              const chartIds = ['inventory-trend-chart', 'category-chart', 'price-distribution-chart'];
+              chartIds.forEach(id => {
+                const chartEl = document.getElementById(id);
+                if (chartEl && chartEl.children.length > 0) {
+                  Plotly.Plots.resize(id);
+                }
+              });
+            }
+          }, 300);
+        }
+      });
+      
+      // Redimensionar gráficos quando as abas se tornam visíveis (usando IntersectionObserver)
+      function setupIntersectionObserver(view, chartIds, isTrendsView = false) {
+        if (view) {
+          const intersectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting && entry.target.classList.contains('active')) {
+                setTimeout(() => {
+                  // Se for a aba trends, garantir que o gráfico seja renderizado
+                  if (isTrendsView && typeof window.renderTrendsChart === 'function') {
+                    window.renderTrendsChart();
+                  }
+                  chartIds.forEach(id => {
+                    const chartEl = document.getElementById(id);
+                    if (chartEl && chartEl.children.length > 0) {
+                      Plotly.Plots.resize(id);
+                    }
+                  });
+                }, 200);
+              }
+            });
+          }, {
+            threshold: 0.1
+          });
+          
+          intersectionObserver.observe(view);
+        }
+      }
+      
+      const trendsView = document.getElementById('trends-view');
+      const insightsView = document.getElementById('insights-view');
+      setupIntersectionObserver(trendsView, ['top-items-trend-chart', 'price-comparison-chart'], true);
+      setupIntersectionObserver(insightsView, ['inventory-trend-chart', 'category-chart', 'price-distribution-chart'], false);
+    });
+  </script>
+</body>
+</html>
