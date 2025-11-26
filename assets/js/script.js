@@ -1002,6 +1002,14 @@ function applyLanguage(lang) {
     }
   });
   
+  // Update aria-labels
+  document.querySelectorAll('[data-pt-aria-label], [data-en-aria-label], [data-es-aria-label]').forEach(element => {
+    const ariaLabel = element.getAttribute(`data-${lang}-aria-label`);
+    if (ariaLabel) {
+      element.setAttribute('aria-label', ariaLabel);
+    }
+  });
+  
   // Update language selector
   const text = document.getElementById('currentLangText');
   if (text) {
