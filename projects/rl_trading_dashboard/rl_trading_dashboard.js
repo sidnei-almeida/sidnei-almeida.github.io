@@ -2,8 +2,33 @@
 // CONFIG
 // ============================================================================
 
-const API_BASE_URL = "https://deep-rl-trading-agent.onrender.com";
-const API_TIMEOUT_MS = 10000; // shorter timeout so the UI doesn't hang during cold starts
+const LOCAL_CSV_URL = "/data/sp500.csv";
+const DEFAULT_INITIAL_BALANCE = 100000;
+const DEFAULT_TRANSACTION_COST = 0.001;
+const MAX_MOMENTUM_SELECTION = 2;
+const YF_CHART_ENDPOINT = "https://query1.finance.yahoo.com/v8/finance/chart";
+const MIN_WEIGHT_TO_CHART = 0.001; // 0.1% - evita rótulos ilegíveis
+const CHART_GRID_STYLE = {
+  gridcolor: "rgba(255, 255, 255, 0.08)",
+  gridwidth: 0.6,
+  griddash: "dot",
+  zeroline: false
+};
+const cssRoot = getComputedStyle(document.documentElement);
+const COLOR_PRIMARY_GREEN = cssRoot.getPropertyValue("--chart-primary-green").trim() || "#00E396";
+const COLOR_PRIMARY_GREEN_ALPHA =
+  cssRoot.getPropertyValue("--chart-primary-green-alpha").trim() || "rgba(0, 227, 150, 0.2)";
+const COLOR_SECONDARY_CYAN = cssRoot.getPropertyValue("--chart-secondary-cyan").trim() || "#00B1F2";
+const COLOR_TERTIARY_PURPLE = cssRoot.getPropertyValue("--chart-tertiary-purple").trim() || "#775DD0";
+const COLOR_ACCENT_YELLOW = cssRoot.getPropertyValue("--chart-accent-yellow").trim() || "#FEB019";
+const COLOR_ALERT_RED = cssRoot.getPropertyValue("--chart-alert-red").trim() || "#FF4560";
+const COLOR_ALERT_RED_ALPHA =
+  cssRoot.getPropertyValue("--chart-alert-red-alpha").trim() || "rgba(255, 69, 96, 0.2)";
+const HOVER_LABEL_STYLE = {
+  bgcolor: "rgba(9, 12, 18, 0.95)",
+  bordercolor: "rgba(255, 255, 255, 0.12)",
+  font: { color: "#f8fafc", size: 11 }
+};
 
 const elements = {
   loadingOverlay: document.getElementById("loadingOverlay"),
@@ -36,7 +61,10 @@ let selectedTickers = null;
 // HELPERS
 // ============================================================================
 
-function showLoading(title = "Loading RL trading data", message = "Querying the RL agent, loading portfolio and benchmark history...") {
+function showLoading(
+  title = "Carregando dados históricos",
+  message = "Processando snapshot local do YFinance (sp500.csv)..."
+) {
   if (elements.loadingTitle) elements.loadingTitle.textContent = title;
   if (elements.loadingMessage) elements.loadingMessage.textContent = message;
   elements.loadingOverlay.classList.add("visible");
@@ -46,18 +74,29 @@ function hideLoading() {
   elements.loadingOverlay.classList.remove("visible");
 }
 
-function updateTimestamp() {
+function updateTimestamp(latestDate = null) {
+  if (!elements.updateTime || !elements.footerUpdateTime) return;
   const now = new Date();
-  const ts = now.toLocaleString("en-US", {
+  const nowLabel = now.toLocaleString("pt-BR", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
     hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
+    minute: "2-digit"
   });
-  elements.updateTime.textContent = `Last update: ${ts}`;
-  elements.footerUpdateTime.textContent = ts;
+  let datasetLabel = "";
+  if (latestDate) {
+    const parsed = new Date(latestDate);
+    datasetLabel = parsed.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    });
+  }
+  elements.updateTime.textContent = latestDate
+    ? `Dados até ${datasetLabel} • Atualizado ${nowLabel}`
+    : `Atualizado ${nowLabel}`;
+  elements.footerUpdateTime.textContent = nowLabel;
 }
 
 function formatCurrency(value) {
@@ -75,17 +114,6 @@ function formatPercent(value, decimals = 2) {
   return `${sign}${value.toFixed(decimals)}%`;
 }
 
-async function fetchWithTimeout(url, options = {}, timeoutMs = API_TIMEOUT_MS) {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, { ...options, signal: controller.signal });
-    return res;
-  } finally {
-    clearTimeout(id);
-  }
-}
-
 function getActiveTickers(data) {
   if (!data?.tickers) return [];
   if (!selectedTickers || selectedTickers.size === 0) {
@@ -94,47 +122,226 @@ function getActiveTickers(data) {
   return data.tickers.filter(t => selectedTickers.has(t));
 }
 
-// ============================================================================
-// API
-// ============================================================================
-
-async function checkApiHealth() {
-  try {
-    const res = await fetchWithTimeout(`${API_BASE_URL}/`, { method: "GET" }, API_TIMEOUT_MS);
-    if (!res.ok) throw new Error(`Status ${res.status}`);
-    const json = await res.json().catch(() => ({}));
-    elements.apiStatusChip.textContent = "API Online";
-    elements.apiStatusChip.classList.remove("error");
-    if (json.model_loaded === false) {
-      elements.apiStatusChip.textContent = "Model not loaded";
-      elements.apiStatusChip.classList.add("error");
-    }
-    return true;
-  } catch (err) {
-    console.error("Health check failed:", err);
-    elements.apiStatusChip.textContent = "API waking up on Render…";
-    elements.apiStatusChip.classList.add("error");
-    return false;
+function parseCsv(text) {
+  const rows = text.trim().split(/\r?\n/);
+  const header = rows.shift();
+  if (!header) {
+    throw new Error("CSV vazio ou inválido.");
   }
+  const columns = header.split(",").map(col => col.trim());
+  const tickers = columns.slice(1);
+
+  const price_history = rows
+    .filter(Boolean)
+    .map(line => {
+      const values = line.split(",");
+      const entry = { Date: values[0] };
+      tickers.forEach((ticker, idx) => {
+        const value = parseFloat(values[idx + 1]);
+        entry[ticker] = Number.isFinite(value) ? value : null;
+      });
+      return entry;
+    })
+    .sort((a, b) => new Date(a.Date) - new Date(b.Date));
+
+  return { tickers, price_history };
 }
 
-async function fetchDashboardData() {
-  try {
-    const res = await fetchWithTimeout(
-      `${API_BASE_URL}/api/v1/dashboard-data`,
-      { method: "GET" },
-      API_TIMEOUT_MS
-    );
-    if (!res.ok) {
-      throw new Error(`Failed to load dashboard data: ${res.status}`);
-    }
-    return await res.json();
-  } catch (err) {
-    if (err.name === "AbortError") {
-      err._isTimeout = true;
-    }
-    throw err;
+function getLatestDate(data) {
+  if (!data?.price_history?.length) return null;
+  return data.price_history[data.price_history.length - 1].Date;
+}
+
+function computeAllTimeWinners(priceHistory, tickers, currentIdx) {
+  if (currentIdx <= 0) return [];
+  const firstRow = priceHistory[0];
+  const currentRow = priceHistory[currentIdx];
+  return tickers
+    .map(ticker => {
+      const basePrice = firstRow[ticker];
+      const currentPrice = currentRow[ticker];
+      if (!basePrice || !currentPrice) {
+        return { ticker, score: Number.NEGATIVE_INFINITY };
+      }
+      return { ticker, score: currentPrice / basePrice - 1 };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, Math.min(MAX_MOMENTUM_SELECTION, tickers.length))
+    .filter(item => Number.isFinite(item.score));
+}
+
+function simulateAgent(priceHistory, tickers) {
+  if (!priceHistory.length || !tickers.length) {
+    return {
+      agent_history: [],
+      benchmark_history: [],
+      current_allocation: {}
+    };
   }
+
+  const baseWeight = 1 / tickers.length;
+  const agentWeights = {};
+  tickers.forEach(ticker => {
+    agentWeights[ticker] = baseWeight;
+  });
+  const benchmarkWeights = { ...agentWeights };
+
+  const agentHistory = [];
+  const benchmarkHistory = [];
+  let agentEquity = DEFAULT_INITIAL_BALANCE;
+  let benchmarkEquity = DEFAULT_INITIAL_BALANCE;
+
+  priceHistory.forEach((row, idx) => {
+    if (idx === 0) {
+      agentHistory.push(agentEquity);
+      benchmarkHistory.push(benchmarkEquity);
+      return;
+    }
+
+    const prevRow = priceHistory[idx - 1];
+    const dailyReturns = tickers.reduce((acc, ticker) => {
+      const prevPrice = prevRow[ticker];
+      const currentPrice = row[ticker];
+      if (!prevPrice || !currentPrice) {
+        acc[ticker] = 0;
+      } else {
+        acc[ticker] = currentPrice / prevPrice - 1;
+      }
+      return acc;
+    }, {});
+
+    const winners = computeAllTimeWinners(priceHistory, tickers, idx);
+    if (winners.length) {
+      const freshWeights = {};
+      tickers.forEach(ticker => {
+        freshWeights[ticker] = 0;
+      });
+      const weight = 1 / winners.length;
+      winners.forEach(({ ticker }) => {
+        freshWeights[ticker] = weight;
+      });
+      Object.assign(agentWeights, freshWeights);
+    }
+
+    const agentDailyReturn = tickers.reduce(
+      (acc, ticker) => acc + (agentWeights[ticker] || 0) * dailyReturns[ticker],
+      0
+    );
+    agentEquity *= 1 + agentDailyReturn;
+    agentHistory.push(agentEquity);
+
+    const benchmarkDailyReturn = tickers.reduce(
+      (acc, ticker) => acc + (benchmarkWeights[ticker] || 0) * dailyReturns[ticker],
+      0
+    );
+    benchmarkEquity *= 1 + benchmarkDailyReturn;
+    benchmarkHistory.push(benchmarkEquity);
+  });
+
+  return {
+    agent_history: agentHistory,
+    benchmark_history: benchmarkHistory,
+    current_allocation: { ...agentWeights }
+  };
+}
+
+function buildDashboardData(priceHistory, tickers) {
+  const simulation = simulateAgent(priceHistory, tickers);
+  return {
+    tickers,
+    price_history: priceHistory,
+    initial_balance: DEFAULT_INITIAL_BALANCE,
+    transaction_cost: DEFAULT_TRANSACTION_COST,
+    ...simulation
+  };
+}
+
+function mergePriceHistory(currentHistory, additions, tickers) {
+  if (!additions?.length) return currentHistory;
+  const map = new Map();
+  currentHistory.forEach(row => {
+    map.set(row.Date, { ...row });
+  });
+
+  additions.forEach(row => {
+    const base = map.get(row.Date) || { Date: row.Date };
+    tickers.forEach(ticker => {
+      if (row[ticker] !== undefined && row[ticker] !== null) {
+        base[ticker] = row[ticker];
+      }
+    });
+    map.set(row.Date, base);
+  });
+
+  return Array.from(map.values()).sort((a, b) => new Date(a.Date) - new Date(b.Date));
+}
+
+async function fetchLocalCsvDataset() {
+  const res = await fetch(LOCAL_CSV_URL, { cache: "no-cache" });
+  if (!res.ok) {
+    throw new Error(`Falha ao carregar ${LOCAL_CSV_URL}: ${res.status}`);
+  }
+  const text = await res.text();
+  return parseCsv(text);
+}
+
+async function fetchTickerSeriesFromYF(ticker, startEpochSec) {
+  const endEpochSec = Math.floor(Date.now() / 1000);
+  const url = `${YF_CHART_ENDPOINT}/${ticker}?interval=1d&events=history&period1=${startEpochSec}&period2=${endEpochSec}&includePrePost=false`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`YF ${ticker}: ${res.status}`);
+  }
+  const json = await res.json();
+  const result = json?.chart?.result?.[0];
+  if (!result?.timestamp?.length) return [];
+  const timestamps = result.timestamp;
+  const prices = result.indicators?.adjclose?.[0]?.adjclose || [];
+
+  return timestamps
+    .map((ts, idx) => {
+      const date = new Date(ts * 1000).toISOString().slice(0, 10);
+      const value = prices[idx];
+      if (!Number.isFinite(value)) return null;
+      return { Date: date, value };
+    })
+    .filter(Boolean);
+}
+
+async function fetchYFinanceUpdates(tickers, lastDate) {
+  if (!tickers?.length || !lastDate) return [];
+  const lastEpoch = Math.floor(new Date(lastDate).getTime() / 1000);
+  // adiciona 24h para evitar duplicar a última linha existente
+  const startEpoch = lastEpoch + 86400;
+  if (startEpoch >= Math.floor(Date.now() / 1000)) {
+    return [];
+  }
+
+  const perTicker = await Promise.all(
+    tickers.map(ticker => fetchTickerSeriesFromYF(ticker, startEpoch).catch(err => {
+      console.error(`Erro ao buscar ${ticker} no YFinance`, err);
+      return [];
+    }))
+  );
+
+  const rowsMap = new Map();
+  perTicker.forEach((series, idx) => {
+    const ticker = tickers[idx];
+    series.forEach(point => {
+      if (!rowsMap.has(point.Date)) {
+        rowsMap.set(point.Date, { Date: point.Date });
+      }
+      rowsMap.get(point.Date)[ticker] = point.value;
+    });
+  });
+
+  return Array.from(rowsMap.values()).sort((a, b) => new Date(a.Date) - new Date(b.Date));
+}
+
+function updateStatusChip(message, isError = false) {
+  if (!elements.apiStatusChip) return;
+  elements.apiStatusChip.textContent = message;
+  elements.apiStatusChip.classList.toggle("error", isError);
 }
 
 // ============================================================================
@@ -146,6 +353,8 @@ function renderSidebarInfo(data) {
 
   if (!selectedTickers) {
     selectedTickers = new Set(tickers);
+  } else {
+    selectedTickers = new Set([...selectedTickers].filter(t => tickers.includes(t)));
   }
 
   elements.tickersList.innerHTML = "";
@@ -165,6 +374,7 @@ function renderSidebarInfo(data) {
       if (dashboardData) {
         renderAllocation(dashboardData);
         renderPrices(dashboardData);
+        renderTickerReturns(dashboardData);
         // Atualiza o visual dos chips
         renderSidebarInfo(dashboardData);
       }
@@ -228,7 +438,9 @@ function renderEquityCurve(data) {
     type: "scatter",
     mode: "lines",
     name: "Agent",
-    line: { color: "#22c55e", width: 2 }
+    line: { color: COLOR_PRIMARY_GREEN, width: 2.2 },
+    fill: "tozeroy",
+    fillcolor: COLOR_PRIMARY_GREEN_ALPHA
   };
 
   const traceBench = {
@@ -237,7 +449,7 @@ function renderEquityCurve(data) {
     type: "scatter",
     mode: "lines",
     name: "Buy & Hold",
-    line: { color: "#64748b", width: 2, dash: "dash" }
+    line: { color: COLOR_SECONDARY_CYAN, width: 2, dash: "dash" }
   };
 
   const layout = {
@@ -245,13 +457,21 @@ function renderEquityCurve(data) {
     paper_bgcolor: "rgba(0,0,0,0)",
     font: { color: "#e5e7eb", size: 10 },
     margin: { l: 50, r: 10, t: 20, b: 40 },
-    xaxis: { title: "", tickfont: { size: 9 } },
+    xaxis: { title: "", tickfont: { size: 9 }, ...CHART_GRID_STYLE },
     yaxis: {
       title: "Equity (USD)",
       tickfont: { size: 9 },
-      tickprefix: "$"
+      tickprefix: "$",
+      ...CHART_GRID_STYLE
     },
-    legend: { orientation: "h", y: -0.2, x: 0 }
+    hoverlabel: HOVER_LABEL_STYLE,
+    legend: {
+      orientation: "h",
+      x: 0,
+      y: 1.15,
+      xanchor: "left",
+      font: { size: 10 }
+    }
   };
 
   Plotly.newPlot("equityCurveChart", [traceAgent, traceBench], layout, { responsive: true, displayModeBar: false });
@@ -270,17 +490,36 @@ function renderAllocation(data) {
     return;
   }
 
-  const values = labels.map(k => current_allocation[k] * 100);
+  const displayLabels = labels.filter(t => (current_allocation[t] ?? 0) > MIN_WEIGHT_TO_CHART);
+  const labelsForChart = displayLabels.length ? displayLabels : labels.slice(0, 1);
+  const values = labelsForChart.map(k => current_allocation[k] * 100);
+  const basePull = labelsForChart.map(() => 0);
+
+  const pieElement = document.getElementById("allocationPieChart");
 
   const trace = {
-    labels,
+    labels: labelsForChart,
     values,
     type: "pie",
-    hole: 0.5,
+    hole: 0.75,
+    textposition: "outside",
+    automargin: true,
     marker: {
-      colors: ["#22c55e", "#4ade80", "#a3e635", "#facc15", "#fb923c", "#38bdf8"]
+      colors: [
+        COLOR_PRIMARY_GREEN,
+        COLOR_SECONDARY_CYAN,
+        COLOR_TERTIARY_PURPLE,
+        COLOR_ACCENT_YELLOW,
+        "#a855f7",
+        "#ec4899"
+      ],
+      line: {
+        color: "#161b22",
+        width: 2
+      }
     },
-    textinfo: "label+percent"
+    textinfo: "label+percent",
+    pull: basePull
   };
 
   const layout = {
@@ -288,17 +527,33 @@ function renderAllocation(data) {
     paper_bgcolor: "rgba(0,0,0,0)",
     font: { color: "#e5e7eb", size: 10 },
     margin: { l: 10, r: 10, t: 10, b: 10 },
-    showlegend: false
+    showlegend: false,
+    hoverlabel: HOVER_LABEL_STYLE
   };
 
-  Plotly.newPlot("allocationPieChart", [trace], layout, { responsive: true, displayModeBar: false });
+  Plotly.newPlot("allocationPieChart", [trace], layout, { responsive: true, displayModeBar: false }).then(() => {
+    if (!pieElement) return;
+    pieElement.removeAllListeners?.("plotly_hover");
+    pieElement.removeAllListeners?.("plotly_unhover");
+
+    pieElement.on("plotly_hover", event => {
+      if (!event.points?.length) return;
+      const pull = basePull.slice();
+      pull[event.points[0].pointNumber] = 0.08;
+      Plotly.restyle(pieElement, { pull: [pull] }, [0]);
+    });
+
+    pieElement.on("plotly_unhover", () => {
+      Plotly.restyle(pieElement, { pull: [basePull] }, [0]);
+    });
+  });
 
   tbody.innerHTML = "";
   labels.forEach((ticker, idx) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${ticker}</td>
-      <td>${values[idx].toFixed(2)}%</td>
+      <td>${(current_allocation[ticker] * 100).toFixed(2)}%</td>
     `;
     tbody.appendChild(tr);
   });
@@ -321,9 +576,9 @@ function renderDrawdown(data) {
     type: "scatter",
     mode: "lines",
     name: "Drawdown",
-    line: { color: "#f97373", width: 2 },
+    line: { color: COLOR_ALERT_RED, width: 2 },
     fill: "tozeroy",
-    fillcolor: "rgba(248,113,113,0.15)"
+    fillcolor: COLOR_ALERT_RED_ALPHA
   };
 
   const layout = {
@@ -331,12 +586,14 @@ function renderDrawdown(data) {
     paper_bgcolor: "rgba(0,0,0,0)",
     font: { color: "#e5e7eb", size: 10 },
     margin: { l: 60, r: 20, t: 20, b: 40 },
-    xaxis: { tickfont: { size: 9 } },
+    xaxis: { tickfont: { size: 9 }, ...CHART_GRID_STYLE },
     yaxis: {
       title: "Drawdown (%)",
       tickfont: { size: 9 },
-      ticksuffix: "%"
-    }
+      ticksuffix: "%",
+      ...CHART_GRID_STYLE
+    },
+    hoverlabel: HOVER_LABEL_STYLE
   };
 
   Plotly.newPlot("drawdownChart", [trace], layout, { responsive: true, displayModeBar: false });
@@ -366,13 +623,15 @@ function renderPrices(data) {
     paper_bgcolor: "rgba(0,0,0,0)",
     font: { color: "#e5e7eb", size: 10 },
     margin: { l: 60, r: 20, t: 20, b: 40 },
-    xaxis: { tickfont: { size: 9 } },
+    xaxis: { tickfont: { size: 9 }, ...CHART_GRID_STYLE },
     yaxis: {
       title: "Price (USD)",
       tickfont: { size: 9 },
-      tickprefix: "$"
+      tickprefix: "$",
+      ...CHART_GRID_STYLE
     },
-    legend: { orientation: "h", y: -0.2, x: 0 }
+    legend: { orientation: "h", y: 1.1, x: 0, xanchor: "left", font: { size: 10 } },
+    hoverlabel: HOVER_LABEL_STYLE
   };
 
   Plotly.newPlot("pricesChart", traces, layout, { responsive: true, displayModeBar: false });
@@ -415,7 +674,7 @@ function renderTickerReturns(data) {
     y: values,
     type: "bar",
     marker: {
-      color: values.map(v => (v >= 0 ? "#22c55e" : "#f97373"))
+      color: values.map(v => (v >= 0 ? COLOR_PRIMARY_GREEN : COLOR_ALERT_RED))
     }
   };
 
@@ -423,16 +682,24 @@ function renderTickerReturns(data) {
     plot_bgcolor: "rgba(0,0,0,0)",
     paper_bgcolor: "rgba(0,0,0,0)",
     font: { color: "#e5e7eb", size: 10 },
-    margin: { l: 50, r: 20, t: 20, b: 50 },
-    xaxis: { tickfont: { size: 9 } },
+    margin: { l: 50, r: 10, t: 20, b: 50, pad: 0 },
+    autosize: true,
+    xaxis: { 
+      tickfont: { size: 9 }, 
+      ...CHART_GRID_STYLE,
+      automargin: true
+    },
     yaxis: {
       title: "Return (%)",
       tickfont: { size: 9 },
-      ticksuffix: "%"
-    }
+      ticksuffix: "%",
+      ...CHART_GRID_STYLE,
+      automargin: true
+    },
+    hoverlabel: HOVER_LABEL_STYLE
   };
 
-  Plotly.newPlot("tickerReturnsChart", [trace], layout, { responsive: true, displayModeBar: false });
+  Plotly.newPlot("tickerReturnsChart", [trace], layout, { responsive: true, autosize: true, displayModeBar: false });
 }
 
 function renderStory(data) {
@@ -515,6 +782,7 @@ function renderAll(data) {
   renderAllocation(data);
   renderDrawdown(data);
   renderPrices(data);
+  renderTickerReturns(data);
   renderStory(data);
 }
 
@@ -560,34 +828,45 @@ function setupViewModeToggle() {
 
 async function init() {
   showLoading();
-  const apiOk = await checkApiHealth();
-
   try {
-    dashboardData = await fetchDashboardData();
+    const csvData = await fetchLocalCsvDataset();
+    dashboardData = buildDashboardData(csvData.price_history, csvData.tickers);
     renderAll(dashboardData);
-    updateTimestamp();
+    const latestDate = getLatestDate(dashboardData);
+    updateTimestamp(latestDate);
+    updateStatusChip("Fonte: snapshot YFinance (sp500.csv)", false);
   } catch (err) {
     console.error(err);
-    if (!apiOk || err._isTimeout) {
-      elements.loadingMessage.textContent =
-        "The RL API is likely cold-starting on Render (free tier). This first request can take up to ~40 seconds. Please wait a bit and click “Refresh data”.";
-    } else {
-      elements.loadingMessage.textContent = "Could not load dashboard data from the RL API.";
-    }
+    elements.loadingMessage.textContent = "Não conseguimos carregar o sp500.csv. Verifique se o arquivo está disponível.";
+    updateStatusChip("Falha ao carregar CSV local", true);
   } finally {
     hideLoading();
   }
 
   elements.refreshBtn.addEventListener("click", async () => {
-    showLoading("Refreshing", "Refreshing data from the RL agent...");
+    if (!dashboardData) return;
+    const lastDate = getLatestDate(dashboardData);
+    showLoading("Sincronizando com o YFinance", "Buscando candles faltantes e atualizando o portfólio…");
     try {
-      dashboardData = await fetchDashboardData();
+      const additions = await fetchYFinanceUpdates(dashboardData.tickers, lastDate);
+      if (!additions.length) {
+        elements.loadingMessage.textContent = "Sem novos candles disponíveis no YFinance (mercado fechado ou dados já em dia).";
+        updateStatusChip("YFinance sincronizado (sem novidades)", false);
+        return;
+      }
+
+      const mergedHistory = mergePriceHistory(dashboardData.price_history, additions, dashboardData.tickers);
+      dashboardData = buildDashboardData(mergedHistory, dashboardData.tickers);
       renderAll(dashboardData);
-      updateTimestamp();
+      const latestDate = getLatestDate(dashboardData);
+      updateTimestamp(latestDate);
+      const now = new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+      updateStatusChip(`YFinance ao vivo • ${now}`, false);
     } catch (err) {
       console.error(err);
       elements.loadingMessage.textContent =
-        "Error while refreshing data. If the API is waking up on Render, try again in a few seconds.";
+        "Erro ao atualizar dados diretamente do YFinance. Tente novamente em alguns segundos.";
+      updateStatusChip("YFinance indisponível", true);
     } finally {
       hideLoading();
     }

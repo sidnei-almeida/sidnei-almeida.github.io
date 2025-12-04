@@ -41,7 +41,7 @@
         </h1>
         <div class="header-meta">
           <span class="update-time" id="updateTime">Loading...</span>
-          <div class="api-status-chip" id="apiStatusChip">Checking API...</div>
+          <div class="api-status-chip" id="apiStatusChip">Carregando dataset...</div>
           <button class="btn-refresh" id="refreshBtn" title="Refresh data">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
@@ -100,7 +100,7 @@
                 <line x1="12" y1="8" x2="12.01" y2="8"/>
               </svg>
             </span>
-            <span>Data loaded from the `deep-rl-trading-agent` API hosted on Render.</span>
+            <span>Dados iniciais carregados do snapshot `data/sp500.csv` (YFinance) com atualização incremental pelo próprio navegador.</span>
           </div>
         </div>
       </aside>
@@ -131,9 +131,9 @@
                 </svg>
               </div>
             </div>
-            <h2 class="loading-title" id="loadingTitle">Loading RL trading data</h2>
+            <h2 class="loading-title" id="loadingTitle">Carregando dados do YFinance</h2>
             <p class="loading-message" id="loadingMessage">
-              Querying the RL agent, loading portfolio and benchmark history...
+              Carregando snapshot local (sp500.csv) e reconstruindo o portfólio...
             </p>
             <div class="loading-progress">
               <div class="loading-progress-bar"></div>
@@ -213,6 +213,15 @@
           <div class="charts-row">
             <div class="chart-container">
               <div class="card">
+                <h3 class="card-title">Returns per Ticker</h3>
+                <div id="tickerReturnsChart"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="charts-row">
+            <div class="chart-container">
+              <div class="card">
                 <h3 class="card-title">Allocation Table</h3>
                 <div class="table-container">
                   <table class="data-table" id="allocationTable">
@@ -240,8 +249,8 @@
           <p>Deep Reinforcement Learning trading agent with portfolio allocation over multiple tech stocks.</p>
         </div>
         <div class="footer-section">
-          <h4>Backend API</h4>
-          <p>Hosted on Render: deep-rl-trading-agent (`/` and `/api/v1/dashboard-data`).</p>
+          <h4>Dados</h4>
+          <p>Snapshot offline (`data/sp500.csv`) + atualizações diretas da API pública do YFinance quando o usuário solicita.</p>
         </div>
         <div class="footer-section">
           <h4>Last Update</h4>

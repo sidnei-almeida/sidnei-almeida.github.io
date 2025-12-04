@@ -7,10 +7,9 @@ The UI is inspired by professional trading/research tools and focuses on answeri
 
 - **Frontend**: HTML5 + CSS3 (custom dark design system) + vanilla JavaScript.
 - **Visualisation**: Plotly.js for interactive charts (equity curves, drawdown, allocation pies, multi‑ticker price lines).
-- **Backend API** (Render – free tier, subject to cold starts):  
-  `https://deep-rl-trading-agent.onrender.com`
-  - `GET /` – health and model status (`model_loaded` flag).
-  - `GET /api/v1/dashboard-data` – consolidated snapshot used by this dashboard.
+- **Dados**:
+  - Snapshot local (`data/sp500.csv`) coletado com `yfinance` contendo histórico ajustado de AAPL, AMZN, GOOGL, MSFT e NVDA.
+  - Atualização incremental diretamente da API pública do **YFinance** (`https://query1.finance.yahoo.com/v8/finance/chart/{ticker}`) quando o usuário clica em **Refresh data**. Apenas candles inexistentes são anexados ao dataframe em memória.
 - **Model**: Deep RL policy (PPO / ONNX) that decides portfolio weights for a basket of tech tickers.
 
 ### Dashboard Views
@@ -40,18 +39,16 @@ The dashboard expects a JSON payload with (at minimum) the following structure:
 
 If some fields are missing the dashboard may render partially or fallback to neutral values.
 
-### Handling Render Cold Starts
+### Atualização dos Dados
 
-Because the API runs on **Render free tier**, the first request after idle time can take **up to ~40–50 seconds**.  
-The frontend mitigates this by:
-
-- Using a **shorter fetch timeout** for health and dashboard calls.
-- Showing a clear message when the API is likely **waking up on Render** and suggesting the user to wait and click **“Refresh data”**.
+- Na carga inicial o dashboard lê o CSV `data/sp500.csv`, reconstrói as curvas de equity (agente x benchmark) e exibe todas as visualizações imediatamente, mesmo offline.
+- Ao clicar em **Refresh data** o navegador consulta a API pública do YFinance apenas para o período posterior ao último candle presente no CSV. Os novos preços são anexados ao dataframe em memória e todo o painel é re-renderizado.
+- Caso não existam candles novos (por exemplo em fins de semana) o usuário recebe o aviso correspondente.
 
 ### Running the Dashboard
 
 - Serve the portfolio with any static HTTP server and open:  
   `projects/rl_trading_dashboard/rl_trading_dashboard.html`
-- Ensure the RL API at `https://deep-rl-trading-agent.onrender.com` is reachable from the browser (CORS and `file://` restrictions may apply).
+- Para utilizar o botão de refresh é necessário acesso à internet (mesmo domínio do dashboard) para consultar `query1.finance.yahoo.com`. A visualização principal continua funcionando 100% offline graças ao CSV.
 
 
