@@ -289,7 +289,7 @@ async function fetchTickerSeriesFromYF(ticker, startEpochSec) {
   const endEpochSec = Math.floor(Date.now() / 1000);
   const url = `${YF_CHART_ENDPOINT}/${ticker}?interval=1d&events=history&period1=${startEpochSec}&period2=${endEpochSec}&includePrePost=false`;
   const res = await fetch(url);
-  if (!res.ok) {
+    if (!res.ok) {
     throw new Error(`YF ${ticker}: ${res.status}`);
   }
   const json = await res.json();
@@ -306,7 +306,7 @@ async function fetchTickerSeriesFromYF(ticker, startEpochSec) {
       return { Date: date, value };
     })
     .filter(Boolean);
-}
+    }
 
 async function fetchYFinanceUpdates(tickers, lastDate) {
   if (!tickers?.length || !lastDate) return [];
