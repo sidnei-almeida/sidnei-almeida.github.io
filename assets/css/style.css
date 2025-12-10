@@ -2495,6 +2495,93 @@ body::-webkit-scrollbar-thumb:hover {
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
+.modal-value-section {
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.05), rgba(75, 0, 130, 0.03));
+  border-left: 2px solid rgba(138, 43, 226, 0.3);
+}
+
+.modal-value-benefits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.value-benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  transition: var(--transition-elegant);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.value-benefit-item:hover {
+  border-color: var(--border-light);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.value-benefit-icon {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, 
+    var(--value-icon-bg-start, rgba(255, 255, 255, 0.2)),
+    var(--value-icon-bg-end, rgba(255, 255, 255, 0.1)));
+  border: 1px solid var(--value-icon-border, var(--border-color));
+  border-radius: 8px;
+  color: var(--accent-color);
+  font-size: 1.1rem;
+  transition: var(--transition-elegant);
+}
+
+.value-benefit-item:hover .value-benefit-icon {
+  background: linear-gradient(135deg, 
+    var(--value-icon-bg-start, rgba(255, 255, 255, 0.25)),
+    var(--value-icon-bg-end, rgba(255, 255, 255, 0.15)));
+  border-color: var(--value-icon-border-hover, var(--accent-color));
+  transform: scale(1.05);
+  box-shadow: var(--value-icon-shadow, 0 2px 8px rgba(0, 0, 0, 0.2));
+}
+
+.value-benefit-content {
+  flex: 1;
+}
+
+.value-benefit-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.4rem 0;
+  letter-spacing: 0.01em;
+}
+
+.value-benefit-description {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  font-weight: 300;
+}
+
+.project-value-benefits {
+  display: none;
+}
+
 .modal-links {
   display: flex;
   gap: 1rem;
@@ -2610,5 +2697,29 @@ body::-webkit-scrollbar-thumb:hover {
     min-width: auto;
     padding: 0.625rem 1rem;
     font-size: 0.8rem;
+  }
+  
+  .modal-value-benefits {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .value-benefit-item {
+    padding: 0.875rem;
+    gap: 0.625rem;
+  }
+  
+  .value-benefit-icon {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+  }
+  
+  .value-benefit-title {
+    font-size: 0.8rem;
+  }
+  
+  .value-benefit-description {
+    font-size: 0.7rem;
   }
 }

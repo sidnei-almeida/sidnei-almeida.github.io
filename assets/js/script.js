@@ -349,6 +349,8 @@ function openProjectModal(projectCard) {
   const modalMetrics = document.getElementById('modalMetrics');
   const modalTech = document.getElementById('modalTech');
   const modalLinks = document.getElementById('modalLinks');
+  const modalValueSection = document.getElementById('modalValueSection');
+  const modalValueBenefits = document.getElementById('modalValueBenefits');
   
   // Extract project data
   const title = projectCard.querySelector('.project-title').textContent;
@@ -357,6 +359,7 @@ function openProjectModal(projectCard) {
   const metrics = projectCard.querySelector('.project-metrics');
   const tech = projectCard.querySelector('.project-tech');
   const links = projectCard.querySelector('.project-links');
+  const valueBenefits = projectCard.querySelector('.project-value-benefits');
   
   // Populate modal content
   modalTitle.textContent = title;
@@ -366,6 +369,15 @@ function openProjectModal(projectCard) {
   modalMetrics.innerHTML = metrics.innerHTML;
   modalTech.innerHTML = tech.innerHTML;
   modalLinks.innerHTML = links.innerHTML;
+  
+  // Handle value/benefits section
+  if (valueBenefits && valueBenefits.children.length > 0) {
+    modalValueBenefits.innerHTML = valueBenefits.innerHTML;
+    modalValueSection.style.display = 'block';
+  } else {
+    modalValueSection.style.display = 'none';
+    modalValueBenefits.innerHTML = '';
+  }
   
   // Show modal
   modal.classList.add('active');
@@ -731,6 +743,21 @@ const colorThemes = {
   }
 };
 
+// Helper function to convert hex to RGB
+function hexToRgb(hex) {
+  if (!hex) return null;
+  // Remove # if present
+  hex = hex.replace('#', '');
+  // Handle 3-digit hex
+  if (hex.length === 3) {
+    hex = hex.split('').map(char => char + char).join('');
+  }
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  return { r, g, b };
+}
+
 // Apply color theme
 function applyColorTheme(themeName) {
   const theme = colorThemes[themeName];
@@ -800,6 +827,17 @@ function applyColorTheme(themeName) {
       root.style.setProperty('--accent-rose-subtle', theme.accentSubtle);
       root.style.setProperty('--gradient-rose', theme.gradient);
     }
+  }
+  
+  // Create dynamic variables for business value icons only (always use primary color)
+  const accentColor = theme.accent || theme.primary;
+  const accentRgb = hexToRgb(accentColor);
+  if (accentRgb) {
+    root.style.setProperty('--value-icon-bg-start', `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, 0.2)`);
+    root.style.setProperty('--value-icon-bg-end', `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, 0.1)`);
+    root.style.setProperty('--value-icon-border', `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, 0.3)`);
+    root.style.setProperty('--value-icon-border-hover', `rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, 0.5)`);
+    root.style.setProperty('--value-icon-shadow', `0 2px 8px rgba(${accentRgb.r}, ${accentRgb.g}, ${accentRgb.b}, 0.25)`);
   }
   
   // Update active color option
