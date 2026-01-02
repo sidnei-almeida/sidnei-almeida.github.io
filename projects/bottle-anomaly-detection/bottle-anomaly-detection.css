@@ -22,6 +22,7 @@
 html,
 body {
   height: 100%;
+  min-height: 100vh;
 }
 
 body {
@@ -34,6 +35,7 @@ body {
   color: var(--text-primary);
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 button,
@@ -55,18 +57,23 @@ input:focus-visible {
 }
 
 .glassguard {
-  width: min(980px, 90vw);
-  margin: 32px auto;
-  display: grid;
-  gap: 26px;
+  width: min(1800px, 92vw);
+  max-width: 1800px;
+  margin: clamp(24px, 3vh, 40px) auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 2.5vw, 32px);
+  padding: 0 clamp(16px, 2vw, 24px);
+  flex: 1;
+  min-height: 0;
 }
 
 .gg-header {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 22px;
-  padding: 16px 22px;
+  gap: clamp(18px, 2vw, 28px);
+  padding: clamp(14px, 1.8vw, 22px) clamp(18px, 2.2vw, 28px);
   background: rgba(8, 8, 8, 0.9);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.04);
@@ -101,11 +108,11 @@ input:focus-visible {
 .brand-copy strong {
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  font-size: 0.98rem;
+  font-size: clamp(0.88rem, 1.1vw, 1.1rem);
 }
 
 .brand-copy span {
-  font-size: 0.7rem;
+  font-size: clamp(0.64rem, 0.9vw, 0.82rem);
   letter-spacing: 0.1em;
   color: var(--text-tertiary);
 }
@@ -208,35 +215,47 @@ input:focus-visible {
 .gg-main {
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: 22px;
+  gap: clamp(18px, 2vw, 28px);
+  flex: 1;
+  min-height: 0;
+  align-items: start;
 }
 
 .panel {
   background: var(--bg-panel);
   border-radius: var(--radius-lg);
   border: 1px solid var(--stroke);
-  padding: 18px;
-  display: grid;
-  gap: 14px;
+  padding: clamp(16px, 2vw, 24px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 1.5vw, 18px);
+  min-height: 0;
+}
+
+.panel.palette {
+  height: 100%;
 }
 
 .panel header h2 {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: clamp(0.7rem, 1vw, 0.9rem);
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
 .panel header p {
   margin: 4px 0 0;
-  font-size: 0.68rem;
+  font-size: clamp(0.62rem, 0.9vw, 0.78rem);
   color: var(--text-tertiary);
 }
 
 .palette .swatch-grid {
   display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: clamp(8px, 1vw, 14px);
+  grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 12vw, 180px), 1fr));
+  flex: 1;
+  min-height: 0;
+  align-content: start;
 }
 
 .sample-card {
@@ -251,7 +270,7 @@ input:focus-visible {
 
 .sample-card img {
   width: 100%;
-  height: 95px;
+  height: clamp(85px, 12vh, 140px);
   object-fit: cover;
   border-radius: var(--radius-sm);
 }
@@ -274,7 +293,11 @@ input:focus-visible {
 }
 
 .workspace {
-  gap: 18px;
+  gap: clamp(16px, 2vw, 24px);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
 }
 
 .workspace-top {
@@ -356,7 +379,9 @@ input:focus-visible {
 
 .workspace-bottom {
   display: grid;
-  gap: 14px;
+  gap: clamp(12px, 1.5vw, 18px);
+  flex: 1;
+  min-height: 0;
 }
 
 .result-shell {
@@ -364,10 +389,12 @@ input:focus-visible {
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.04);
   background: rgba(7, 7, 8, 0.95);
-  min-height: 220px;
+  min-height: clamp(350px, 45vh, 600px);
+  max-height: clamp(600px, 75vh, 900px);
   display: grid;
   place-items: center;
   overflow: hidden;
+  width: 100%;
 }
 
 .result-shell.boxed {
@@ -389,7 +416,8 @@ input:focus-visible {
   display: none;
   width: 100%;
   height: auto;
-  max-height: 320px;
+  max-height: clamp(400px, 65vh, 800px);
+  max-width: 100%;
   object-fit: contain;
 }
 
@@ -418,15 +446,16 @@ input:focus-visible {
 
 .result-placeholder {
   display: grid;
-  gap: 8px;
+  gap: clamp(12px, 1.5vw, 20px);
   place-items: center;
   color: var(--text-tertiary);
-  font-size: 0.68rem;
+  font-size: clamp(0.64rem, 0.9vw, 0.82rem);
+  padding: clamp(20px, 3vh, 40px);
 }
 
 .result-placeholder svg {
-  width: 34px;
-  height: 34px;
+  width: clamp(48px, 6vw, 80px);
+  height: clamp(48px, 6vw, 80px);
   fill: var(--accent);
 }
 
@@ -460,8 +489,8 @@ input:focus-visible {
 .metrics,
 .threshold-row {
   display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: clamp(8px, 1vw, 14px);
+  grid-template-columns: repeat(auto-fit, minmax(clamp(110px, 10vw, 160px), 1fr));
 }
 
 .metric-card,
@@ -484,16 +513,18 @@ input:focus-visible {
 
 .metric-card strong,
 .threshold-card strong {
-  font-size: 0.8rem;
+  font-size: clamp(0.72rem, 1vw, 0.95rem);
 }
 
 .gg-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.66rem;
+  font-size: clamp(0.6rem, 0.85vw, 0.78rem);
   color: var(--text-tertiary);
-  padding-bottom: 8px;
+  padding: clamp(12px, 1.5vw, 20px) 0;
+  margin-top: auto;
+  flex-shrink: 0;
 }
 
 .toast-stack {
@@ -533,6 +564,28 @@ input:focus-visible {
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+@media (min-width: 1920px) {
+  .glassguard {
+    width: min(1800px, 92vw);
+  }
+  
+  .gg-main {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+}
+
+@media (min-width: 2560px) {
+  .glassguard {
+    width: min(2000px, 90vw);
+  }
+}
+
+@media (max-width: 1200px) {
+  .gg-main {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -596,8 +649,8 @@ input:focus-visible {
 
 .artifact-grid {
   display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: clamp(8px, 1vw, 14px);
+  grid-template-columns: repeat(auto-fit, minmax(clamp(110px, 10vw, 160px), 1fr));
 }
 
 .artifact-card {
