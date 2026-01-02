@@ -21,6 +21,12 @@
   --shadow-soft: 0 22px 45px rgba(15, 23, 42, 0.12);
   --transition: 200ms ease;
   --transition-long: 420ms cubic-bezier(0.23, 1, 0.32, 1);
+  /* Spacing system */
+  --spacing-xs: clamp(4px, 0.5vw, 8px);
+  --spacing-sm: clamp(8px, 1vw, 12px);
+  --spacing-md: clamp(12px, 1.5vw, 20px);
+  --spacing-lg: clamp(16px, 2vw, 28px);
+  --spacing-xl: clamp(24px, 3vw, 40px);
 }
 
 *,
@@ -66,8 +72,9 @@ video {
 }
 
 .container {
-  width: min(1100px, 92vw);
+  width: min(1800px, 92vw);
   margin: 0 auto;
+  max-width: 1800px;
 }
 
 .page-wrapper {
@@ -431,14 +438,14 @@ video {
 .hero-section h2 {
   margin: 0 0 12px;
   font-family: "Space Grotesk", sans-serif;
-  font-size: clamp(1.9rem, 2.6vw, 2.2rem);
+  font-size: clamp(1.9rem, 2.6vw, 2.4rem);
   letter-spacing: -0.01em;
 }
 
 .hero-description {
   margin: 0;
   color: var(--color-text-soft);
-  font-size: 0.95rem;
+  font-size: clamp(0.9rem, 1.1vw, 1rem);
   line-height: 1.55;
   max-width: 34ch;
 }
@@ -541,19 +548,25 @@ video {
 
 .analysis-shell {
   display: grid;
-  gap: 26px;
+  gap: var(--spacing-lg);
+}
+
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
 }
 
 .section-head h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
   font-family: "Space Grotesk", sans-serif;
 }
 
 .section-head p {
   margin: 6px 0 0;
   color: var(--color-text-soft);
-  font-size: 0.88rem;
+  font-size: clamp(0.85rem, 1vw, 0.95rem);
 }
 
 .input-hint {
@@ -602,10 +615,13 @@ video {
 
 .tab-content {
   display: none;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }
 
 .tab-content.active {
-  display: block;
+  display: flex;
 }
 
 .examples-grid {
@@ -655,13 +671,15 @@ video {
   place-items: center;
   text-align: center;
   gap: 10px;
-  padding: 32px 20px;
+  padding: var(--spacing-xl) var(--spacing-lg);
   border: 1.5px dashed rgba(37, 99, 235, 0.3);
   border-radius: var(--radius-md);
   background: rgba(37, 99, 235, 0.08);
   color: var(--color-text-soft);
   cursor: pointer;
   transition: transform var(--transition), background var(--transition);
+  flex: 1;
+  min-height: 0;
 }
 
 .upload-area:hover,
@@ -676,35 +694,48 @@ video {
 }
 
 .camera-container {
+  position: relative;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   overflow: hidden;
   background: var(--color-surface-soft);
-  display: grid;
-  gap: 16px;
-  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  flex: 1;
+  min-height: 0;
 }
 
-.camera-container video,
-.camera-overlay {
-  grid-row: 1;
-  grid-column: 1;
+.camera-container video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 400px;
+  border-radius: var(--radius-sm);
+  object-fit: contain;
+  background: var(--color-surface-soft);
+  position: relative;
 }
 
 .camera-overlay {
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  width: calc(100% - var(--spacing-md) * 2);
+  aspect-ratio: 16 / 9;
+  max-height: 400px;
   border-radius: var(--radius-sm);
   border: 2px solid rgba(37, 99, 235, 0.24);
   pointer-events: none;
-  width: 100%;
-  height: 100%;
+  z-index: 1;
 }
 
 .camera-controls {
-  grid-row: 2;
-  grid-column: 1;
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-sm);
   flex-wrap: wrap;
+  margin-top: auto;
+  flex-shrink: 0;
 }
 
 .camera-controls .btn {
@@ -774,7 +805,9 @@ video {
   border-radius: var(--radius-md);
   background: #e6edfb;
   overflow: hidden;
-  min-height: 360px;
+  min-height: clamp(300px, 35vh, 450px);
+  max-height: 500px;
+  aspect-ratio: 16 / 9;
   border: 1px solid rgba(37, 99, 235, 0.18);
 }
 
@@ -1037,6 +1070,34 @@ video {
 }
 
 /* Responsive */
+@media (min-width: 1920px) {
+  .app-shell {
+    max-width: 1800px;
+    margin: 0 auto;
+  }
+  
+  .container {
+    max-width: 1800px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .app-shell {
+    max-width: 1800px;
+  }
+  
+  .container {
+    max-width: 1800px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+}
+
 @media (max-width: 1024px) {
   .app-shell {
     grid-template-columns: 1fr;
