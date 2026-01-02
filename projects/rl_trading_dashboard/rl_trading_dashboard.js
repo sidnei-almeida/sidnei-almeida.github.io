@@ -9,25 +9,27 @@ const MAX_MOMENTUM_SELECTION = 2;
 const YF_CHART_ENDPOINT = "https://query1.finance.yahoo.com/v8/finance/chart";
 const MIN_WEIGHT_TO_CHART = 0.001; // 0.1% - evita rótulos ilegíveis
 const CHART_GRID_STYLE = {
-  gridcolor: "rgba(255, 255, 255, 0.08)",
-  gridwidth: 0.6,
+  gridcolor: "rgba(255, 255, 255, 0.05)",
+  gridwidth: 0.8,
   griddash: "dot",
   zeroline: false
 };
 const cssRoot = getComputedStyle(document.documentElement);
-const COLOR_PRIMARY_GREEN = cssRoot.getPropertyValue("--chart-primary-green").trim() || "#00E396";
+const COLOR_PRIMARY_GREEN = cssRoot.getPropertyValue("--chart-primary-green").trim() || "#00E676";
 const COLOR_PRIMARY_GREEN_ALPHA =
-  cssRoot.getPropertyValue("--chart-primary-green-alpha").trim() || "rgba(0, 227, 150, 0.2)";
-const COLOR_SECONDARY_CYAN = cssRoot.getPropertyValue("--chart-secondary-cyan").trim() || "#00B1F2";
-const COLOR_TERTIARY_PURPLE = cssRoot.getPropertyValue("--chart-tertiary-purple").trim() || "#775DD0";
-const COLOR_ACCENT_YELLOW = cssRoot.getPropertyValue("--chart-accent-yellow").trim() || "#FEB019";
-const COLOR_ALERT_RED = cssRoot.getPropertyValue("--chart-alert-red").trim() || "#FF4560";
+  cssRoot.getPropertyValue("--chart-primary-green-alpha").trim() || "rgba(0, 230, 118, 0.15)";
+const COLOR_PRIMARY_GREEN_FILL =
+  cssRoot.getPropertyValue("--chart-primary-green-fill").trim() || "rgba(0, 230, 118, 0.1)";
+const COLOR_SECONDARY_CYAN = cssRoot.getPropertyValue("--chart-secondary-cyan").trim() || "#00B8FF";
+const COLOR_TERTIARY_PURPLE = cssRoot.getPropertyValue("--chart-tertiary-purple").trim() || "#8B5CF6";
+const COLOR_ACCENT_YELLOW = cssRoot.getPropertyValue("--chart-accent-yellow").trim() || "#FCD34D";
+const COLOR_ALERT_RED = cssRoot.getPropertyValue("--chart-alert-red").trim() || "#FF3D00";
 const COLOR_ALERT_RED_ALPHA =
-  cssRoot.getPropertyValue("--chart-alert-red-alpha").trim() || "rgba(255, 69, 96, 0.2)";
+  cssRoot.getPropertyValue("--chart-alert-red-alpha").trim() || "rgba(255, 61, 0, 0.15)";
 const HOVER_LABEL_STYLE = {
-  bgcolor: "rgba(9, 12, 18, 0.95)",
-  bordercolor: "rgba(255, 255, 255, 0.12)",
-  font: { color: "#f8fafc", size: 11 }
+  bgcolor: "rgba(21, 26, 37, 0.98)",
+  bordercolor: "rgba(255, 255, 255, 0.1)",
+  font: { color: "#FFFFFF", size: 11 }
 };
 
 const elements = {
@@ -51,7 +53,17 @@ const elements = {
   excessReturn: document.getElementById("excessReturn"),
   excessNarrative: document.getElementById("excessNarrative"),
   excessBarFill: document.getElementById("excessBarFill"),
-  storyText: document.getElementById("storyText")
+  storyText: document.getElementById("storyText"),
+  sharpeRatio: document.getElementById("sharpeRatio"),
+  sharpeInterpretation: document.getElementById("sharpeInterpretation"),
+  maxDrawdown: document.getElementById("maxDrawdown"),
+  volatility: document.getElementById("volatility"),
+  volatilityInterpretation: document.getElementById("volatilityInterpretation"),
+  activePositions: document.getElementById("activePositions"),
+  topHoldings: document.getElementById("topHoldings"),
+  return30d: document.getElementById("return30d"),
+  return90d: document.getElementById("return90d"),
+  return365d: document.getElementById("return365d")
 };
 
 let dashboardData = null;
@@ -365,18 +377,27 @@ function renderSidebarInfo(data) {
     btn.textContent = ticker;
     btn.dataset.ticker = ticker;
     btn.addEventListener("click", () => {
+      // Toggle ticker selection
       if (selectedTickers.has(ticker)) {
         selectedTickers.delete(ticker);
       } else {
         selectedTickers.add(ticker);
       }
-      // Re-render filtered views
+      
+      // Update chip visual state immediately
+      btn.classList.toggle("active", selectedTickers.has(ticker));
+      
+      // Re-render all filtered views that depend on ticker selection
       if (dashboardData) {
+        // Update allocation pie chart and table (Overview tab)
         renderAllocation(dashboardData);
+        
+        // Update price and returns charts (Allocation tab)
         renderPrices(dashboardData);
         renderTickerReturns(dashboardData);
-        // Atualiza o visual dos chips
-        renderSidebarInfo(dashboardData);
+        
+        // Note: Plotly.newPlot with responsive: true handles resizing automatically
+        // No manual resize needed to prevent size accumulation issues
       }
     });
     elements.tickersList.appendChild(btn);
@@ -422,6 +443,125 @@ function renderOverviewMetrics(data) {
   elements.excessNarrative.textContent = narrative;
 }
 
+function renderAdvancedMetrics(data) {
+  const { agent_history, benchmark_history, current_allocation, initial_balance } = data;
+  if (!agent_history?.length) return;
+
+  // Calculate returns
+  const agentReturns = [];
+  for (let i = 1; i < agent_history.length; i++) {
+    agentReturns.push((agent_history[i] / agent_history[i - 1]) - 1);
+  }
+
+  // Sharpe Ratio (annualized, assuming 252 trading days)
+  const meanReturn = agentReturns.reduce((a, b) => a + b, 0) / agentReturns.length;
+  const variance = agentReturns.reduce((sum, r) => sum + Math.pow(r - meanReturn, 2), 0) / agentReturns.length;
+  const stdDev = Math.sqrt(variance);
+  const sharpeRatio = stdDev > 0 ? (meanReturn / stdDev) * Math.sqrt(252) : 0;
+  
+  if (elements.sharpeRatio) {
+    elements.sharpeRatio.textContent = sharpeRatio.toFixed(2);
+    if (elements.sharpeInterpretation) {
+      if (sharpeRatio > 2) {
+        elements.sharpeInterpretation.textContent = "Excellent";
+      } else if (sharpeRatio > 1) {
+        elements.sharpeInterpretation.textContent = "Good";
+      } else if (sharpeRatio > 0.5) {
+        elements.sharpeInterpretation.textContent = "Acceptable";
+      } else {
+        elements.sharpeInterpretation.textContent = "Poor";
+      }
+    }
+  }
+
+  // Maximum Drawdown
+  let peak = agent_history[0];
+  let maxDD = 0;
+  agent_history.forEach(v => {
+    if (v > peak) peak = v;
+    const dd = (v / peak - 1) * 100;
+    if (dd < maxDD) maxDD = dd;
+  });
+  
+  if (elements.maxDrawdown) {
+    elements.maxDrawdown.textContent = `${maxDD.toFixed(2)}%`;
+  }
+
+  // Volatility (annualized)
+  const annualVol = stdDev * Math.sqrt(252) * 100;
+  if (elements.volatility) {
+    elements.volatility.textContent = `${annualVol.toFixed(1)}%`;
+    if (elements.volatilityInterpretation) {
+      if (annualVol < 15) {
+        elements.volatilityInterpretation.textContent = "Low Risk";
+      } else if (annualVol < 25) {
+        elements.volatilityInterpretation.textContent = "Moderate Risk";
+      } else {
+        elements.volatilityInterpretation.textContent = "High Risk";
+      }
+    }
+  }
+
+  // Active Positions and Top Holdings
+  if (current_allocation) {
+    const activeTickers = Object.keys(current_allocation).filter(t => (current_allocation[t] ?? 0) > 0.001);
+    if (elements.activePositions) {
+      elements.activePositions.textContent = activeTickers.length;
+    }
+    
+    if (elements.topHoldings && activeTickers.length > 0) {
+      const sorted = activeTickers
+        .map(t => ({ ticker: t, weight: current_allocation[t] }))
+        .sort((a, b) => b.weight - a.weight)
+        .slice(0, 3);
+      elements.topHoldings.textContent = sorted.map(s => s.ticker).join(", ");
+    }
+  }
+}
+
+function renderPerformanceByPeriod(data) {
+  const { agent_history, initial_balance } = data;
+  if (!agent_history?.length) return;
+
+  const dates = buildDates(data);
+  const now = new Date();
+  const totalDays = agent_history.length;
+
+  // Calculate period returns
+  const getReturnForDays = (days) => {
+    if (days >= totalDays) {
+      const startIdx = 0;
+      const endIdx = totalDays - 1;
+      return ((agent_history[endIdx] / agent_history[startIdx]) - 1) * 100;
+    }
+    const startIdx = Math.max(0, totalDays - days - 1);
+    const endIdx = totalDays - 1;
+    return ((agent_history[endIdx] / agent_history[startIdx]) - 1) * 100;
+  };
+
+  const return30d = getReturnForDays(30);
+  const return90d = getReturnForDays(90);
+  const return365d = getReturnForDays(365);
+
+  if (elements.return30d) {
+    elements.return30d.textContent = formatPercent(return30d);
+    elements.return30d.className = `stat-value ${return30d >= 0 ? "positive" : "negative"}`;
+    elements.return30d.style.color = return30d >= 0 ? "#00E676" : "#FF3D00";
+  }
+  
+  if (elements.return90d) {
+    elements.return90d.textContent = formatPercent(return90d);
+    elements.return90d.className = `stat-value ${return90d >= 0 ? "positive" : "negative"}`;
+    elements.return90d.style.color = return90d >= 0 ? "#00E676" : "#FF3D00";
+  }
+  
+  if (elements.return365d) {
+    elements.return365d.textContent = formatPercent(return365d);
+    elements.return365d.className = `stat-value ${return365d >= 0 ? "positive" : "negative"}`;
+    elements.return365d.style.color = return365d >= 0 ? "#00E676" : "#FF3D00";
+  }
+}
+
 function buildDates(data) {
   const { price_history } = data;
   return price_history.map(p => new Date(p.Date));
@@ -438,9 +578,9 @@ function renderEquityCurve(data) {
     type: "scatter",
     mode: "lines",
     name: "Agent",
-    line: { color: COLOR_PRIMARY_GREEN, width: 2.2 },
+    line: { color: COLOR_PRIMARY_GREEN, width: 2.5 },
     fill: "tozeroy",
-    fillcolor: COLOR_PRIMARY_GREEN_ALPHA
+    fillcolor: COLOR_PRIMARY_GREEN_FILL
   };
 
   const traceBench = {
@@ -455,7 +595,7 @@ function renderEquityCurve(data) {
   const layout = {
     plot_bgcolor: "rgba(0,0,0,0)",
     paper_bgcolor: "rgba(0,0,0,0)",
-    font: { color: "#e5e7eb", size: 10 },
+    font: { color: "#9CA3AF", size: 10 },
     margin: { l: 50, r: 10, t: 20, b: 40 },
     xaxis: { title: "", tickfont: { size: 9 }, ...CHART_GRID_STYLE },
     yaxis: {
@@ -514,7 +654,7 @@ function renderAllocation(data) {
         "#ec4899"
       ],
       line: {
-        color: "#161b22",
+        color: "#151A25",
         width: 2
       }
     },
@@ -525,7 +665,7 @@ function renderAllocation(data) {
   const layout = {
     plot_bgcolor: "rgba(0,0,0,0)",
     paper_bgcolor: "rgba(0,0,0,0)",
-    font: { color: "#e5e7eb", size: 10 },
+    font: { color: "#9CA3AF", size: 10 },
     margin: { l: 10, r: 10, t: 10, b: 10 },
     showlegend: false,
     hoverlabel: HOVER_LABEL_STYLE
@@ -584,7 +724,7 @@ function renderDrawdown(data) {
   const layout = {
     plot_bgcolor: "rgba(0,0,0,0)",
     paper_bgcolor: "rgba(0,0,0,0)",
-    font: { color: "#e5e7eb", size: 10 },
+    font: { color: "#9CA3AF", size: 10 },
     margin: { l: 60, r: 20, t: 20, b: 40 },
     xaxis: { tickfont: { size: 9 }, ...CHART_GRID_STYLE },
     yaxis: {
@@ -605,7 +745,8 @@ function renderPrices(data) {
   const dates = buildDates(data);
   const activeTickers = getActiveTickers(data);
   if (!activeTickers.length) {
-    Plotly.purge("pricesChart");
+    const pricesChart = document.getElementById("pricesChart");
+    if (pricesChart) Plotly.purge(pricesChart);
     return;
   }
 
@@ -621,7 +762,7 @@ function renderPrices(data) {
   const layout = {
     plot_bgcolor: "rgba(0,0,0,0)",
     paper_bgcolor: "rgba(0,0,0,0)",
-    font: { color: "#e5e7eb", size: 10 },
+    font: { color: "#9CA3AF", size: 10 },
     margin: { l: 60, r: 20, t: 20, b: 40 },
     xaxis: { tickfont: { size: 9 }, ...CHART_GRID_STYLE },
     yaxis: {
@@ -661,7 +802,8 @@ function computeTickerReturns(data, tickersOverride = null) {
 function renderTickerReturns(data) {
   const activeTickers = getActiveTickers(data);
   if (!activeTickers.length) {
-    Plotly.purge("tickerReturnsChart");
+    const returnsChart = document.getElementById("tickerReturnsChart");
+    if (returnsChart) Plotly.purge(returnsChart);
     return;
   }
 
@@ -674,32 +816,45 @@ function renderTickerReturns(data) {
     y: values,
     type: "bar",
     marker: {
-      color: values.map(v => (v >= 0 ? COLOR_PRIMARY_GREEN : COLOR_ALERT_RED))
-    }
+      color: values.map(v => (v >= 0 ? COLOR_PRIMARY_GREEN : COLOR_ALERT_RED)),
+      line: {
+        width: 0
+      }
+    },
+    width: 0.6
   };
 
   const layout = {
     plot_bgcolor: "rgba(0,0,0,0)",
     paper_bgcolor: "rgba(0,0,0,0)",
-    font: { color: "#e5e7eb", size: 10 },
-    margin: { l: 50, r: 10, t: 20, b: 50, pad: 0 },
-    autosize: true,
+    font: { color: "#9CA3AF", size: 10 },
+    margin: { l: 70, r: 30, t: 15, b: 70, pad: 2 },
+    autosize: false,
     xaxis: { 
       tickfont: { size: 9 }, 
       ...CHART_GRID_STYLE,
-      automargin: true
+      automargin: false,
+      fixedrange: false,
+      showgrid: true
     },
     yaxis: {
       title: "Return (%)",
       tickfont: { size: 9 },
       ticksuffix: "%",
       ...CHART_GRID_STYLE,
-      automargin: true
+      automargin: false,
+      fixedrange: false,
+      showgrid: true
     },
-    hoverlabel: HOVER_LABEL_STYLE
+    hoverlabel: HOVER_LABEL_STYLE,
+    bargap: 0.4,
+    bargroupgap: 0.05
   };
 
-  Plotly.newPlot("tickerReturnsChart", [trace], layout, { responsive: true, autosize: true, displayModeBar: false });
+  Plotly.newPlot("tickerReturnsChart", [trace], layout, { 
+    responsive: true,
+    displayModeBar: false
+  });
 }
 
 function renderStory(data) {
@@ -778,12 +933,13 @@ function renderStory(data) {
 function renderAll(data) {
   renderSidebarInfo(data);
   renderOverviewMetrics(data);
+  renderAdvancedMetrics(data);
   renderEquityCurve(data);
   renderAllocation(data);
   renderDrawdown(data);
+  renderPerformanceByPeriod(data);
   renderPrices(data);
   renderTickerReturns(data);
-  renderStory(data);
 }
 
 // ============================================================================
@@ -815,7 +971,9 @@ function setupViewModeToggle() {
         // Ajusta gráficos quando a aba Allocation fica visível
         if (window.Plotly) {
           const prices = document.getElementById("pricesChart");
+          const returns = document.getElementById("tickerReturnsChart");
           if (prices) Plotly.Plots.resize(prices);
+          if (returns) Plotly.Plots.resize(returns);
         }
       }
     });
@@ -873,6 +1031,29 @@ async function init() {
   });
 
   setupViewModeToggle();
+
+  // Handle window resize for chart responsiveness
+  let resizeTimeout;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      if (window.Plotly && dashboardData) {
+        const chartIds = [
+          "equityCurveChart",
+          "allocationPieChart",
+          "drawdownChart",
+          "pricesChart",
+          "tickerReturnsChart"
+        ];
+        chartIds.forEach(id => {
+          const chartElement = document.getElementById(id);
+          if (chartElement) {
+            Plotly.Plots.resize(chartElement);
+          }
+        });
+      }
+    }, 150);
+  });
 }
 
 if (document.readyState === "loading") {

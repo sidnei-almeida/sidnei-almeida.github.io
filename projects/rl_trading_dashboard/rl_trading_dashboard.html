@@ -143,6 +143,7 @@
 
         <!-- OVERVIEW VIEW -->
         <div class="view-container" id="overviewView">
+          <!-- Top Row: 3 Equal Metric Cards -->
           <div class="metrics-row">
             <div class="metric-card">
               <div class="metric-label">Final Agent Equity</div>
@@ -164,35 +165,73 @@
             </div>
           </div>
 
-          <div class="charts-row">
-            <div class="chart-container">
-              <div class="card">
-                <h3 class="card-title">Equity Curve: Agent vs Buy & Hold</h3>
-                <div id="equityCurveChart"></div>
-              </div>
+          <!-- Second Row: Additional Performance Metrics -->
+          <div class="metrics-row metrics-row-secondary">
+            <div class="metric-card">
+              <div class="metric-label">Sharpe Ratio</div>
+              <div class="metric-value" id="sharpeRatio">—</div>
+              <div class="metric-subtitle" id="sharpeInterpretation">—</div>
             </div>
-            <div class="chart-container">
-              <div class="card">
-                <h3 class="card-title">Current Allocation Snapshot</h3>
-                <div id="allocationPieChart"></div>
-              </div>
+            <div class="metric-card">
+              <div class="metric-label">Max Drawdown</div>
+              <div class="metric-value" id="maxDrawdown">—</div>
+              <div class="metric-subtitle">Peak to Trough</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Volatility (Annual)</div>
+              <div class="metric-value" id="volatility">—</div>
+              <div class="metric-subtitle" id="volatilityInterpretation">—</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Active Positions</div>
+              <div class="metric-value" id="activePositions">—</div>
+              <div class="metric-subtitle" id="topHoldings">—</div>
             </div>
           </div>
 
-          <div class="charts-row">
-            <div class="chart-container">
-              <div class="card">
-                <h3 class="card-title">Drawdown Profile (Agent)</h3>
-                <div id="drawdownChart"></div>
+          <!-- Main Body: 2fr (Equity Curve) | 1fr (Donut + Drawdown) -->
+          <div class="main-body-grid">
+            <!-- Left Column (2fr): Equity Curve and Drawdown stacked -->
+            <div class="main-chart-column">
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Equity Curve: Agent vs Buy & Hold</h3>
+                  <div id="equityCurveChart"></div>
+                </div>
+              </div>
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Drawdown Profile (Agent)</h3>
+                  <div id="drawdownChart"></div>
+                </div>
               </div>
             </div>
-            <div class="chart-container">
-              <div class="card">
-                <h3 class="card-title">Live Agent Insight</h3>
-                <div class="story-card" id="storyCard">
-                  <p id="storyText">
-                    As soon as the data is loaded, we show here a live insight combining performance, drawdown and the agent's current allocation.
-                  </p>
+
+            <!-- Right Column (1fr): Donut Chart and Performance Stats -->
+            <div class="sidebar-column">
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Current Allocation Snapshot</h3>
+                  <div id="allocationPieChart"></div>
+                </div>
+              </div>
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Performance by Period</h3>
+                  <div class="performance-stats" id="performanceStats">
+                    <div class="stat-item">
+                      <span class="stat-label">30 Days</span>
+                      <span class="stat-value" id="return30d">—</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">90 Days</span>
+                      <span class="stat-value" id="return90d">—</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">1 Year</span>
+                      <span class="stat-value" id="return365d">—</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -208,9 +247,6 @@
                 <div id="pricesChart"></div>
               </div>
             </div>
-          </div>
-
-          <div class="charts-row">
             <div class="chart-container">
               <div class="card">
                 <h3 class="card-title">Returns per Ticker</h3>
