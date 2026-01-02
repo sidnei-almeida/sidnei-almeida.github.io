@@ -11,12 +11,21 @@ const OVERLAY_FAILSAFE_MS = 12000;
 const INFER_TIMEOUT_MS = 16000;
 
 const SAMPLE_IMAGES = [
-  { label: "Reference Good", src: "../../images/bottles/000.png" },
-  { label: "Anomaly 1", src: "../../images/bottles/anomaly_1.png" },
-  { label: "Anomaly 2", src: "../../images/bottles/anomaly_2.png" },
-  { label: "Anomaly 3", src: "../../images/bottles/anomaly_3.png" },
-  { label: "Anomaly 4", src: "../../images/bottles/anomaly_4.png" },
-  { label: "Anomaly 5", src: "../../images/bottles/anomaly_5.png" },
+  { label: "Reference Good", src: "../../images/bottles/000.png", rotation: 0 },
+  { label: "Anomaly 1", src: "../../images/bottles/anomaly_1.png", rotation: 0 },
+  { label: "Anomaly 2", src: "../../images/bottles/anomaly_2.png", rotation: 0 },
+  { label: "Anomaly 3", src: "../../images/bottles/anomaly_3.png", rotation: 0 },
+  { label: "Anomaly 4", src: "../../images/bottles/anomaly_4.png", rotation: 0 },
+  { label: "Anomaly 5", src: "../../images/bottles/anomaly_5.png", rotation: 0 },
+  { label: "Anomaly 1 (180°)", src: "../../images/bottles/anomaly_1.png", rotation: 180 },
+  { label: "Anomaly 2 (180°)", src: "../../images/bottles/anomaly_2.png", rotation: 180 },
+  { label: "Anomaly 3 (180°)", src: "../../images/bottles/anomaly_3.png", rotation: 180 },
+  { label: "Anomaly 4 (180°)", src: "../../images/bottles/anomaly_4.png", rotation: 180 },
+  { label: "Anomaly 5 (180°)", src: "../../images/bottles/anomaly_5.png", rotation: 180 },
+  { label: "Anomaly 6 (180°)", src: "../../images/bottles/anomaly_6.png", rotation: 180 },
+  { label: "Anomaly 1 (180°) #2", src: "../../images/bottles/anomaly_1.png", rotation: 180 },
+  { label: "Anomaly 2 (180°) #2", src: "../../images/bottles/anomaly_2.png", rotation: 180 },
+  { label: "Anomaly 3 (180°) #2", src: "../../images/bottles/anomaly_3.png", rotation: 180 },
 ];
 
 const SELECTORS = {
@@ -558,15 +567,38 @@ async function renderBoundingBoxes(payload) {
   queueBoundingBoxRender();
 }
 
-/** Utility: convert image URL to File using canvas */
-async function imageUrlToFile(url, filename = "sample.png") {
+/** Utility: convert image URL to File using canvas with optional rotation */
+async function imageUrlToFile(url, filename = "sample.png", rotation = 0) {
   try {
     const img = await loadImage(url);
     const canvas = document.createElement("canvas");
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
+    
+    // If rotation is needed, adjust canvas dimensions
+    if (rotation === 90 || rotation === 270) {
+      canvas.width = img.naturalHeight;
+      canvas.height = img.naturalWidth;
+    } else {
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+    }
+    
     const ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
+    
+    // Apply rotation transformation
+    if (rotation !== 0) {
+      ctx.save();
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      ctx.translate(centerX, centerY);
+      ctx.rotate((rotation * Math.PI) / 180);
+      
+      // Draw image centered at origin after rotation
+      ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+      ctx.restore();
+    } else {
+      ctx.drawImage(img, 0, 0);
+    }
+    
     const blob = await new Promise((resolve, reject) => {
       canvas.toBlob((result) => {
         if (!result) {
@@ -676,6 +708,12 @@ function renderSamples() {
     thumb.src = sample.src;
     thumb.alt = sample.label;
     thumb.decoding = "async";
+    
+    // Apply rotation if specified
+    if (sample.rotation && sample.rotation !== 0) {
+      thumb.style.transform = `rotate(${sample.rotation}deg)`;
+      thumb.style.transition = "transform 0.2s ease";
+    }
 
     const label = document.createElement("span");
     label.textContent = sample.label;
@@ -685,7 +723,11 @@ function renderSamples() {
       try {
         setLoading(true);
         showToast(`Loading ${sample.label}…`, "info", 1500);
-        const file = await imageUrlToFile(sample.src, sample.src.split("/").pop() || `sample-${index}.png`);
+        const file = await imageUrlToFile(
+          sample.src, 
+          sample.src.split("/").pop() || `sample-${index}.png`,
+          sample.rotation || 0
+        );
         activeSampleIndex = index;
         highlightSample(index);
         handleFile(file, "sample");
