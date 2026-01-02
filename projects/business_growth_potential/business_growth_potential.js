@@ -433,7 +433,10 @@ function renderPotentialDistributionChart() {
     hole: 0.5,
     marker: {
       colors: [CHART_CONFIG.colors.low, CHART_CONFIG.colors.medium, CHART_CONFIG.colors.high],
-      line: { color: '#ffffff', width: 3 },
+      line: { 
+        color: ['#ffffff', '#ffffff', '#ffffff'], // White borders for pie chart work well
+        width: 2 
+      },
       pattern: { fillmode: 'overlay', opacity: 0.95 }
     },
     textinfo: 'label+percent',
@@ -528,7 +531,16 @@ function renderTopCountriesChart() {
         if (intensity > 0.2) return CHART_CONFIG.colors.primaryLighter;
         return CHART_CONFIG.colors.primaryLightest;
       }),
-      line: { color: '#ffffff', width: 2 },
+      line: { 
+        color: normalizedData.map(d => {
+          const intensity = d.normalized / 100;
+          if (intensity > 0.7) return getDarkerColor(CHART_CONFIG.colors.primary);
+          if (intensity > 0.4) return getDarkerColor(CHART_CONFIG.colors.primaryLight);
+          if (intensity > 0.2) return getDarkerColor(CHART_CONFIG.colors.primaryLighter);
+          return getDarkerColor(CHART_CONFIG.colors.primaryLightest);
+        }),
+        width: 1.5 
+      },
       opacity: 0.9
     }
   };
@@ -583,6 +595,22 @@ function renderTopCountriesChart() {
 // CHART STYLING CONFIGURATION
 // ============================================================================
 
+// Helper function to get darker version of a color for borders
+function getDarkerColor(color) {
+  const colorMap = {
+    '#3b82f6': '#2563eb',  // primary -> darker blue
+    '#60a5fa': '#3b82f6',  // primaryLight -> primary
+    '#93c5fd': '#60a5fa',  // primaryLighter -> primaryLight
+    '#dbeafe': '#93c5fd',  // primaryLightest -> primaryLighter
+    '#8b5cf6': '#7c3aed',  // secondary -> darker purple
+    '#10b981': '#059669',  // success/high -> darker green
+    '#f59e0b': '#d97706',  // warning/medium -> darker orange
+    '#ef4444': '#dc2626',  // danger/low -> darker red
+    '#fbbf24': '#f59e0b'   // warningLight -> warning
+  };
+  return colorMap[color] || color;
+}
+
 const CHART_CONFIG = {
   colors: {
     primary: '#3b82f6',
@@ -600,7 +628,7 @@ const CHART_CONFIG = {
     text: '#0f172a',
     textSecondary: '#475569',
     background: 'rgba(255, 255, 255, 0)',
-    grid: 'rgba(148, 163, 184, 0.2)'
+    grid: 'rgba(148, 163, 184, 0.35)' // Increased opacity for better visibility on white background
   },
   fonts: {
     family: '"Inter", system-ui, -apple-system, sans-serif',
@@ -692,11 +720,11 @@ function renderGeographicHeatmapMain() {
     y: countries,
     type: 'heatmap',
     colorscale: [
-      [0, '#f1f5f9'],
-      [0.25, '#e2e8f0'],
-      [0.5, '#cbd5e1'],
-      [0.75, '#93c5fd'],
-      [1, '#3b82f6']
+      [0, '#e2e8f0'],      // Slightly darker starting point for better visibility
+      [0.25, '#cbd5e1'],   // Medium-light gray
+      [0.5, '#94a3b8'],    // Medium gray
+      [0.75, '#60a5fa'],   // Light blue
+      [1, '#3b82f6']       // Primary blue
     ],
     showscale: true,
     text: text,
@@ -805,7 +833,7 @@ function renderAvgPotentialByCountry() {
       orientation: 'h',
       marker: { 
         color: CHART_CONFIG.colors.low,
-        line: { color: '#ffffff', width: 1 }
+        line: { color: CHART_CONFIG.colors.textSecondary, width: 1 }
       },
       hovertemplate: '<b>%{y}</b><br>Low Potential: %{x:.1f}%<extra></extra>'
     },
@@ -817,7 +845,7 @@ function renderAvgPotentialByCountry() {
       orientation: 'h',
       marker: { 
         color: CHART_CONFIG.colors.medium,
-        line: { color: '#ffffff', width: 1 }
+        line: { color: CHART_CONFIG.colors.textSecondary, width: 1 }
       },
       hovertemplate: '<b>%{y}</b><br>Medium Potential: %{x:.1f}%<extra></extra>'
     },
@@ -829,7 +857,7 @@ function renderAvgPotentialByCountry() {
       orientation: 'h',
       marker: { 
         color: CHART_CONFIG.colors.high,
-        line: { color: '#ffffff', width: 1 }
+        line: { color: CHART_CONFIG.colors.textSecondary, width: 1 }
       },
       hovertemplate: '<b>%{y}</b><br>High Potential: %{x:.1f}%<extra></extra>'
     }
@@ -894,28 +922,31 @@ function renderAvgPotentialByCountry() {
 function renderPERatioChartMain() {
   if (!allData.length) return;
   
-  const traces = [0, 1, 2].map(pcClass => ({
-    y: allData.filter(d => d.pc_class === pcClass && d.pe_ratio_ttm > 0).map(d => d.pe_ratio_ttm),
-    type: 'violin',
-    name: POTENTIAL_LABELS[pcClass],
-    marker: { 
-      color: CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary,
-      line: { color: '#ffffff', width: 2 },
-      opacity: 0.7
-    },
-    box: { 
-      visible: true,
-      width: 0.2,
-      line: { color: CHART_CONFIG.colors.text, width: 2 }
-    },
-    meanline: { 
-      visible: true,
-      width: 2,
-      color: CHART_CONFIG.colors.text
-    },
-    fillcolor: CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary,
-    opacity: 0.6
-  }));
+  const traces = [0, 1, 2].map(pcClass => {
+    const baseColor = CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary;
+    return {
+      y: allData.filter(d => d.pc_class === pcClass && d.pe_ratio_ttm > 0).map(d => d.pe_ratio_ttm),
+      type: 'violin',
+      name: POTENTIAL_LABELS[pcClass],
+      marker: { 
+        color: baseColor,
+        line: { color: getDarkerColor(baseColor), width: 1.5 },
+        opacity: 0.7
+      },
+      box: { 
+        visible: true,
+        width: 0.2,
+        line: { color: getDarkerColor(baseColor), width: 2 }
+      },
+      meanline: { 
+        visible: true,
+        width: 2,
+        color: getDarkerColor(baseColor)
+      },
+      fillcolor: baseColor,
+      opacity: 0.6
+    };
+  });
   
   const layout = {
     plot_bgcolor: CHART_CONFIG.layout.plotBg,
@@ -961,28 +992,31 @@ function renderPERatioChartMain() {
 function renderDividendYieldChartMain() {
   if (!allData.length) return;
   
-  const traces = [0, 1, 2].map(pcClass => ({
-    y: allData.filter(d => d.pc_class === pcClass && d.dividend_yield_ttm > 0).map(d => d.dividend_yield_ttm),
-    type: 'violin',
-    name: POTENTIAL_LABELS[pcClass],
-    marker: { 
-      color: CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary,
-      line: { color: '#ffffff', width: 2 },
-      opacity: 0.7
-    },
-    box: { 
-      visible: true,
-      width: 0.2,
-      line: { color: CHART_CONFIG.colors.text, width: 2 }
-    },
-    meanline: { 
-      visible: true,
-      width: 2,
-      color: CHART_CONFIG.colors.text
-    },
-    fillcolor: CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary,
-    opacity: 0.6
-  }));
+  const traces = [0, 1, 2].map(pcClass => {
+    const baseColor = CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary;
+    return {
+      y: allData.filter(d => d.pc_class === pcClass && d.dividend_yield_ttm > 0).map(d => d.dividend_yield_ttm),
+      type: 'violin',
+      name: POTENTIAL_LABELS[pcClass],
+      marker: { 
+        color: baseColor,
+        line: { color: getDarkerColor(baseColor), width: 1.5 },
+        opacity: 0.7
+      },
+      box: { 
+        visible: true,
+        width: 0.2,
+        line: { color: getDarkerColor(baseColor), width: 2 }
+      },
+      meanline: { 
+        visible: true,
+        width: 2,
+        color: getDarkerColor(baseColor)
+      },
+      fillcolor: baseColor,
+      opacity: 0.6
+    };
+  });
   
   const layout = {
     plot_bgcolor: CHART_CONFIG.layout.plotBg,
@@ -1028,23 +1062,26 @@ function renderDividendYieldChartMain() {
 function renderMarketCapRevenueScatterMain() {
   if (!allData.length) return;
   
-  const scatterTraces = [0, 1, 2].map(pcClass => ({
-    x: allData.filter(d => d.pc_class === pcClass).map(d => d.revenue_ttm || 0),
-    y: allData.filter(d => d.pc_class === pcClass).map(d => d.marketcap || 0),
-    mode: 'markers',
-    type: 'scatter',
-    name: POTENTIAL_LABELS[pcClass],
-    marker: {
-      color: CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary,
-      size: 8,
-      opacity: 0.65,
-      line: {
-        color: '#ffffff',
-        width: 1
-      }
-    },
-    hovertemplate: '<b>%{fullData.name}</b><br>Revenue: $%{x:,.0f}<br>Market Cap: $%{y:,.0f}<extra></extra>'
-  }));
+  const scatterTraces = [0, 1, 2].map(pcClass => {
+    const baseColor = CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary;
+    return {
+      x: allData.filter(d => d.pc_class === pcClass).map(d => d.revenue_ttm || 0),
+      y: allData.filter(d => d.pc_class === pcClass).map(d => d.marketcap || 0),
+      mode: 'markers',
+      type: 'scatter',
+      name: POTENTIAL_LABELS[pcClass],
+      marker: {
+        color: baseColor,
+        size: 8,
+        opacity: 0.65,
+        line: {
+          color: getDarkerColor(baseColor),
+          width: 1
+        }
+      },
+      hovertemplate: '<b>%{fullData.name}</b><br>Revenue: $%{x:,.0f}<br>Market Cap: $%{y:,.0f}<extra></extra>'
+    };
+  });
   
   const layout = {
     plot_bgcolor: CHART_CONFIG.layout.plotBg,
@@ -1092,23 +1129,26 @@ function renderMarketCapRevenueScatterMain() {
 function renderPEDividendScatterMain() {
   if (!allData.length) return;
   
-  const peDivTraces = [0, 1, 2].map(pcClass => ({
-    x: allData.filter(d => d.pc_class === pcClass && d.dividend_yield_ttm > 0).map(d => d.dividend_yield_ttm),
-    y: allData.filter(d => d.pc_class === pcClass && d.pe_ratio_ttm > 0).map(d => d.pe_ratio_ttm),
-    mode: 'markers',
-    type: 'scatter',
-    name: POTENTIAL_LABELS[pcClass],
-    marker: {
-      color: CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary,
-      size: 8,
-      opacity: 0.65,
-      line: {
-        color: '#ffffff',
-        width: 1
-      }
-    },
-    hovertemplate: '<b>%{fullData.name}</b><br>Dividend Yield: %{x:.2f}%<br>P/E Ratio: %{y:.2f}<extra></extra>'
-  }));
+  const peDivTraces = [0, 1, 2].map(pcClass => {
+    const baseColor = CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary;
+    return {
+      x: allData.filter(d => d.pc_class === pcClass && d.dividend_yield_ttm > 0).map(d => d.dividend_yield_ttm),
+      y: allData.filter(d => d.pc_class === pcClass && d.pe_ratio_ttm > 0).map(d => d.pe_ratio_ttm),
+      mode: 'markers',
+      type: 'scatter',
+      name: POTENTIAL_LABELS[pcClass],
+      marker: {
+        color: baseColor,
+        size: 8,
+        opacity: 0.65,
+        line: {
+          color: getDarkerColor(baseColor),
+          width: 1
+        }
+      },
+      hovertemplate: '<b>%{fullData.name}</b><br>Dividend Yield: %{x:.2f}%<br>P/E Ratio: %{y:.2f}<extra></extra>'
+    };
+  });
   
   const layout = {
     plot_bgcolor: CHART_CONFIG.layout.plotBg,
@@ -1165,7 +1205,7 @@ function renderTopCompaniesByMarketCap() {
     orientation: 'h',
     marker: {
       color: topCompanies.map(c => POTENTIAL_COLORS[c.pc_class]),
-      line: { color: '#0f172a', width: 1 }
+      line: { color: topCompanies.map(c => getDarkerColor(POTENTIAL_COLORS[c.pc_class])), width: 1 }
     },
     text: topCompanies.map(c => formatNumber(c.marketcap)),
     textposition: 'outside'
@@ -1208,7 +1248,7 @@ function renderPotentialCorrelationChartMain() {
     orientation: 'h',
     marker: {
       color: potentialCorrs.map(c => c.correlation > 0 ? CHART_CONFIG.colors.success : CHART_CONFIG.colors.danger),
-      line: { color: '#ffffff', width: 2 },
+      line: { color: potentialCorrs.map(c => c.correlation > 0 ? getDarkerColor(CHART_CONFIG.colors.success) : getDarkerColor(CHART_CONFIG.colors.danger)), width: 1.5 },
       opacity: 0.85
     },
     text: potentialCorrs.map(c => c.correlation.toFixed(2)),
@@ -1415,20 +1455,23 @@ function renderCountriesBarChart() {
 function renderMarketCapBoxChart() {
   if (!allData.length) return;
   
-  const traces = [0, 1, 2].map(pcClass => ({
-    y: allData.filter(d => d.pc_class === pcClass).map(d => d.marketcap),
-    type: 'box',
-    name: POTENTIAL_LABELS[pcClass],
-    marker: { 
-      color: CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary,
-      line: { color: '#ffffff', width: 2 },
-      outliercolor: CHART_CONFIG.colors.textSecondary
-    },
-    fillcolor: CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary,
-    opacity: 0.6,
-    line: { color: CHART_CONFIG.colors.text, width: 2 },
-    boxmean: 'sd'
-  }));
+  const traces = [0, 1, 2].map(pcClass => {
+    const baseColor = CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary;
+    return {
+      y: allData.filter(d => d.pc_class === pcClass).map(d => d.marketcap),
+      type: 'box',
+      name: POTENTIAL_LABELS[pcClass],
+      marker: { 
+        color: baseColor,
+        line: { color: getDarkerColor(baseColor), width: 1.5 },
+        outliercolor: CHART_CONFIG.colors.textSecondary
+      },
+      fillcolor: baseColor,
+      opacity: 0.6,
+      line: { color: getDarkerColor(baseColor), width: 2 },
+      boxmean: 'sd'
+    };
+  });
   
   const layout = {
     plot_bgcolor: CHART_CONFIG.layout.plotBg,
@@ -1470,20 +1513,23 @@ function renderMarketCapBoxChart() {
 function renderRevenueBoxChart() {
   if (!allData.length) return;
   
-  const traces = [0, 1, 2].map(pcClass => ({
-    y: allData.filter(d => d.pc_class === pcClass).map(d => d.revenue_ttm || 0),
-    type: 'box',
-    name: POTENTIAL_LABELS[pcClass],
-    marker: { 
-      color: CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary,
-      line: { color: '#ffffff', width: 2 },
-      outliercolor: CHART_CONFIG.colors.textSecondary
-    },
-    fillcolor: CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary,
-    opacity: 0.6,
-    line: { color: CHART_CONFIG.colors.text, width: 2 },
-    boxmean: 'sd'
-  }));
+  const traces = [0, 1, 2].map(pcClass => {
+    const baseColor = CHART_CONFIG.colors[POTENTIAL_LABELS[pcClass].toLowerCase()] || CHART_CONFIG.colors.primary;
+    return {
+      y: allData.filter(d => d.pc_class === pcClass).map(d => d.revenue_ttm || 0),
+      type: 'box',
+      name: POTENTIAL_LABELS[pcClass],
+      marker: { 
+        color: baseColor,
+        line: { color: getDarkerColor(baseColor), width: 1.5 },
+        outliercolor: CHART_CONFIG.colors.textSecondary
+      },
+      fillcolor: baseColor,
+      opacity: 0.6,
+      line: { color: getDarkerColor(baseColor), width: 2 },
+      boxmean: 'sd'
+    };
+  });
   
   const layout = {
     plot_bgcolor: CHART_CONFIG.layout.plotBg,
@@ -1713,7 +1759,10 @@ function displayPredictionResult(company, result, container, isManual = false) {
     type: 'bar',
     marker: {
       color: [POTENTIAL_COLORS[0], POTENTIAL_COLORS[1], POTENTIAL_COLORS[2]],
-      line: { color: '#0f172a', width: 1 }
+      line: { 
+        color: [getDarkerColor(POTENTIAL_COLORS[0]), getDarkerColor(POTENTIAL_COLORS[1]), getDarkerColor(POTENTIAL_COLORS[2])], 
+        width: 1 
+      }
     }
   };
   

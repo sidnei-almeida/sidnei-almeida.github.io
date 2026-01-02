@@ -495,195 +495,193 @@
             </p>
           </div>
 
-          <div class="predictions-main-grid">
-            <div class="predictions-main-col">
-              <!-- Prediction Tabs -->
-              <div class="tabs-container">
-                <button class="tab-btn active" data-tab="individual">Individual Prediction</button>
-                <button class="tab-btn" data-tab="manual">Manual Input</button>
-                <button class="tab-btn" data-tab="batch">Batch Prediction</button>
-              </div>
-
-              <!-- Individual Prediction Tab -->
-              <div class="tab-content active" id="individualTab">
-                <div class="prediction-form-card">
-                  <h3 class="card-title">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
-                      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-                      <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-                      <path d="M9 14l2 2 4-4"/>
-                    </svg>
-                    Select Company for Analysis
-                  </h3>
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label>Select Country</label>
-                      <select class="form-select" id="predictionCountrySelect">
-                        <option value="">Loading...</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label>Select Company</label>
-                      <select class="form-select" id="predictionCompanySelect" disabled>
-                        <option value="">Select country first</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <button class="btn-primary" id="analyzeCompanyBtn" disabled>
-                        <span class="btn-icon">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="7"/>
-                            <line x1="16.65" y1="16.65" x2="21" y2="21"/>
-                          </svg>
-                        </span>
-                        <span>Analyze Potential</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div id="predictionResults" style="display: none;"></div>
-              </div>
-
-              <!-- Manual Input Tab -->
-              <div class="tab-content" id="manualTab">
-                <div class="prediction-form-card">
-                  <h3 class="card-title">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
-                      <path d="M4 19.5V4.5A2.5 2.5 0 0 1 6.5 2H14l6 6v11.5A2.5 2.5 0 0 1 17.5 22h-11A2.5 2.5 0 0 1 4 19.5z"/>
-                      <polyline points="14 2 14 8 20 8"/>
-                    </svg>
-                    Enter Company Data
-                  </h3>
-                  <form id="manualPredictionForm">
-                    <div class="form-grid">
-                      <div class="form-group">
-                        <label>Dividend Yield (%)</label>
-                        <input type="number" step="0.01" class="form-input" id="manual_dividend_yield" value="2.5" required>
-                      </div>
-                      <div class="form-group">
-                        <label>Earnings TTM (USD)</label>
-                        <input type="number" step="1000" class="form-input" id="manual_earnings_ttm" value="1000000" required>
-                      </div>
-                      <div class="form-group">
-                        <label>Market Cap (USD)</label>
-                        <input type="number" step="1000000" class="form-input" id="manual_marketcap" value="1000000000" required>
-                      </div>
-                      <div class="form-group">
-                        <label>P/E Ratio</label>
-                        <input type="number" step="0.1" class="form-input" id="manual_pe_ratio" value="15.0" required>
-                      </div>
-                      <div class="form-group">
-                        <label>Revenue TTM (USD)</label>
-                        <input type="number" step="1000000" class="form-input" id="manual_revenue_ttm" value="5000000000" required>
-                      </div>
-                      <div class="form-group">
-                        <label>Stock Price (USD)</label>
-                        <input type="number" step="0.01" class="form-input" id="manual_price" value="50.0" required>
-                      </div>
-                      <div class="form-group">
-                        <label>GDP per Capita (USD)</label>
-                        <input type="number" step="100" class="form-input" id="manual_gdp_per_capita" value="50000" required>
-                      </div>
-                      <div class="form-group">
-                        <label>GDP Growth (%)</label>
-                        <input type="number" step="0.1" class="form-input" id="manual_gdp_growth" value="2.5" required>
-                      </div>
-                      <div class="form-group">
-                        <label>Inflation (%)</label>
-                        <input type="number" step="0.1" class="form-input" id="manual_inflation_percent" value="2.5" required>
-                      </div>
-                      <div class="form-group">
-                        <label>Interest Rate (%)</label>
-                        <input type="number" step="0.1" class="form-input" id="manual_interest_rate_percent" value="4.875" required>
-                      </div>
-                      <div class="form-group">
-                        <label>Unemployment Rate (%)</label>
-                        <input type="number" step="0.1" class="form-input" id="manual_unemployment_rate_percent" value="3.7" required>
-                      </div>
-                      <div class="form-group">
-                        <label>Exchange Rate to USD</label>
-                        <input type="number" step="0.01" class="form-input" id="manual_exchange_rate" value="1.0" required>
-                      </div>
-                      <div class="form-group">
-                        <label>Inflation (Absolute)</label>
-                        <input type="number" step="0.1" class="form-input" id="manual_inflation" value="-2.5" required>
-                      </div>
-                      <div class="form-group">
-                        <label>Interest Rate (Absolute)</label>
-                        <input type="number" step="0.1" class="form-input" id="manual_interest_rate_abs" value="-4.875" required>
-                      </div>
-                      <div class="form-group">
-                        <label>Unemployment (Absolute)</label>
-                        <input type="number" step="0.1" class="form-input" id="manual_unemployment" value="-3.7" required>
-                      </div>
-                    </div>
-                    <div class="form-actions">
-                      <button type="submit" class="btn-primary">
-                        <span class="btn-icon">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="7"/>
-                            <line x1="16.65" y1="16.65" x2="21" y2="21"/>
-                          </svg>
-                        </span>
-                        <span>Analyze Potential</span>
-                      </button>
-                      <button type="reset" class="btn-secondary">Reset</button>
-                    </div>
-                  </form>
-                </div>
-                <div id="manualPredictionResults" style="display: none;"></div>
-              </div>
-
-              <!-- Batch Prediction Tab -->
-              <div class="tab-content" id="batchTab">
-                <div class="prediction-form-card">
-                  <h3 class="card-title">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
-                      <rect x="3" y="3" width="7" height="7" rx="1"/>
-                      <rect x="14" y="3" width="7" height="7" rx="1"/>
-                      <rect x="14" y="14" width="7" height="7" rx="1"/>
-                      <rect x="3" y="14" width="7" height="7" rx="1"/>
-                    </svg>
-                    Batch Prediction
-                  </h3>
-                  <p class="card-description">Upload a CSV file with multiple companies to score an entire universe or watchlist in one click.</p>
-                  <div class="upload-area" id="uploadArea">
-                    <input type="file" id="batchFileInput" accept=".csv" style="display: none;">
-                    <div class="upload-content">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                        <polyline points="7 10 12 15 17 10"/>
-                        <line x1="12" y1="15" x2="12" y2="3"/>
-                      </svg>
-                      <p>Click to upload or drag and drop</p>
-                      <p class="upload-hint">CSV file with company data</p>
-                    </div>
-                  </div>
-                  <div id="batchResults" style="display: none;"></div>
-                </div>
-              </div>
+          <div class="predictions-main-col">
+            <!-- Prediction Tabs -->
+            <div class="tabs-container">
+              <button class="tab-btn active" data-tab="individual">Individual Prediction</button>
+              <button class="tab-btn" data-tab="manual">Manual Input</button>
+              <button class="tab-btn" data-tab="batch">Batch Prediction</button>
             </div>
 
-            <aside class="predictions-side-col">
-              <div class="card predictions-side-card">
+            <!-- Individual Prediction Tab -->
+            <div class="tab-content active" id="individualTab">
+              <div class="prediction-form-card">
                 <h3 class="card-title">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 8v4l3 3"/>
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                    <path d="M9 14l2 2 4-4"/>
                   </svg>
-                  How to use this studio
+                  Select Company for Analysis
                 </h3>
-                <p class="card-description">
-                  Combine the three modes below to explore the model: start from a real company, then stress‑test scenarios and finally
-                  upload your own universe in batch.
-                </p>
-                <ul class="predictions-side-list">
-                  <li><strong>Individual Prediction</strong> — pick a company from the dataset and see how the model scores it today.</li>
-                  <li><strong>Manual Input</strong> — design hypothetical balance sheets and macro environments to test edge cases.</li>
-                  <li><strong>Batch Prediction</strong> — upload a CSV with your watchlist and rank names by growth potential.</li>
-                </ul>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Select Country</label>
+                    <select class="form-select" id="predictionCountrySelect">
+                      <option value="">Loading...</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Select Company</label>
+                    <select class="form-select" id="predictionCompanySelect" disabled>
+                      <option value="">Select country first</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <button class="btn-primary" id="analyzeCompanyBtn" disabled>
+                      <span class="btn-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="11" cy="11" r="7"/>
+                          <line x1="16.65" y1="16.65" x2="21" y2="21"/>
+                        </svg>
+                      </span>
+                      <span>Analyze Potential</span>
+                    </button>
+                  </div>
+                </div>
               </div>
-            </aside>
+              <div id="predictionResults" style="display: none;"></div>
+            </div>
+
+            <!-- Manual Input Tab -->
+            <div class="tab-content" id="manualTab">
+              <div class="prediction-form-card">
+                <h3 class="card-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                    <path d="M4 19.5V4.5A2.5 2.5 0 0 1 6.5 2H14l6 6v11.5A2.5 2.5 0 0 1 17.5 22h-11A2.5 2.5 0 0 1 4 19.5z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  Enter Company Data
+                </h3>
+                <form id="manualPredictionForm">
+                  <div class="form-grid">
+                    <div class="form-group">
+                      <label>Dividend Yield (%)</label>
+                      <input type="number" step="0.01" class="form-input" id="manual_dividend_yield" value="2.5" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Earnings TTM (USD)</label>
+                      <input type="number" step="1000" class="form-input" id="manual_earnings_ttm" value="1000000" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Market Cap (USD)</label>
+                      <input type="number" step="1000000" class="form-input" id="manual_marketcap" value="1000000000" required>
+                    </div>
+                    <div class="form-group">
+                      <label>P/E Ratio</label>
+                      <input type="number" step="0.1" class="form-input" id="manual_pe_ratio" value="15.0" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Revenue TTM (USD)</label>
+                      <input type="number" step="1000000" class="form-input" id="manual_revenue_ttm" value="5000000000" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Stock Price (USD)</label>
+                      <input type="number" step="0.01" class="form-input" id="manual_price" value="50.0" required>
+                    </div>
+                    <div class="form-group">
+                      <label>GDP per Capita (USD)</label>
+                      <input type="number" step="100" class="form-input" id="manual_gdp_per_capita" value="50000" required>
+                    </div>
+                    <div class="form-group">
+                      <label>GDP Growth (%)</label>
+                      <input type="number" step="0.1" class="form-input" id="manual_gdp_growth" value="2.5" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Inflation (%)</label>
+                      <input type="number" step="0.1" class="form-input" id="manual_inflation_percent" value="2.5" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Interest Rate (%)</label>
+                      <input type="number" step="0.1" class="form-input" id="manual_interest_rate_percent" value="4.875" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Unemployment Rate (%)</label>
+                      <input type="number" step="0.1" class="form-input" id="manual_unemployment_rate_percent" value="3.7" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Exchange Rate to USD</label>
+                      <input type="number" step="0.01" class="form-input" id="manual_exchange_rate" value="1.0" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Inflation (Absolute)</label>
+                      <input type="number" step="0.1" class="form-input" id="manual_inflation" value="-2.5" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Interest Rate (Absolute)</label>
+                      <input type="number" step="0.1" class="form-input" id="manual_interest_rate_abs" value="-4.875" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Unemployment (Absolute)</label>
+                      <input type="number" step="0.1" class="form-input" id="manual_unemployment" value="-3.7" required>
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                      <span class="btn-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="11" cy="11" r="7"/>
+                          <line x1="16.65" y1="16.65" x2="21" y2="21"/>
+                        </svg>
+                      </span>
+                      <span>Analyze Potential</span>
+                    </button>
+                    <button type="reset" class="btn-secondary">Reset</button>
+                  </div>
+                </form>
+              </div>
+              <div id="manualPredictionResults" style="display: none;"></div>
+            </div>
+
+            <!-- Batch Prediction Tab -->
+            <div class="tab-content" id="batchTab">
+              <div class="prediction-form-card">
+                <h3 class="card-title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                  </svg>
+                  Batch Prediction
+                </h3>
+                <p class="card-description">Upload a CSV file with multiple companies to score an entire universe or watchlist in one click.</p>
+                <div class="upload-area" id="uploadArea">
+                  <input type="file" id="batchFileInput" accept=".csv" style="display: none;">
+                  <div class="upload-content">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="7 10 12 15 17 10"/>
+                      <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    <p>Click to upload or drag and drop</p>
+                    <p class="upload-hint">CSV file with company data</p>
+                  </div>
+                </div>
+                <div id="batchResults" style="display: none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="predictions-side-col">
+            <div class="card predictions-side-card">
+              <h3 class="card-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline-block; vertical-align: middle; margin-right: 6px;">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 8v4l3 3"/>
+                </svg>
+                How to use this studio
+              </h3>
+              <p class="card-description">
+                Combine the three modes below to explore the model: start from a real company, then stress‑test scenarios and finally
+                upload your own universe in batch.
+              </p>
+              <ul class="predictions-side-list">
+                <li><strong>Individual Prediction</strong> — pick a company from the dataset and see how the model scores it today.</li>
+                <li><strong>Manual Input</strong> — design hypothetical balance sheets and macro environments to test edge cases.</li>
+                <li><strong>Batch Prediction</strong> — upload a CSV with your watchlist and rank names by growth potential.</li>
+              </ul>
+            </div>
           </div>
         </div>
 
