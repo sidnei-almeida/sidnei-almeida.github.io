@@ -33,6 +33,12 @@
   --shadow-chip: 0 1px 4px rgba(0, 0, 0, 0.1);
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  
+  /* Standardized spacing system for responsive design */
+  --spacing-xs: clamp(12px, 1vw, 16px);
+  --spacing-sm: clamp(16px, 1.5vw, 24px);
+  --spacing-md: clamp(24px, 2vw, 32px);
+  --spacing-lg: clamp(32px, 2.5vw, 40px);
 }
 
 *,
@@ -183,17 +189,18 @@ select:focus-visible {
   position: relative;
 }
 
-/* Sidebar - Minimalist Design */
+/* Sidebar - Responsive Design */
 .dashboard-sidebar {
-  width: 220px;
+  width: clamp(260px, 20vw, 300px);
   flex-shrink: 0;
   background: var(--bg-panel);
   border-right: 1px solid var(--stroke);
-  padding: 12px;
+  padding: var(--spacing-sm);
   overflow-y: auto;
   position: relative;
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .dashboard-sidebar::before {
@@ -201,7 +208,7 @@ select:focus-visible {
 }
 
 .sidebar-section {
-  margin-bottom: 16px;
+  margin-bottom: 0;
 }
 
 .sidebar-title {
@@ -287,16 +294,16 @@ select:focus-visible {
   color: currentColor;
 }
 
-/* Selects - Minimalist Design */
+/* Selects - Responsive Design */
 .select-indicator,
 .select-country {
   width: 100%;
-  padding: 6px 10px;
+  padding: clamp(8px, 0.7vw, 10px) clamp(10px, 1vw, 14px);
   border-radius: var(--radius-sm);
   background: var(--bg-elevated);
   border: 1px solid var(--stroke);
   color: var(--text-primary);
-  font-size: 11px;
+  font-size: clamp(10px, 0.8vw + 0.2rem, 12px);
   transition: border-color var(--transition);
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' opacity='0.5'/%3E%3C/svg%3E");
@@ -440,8 +447,11 @@ select:focus-visible {
 .dashboard-content {
   flex: 1;
   overflow-y: auto;
-  padding: 12px 16px;
+  padding: var(--spacing-sm);
   position: relative;
+  max-width: 1800px;
+  margin-inline: auto;
+  width: 100%;
 }
 
 /* Loading Overlay - Minimalist Design */
@@ -545,9 +555,10 @@ select:focus-visible {
   background: var(--bg-card);
   border: 1px solid var(--stroke);
   border-radius: var(--radius-md);
-  padding: 12px;
+  padding: var(--spacing-sm);
   position: relative;
   transition: border-color var(--transition);
+  min-height: 0;
 }
 
 .card:hover {
@@ -555,9 +566,9 @@ select:focus-visible {
 }
 
 .card-title {
-  font-size: 10px;
+  font-size: clamp(10px, 0.85vw + 0.25rem, 12px);
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: var(--spacing-xs);
   color: var(--text-secondary);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -567,7 +578,8 @@ select:focus-visible {
 .view-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--spacing-sm);
+  width: 100%;
 }
 
 /* Timeline Card */
@@ -575,20 +587,24 @@ select:focus-visible {
   margin-bottom: 8px;
 }
 
-/* Metrics Row - Premium Design */
+/* Metrics Row - Responsive Grid */
 .metrics-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-  margin-bottom: 12px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  width: 100%;
 }
 
 .metric-card {
   background: var(--bg-card);
   border: 1px solid var(--stroke);
   border-radius: var(--radius-md);
-  padding: 12px;
+  padding: var(--spacing-sm);
   transition: border-color var(--transition);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .metric-card:hover {
@@ -596,20 +612,20 @@ select:focus-visible {
 }
 
 .metric-label {
-  font-size: 8px;
+  font-size: clamp(8px, 0.7vw + 0.2rem, 10px);
   color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-bottom: 4px;
+  margin-bottom: clamp(4px, 0.4vw, 6px);
   font-weight: 600;
 }
 
 .metric-value {
-  font-size: 20px;
+  font-size: clamp(18px, 1.8vw + 0.5rem, 24px);
   font-weight: 700;
   color: var(--text-primary);
   font-family: var(--font-mono);
-  margin-bottom: 4px;
+  margin-bottom: clamp(4px, 0.4vw, 6px);
   letter-spacing: -0.02em;
   background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
   -webkit-background-clip: text;
@@ -618,8 +634,8 @@ select:focus-visible {
 }
 
 .metric-value.small {
-  font-size: 14px;
-  margin-top: 6px;
+  font-size: clamp(12px, 1.2vw + 0.3rem, 16px);
+  margin-top: clamp(6px, 0.5vw, 8px);
   margin-bottom: 0;
 }
 
@@ -646,9 +662,10 @@ select:focus-visible {
 }
 
 .risk-value {
-  font-size: 24px;
+  font-size: clamp(20px, 2vw + 0.5rem, 28px);
   color: var(--text-primary);
   font-weight: 600;
+  font-family: var(--font-mono);
 }
 
 .metric-category {
@@ -674,22 +691,29 @@ select:focus-visible {
   transition: width 0.4s ease;
 }
 
-/* Charts Row */
+/* Charts Row - Responsive Grid */
 .charts-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 10px;
-  margin-bottom: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  width: 100%;
 }
 
 .chart-container {
-  min-height: 280px;
+  min-height: clamp(300px, 30vh, 450px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .chart-container .card {
   height: 100%;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .chart-container #mainChart,
@@ -702,7 +726,10 @@ select:focus-visible {
 .chart-container #correlationHeatmap,
 .chart-container #indicatorsCorrelationChart {
   flex: 1;
-  min-height: 280px;
+  min-height: clamp(280px, 28vh, 400px);
+  max-height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 /* Map styling - grayscale for both map and bubbles */
@@ -935,8 +962,8 @@ select:focus-visible {
 .footer-content {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
-  max-width: 1400px;
+  gap: var(--spacing-sm);
+  max-width: 1800px;
   margin: 0 auto;
 }
 
@@ -977,12 +1004,35 @@ select:focus-visible {
 
 /* Responsive */
 @media (max-width: 1200px) {
+  .metrics-row {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
   .charts-row {
     grid-template-columns: 1fr;
   }
   
   .dashboard-sidebar {
-    width: 200px;
+    width: clamp(240px, 22vw, 280px);
+  }
+}
+
+/* Ultrawide display optimizations */
+@media (min-width: 1920px) {
+  .dashboard-content {
+    max-width: 1800px;
+    margin-inline: auto;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+  }
+}
+
+@media (min-width: 2560px) {
+  .dashboard-content {
+    max-width: 1800px;
+    margin-inline: auto;
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
   }
 }
 

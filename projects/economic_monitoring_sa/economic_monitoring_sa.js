@@ -630,12 +630,10 @@ function initializeTabs() {
           renderCompareTemporalChart();
         } else if (tabName === "ranking") {
           renderRankingView();
-        } else if (tabName === "map") {
-          renderMapView();
+          renderIndicatorsCorrelation();
         } else if (tabName === "risk") {
           renderRiskView();
-        } else if (tabName === "correlation") {
-          renderIndicatorsCorrelation();
+          renderMapView();
         }
       }
     });
@@ -1041,22 +1039,36 @@ function renderCorrelationHeatmap() {
     })
   );
   
+  // Custom dark theme colorscale for correlation heatmap
+  const darkColorscale = [
+    [0, "rgb(11, 14, 20)"],      // Very dark (bg-page color) for low/negative correlation
+    [0.2, "rgb(26, 30, 40)"],   // Dark grey
+    [0.4, "rgb(0, 100, 150)"],  // Deep blue
+    [0.6, "rgb(0, 150, 200)"],  // Bright blue
+    [0.8, "rgb(0, 200, 180)"],  // Cyan-teal
+    [1, "rgb(0, 230, 118)"]     // Vibrant emerald green for high/positive correlation
+  ];
+  
   const trace = {
     z: corrMatrix,
     x: countries,
     y: countries,
     type: "heatmap",
-    colorscale: [
-      [0, "rgb(30, 30, 30)"],
-      [0.25, "rgb(26, 166, 184)"],
-      [0.5, "rgb(16, 185, 129)"],
-      [0.75, "rgb(245, 158, 11)"],
-      [1, "rgb(236, 72, 153)"]
-    ],
+    colorscale: darkColorscale,
+    zmid: 0,
     showscale: true,
+    colorbar: {
+      tickfont: { color: "#9CA3AF", size: 10 },
+      tickcolor: "#9CA3AF",
+      outlinecolor: "rgba(255, 255, 255, 0.1)",
+      outlinewidth: 1,
+      bgcolor: "rgba(0, 0, 0, 0)",
+      bordercolor: "rgba(255, 255, 255, 0.1)",
+      borderwidth: 1
+    },
     text: corrMatrix.map(row => row.map(v => v.toFixed(2))),
     texttemplate: "%{text}",
-    textfont: { color: "white", size: 9 }
+    textfont: { color: "#FFFFFF", size: 10, family: "Inter, system-ui" }
   };
   
   const layout = {
@@ -1358,23 +1370,36 @@ function renderIndicatorsCorrelation() {
     })
   );
   
+  // Custom dark theme colorscale for correlation heatmap
+  const darkColorscale = [
+    [0, "rgb(11, 14, 20)"],      // Very dark (bg-page color) for low/negative correlation
+    [0.2, "rgb(26, 30, 40)"],   // Dark grey
+    [0.4, "rgb(0, 100, 150)"],  // Deep blue
+    [0.6, "rgb(0, 150, 200)"],  // Bright blue
+    [0.8, "rgb(0, 200, 180)"],  // Cyan-teal
+    [1, "rgb(0, 230, 118)"]     // Vibrant emerald green for high/positive correlation
+  ];
+  
   const trace = {
     z: corrMatrix,
     x: indicators.map(k => INDICATORS[k]),
     y: indicators.map(k => INDICATORS[k]),
     type: "heatmap",
-    colorscale: [
-      [0, "rgb(30, 30, 30)"],
-      [0.25, "rgb(26, 166, 184)"],
-      [0.5, "rgb(16, 185, 129)"],
-      [0.75, "rgb(245, 158, 11)"],
-      [1, "rgb(236, 72, 153)"]
-    ],
+    colorscale: darkColorscale,
     zmid: 0,
     showscale: true,
+    colorbar: {
+      tickfont: { color: "#9CA3AF", size: 10 },
+      tickcolor: "#9CA3AF",
+      outlinecolor: "rgba(255, 255, 255, 0.1)",
+      outlinewidth: 1,
+      bgcolor: "rgba(0, 0, 0, 0)",
+      bordercolor: "rgba(255, 255, 255, 0.1)",
+      borderwidth: 1
+    },
     text: corrMatrix.map(row => row.map(v => v.toFixed(2))),
     texttemplate: "%{text}",
-    textfont: { color: "white", size: 9 }
+    textfont: { color: "#FFFFFF", size: 10, family: "Inter, system-ui" }
   };
   
   const layout = {
@@ -1509,12 +1534,10 @@ function renderCompareView() {
       renderCompareTemporalChart();
     } else if (tabName === "ranking") {
       renderRankingView();
-    } else if (tabName === "map") {
-      renderMapView();
+      renderIndicatorsCorrelation();
     } else if (tabName === "risk") {
       renderRiskView();
-    } else if (tabName === "correlation") {
-      renderIndicatorsCorrelation();
+      renderMapView();
     }
   } else {
     // Default: render temporal chart

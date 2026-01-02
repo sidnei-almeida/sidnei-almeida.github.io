@@ -258,9 +258,7 @@
           <div class="tabs-container">
             <button class="tab-btn active" data-tab="temporal">Temporal Comparison</button>
             <button class="tab-btn" data-tab="ranking">Ranking</button>
-            <button class="tab-btn" data-tab="map">Map</button>
-            <button class="tab-btn" data-tab="risk">Risk Score</button>
-            <button class="tab-btn" data-tab="correlation">Correlation</button>
+            <button class="tab-btn" data-tab="risk">Risk Analysis</button>
           </div>
 
           <!-- Tab Content -->
@@ -296,19 +294,26 @@
                 </table>
               </div>
             </div>
-          </div>
-
-          <div class="tab-content" id="mapTab" style="display: none;">
             <div class="card">
-              <h3 class="card-title">Geographic Distribution</h3>
-              <div id="mapChart"></div>
+              <h3 class="card-title">Indicators Correlation Matrix</h3>
+              <div id="indicatorsCorrelationChart"></div>
             </div>
           </div>
 
           <div class="tab-content" id="riskTab" style="display: none;">
-            <div class="card">
-              <h3 class="card-title">Risk Score by Country</h3>
-              <div id="riskChart"></div>
+            <div class="charts-row">
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Risk Score by Country</h3>
+                  <div id="riskChart"></div>
+                </div>
+              </div>
+              <div class="chart-container">
+                <div class="card">
+                  <h3 class="card-title">Regional Overview</h3>
+                  <div id="mapChart"></div>
+                </div>
+              </div>
             </div>
             <div class="card">
               <h3 class="card-title">Score Details</h3>
@@ -342,12 +347,6 @@
             </div>
           </div>
 
-          <div class="tab-content" id="correlationTab" style="display: none;">
-            <div class="card">
-              <h3 class="card-title">Indicators Correlation Matrix</h3>
-              <div id="indicatorsCorrelationChart"></div>
-            </div>
-          </div>
         </div>
       </div>
     </main>
