@@ -17,6 +17,20 @@
   --radius-md: 12px;
   --radius-sm: 8px;
   --transition: 180ms ease;
+  --transition-smooth: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  /* Spacing system */
+  --spacing-xs: clamp(4px, 0.5vw, 8px);
+  --spacing-sm: clamp(8px, 1vw, 12px);
+  --spacing-md: clamp(12px, 1.5vw, 20px);
+  --spacing-lg: clamp(16px, 2vw, 28px);
+  --spacing-xl: clamp(24px, 3vw, 40px);
+  /* Shadow system */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.35);
+  --shadow-glow: 0 0 20px rgba(0, 139, 119, 0.3);
+  --shadow-glow-strong: 0 0 32px rgba(0, 139, 119, 0.5);
 }
 
 *,
@@ -59,7 +73,10 @@ button {
 button:focus-visible,
 input:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 3px;
+  box-shadow: 
+    0 0 0 4px rgba(0, 139, 119, 0.15),
+    0 0 16px rgba(0, 139, 119, 0.3);
 }
 
 .noscript-banner {
@@ -73,17 +90,22 @@ input:focus-visible {
 }
 
 .container {
-  width: min(1120px, 92vw);
+  width: min(1800px, 92vw);
   margin: 0 auto;
+  max-width: 1800px;
 }
 
 .app-header {
   background: rgba(26, 26, 26, 0.88);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--stroke);
   position: sticky;
   top: 0;
   z-index: 20;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .app-header .container {
@@ -108,6 +130,18 @@ input:focus-visible {
   display: grid;
   place-items: center;
   border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 
+    0 4px 12px rgba(0, 139, 119, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+
+.brand:hover .brand-icon {
+  transform: scale(1.05) rotate(2deg);
+  box-shadow: 
+    0 6px 16px rgba(0, 139, 119, 0.3),
+    0 0 20px rgba(0, 139, 119, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .brand-icon svg {
@@ -149,6 +183,19 @@ input:focus-visible {
   background: rgba(36, 36, 36, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.06);
   min-width: 120px;
+  transition: all var(--transition-smooth);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.metric:hover {
+  background: rgba(40, 40, 40, 0.95);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
 }
 
 .metric .label {
@@ -215,7 +262,30 @@ input:focus-visible {
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: transform var(--transition), box-shadow var(--transition);
+  transition: all var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 12px rgba(0, 139, 119, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.link-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.link-btn:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .link-btn svg {
@@ -224,22 +294,33 @@ input:focus-visible {
   fill: none;
   stroke: var(--text-primary);
   stroke-width: 1.4;
+  transition: transform var(--transition-smooth);
+  position: relative;
+  z-index: 1;
 }
 
 .link-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 28px rgba(0, 139, 119, 0.35);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 14px 28px rgba(0, 139, 119, 0.35),
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    0 0 24px rgba(0, 139, 119, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.link-btn:hover svg {
+  transform: translateX(-2px);
 }
 
 .app-main {
-  padding: 48px 0 64px;
+  padding: clamp(32px, 4vw, 64px) 0 clamp(48px, 5vw, 80px);
   flex: 1;
 }
 
 .layout {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px;
+  gap: var(--spacing-lg);
   align-items: start;
 }
 
@@ -247,21 +328,55 @@ input:focus-visible {
   background: var(--bg-panel);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.32);
-  padding: 26px;
+  box-shadow: 
+    0 18px 32px rgba(0, 0, 0, 0.32),
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--spacing-md);
   height: 100%;
-  min-height: 520px;
+  min-height: clamp(400px, 50vh, 600px);
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(0, 139, 119, 0.2), 
+    transparent
+  );
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
+}
+
+.panel:hover::before {
+  opacity: 1;
+}
+
+.panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 24px 48px rgba(0, 0, 0, 0.4),
+    0 8px 16px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .layout > .panel {
-  min-height: 520px;
+  min-height: clamp(400px, 50vh, 600px);
 }
 
 .input-panel {
-  max-height: 640px;
+  /* Removed max-height to allow better space usage */
 }
 
 .panel-head {
@@ -281,7 +396,7 @@ input:focus-visible {
 .panel-head h2 {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 1.3vw, 1.3rem);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -289,7 +404,7 @@ input:focus-visible {
 .subhead {
   margin: 6px 0 0;
   color: var(--text-tertiary);
-  font-size: 0.78rem;
+  font-size: clamp(0.75rem, 0.9vw, 0.85rem);
   letter-spacing: 0.04em;
 }
 
@@ -323,7 +438,11 @@ input:focus-visible {
 
 .url-field input:focus-visible {
   border-color: rgba(0, 139, 119, 0.55);
-  box-shadow: 0 0 0 3px rgba(0, 139, 119, 0.2);
+  box-shadow: 
+    0 0 0 3px rgba(0, 139, 119, 0.2),
+    0 0 16px rgba(0, 139, 119, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: rgba(16, 22, 32, 0.95);
 }
 
 .url-field button,
@@ -337,15 +456,53 @@ input:focus-visible {
   font-family: var(--font-heading);
   font-size: 0.7rem;
   letter-spacing: 0.14em;
-  box-shadow: 0 12px 26px rgba(0, 139, 119, 0.24);
-  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+  box-shadow: 
+    0 12px 26px rgba(0, 139, 119, 0.24),
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), background var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.url-field button::before,
+.predict-btn::before,
+.camera-actions button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.15), 
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.url-field button:hover::before,
+.predict-btn:hover::before,
+.camera-actions button:not(:disabled):hover::before {
+  left: 100%;
 }
 
 .url-field button:hover,
 .predict-btn:hover,
 .camera-actions button:not(:disabled):hover {
-  transform: translateY(-1px);
-  box-shadow: 0 18px 32px rgba(0, 139, 119, 0.32);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 18px 32px rgba(0, 139, 119, 0.32),
+    0 8px 16px rgba(0, 0, 0, 0.3),
+    0 0 24px rgba(0, 139, 119, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.url-field button:active,
+.predict-btn:active,
+.camera-actions button:not(:disabled):active {
+  transform: translateY(0) scale(0.98);
 }
 
 .input-tabs {
@@ -364,14 +521,43 @@ input:focus-visible {
   font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: background var(--transition), color var(--transition), box-shadow var(--transition), border-color var(--transition);
+  transition: all var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.input-tabs .tab::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 80%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  transition: transform var(--transition-smooth);
+}
+
+.input-tabs .tab:hover {
+  background: rgba(52, 52, 52, 0.95);
+  color: var(--text-secondary);
+  border-color: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
 }
 
 .input-tabs .tab.active {
   background: linear-gradient(135deg, rgba(0, 139, 119, 0.36), rgba(0, 96, 81, 0.5));
   color: var(--text-primary);
-  box-shadow: 0 16px 28px rgba(0, 139, 119, 0.28);
+  box-shadow: 
+    0 16px 28px rgba(0, 139, 119, 0.28),
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   border-color: rgba(0, 139, 119, 0.48);
+  text-shadow: 0 0 8px rgba(0, 139, 119, 0.3);
+}
+
+.input-tabs .tab.active::before {
+  transform: translateX(-50%) scaleX(1);
 }
 
 .tab-panels {
@@ -408,10 +594,10 @@ input:focus-visible {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(140px, 12vw, 180px), 1fr));
+  gap: var(--spacing-sm);
   padding: 4px;
-  max-height: clamp(360px, 48vh, 600px);
+  max-height: clamp(400px, 55vh, 700px);
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 139, 119, 0.55) rgba(18, 18, 18, 0.4);
@@ -443,18 +629,55 @@ input:focus-visible {
   flex-direction: column;
   gap: 10px;
   padding: 12px;
-  transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+  transition: all var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.sample-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  padding: 1px;
+  background: linear-gradient(135deg, 
+    rgba(0, 139, 119, 0.3), 
+    rgba(0, 96, 81, 0.2), 
+    transparent
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--transition-smooth);
 }
 
 .sample-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(1.02);
   border-color: rgba(0, 139, 119, 0.46);
-  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 
+    0 18px 32px rgba(0, 0, 0, 0.4),
+    0 8px 16px rgba(0, 139, 119, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.sample-card:hover::before {
+  opacity: 1;
 }
 
 .sample-card.active {
   border-color: rgba(0, 139, 119, 0.62);
-  box-shadow: 0 14px 24px rgba(0, 139, 119, 0.26);
+  box-shadow: 
+    0 14px 24px rgba(0, 139, 119, 0.26),
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    0 0 16px rgba(0, 139, 119, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: rgba(24, 32, 30, 0.95);
+}
+
+.sample-card.active::before {
+  opacity: 1;
 }
 
 .sample-card .thumb {
@@ -532,9 +755,10 @@ input:focus-visible {
 #cameraFeed {
   width: 100%;
   aspect-ratio: 16 / 9;
+  max-height: 400px;
   border-radius: var(--radius-sm);
   background: rgba(28, 28, 28, 0.9);
-  object-fit: cover;
+  object-fit: contain;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -601,13 +825,26 @@ input:focus-visible {
 .result-figure {
   position: relative;
   flex: 1;
-  min-height: clamp(340px, 52vh, 540px);
+  min-height: clamp(340px, 45vh, 600px);
+  max-height: 700px;
+  aspect-ratio: 16 / 9;
   border-radius: var(--radius-md);
   background: rgba(30, 30, 30, 0.95);
   display: grid;
   place-items: center;
   overflow: hidden;
   cursor: zoom-in;
+  transition: box-shadow var(--transition-smooth);
+  box-shadow: 
+    inset 0 2px 8px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.result-figure:hover {
+  box-shadow: 
+    inset 0 2px 8px rgba(0, 0, 0, 0.3),
+    0 8px 24px rgba(0, 139, 119, 0.2),
+    0 0 32px rgba(0, 139, 119, 0.15);
 }
 
 .result-figure::after {
@@ -617,6 +854,17 @@ input:focus-visible {
   border-radius: var(--radius-sm);
   border: 1px solid rgba(0, 139, 119, 0.28);
   pointer-events: none;
+  box-shadow: 
+    inset 0 0 16px rgba(0, 139, 119, 0.1),
+    0 0 8px rgba(0, 139, 119, 0.05);
+  transition: border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+
+.result-figure:hover::after {
+  border-color: rgba(0, 139, 119, 0.4);
+  box-shadow: 
+    inset 0 0 24px rgba(0, 139, 119, 0.15),
+    0 0 16px rgba(0, 139, 119, 0.1);
 }
 
 #resultImage {
@@ -663,6 +911,39 @@ input:focus-visible {
   grid-template-columns: auto 1fr;
   gap: 16px;
   align-items: start;
+  transition: all var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.insight-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(0, 139, 119, 0.4), 
+    transparent
+  );
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-smooth);
+}
+
+.insight-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 12px 24px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+.insight-card:hover::before {
+  transform: scaleX(1);
 }
 
 .insight-card .icon {
@@ -973,6 +1254,35 @@ input:focus-visible {
 .lightbox-close:hover {
   transform: rotate(6deg);
   border-color: rgba(0, 139, 119, 0.5);
+}
+
+/* Responsive - Ultrawide optimizations */
+@media (min-width: 1920px) {
+  .layout {
+    max-width: 1800px;
+    margin: 0 auto;
+  }
+  
+  .container {
+    max-width: 1800px;
+  }
+}
+
+@media (min-width: 2560px) {
+  .layout {
+    max-width: 1800px;
+  }
+  
+  .container {
+    max-width: 1800px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
 }
 
 @media (max-width: 980px) {
