@@ -21,6 +21,7 @@ const API_CONFIG = {
     exchangeDisconnect: '/api/exchange/disconnect',
     guardrails: '/api/guardrails',
     strategy: '/api/strategy',
+    testMode: '/api/test-mode', // Endpoint específico para modo teste
     auth: {
       signup: '/api/auth/signup',
       login: '/api/auth/login',
@@ -54,7 +55,8 @@ let state = {
   user: null,
   isAuthenticated: false,
   notifications: [],
-  messages: []
+  messages: [],
+  testMode: false
 };
 
 // ============================================================================
@@ -89,6 +91,7 @@ const elements = {
   apiKeyInput: document.getElementById('apiKeyInput'),
   apiSecretInput: document.getElementById('apiSecretInput'),
   testnetCheckbox: document.getElementById('testnetCheckbox'),
+  testModeCheckbox: document.getElementById('testModeCheckbox'),
   connectExchangeBtn: document.getElementById('connectExchangeBtn'),
   exchangeStatus: document.getElementById('exchangeStatus'),
   dailyStopLossInput: document.getElementById('dailyStopLossInput'),
@@ -235,7 +238,18 @@ async function apiCall(endpoint, options = {}) {
     });
     
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
+      let errorData = {};
+      try {
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          errorData = await response.json();
+        } else {
+          const text = await response.text();
+          errorData = { message: text || response.statusText };
+        }
+      } catch (e) {
+        errorData = { message: response.statusText };
+      }
       
       // Handle 401 Unauthorized - clear tokens and redirect to login
       if (response.status === 401) {
@@ -246,7 +260,36 @@ async function apiCall(endpoint, options = {}) {
         updateUserUI();
       }
       
-      throw new Error(errorData.detail || errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      // Handle validation errors (422) - FastAPI format
+      let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+      
+      if (errorData.detail) {
+        // FastAPI validation errors can be a string, array, or object
+        if (typeof errorData.detail === 'string') {
+          errorMessage = errorData.detail;
+        } else if (Array.isArray(errorData.detail)) {
+          // Array of validation errors
+          const messages = errorData.detail.map(err => {
+            if (typeof err === 'string') return err;
+            if (err.msg) return err.msg;
+            if (err.loc && err.msg) return `${err.loc.join('.')}: ${err.msg}`;
+            return JSON.stringify(err);
+          });
+          errorMessage = messages.join(', ');
+        } else if (typeof errorData.detail === 'object') {
+          errorMessage = JSON.stringify(errorData.detail);
+        }
+      } else if (errorData.message) {
+        errorMessage = typeof errorData.message === 'string' 
+          ? errorData.message 
+          : JSON.stringify(errorData.message);
+      } else if (errorData.error) {
+        errorMessage = typeof errorData.error === 'string'
+          ? errorData.error
+          : JSON.stringify(errorData.error);
+      }
+      
+      throw new Error(errorMessage);
     }
     
     return await response.json();
@@ -258,12 +301,25 @@ async function apiCall(endpoint, options = {}) {
 
 async function getAgentStatus() {
   try {
-    const data = await apiCall(API_CONFIG.endpoints.agentStatus);
+    let data;
+    if (state.testMode) {
+      // Return mock data in test mode
+      data = getMockAgentStatus();
+    } else {
+      data = await apiCall(API_CONFIG.endpoints.agentStatus);
+    }
     state.agentStatus = data;
     updateAgentStatusUI();
     return data;
   } catch (error) {
     console.error('Failed to fetch agent status:', error);
+    // In test mode, use mock data even on error
+    if (state.testMode) {
+      const mockData = getMockAgentStatus();
+      state.agentStatus = mockData;
+      updateAgentStatusUI();
+      return mockData;
+    }
     // Don't update UI on error to preserve last known state
     return null;
   }
@@ -273,7 +329,13 @@ let previousTradesCount = 0;
 
 async function getOpenTrades() {
   try {
-    const data = await apiCall(API_CONFIG.endpoints.tradesOpen);
+    let data;
+    if (state.testMode) {
+      // Return mock data in test mode
+      data = getMockOpenTrades();
+    } else {
+      data = await apiCall(API_CONFIG.endpoints.tradesOpen);
+    }
     const newTrades = Array.isArray(data) ? data : [];
     const currentCount = newTrades.length;
     
@@ -296,13 +358,26 @@ async function getOpenTrades() {
     return state.openTrades;
   } catch (error) {
     console.error('Failed to fetch open trades:', error);
+    // In test mode, use mock data even on error
+    if (state.testMode) {
+      const mockData = getMockOpenTrades();
+      state.openTrades = mockData;
+      updatePositionsUI();
+      return mockData;
+    }
     return [];
   }
 }
 
 async function getLogs(limit = 50) {
   try {
-    const data = await apiCall(`${API_CONFIG.endpoints.logs}?limit=${limit}`);
+    let data;
+    if (state.testMode) {
+      // Return mock data in test mode
+      data = getMockLogs();
+    } else {
+      data = await apiCall(`${API_CONFIG.endpoints.logs}?limit=${limit}`);
+    }
     const newLogs = Array.isArray(data) ? data : [];
     
     // Only add new logs
@@ -380,26 +455,143 @@ async function controlAgent(action, closeAllPositions = false) {
   }
 }
 
-async function connectExchange(exchange, apiKey, apiSecret, testnet = false) {
+// Mock data for test mode
+const getMockExchangeStatus = () => ({
+  connected: true,
+  exchange: 'test',
+  test_mode: true,
+  balance: {
+    total: 10000.00,
+    available: 8500.00,
+    in_positions: 1500.00,
+    currency: 'USD'
+  }
+});
+
+const getMockAgentStatus = () => ({
+  agent_status: 'stopped',
+  test_mode: true,
+  last_update: new Date().toISOString()
+});
+
+const getMockOpenTrades = () => [
+  {
+    id: 'test-1',
+    symbol: 'BTC',
+    side: 'long',
+    quantity: 0.1,
+    entry_price: 45000.00,
+    current_price: 45250.00,
+    pnl: 25.00,
+    pnl_percent: 0.56,
+    test_mode: true
+  },
+  {
+    id: 'test-2',
+    symbol: 'ETH',
+    side: 'long',
+    quantity: 2.5,
+    entry_price: 2800.00,
+    current_price: 2825.00,
+    pnl: 62.50,
+    pnl_percent: 0.89,
+    test_mode: true
+  },
+  {
+    id: 'test-3',
+    symbol: 'AAPL',
+    side: 'long',
+    quantity: 10,
+    entry_price: 175.50,
+    current_price: 176.25,
+    pnl: 7.50,
+    pnl_percent: 0.43,
+    test_mode: true
+  }
+]);
+
+const getMockLogs = () => [
+  {
+    id: Date.now() - 1000,
+    timestamp: new Date().toISOString(),
+    level: 'INFO',
+    message: 'Test mode activated - Using demo data',
+    test_mode: true
+  },
+  {
+    id: Date.now() - 2000,
+    timestamp: new Date(Date.now() - 2000).toISOString(),
+    level: 'INFO',
+    message: 'Guard-rails configured for test symbols: BTC, ETH, AAPL',
+    test_mode: true
+  },
+  {
+    id: Date.now() - 3000,
+    timestamp: new Date(Date.now() - 3000).toISOString(),
+    level: 'INFO',
+    message: 'Strategy set to: moderate',
+    test_mode: true
+  }
+];
+
+async function connectExchange(exchange, apiKey, apiSecret, testnet = false, testMode = false) {
   try {
-    const data = await apiCall(API_CONFIG.endpoints.exchangeConnect, {
-      method: 'POST',
-      body: JSON.stringify({
-        exchange,
-        api_key: apiKey,
-        api_secret: apiSecret,
-        testnet
-      })
-    });
+    let data;
     
-    showToast('Exchange connected successfully', 'success');
+    if (testMode) {
+      // Test mode - use mock data or call test mode endpoint
+      try {
+        // Try to call test mode endpoint first
+        data = await apiCall(API_CONFIG.endpoints.testMode, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'connect',
+            test_mode: true
+          })
+        });
+      } catch (error) {
+        // If endpoint doesn't exist, use mock data
+        console.log('Test mode endpoint not available, using mock data');
+        data = getMockExchangeStatus();
+      }
+    } else {
+      // Normal mode - require API keys
+      const requestBody = {
+        exchange: exchange || 'binance',
+        test_mode: false,
+        testnet: testnet || false
+      };
+      
+      // Only add API keys if provided
+      if (apiKey && apiKey.trim()) {
+        requestBody.api_key = apiKey.trim();
+      }
+      if (apiSecret && apiSecret.trim()) {
+        requestBody.api_secret = apiSecret.trim();
+      }
+      
+      data = await apiCall(API_CONFIG.endpoints.exchangeConnect, {
+        method: 'POST',
+        body: JSON.stringify(requestBody)
+      });
+    }
+    
+    state.testMode = testMode;
+    
+    // Save test mode state to localStorage
+    localStorage.setItem('finsight_test_mode', testMode.toString());
+    
+    const modeText = testMode ? 'Test Mode' : (testnet ? 'Testnet' : 'Live');
+    showToast(`Exchange connected successfully (${modeText})`, 'success');
     
     // Add notification
     addNotification({
       id: Date.now(),
       type: 'success',
-      title: 'Exchange Connected',
-      message: `Successfully connected to ${exchange}${testnet ? ' (Testnet)' : ''}. You can now start trading.`,
+      title: testMode ? 'Test Mode Activated' : 'Exchange Connected',
+      message: testMode 
+        ? 'Test mode is active. Using demo data with BTC, ETH, and AAPL for analysis.'
+        : `Successfully connected to ${exchange}${testnet ? ' (Testnet)' : ''}. You can now start trading.`,
       timestamp: new Date(),
       read: false
     });
@@ -408,13 +600,38 @@ async function connectExchange(exchange, apiKey, apiSecret, testnet = false) {
     addMessage({
       id: Date.now(),
       type: 'info',
-      title: 'Exchange Connection Established',
-      text: `Your ${exchange}${testnet ? ' testnet' : ''} connection is active. Make sure your API keys have the necessary permissions for trading.`,
+      title: testMode ? 'Test Mode Active' : 'Exchange Connection Established',
+      text: testMode
+        ? 'You are now in test mode. The system will use demo data (BTC, ETH, AAPL) for analysis. No real trading will occur.'
+        : `Your ${exchange}${testnet ? ' testnet' : ''} connection is active. Make sure your API keys have the necessary permissions for trading.`,
       timestamp: new Date(),
       read: false
     });
     
     await getExchangeStatus();
+    
+    // In test mode, initialize mock data
+    if (testMode) {
+      // Initialize mock data for all endpoints
+      await Promise.all([
+        getAgentStatus(),
+        getOpenTrades(),
+        getLogs()
+      ]);
+      
+      // Add a log entry for test mode activation
+      const testLog = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        level: 'INFO',
+        message: `Exchange connected: test (Test Mode Active)`,
+        test_mode: true
+      };
+      state.logs.unshift(testLog);
+      if (state.logs.length > 50) state.logs.pop();
+      updateTerminalUI();
+    }
+    
     // Update dashboard visibility after connecting exchange
     updateDashboardVisibility();
     return data;
@@ -426,7 +643,13 @@ async function connectExchange(exchange, apiKey, apiSecret, testnet = false) {
 
 async function getExchangeStatus() {
   try {
-    const data = await apiCall(API_CONFIG.endpoints.exchangeStatus);
+    let data;
+    if (state.testMode) {
+      // Return mock data in test mode
+      data = getMockExchangeStatus();
+    } else {
+      data = await apiCall(API_CONFIG.endpoints.exchangeStatus);
+    }
     state.exchangeStatus = data;
     updateExchangeStatusUI();
     // Update dashboard visibility when exchange status changes
@@ -434,6 +657,14 @@ async function getExchangeStatus() {
     return data;
   } catch (error) {
     console.error('Failed to fetch exchange status:', error);
+    // In test mode, use mock data even on error
+    if (state.testMode) {
+      const mockData = getMockExchangeStatus();
+      state.exchangeStatus = mockData;
+      updateExchangeStatusUI();
+      updateDashboardVisibility();
+      return mockData;
+    }
     return null;
   }
 }
@@ -452,20 +683,34 @@ async function getGuardrails() {
 
 async function saveGuardrails(guardrails) {
   try {
+    // If in test mode, override allowed_symbols with test tickers
+    const guardrailsToSave = { ...guardrails };
+    if (state.testMode) {
+      guardrailsToSave.allowed_symbols = ['BTC', 'ETH', 'AAPL'];
+      guardrailsToSave.test_mode = true;
+    }
+    
     const data = await apiCall(API_CONFIG.endpoints.guardrails, {
       method: 'POST',
-      body: JSON.stringify(guardrails)
+      body: JSON.stringify(guardrailsToSave)
     });
     
     state.guardrails = data;
-    showToast('Guard-rails saved successfully', 'success');
+    
+    const message = state.testMode 
+      ? 'Guard-rails saved successfully (Test Mode: BTC, ETH, AAPL)'
+      : 'Guard-rails saved successfully';
+    
+    showToast(message, 'success');
     
     // Add notification
     addNotification({
       id: Date.now(),
       type: 'info',
       title: 'Guard-Rails Updated',
-      message: 'Your risk management parameters have been saved successfully.',
+      message: state.testMode
+        ? 'Risk management parameters saved. Using test symbols: BTC, ETH, AAPL'
+        : 'Your risk management parameters have been saved successfully.',
       timestamp: new Date(),
       read: false
     });
@@ -780,6 +1025,16 @@ function updateExchangeStatusUI() {
 function updateGuardrailsUI() {
   if (!state.guardrails) return;
   
+  // Check if test mode is active from guardrails response
+  if (state.guardrails.test_mode !== undefined) {
+    state.testMode = state.guardrails.test_mode;
+    if (elements.testModeCheckbox) {
+      elements.testModeCheckbox.checked = state.testMode;
+      // Trigger change event to update UI
+      elements.testModeCheckbox.dispatchEvent(new Event('change'));
+    }
+  }
+  
   if (elements.dailyStopLossInput) {
     elements.dailyStopLossInput.value = state.guardrails.daily_stop_loss || '';
   }
@@ -787,9 +1042,16 @@ function updateGuardrailsUI() {
     elements.maxLeverageInput.value = state.guardrails.max_leverage || '';
   }
   if (elements.allowedSymbolsInput) {
-    elements.allowedSymbolsInput.value = Array.isArray(state.guardrails.allowed_symbols) 
-      ? state.guardrails.allowed_symbols.join(', ') 
-      : '';
+    // If in test mode, show test symbols
+    if (state.testMode) {
+      elements.allowedSymbolsInput.value = 'BTC, ETH, AAPL';
+      elements.allowedSymbolsInput.disabled = true;
+    } else {
+      elements.allowedSymbolsInput.value = Array.isArray(state.guardrails.allowed_symbols) 
+        ? state.guardrails.allowed_symbols.join(', ') 
+        : '';
+      elements.allowedSymbolsInput.disabled = false;
+    }
   }
   if (elements.maxPositionSizeInput) {
     elements.maxPositionSizeInput.value = state.guardrails.max_position_size || '';
@@ -898,22 +1160,92 @@ function setupEventHandlers() {
     });
   }
   
+  // Settings - Test Mode Toggle
+  if (elements.testModeCheckbox) {
+    const testModeIndicator = document.getElementById('testModeIndicator');
+    
+    const updateTestModeUI = (testMode) => {
+      state.testMode = testMode;
+      
+      // Show/hide test mode indicator
+      if (testModeIndicator) {
+        testModeIndicator.style.display = testMode ? 'inline-flex' : 'none';
+      }
+      
+      // Disable/enable API input fields based on test mode
+      if (elements.apiKeyInput && elements.apiSecretInput && elements.exchangeSelect) {
+        elements.apiKeyInput.disabled = testMode;
+        elements.apiSecretInput.disabled = testMode;
+        elements.exchangeSelect.disabled = testMode;
+        
+        if (testMode) {
+          elements.apiKeyInput.value = '';
+          elements.apiSecretInput.value = '';
+          elements.apiKeyInput.placeholder = 'Not required in test mode';
+          elements.apiSecretInput.placeholder = 'Not required in test mode';
+        } else {
+          elements.apiKeyInput.placeholder = 'Enter API key';
+          elements.apiSecretInput.placeholder = 'Enter API secret';
+        }
+      }
+      
+      // Update allowed symbols input if in test mode
+      if (elements.allowedSymbolsInput) {
+        if (testMode) {
+          elements.allowedSymbolsInput.value = 'BTC, ETH, AAPL';
+          elements.allowedSymbolsInput.disabled = true;
+        } else {
+          elements.allowedSymbolsInput.disabled = false;
+        }
+      }
+    };
+    
+    elements.testModeCheckbox.addEventListener('change', (e) => {
+      updateTestModeUI(e.target.checked);
+    });
+    
+    // Initialize test mode state from localStorage or checkbox state
+    const savedTestMode = localStorage.getItem('finsight_test_mode');
+    if (savedTestMode === 'true' || elements.testModeCheckbox.checked) {
+      elements.testModeCheckbox.checked = true;
+      updateTestModeUI(true);
+    }
+  }
+  
   // Settings - Exchange connection
   if (elements.connectExchangeBtn) {
     elements.connectExchangeBtn.addEventListener('click', async () => {
-      const exchange = elements.exchangeSelect.value;
-      const apiKey = elements.apiKeyInput.value.trim();
-      const apiSecret = elements.apiSecretInput.value.trim();
-      const testnet = elements.testnetCheckbox.checked;
+      const testMode = elements.testModeCheckbox?.checked || false;
       
-      if (!apiKey || !apiSecret) {
-        showToast('Please enter API key and secret', 'error');
-        return;
+      // Only get values if not in test mode
+      let exchange, apiKey, apiSecret, testnet;
+      
+      if (testMode) {
+        // Test mode - use defaults, no API keys needed
+        exchange = 'test';
+        apiKey = '';
+        apiSecret = '';
+        testnet = false;
+      } else {
+        // Normal mode - get values and validate
+        exchange = elements.exchangeSelect?.value || 'binance';
+        apiKey = elements.apiKeyInput?.value?.trim() || '';
+        apiSecret = elements.apiSecretInput?.value?.trim() || '';
+        testnet = elements.testnetCheckbox?.checked || false;
+        
+        // Validate API keys
+        if (!apiKey || !apiSecret) {
+          showToast('Please enter API key and secret', 'error');
+          return;
+        }
       }
       
-      showLoading('Connecting Exchange', 'Please wait...');
+      showLoading(testMode ? 'Activating Test Mode' : 'Connecting Exchange', 'Please wait...');
       try {
-        await connectExchange(exchange, apiKey, apiSecret, testnet);
+        await connectExchange(exchange, apiKey, apiSecret, testnet, testMode);
+      } catch (error) {
+        // Error is already handled in connectExchange, but we can add additional context
+        console.error('Exchange connection error:', error);
       } finally {
         hideLoading();
       }
@@ -923,13 +1255,21 @@ function setupEventHandlers() {
   // Settings - Guard-rails
   if (elements.saveGuardrailsBtn) {
     elements.saveGuardrailsBtn.addEventListener('click', async () => {
+      // Use test symbols if in test mode, otherwise use input value
+      let allowedSymbols;
+      if (state.testMode) {
+        allowedSymbols = ['BTC', 'ETH', 'AAPL'];
+      } else {
+        allowedSymbols = elements.allowedSymbolsInput.value
+          .split(',')
+          .map(s => s.trim())
+          .filter(s => s.length > 0);
+      }
+      
       const guardrails = {
         daily_stop_loss: parseFloat(elements.dailyStopLossInput.value) || 0,
         max_leverage: parseFloat(elements.maxLeverageInput.value) || 1.0,
-        allowed_symbols: elements.allowedSymbolsInput.value
-          .split(',')
-          .map(s => s.trim())
-          .filter(s => s.length > 0),
+        allowed_symbols: allowedSymbols,
         max_position_size: parseFloat(elements.maxPositionSizeInput.value) || undefined
       };
       
@@ -1268,8 +1608,48 @@ function updateProfileUI() {
   
   if (state.user.avatar_url) {
     // Add timestamp to force refresh if image was just uploaded
-    const avatarUrl = state.user.avatar_url + (state.user.avatar_url.includes('?') ? '&' : '?') + 't=' + Date.now();
+    let avatarUrl = state.user.avatar_url.trim();
+    
+    // Check if it's a data URL (data:image/... or data:image/jpeg;base64,...)
+    const isDataUrl = avatarUrl.startsWith('data:');
+    
+    if (!isDataUrl) {
+      // Ensure URL is absolute (only for HTTP/HTTPS URLs)
+      if (!avatarUrl.startsWith('http://') && !avatarUrl.startsWith('https://')) {
+        // If it's a relative URL, make it absolute
+        if (avatarUrl.startsWith('/')) {
+          avatarUrl = API_CONFIG.baseURL.replace(/\/$/, '') + avatarUrl;
+        } else {
+          avatarUrl = API_CONFIG.baseURL.replace(/\/$/, '') + '/' + avatarUrl;
+        }
+      }
+      
+      // Add cache-busting timestamp (only for HTTP URLs, not data URLs)
+      avatarUrl = avatarUrl + (avatarUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+    }
+    // Data URLs are used as-is, no modification needed
+    
     if (profileAvatarImg) {
+      // Remove previous error handler to avoid duplicates
+      profileAvatarImg.onerror = null;
+      
+      // Add error handler - if image fails to load, show icon instead
+      profileAvatarImg.onerror = function() {
+        console.error('Failed to load avatar image:', avatarUrl);
+        this.style.display = 'none';
+        if (profileAvatarIcon) {
+          profileAvatarIcon.style.display = 'block';
+        }
+      };
+      
+      // Add load handler to ensure image is shown when loaded
+      profileAvatarImg.onload = function() {
+        this.style.display = 'block';
+        if (profileAvatarIcon) {
+          profileAvatarIcon.style.display = 'none';
+        }
+      };
+      
       profileAvatarImg.src = avatarUrl;
       profileAvatarImg.style.display = 'block';
     }
@@ -1279,6 +1659,7 @@ function updateProfileUI() {
   } else {
     if (profileAvatarImg) {
       profileAvatarImg.style.display = 'none';
+      profileAvatarImg.onerror = null;
     }
     if (profileAvatarIcon) {
       profileAvatarIcon.style.display = 'block';
@@ -1347,20 +1728,65 @@ function updateUserUI() {
   
   // Use avatar image if available, otherwise use initials
   if (state.user.avatar_url) {
-    // Add timestamp to force refresh if image was just uploaded
-    const avatarUrl = state.user.avatar_url + (state.user.avatar_url.includes('?') ? '&' : '?') + 't=' + Date.now();
+    // Check if it's a data URL (data:image/... or data:image/jpeg;base64,...)
+    let avatarUrl = state.user.avatar_url.trim();
+    const isDataUrl = avatarUrl.startsWith('data:');
     
-    if (avatarImg) {
-      avatarImg.src = avatarUrl;
-      avatarImg.style.display = 'block';
+    if (!isDataUrl) {
+      // Ensure URL is absolute (only for HTTP/HTTPS URLs)
+      if (!avatarUrl.startsWith('http://') && !avatarUrl.startsWith('https://')) {
+        // If it's a relative URL, make it absolute
+        if (avatarUrl.startsWith('/')) {
+          avatarUrl = API_CONFIG.baseURL.replace(/\/$/, '') + avatarUrl;
+        } else {
+          avatarUrl = API_CONFIG.baseURL.replace(/\/$/, '') + '/' + avatarUrl;
+        }
+      }
+      
+      // Add cache-busting timestamp (only for HTTP URLs, not data URLs)
+      avatarUrl = avatarUrl + (avatarUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
     }
-    if (avatarIcon) avatarIcon.style.display = 'none';
+    // Data URLs are used as-is, no modification needed
     
-    if (menuAvatarImg) {
-      menuAvatarImg.src = avatarUrl;
-      menuAvatarImg.style.display = 'block';
+    // Helper function to handle image load/error
+    const setupAvatarImage = (imgElement, iconElement) => {
+      if (!imgElement) return;
+      
+      // Remove previous handlers
+      imgElement.onerror = null;
+      imgElement.onload = null;
+      
+      // Error handler - fallback to icon
+      imgElement.onerror = function() {
+        console.error('Failed to load avatar image:', avatarUrl);
+        this.style.display = 'none';
+        if (iconElement) {
+          iconElement.style.display = 'flex';
+          iconElement.textContent = getInitials(state.user.full_name || state.user.name || 'U');
+        }
+      };
+      
+      // Load handler - ensure image is shown
+      imgElement.onload = function() {
+        this.style.display = 'block';
+        if (iconElement) {
+          iconElement.style.display = 'none';
+        }
+      };
+      
+      imgElement.src = avatarUrl;
+      imgElement.style.display = 'block';
+    };
+    
+    setupAvatarImage(avatarImg, avatarIcon);
+    setupAvatarImage(menuAvatarImg, menuAvatarIcon);
+    
+    if (avatarIcon && avatarImg && avatarImg.complete && avatarImg.naturalHeight !== 0) {
+      avatarIcon.style.display = 'none';
     }
-    if (menuAvatarIcon) menuAvatarIcon.style.display = 'none';
+    if (menuAvatarIcon && menuAvatarImg && menuAvatarImg.complete && menuAvatarImg.naturalHeight !== 0) {
+      menuAvatarIcon.style.display = 'none';
+    }
   } else {
     // Use initials if no picture
     if (avatarIcon) {
@@ -1835,6 +2261,54 @@ if (document.readyState === 'loading') {
     }
   });
 
+  // Custom number input buttons handler
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.number-input-btn')) {
+      const button = e.target.closest('.number-input-btn');
+      const inputId = button.getAttribute('data-input');
+      const action = button.getAttribute('data-action');
+      const input = document.getElementById(inputId);
+      
+      if (input && input.type === 'number') {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const currentValue = parseFloat(input.value) || 0;
+        const step = parseFloat(input.getAttribute('step')) || 1;
+        const min = parseFloat(input.getAttribute('min')) || 0;
+        const max = parseFloat(input.getAttribute('max')) || Infinity;
+        
+        let newValue = currentValue;
+        
+        if (action === 'increment') {
+          newValue = Math.min(currentValue + step, max);
+        } else if (action === 'decrement') {
+          newValue = Math.max(currentValue - step, min);
+        }
+        
+        // Format the value based on step (if step is decimal, keep decimals)
+        if (step < 1) {
+          const decimals = step.toString().split('.')[1]?.length || 1;
+          newValue = parseFloat(newValue.toFixed(decimals));
+        } else {
+          newValue = Math.round(newValue);
+        }
+        
+        input.value = newValue;
+        
+        // Trigger input and change events to ensure form validation works
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        
+        // Visual feedback
+        button.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          button.style.transform = '';
+        }, 150);
+      }
+    }
+  });
+
   // Load notifications from localStorage
   const storedNotifications = localStorage.getItem('finsight_notifications');
   if (storedNotifications) {
@@ -2135,14 +2609,53 @@ async function handleAvatarUpload(event) {
       
       const data = await response.json();
       
+      console.log('Avatar upload response:', data); // Debug log
+      
       // Update state with new avatar URL
+      // Handle different response formats: {user: {...}} or {avatar_url: "...", ...}
       if (data.user) {
+        // If avatar_url is a relative HTTP URL, make it absolute
+        // But don't modify data URLs (data:image/...) - use them as-is
+        if (data.user.avatar_url && 
+            !data.user.avatar_url.startsWith('http://') && 
+            !data.user.avatar_url.startsWith('https://') &&
+            !data.user.avatar_url.startsWith('data:')) {
+          // If it starts with /, it's relative to the base URL
+          if (data.user.avatar_url.startsWith('/')) {
+            data.user.avatar_url = API_CONFIG.baseURL.replace(/\/$/, '') + data.user.avatar_url;
+          } else {
+            // Otherwise, it's relative to the API base URL
+            data.user.avatar_url = API_CONFIG.baseURL.replace(/\/$/, '') + '/' + data.user.avatar_url;
+          }
+        }
+        
         state.user = data.user;
         localStorage.setItem('finsight_user', JSON.stringify(state.user));
         
-        // Update UI immediately - these functions will add timestamp to force refresh
+        console.log('Updated user state:', state.user); // Debug log
+        
+        // Update UI immediately - these functions will handle data URLs correctly
         updateUserUI();
         updateProfileUI();
+      } else if (data.avatar_url) {
+        // Handle case where response is {avatar_url: "...", ...}
+        let avatarUrl = data.avatar_url;
+        
+        // Only convert to absolute if it's not already absolute and not a data URL
+        if (!avatarUrl.startsWith('http://') && 
+            !avatarUrl.startsWith('https://') &&
+            !avatarUrl.startsWith('data:')) {
+          avatarUrl = API_CONFIG.baseURL.replace(/\/$/, '') + (avatarUrl.startsWith('/') ? '' : '/') + avatarUrl;
+        }
+        
+        state.user = { ...state.user, avatar_url: avatarUrl };
+        localStorage.setItem('finsight_user', JSON.stringify(state.user));
+        
+        updateUserUI();
+        updateProfileUI();
+      } else {
+        console.warn('Unexpected response format:', data);
+        showToast('Avatar uploaded but response format unexpected', 'warning');
       }
       
       showToast('Avatar uploaded successfully', 'success');

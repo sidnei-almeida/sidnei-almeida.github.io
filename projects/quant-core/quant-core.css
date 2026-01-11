@@ -964,6 +964,138 @@ body::before {
   color: var(--text-muted);
 }
 
+.form-control:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--bg-secondary);
+}
+
+.form-control:disabled::placeholder {
+  color: var(--text-muted);
+}
+
+.form-help-text {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: var(--spacing-xs);
+  display: block;
+}
+
+/* Test Mode Indicator */
+.test-mode-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--border-radius);
+  color: var(--accent-warning);
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  margin-left: var(--spacing-md);
+}
+
+.test-mode-indicator svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+/* Custom Number Input - Hide native spinners and add custom buttons */
+.form-control[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield; /* Standard */
+}
+
+/* Hide spinner buttons in WebKit browsers (Chrome, Safari, Edge) */
+.form-control[type="number"]::-webkit-outer-spin-button,
+.form-control[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Number Input Wrapper with Custom Buttons */
+.number-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.number-input-wrapper .form-control[type="number"] {
+  padding-right: 60px; /* Space for custom buttons */
+  width: 100%;
+}
+
+.number-input-buttons {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 1;
+}
+
+.number-input-btn {
+  width: 24px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.number-input-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.number-input-btn:active {
+  background: var(--glass-active);
+  transform: scale(0.95);
+}
+
+.number-input-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.number-input-btn:disabled:hover {
+  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.number-input-btn svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none; /* Prevent SVG from intercepting clicks */
+}
+
+/* Ensure buttons are clickable even when input is focused */
+.number-input-wrapper:focus-within .number-input-buttons {
+  z-index: 2;
+}
+
 .checkbox-label, .radio-label {
   display: flex;
   align-items: center;
