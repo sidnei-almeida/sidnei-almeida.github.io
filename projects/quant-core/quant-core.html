@@ -11,9 +11,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <!-- Render API Utils -->
   <script src="../../assets/js/render-api-utils.js"></script>
   
@@ -37,8 +34,10 @@
       <div class="sidebar-header">
         <div class="logo">
           <div class="logo-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            <!-- FinSight Logo - Star/Insight symbol -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L14 8L20 10L14 12L12 18L10 12L4 10L10 8L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <circle cx="12" cy="10" r="2" fill="currentColor"/>
             </svg>
           </div>
           <span class="logo-text">FinSight</span>
@@ -47,15 +46,26 @@
       
       <nav class="sidebar-nav">
         <button class="nav-item active" data-view="dashboard">
-          <i class="fas fa-th-large"></i>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <rect x="11" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <rect x="3" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <rect x="11" y="11" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          </svg>
           <span>Dashboard</span>
         </button>
         <button class="nav-item" data-view="settings">
-          <i class="fas fa-cog"></i>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M10 2.5V5.5M10 14.5V17.5M17.5 10H14.5M5.5 10H2.5M15.66 4.34L13.54 6.46M6.46 13.54L4.34 15.66M15.66 15.66L13.54 13.54M6.46 6.46L4.34 4.34" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
           <span>Settings</span>
         </button>
         <button class="nav-item" data-view="profile">
-          <i class="fas fa-user"></i>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M4 17C4 13 6.5 11 10 11C13.5 11 16 13 16 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
           <span>Profile</span>
         </button>
       </nav>
@@ -69,22 +79,75 @@
           <h1 class="header-title">Dashboard</h1>
         </div>
         <div class="header-right">
-          <button class="header-btn" id="notificationsBtn" title="Notifications">
-            <i class="fas fa-bell"></i>
-            <span class="badge" id="notificationBadge" style="display: none;">0</span>
-          </button>
-          <button class="header-btn" id="messagesBtn" title="Messages">
-            <i class="fas fa-envelope"></i>
-          </button>
+          <div style="position: relative;">
+            <button class="header-btn" id="notificationsBtn" title="Notifications" onclick="toggleNotificationsMenu()">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 2C7.24 2 5 4.24 5 7V12L3 15H17L15 12V7C15 4.24 12.76 2 10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <path d="M8 17H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <span class="badge" id="notificationBadge" style="display: none;">0</span>
+            </button>
+            <div class="notifications-menu" id="notificationsMenu" style="display: none;">
+              <div class="notifications-menu-header">
+                <h3>Notifications</h3>
+                <button class="notifications-clear-btn" id="clearAllNotificationsBtn" title="Clear all">
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6H16M7 6V4C7 3.45 7.45 3 8 3H12C12.55 3 13 3.45 13 4V6M9 10V15M11 10V15M6 6L5 17H15L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="notifications-list" id="notificationsList">
+                <div class="notification-empty">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.3; margin-bottom: var(--spacing-md);">
+                    <path d="M10 2C7.24 2 5 4.24 5 7V12L3 15H17L15 12V7C15 4.24 12.76 2 10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M8 17H12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  </svg>
+                  <p>No notifications</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="position: relative;">
+            <button class="header-btn" id="messagesBtn" title="System Messages" onclick="toggleMessagesMenu()">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 5H17V13H6L3 16V5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+              <span class="badge" id="messageBadge" style="display: none;">0</span>
+            </button>
+            <div class="messages-menu" id="messagesMenu" style="display: none;">
+              <div class="messages-menu-header">
+                <h3>System Messages</h3>
+                <button class="messages-clear-btn" id="clearAllMessagesBtn" title="Clear all">
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6H16M7 6V4C7 3.45 7.45 3 8 3H12C12.55 3 13 3.45 13 4V6M9 10V15M11 10V15M6 6L5 17H15L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="messages-list" id="messagesList">
+                <div class="message-empty">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.3; margin-bottom: var(--spacing-md);">
+                    <path d="M3 5H21V19H7L3 23V5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  </svg>
+                  <p>No messages</p>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="user-avatar" id="userAvatar" title="User Profile" onclick="toggleUserMenu()">
             <img id="userAvatarImg" src="" alt="User" style="display: none; width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-            <i class="fas fa-user" id="userAvatarIcon"></i>
+            <svg id="userAvatarIcon" width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <path d="M4 17C4 13 6.5 11 10 11C13.5 11 16 13 16 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
           </div>
           <div class="user-menu" id="userMenu" style="display: none;">
             <div class="user-menu-header" id="userMenuHeader">
               <div class="user-menu-avatar">
                 <img id="userMenuAvatarImg" src="" alt="User" style="display: none; width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-                <i class="fas fa-user" id="userMenuAvatarIcon"></i>
+                <svg id="userMenuAvatarIcon" width="24" height="24" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                  <path d="M4 17C4 13 6.5 11 10 11C13.5 11 16 13 16 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
               </div>
               <div class="user-menu-info">
                 <div class="user-menu-name" id="userMenuName">Not signed in</div>
@@ -93,15 +156,25 @@
             </div>
             <div class="user-menu-actions">
               <button class="user-menu-btn" id="signInBtn" onclick="openLoginModal()">
-                <i class="fas fa-sign-in-alt"></i>
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 15L13 10L8 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M13 10H2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
                 <span>Sign in</span>
               </button>
               <button class="user-menu-btn" id="signUpBtn" onclick="openSignUpModal()">
-                <i class="fas fa-user-plus"></i>
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                  <path d="M4 17C4 13 6.5 11 10 11C13.5 11 16 13 16 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M15 5L15 11M12 8L18 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
                 <span>Sign up</span>
               </button>
               <button class="user-menu-btn" id="signOutBtn" onclick="handleSignOut()" style="display: none;">
-                <i class="fas fa-sign-out-alt"></i>
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 15L7 10L12 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M7 10H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
                 <span>Sign out</span>
               </button>
             </div>
@@ -111,32 +184,100 @@
 
       <!-- Dashboard View -->
       <div id="dashboardView" class="view active">
+        <!-- Welcome/Onboarding Section (shown when no data) -->
+        <div id="onboardingSection" class="onboarding-section" style="display: none;">
+          <div class="onboarding-card">
+            <div class="onboarding-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L14 8L20 10L14 12L12 18L10 12L4 10L10 8L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <circle cx="12" cy="10" r="2" fill="currentColor"/>
+              </svg>
+            </div>
+            <h2 class="onboarding-title">Welcome to FinSight</h2>
+            <p class="onboarding-description">Get started by connecting your exchange and configuring your trading parameters.</p>
+            <div class="onboarding-steps">
+              <div class="onboarding-step">
+                <div class="step-number">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L15 8L22 9L17 13L18 20L12 17L6 20L7 13L2 9L9 8L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="step-content">
+                  <h3>Connect Exchange</h3>
+                  <p>Go to <strong>Settings</strong> and connect your exchange (Binance, Alpaca, or Bybit) using your API credentials.</p>
+                  <button class="btn-primary btn-outline" onclick="switchView('settings')">
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                      <path d="M10 2.5V5.5M10 14.5V17.5M17.5 10H14.5M5.5 10H2.5M15.66 4.34L13.54 6.46M6.46 13.54L4.34 15.66M15.66 15.66L13.54 13.54M6.46 6.46L4.34 4.34" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <span>Go to Settings</span>
+                  </button>
+                </div>
+              </div>
+              <div class="onboarding-step">
+                <div class="step-number">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 9H15M9 12H15M9 15H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="step-content">
+                  <h3>Configure Guard-Rails</h3>
+                  <p>Set your risk management parameters: daily stop loss, max leverage, and allowed trading symbols.</p>
+                </div>
+              </div>
+              <div class="onboarding-step">
+                <div class="step-number">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 12L7 8L11 12L17 6L21 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 18L7 14L11 18L17 12L21 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="step-content">
+                  <h3>Set Strategy</h3>
+                  <p>Choose your trading strategy mode: Conservative, Moderate, or Aggressive.</p>
+                </div>
+              </div>
+              <div class="onboarding-step">
+                <div class="step-number">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="step-content">
+                  <h3>Start Trading</h3>
+                  <p>Once configured, you can start the trading agent and monitor your positions in real-time.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Balance Section -->
-        <section class="balance-section">
+        <section class="balance-section" id="balanceSection" style="display: none;">
           <div class="balance-card">
             <div class="balance-label">BALANCE</div>
-            <div class="balance-amount" id="balanceAmount">$ 0.00</div>
+            <div class="balance-amount" id="balanceAmount">—</div>
             <div class="balance-change" id="balanceChange">
-              <span class="change-amount">+ $ 0.00</span>
-              <span class="change-percent">(0.00%)</span>
+              <span class="change-amount">—</span>
+              <span class="change-percent">(—)</span>
             </div>
           </div>
           
-          <button class="stop-system-btn" id="stopSystemBtn">
-            <i class="fas fa-stop"></i>
-            <span>STOP THE SYSTEM</span>
+          <button class="stop-system-btn" id="stopSystemBtn" style="display: none;">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="6" width="8" height="8" rx="1" fill="currentColor"/>
+            </svg>
+            <span>TERMINATE SESSION</span>
           </button>
         </section>
 
         <!-- Open Positions Section -->
-        <section class="positions-section">
+        <section class="positions-section" id="positionsSection" style="display: none;">
           <h2 class="section-title">OPEN POSITIONS</h2>
           <div class="positions-grid" id="positionsGrid">
             <!-- Positions will be dynamically inserted here -->
-            <div class="empty-state">
-              <i class="fas fa-chart-line"></i>
-              <p>No open positions</p>
-            </div>
           </div>
         </section>
 
@@ -146,18 +287,29 @@
             <h2 class="section-title">LIVE TERMINAL (Logs)</h2>
             <div class="terminal-controls">
               <button class="terminal-btn" id="clearLogsBtn" title="Clear logs">
-                <i class="fas fa-trash"></i>
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 6H16M7 6V4C7 3.45 7.45 3 8 3H12C12.55 3 13 3.45 13 4V6M9 10V15M11 10V15M6 6L5 17H15L14 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
               </button>
               <button class="terminal-btn" id="pauseLogsBtn" title="Pause/Resume">
-                <i class="fas fa-pause"></i>
+                <svg id="pauseIcon" width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="7" y="4" width="2" height="12" rx="1" fill="currentColor"/>
+                  <rect x="11" y="4" width="2" height="12" rx="1" fill="currentColor"/>
+                </svg>
+                <svg id="playIcon" width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                  <path d="M7 5L15 10L7 15V5Z" fill="currentColor"/>
+                </svg>
               </button>
             </div>
           </div>
           <div class="terminal-content" id="terminalContent">
-            <div class="terminal-line">
-              <span class="terminal-timestamp">[2023-03-03 13:35:28]</span>
-              <span class="terminal-level">INFO</span>
-              <span class="terminal-message">FinSight initialized. Waiting for connection...</span>
+            <div class="empty-state" style="padding: var(--spacing-xl); text-align: center;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.3; margin-bottom: var(--spacing-md);">
+                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M7 9L11 12L7 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 9H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <p style="color: var(--text-tertiary); font-size: 13px;">Waiting for logs...</p>
             </div>
           </div>
         </section>
@@ -247,12 +399,126 @@
       <div id="profileView" class="view">
         <h2 class="view-title">Profile</h2>
         <div class="profile-content">
+          <!-- Profile Info Card -->
           <div class="profile-card">
-            <div class="profile-avatar-large">
-              <i class="fas fa-user"></i>
+            <div class="profile-avatar-section">
+              <div class="profile-avatar-large" id="profileAvatarLarge">
+                <img id="profileAvatarImg" src="" alt="Profile" style="display: none; width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                <svg id="profileAvatarIcon" width="48" height="48" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                  <path d="M4 17C4 13 6.5 11 10 11C13.5 11 16 13 16 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <label for="profileImageInput" class="profile-avatar-upload-btn">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14 2H6C4.9 2 4 2.9 4 4V16C4 17.1 4.9 18 6 18H14C15.1 18 16 17.1 16 16V4C16 2.9 15.1 2 14 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  <path d="M12 6H8M10 4V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span>Change Photo</span>
+              </label>
+              <input type="file" id="profileImageInput" accept="image/*" style="display: none;">
             </div>
-            <h3>User Profile</h3>
-            <p>Manage your account settings and preferences</p>
+            <h3 id="profileName">Not signed in</h3>
+            <p id="profileEmail"></p>
+            <p id="profileBio" style="display: none; margin-top: var(--spacing-md);"></p>
+            <div id="profileDetails" style="display: none; margin-top: var(--spacing-md); font-size: 13px; color: var(--text-tertiary);">
+              <p id="profileLocation"></p>
+              <p id="profileWebsite"></p>
+            </div>
+          </div>
+
+          <!-- Profile Edit Form -->
+          <div class="profile-card" id="profileEditCard" style="display: none;">
+            <h3 class="settings-card-title">Edit Profile</h3>
+            <form id="profileEditForm">
+              <div class="form-group">
+                <label for="editProfileName">Full Name</label>
+                <input type="text" id="editProfileName" class="form-control" placeholder="John Doe" required>
+              </div>
+              <div class="form-group">
+                <label for="editProfileEmail">Email</label>
+                <input type="email" id="editProfileEmail" class="form-control" placeholder="your@email.com" required>
+              </div>
+              <div class="form-group">
+                <label for="editProfileBio">Bio (Optional)</label>
+                <textarea id="editProfileBio" class="form-control" rows="3" placeholder="Tell us about yourself..."></textarea>
+              </div>
+              <div class="form-group">
+                <label for="editProfileLocation">Location (Optional)</label>
+                <input type="text" id="editProfileLocation" class="form-control" placeholder="City, Country">
+              </div>
+              <div class="form-group">
+                <label for="editProfileWebsite">Website (Optional)</label>
+                <input type="url" id="editProfileWebsite" class="form-control" placeholder="https://yourwebsite.com">
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-primary btn-outline" id="cancelEditProfileBtn">Cancel</button>
+                <button type="submit" class="btn-primary" id="saveProfileBtn">
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17 3L7 13L3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <span>Save Changes</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Profile Actions -->
+          <div class="profile-card" id="profileActionsCard">
+            <h3 class="settings-card-title">Account Actions</h3>
+            <div class="profile-actions">
+              <button class="btn-primary btn-outline" id="editProfileBtn" onclick="showEditProfile()">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11 4H4C3.45 4 3 4.45 3 5V16C3 16.55 3.45 17 4 17H15C15.55 17 16 16.55 16 16V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M14.5 2.5L17.5 5.5L10.5 12.5H7.5V9.5L14.5 2.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Edit Profile</span>
+              </button>
+              <button class="btn-primary btn-outline" id="changePasswordBtn" onclick="showChangePasswordModal()">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="9" width="14" height="8" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                  <path d="M7 9V6C7 4.34 8.34 3 10 3C11.66 3 13 4.34 13 6V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span>Change Password</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change Password Modal -->
+      <div id="changePasswordModal" class="auth-modal" style="display: none;">
+        <div class="auth-modal-content">
+          <div class="auth-modal-header">
+            <h2>Change Password</h2>
+            <button class="auth-modal-close" onclick="closeChangePasswordModal()">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="auth-modal-body">
+            <form id="changePasswordForm" onsubmit="handleChangePassword(event)">
+              <div class="form-group">
+                <label for="currentPassword">Current Password</label>
+                <input type="password" id="currentPassword" class="form-control" placeholder="Enter current password" required>
+              </div>
+              <div class="form-group">
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" class="form-control" placeholder="Enter new password" required minlength="8">
+                <small class="form-hint">Minimum 8 characters</small>
+              </div>
+              <div class="form-group">
+                <label for="confirmNewPassword">Confirm New Password</label>
+                <input type="password" id="confirmNewPassword" class="form-control" placeholder="Confirm new password" required>
+              </div>
+              <button type="submit" class="btn-primary btn-full">
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M17 3L7 13L3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Update Password</span>
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -265,7 +531,9 @@
       <div class="auth-modal-header">
         <h2>Sign In</h2>
         <button class="auth-modal-close" onclick="closeLoginModal()">
-          <i class="fas fa-times"></i>
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
         </button>
       </div>
       <div class="auth-modal-body">
@@ -279,7 +547,10 @@
             <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
           </div>
           <button type="submit" class="btn-primary btn-full">
-            <i class="fas fa-sign-in-alt"></i>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 15L13 10L8 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13 10H2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
             <span>Sign In</span>
           </button>
         </form>
@@ -296,7 +567,9 @@
       <div class="auth-modal-header">
         <h2>Create Account</h2>
         <button class="auth-modal-close" onclick="closeSignUpModal()">
-          <i class="fas fa-times"></i>
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 5L15 15M15 5L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
         </button>
       </div>
       <div class="auth-modal-body">
@@ -319,7 +592,11 @@
             <input type="password" id="signUpPasswordConfirm" class="form-control" placeholder="Confirm your password" required>
           </div>
           <button type="submit" class="btn-primary btn-full">
-            <i class="fas fa-user-plus"></i>
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="7" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <path d="M4 17C4 13 6.5 11 10 11C13.5 11 16 13 16 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M15 5L15 11M12 8L18 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
             <span>Create Account</span>
           </button>
         </form>
