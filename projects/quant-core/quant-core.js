@@ -519,7 +519,17 @@ async function apiCall(endpoint, options = {}) {
     
     return await response.json();
   } catch (error) {
-    console.error(`API Error (${endpoint}):`, error);
+    // Only log non-network errors to avoid console spam
+    const isNetworkError = error.message && (
+      error.message.includes('NetworkError') ||
+      error.message.includes('CORS') ||
+      error.message.includes('Failed to fetch') ||
+      error.message.includes('network')
+    );
+    
+    if (!isNetworkError) {
+      console.error(`API Error (${endpoint}):`, error);
+    }
     throw error;
   }
 }
@@ -1170,8 +1180,20 @@ async function saveStrategy(mode) {
     
     return state.strategy;
   } catch (error) {
-    const errorMsg = error.message || 'Failed to save strategy';
-    showToast(`Failed to save strategy: ${errorMsg}`, 'error');
+    // Check if it's a network/CORS error
+    const isNetworkError = error.message && (
+      error.message.includes('NetworkError') ||
+      error.message.includes('CORS') ||
+      error.message.includes('Failed to fetch') ||
+      error.message.includes('network')
+    );
+    
+    if (isNetworkError) {
+      showToast('Network error. Please check your connection and try again.', 'error');
+    } else {
+      const errorMsg = error.message || 'Failed to save strategy';
+      showToast(`Failed to save strategy: ${errorMsg}`, 'error');
+    }
     throw error;
   }
 }
