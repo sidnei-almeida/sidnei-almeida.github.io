@@ -1126,28 +1126,52 @@ async function getStrategy() {
 
 async function saveStrategy(mode) {
   try {
+    // Normalize mode to lowercase to ensure consistency
+    const normalizedMode = mode.toLowerCase();
+    
     const data = await apiCall(API_CONFIG.endpoints.strategy, {
       method: 'POST',
-      body: JSON.stringify({ mode })
+      body: JSON.stringify({ mode: normalizedMode })
     });
     
-    state.strategy = data;
+    // Ensure we use the mode that was sent, not what API returned (in case API modifies it)
+    state.strategy = { ...data, mode: normalizedMode };
     persistStrategy(); // Persist to localStorage
+    updateStrategyUI(); // Update UI to reflect the saved strategy
+    
     showToast('Strategy saved successfully', 'success');
+    
+    // Capitalize mode name properly for display
+    const modeDisplay = normalizedMode.charAt(0).toUpperCase() + normalizedMode.slice(1);
     
     // Add notification
     addNotification({
       id: Date.now(),
       type: 'info',
       title: 'Strategy Updated',
-      message: `Trading strategy set to ${mode.charAt(0).toUpperCase() + mode.slice(1)} mode.`,
+      message: `Trading strategy set to ${modeDisplay} mode.`,
       timestamp: new Date(),
       read: false
     });
     
-    return data;
+    // Add log entry in test mode
+    if (state.testMode) {
+      const logEntry = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        level: 'INFO',
+        message: `🤖 FinSight AI: Strategy set to ${modeDisplay} mode`,
+        test_mode: true
+      };
+      state.logs.unshift(logEntry);
+      if (state.logs.length > 100) state.logs.pop();
+      updateTerminalUI();
+    }
+    
+    return state.strategy;
   } catch (error) {
-    showToast(`Failed to save strategy: ${error.message}`, 'error');
+    const errorMsg = error.message || 'Failed to save strategy';
+    showToast(`Failed to save strategy: ${errorMsg}`, 'error');
     throw error;
   }
 }
@@ -1967,7 +1991,27 @@ async function handleSignUp(event) {
     setTimeout(() => openLoginModal(), 500);
   } catch (error) {
     console.error('Sign up error:', error);
-    const errorMessage = error.message || 'Failed to create account. Please try again.';
+    let errorMessage = 'Failed to create account. Please try again.';
+    
+    // Handle specific error cases
+    if (error.message) {
+      const msg = error.message.toLowerCase();
+      if (msg.includes('email') && (msg.includes('already') || msg.includes('exists') || msg.includes('registered'))) {
+        errorMessage = 'This email is already registered. Please sign in instead.';
+      } else if (msg.includes('email') && msg.includes('invalid')) {
+        errorMessage = 'Please enter a valid email address.';
+      } else if (msg.includes('password')) {
+        errorMessage = 'Password does not meet requirements. Please use at least 8 characters.';
+      } else if (msg.includes('validation') || msg.includes('field required')) {
+        errorMessage = 'Please fill in all required fields correctly.';
+      } else if (msg.includes('network') || msg.includes('fetch')) {
+        errorMessage = 'Network error. Please check your connection and try again.';
+      } else {
+        // Use a more user-friendly version of the error
+        errorMessage = error.message.replace(/HTTP \d+: /, '').replace(/Error: /, '');
+      }
+    }
+    
     showToast(errorMessage, 'error');
     hideLoading();
   }
@@ -2011,7 +2055,33 @@ async function handleLogin(event) {
     hideLoading();
   } catch (error) {
     console.error('Login error:', error);
-    const errorMessage = error.message || 'Invalid email or password';
+    let errorMessage = 'Invalid email or password';
+    
+    // Handle specific error cases
+    if (error.message) {
+      const msg = error.message.toLowerCase();
+      if (msg.includes('not found') || msg.includes('does not exist') || msg.includes('user not found')) {
+        errorMessage = 'Account not found. Please check your email or sign up for a new account.';
+      } else if (msg.includes('password') && (msg.includes('incorrect') || msg.includes('wrong') || msg.includes('invalid'))) {
+        errorMessage = 'Incorrect password. Please try again.';
+      } else if (msg.includes('email') && msg.includes('invalid')) {
+        errorMessage = 'Please enter a valid email address.';
+      } else if (msg.includes('unauthorized') || msg.includes('401')) {
+        errorMessage = 'Invalid email or password. Please try again.';
+      } else if (msg.includes('network') || msg.includes('fetch')) {
+        errorMessage = 'Network error. Please check your connection and try again.';
+      } else if (msg.includes('validation') || msg.includes('field required')) {
+        errorMessage = 'Please fill in all required fields.';
+      } else {
+        // Use a more user-friendly version of the error
+        errorMessage = error.message.replace(/HTTP \d+: /, '').replace(/Error: /, '');
+        // If it's still too technical, use default
+        if (errorMessage.length > 100 || errorMessage.includes('detail') || errorMessage.includes('{"')) {
+          errorMessage = 'Invalid email or password';
+        }
+      }
+    }
+    
     showToast(errorMessage, 'error');
     hideLoading();
   }
