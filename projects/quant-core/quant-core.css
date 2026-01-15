@@ -218,6 +218,7 @@ body::before {
   z-index: 100;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  transition: transform var(--transition-base);
 }
 
 .sidebar-header {
@@ -229,6 +230,11 @@ body::before {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
+  transition: transform var(--transition-base);
+}
+
+.logo:hover {
+  transform: scale(1.02);
 }
 
 .logo-icon {
@@ -308,11 +314,16 @@ body::before {
 .nav-item:hover {
   background: var(--glass-hover);
   color: var(--text-primary);
+  transform: translateX(4px);
 }
 
 .nav-item.active {
   background: var(--glass-active);
   color: var(--accent-primary);
+}
+
+.nav-item:active {
+  transform: translateX(2px) scale(0.98);
 }
 
 .nav-item.active::before {
@@ -398,6 +409,11 @@ body::before {
   background: var(--glass-hover);
   color: var(--accent-primary);
   border-color: var(--accent-primary);
+  transform: scale(1.05);
+}
+
+.header-btn:active {
+  transform: scale(0.95);
 }
 
 .badge {
@@ -442,6 +458,11 @@ body::before {
 .user-avatar:hover {
   transform: scale(1.05);
   border-color: var(--accent-primary);
+  box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.1);
+}
+
+.user-avatar:active {
+  transform: scale(1.02);
 }
 
 /* ============================================================================
@@ -453,12 +474,17 @@ body::before {
   flex: 1;
   padding: var(--spacing-xl);
   overflow-y: auto;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .view.active {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xl);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .view-title {
@@ -487,6 +513,12 @@ body::before {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--shadow-lg);
   position: relative;
   overflow: hidden;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.balance-section:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--shadow-xl);
 }
 
 .balance-card {
@@ -585,6 +617,11 @@ body::before {
   border-radius: var(--border-radius-xl);
   border: 1px solid var(--glass-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--shadow-lg);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.positions-section:hover {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--shadow-xl);
 }
 
 .section-title {
@@ -640,23 +677,42 @@ body::before {
 .position-card:hover {
   border-color: var(--accent-primary);
   background: var(--bg-card);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .position-card:hover::before {
   transform: scaleY(1);
 }
 
+.position-card:active {
+  transform: translateY(0);
+}
+
 .position-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--border-radius);
-  background: var(--gradient-primary);
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
   flex-shrink: 0;
-  color: var(--text-inverse);
+  color: var(--text-primary);
+  opacity: 0.95;
+  transition: opacity var(--transition-base);
+}
+
+.position-card:hover .position-icon {
+  opacity: 1;
+}
+
+.position-icon svg {
+  width: 100%;
+  height: 100%;
+  transition: transform var(--transition-base);
+}
+
+.position-card:hover .position-icon svg {
+  transform: scale(1.05);
 }
 
 .position-info {
@@ -918,6 +974,17 @@ body::before {
   border-radius: var(--border-radius-xl);
   border: 1px solid var(--glass-border);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--shadow-lg);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.settings-card:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--shadow-xl);
+}
+
+.settings-card:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--shadow-xl);
 }
 
 .settings-card-title {
@@ -1227,6 +1294,15 @@ body::before {
   gap: var(--spacing-sm);
 }
 
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 229, 255, 0.15);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
 .btn-primary svg {
   width: 16px;
   height: 16px;
@@ -1239,10 +1315,12 @@ body::before {
   background: var(--bg-tertiary);
   border-color: var(--accent-primary);
   color: var(--accent-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 229, 255, 0.15);
 }
 
 .btn-primary:active {
-  transform: scale(0.98);
+  transform: translateY(0) scale(0.98);
 }
 
 .status-message {
@@ -2464,7 +2542,7 @@ body::before {
 }
 
 /* ============================================================================
-   Animations
+   Elegant Animations - Professional & Refined
    ============================================================================ */
 
 @keyframes fadeIn {
@@ -2476,13 +2554,203 @@ body::before {
   }
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes numberCount {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* View transitions */
+.view {
+  animation: fadeIn 300ms ease-out;
+}
+
 .view.active > * {
-  animation: fadeIn var(--transition-slow) ease-out;
+  animation: fadeInUp 400ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.view.active > *:nth-child(1) { animation-delay: 50ms; }
+.view.active > *:nth-child(2) { animation-delay: 100ms; }
+.view.active > *:nth-child(3) { animation-delay: 150ms; }
+.view.active > *:nth-child(4) { animation-delay: 200ms; }
+.view.active > *:nth-child(5) { animation-delay: 250ms; }
+
+/* Balance section animation */
+.balance-section {
+  animation: fadeInUp 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.balance-amount {
+  animation: numberCount 600ms cubic-bezier(0.16, 1, 0.3, 1) 200ms backwards;
+}
+
+.balance-change {
+  animation: fadeInUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 300ms backwards;
+}
+
+/* Position cards - no animation on updates, only initial load */
+.positions-grid {
+  /* Removed animation to keep positions always visible */
+}
+
+/* Sidebar navigation */
+.sidebar {
+  animation: slideInRight 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-item {
+  animation: fadeInUp 300ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.nav-item:nth-child(1) { animation-delay: 100ms; }
+.nav-item:nth-child(2) { animation-delay: 150ms; }
+.nav-item:nth-child(3) { animation-delay: 200ms; }
+
+/* Header animation */
+.header {
+  animation: fadeInDown 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Settings cards */
+.settings-card {
+  animation: fadeInUp 400ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.settings-card:nth-child(1) { animation-delay: 50ms; }
+.settings-card:nth-child(2) { animation-delay: 100ms; }
+.settings-card:nth-child(3) { animation-delay: 150ms; }
+
+/* Terminal animation */
+.terminal-section {
+  animation: fadeInUp 500ms cubic-bezier(0.16, 1, 0.3, 1) 200ms backwards;
+  transition: box-shadow var(--transition-base);
+}
+
+.terminal-section:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Onboarding animation */
+.onboarding-card {
+  animation: scaleIn 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.onboarding-step {
+  animation: fadeInUp 400ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.onboarding-step:nth-child(1) { animation-delay: 100ms; }
+.onboarding-step:nth-child(2) { animation-delay: 200ms; }
+.onboarding-step:nth-child(3) { animation-delay: 300ms; }
+.onboarding-step:nth-child(4) { animation-delay: 400ms; }
+
+/* Modal animations */
+.auth-modal {
+  animation: fadeIn 200ms ease-out;
+}
+
+.auth-modal-content {
+  animation: scaleIn 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Toast animations */
+.toast {
+  animation: slideInRight 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Menu dropdowns */
+.user-menu,
+.notifications-menu,
+.messages-menu {
+  animation: fadeInDown 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Loading spinner enhancement */
+.loading-spinner {
+  animation: spin 0.8s linear infinite, pulse 2s ease-in-out infinite;
 }
 
 /* Smooth transitions */
 * {
-  transition-property: background-color, border-color, color, transform, box-shadow;
+  transition-property: background-color, border-color, color, transform, box-shadow, opacity;
   transition-duration: var(--transition-base);
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

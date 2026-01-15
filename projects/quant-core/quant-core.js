@@ -56,7 +56,52 @@ let state = {
   isAuthenticated: false,
   notifications: [],
   messages: [],
-  testMode: false
+  testMode: false,
+  // Simulation state for dynamic mock data
+  simulation: {
+    trades: [
+      {
+        id: 'test-1',
+        symbol: 'BTC',
+        side: 'long',
+        quantity: 0.1,
+        entry_price: 45000.00,
+        base_price: 45000.00, // Base price for simulation
+        current_price: 45250.00,
+        price_trend: 0.001, // Small upward trend
+        volatility: 0.02, // 2% volatility
+        test_mode: true
+      },
+      {
+        id: 'test-2',
+        symbol: 'ETH',
+        side: 'long',
+        quantity: 2.5,
+        entry_price: 2800.00,
+        base_price: 2800.00,
+        current_price: 2825.00,
+        price_trend: 0.0008,
+        volatility: 0.025,
+        test_mode: true
+      },
+      {
+        id: 'test-3',
+        symbol: 'AAPL',
+        side: 'long',
+        quantity: 10,
+        entry_price: 175.50,
+        base_price: 175.50,
+        current_price: 176.25,
+        price_trend: 0.0005,
+        volatility: 0.015,
+        test_mode: true
+      }
+    ],
+    baseBalance: 10000.00,
+    lastLogTime: Date.now(),
+    lastInsightTime: Date.now(),
+    insightCounter: 0
+  }
 };
 
 // ============================================================================
@@ -120,6 +165,122 @@ const elements = {
 // UTILITY FUNCTIONS
 // ============================================================================
 
+// ============================================================================
+// LOCALSTORAGE PERSISTENCE
+// ============================================================================
+
+function saveToLocalStorage(key, data) {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (error) {
+    console.error(`Failed to save ${key} to localStorage:`, error);
+  }
+}
+
+function loadFromLocalStorage(key) {
+  try {
+    const stored = localStorage.getItem(key);
+    return stored ? JSON.parse(stored) : null;
+  } catch (error) {
+    console.error(`Failed to load ${key} from localStorage:`, error);
+    return null;
+  }
+}
+
+function saveExchangeStatus() {
+  if (state.exchangeStatus) {
+    saveToLocalStorage('finsight_exchange_status', state.exchangeStatus);
+  }
+}
+
+function loadExchangeStatus() {
+  const saved = loadFromLocalStorage('finsight_exchange_status');
+  if (saved) {
+    state.exchangeStatus = saved;
+    updateExchangeStatusUI();
+    return true;
+  }
+  return false;
+}
+
+function persistGuardrails() {
+  if (state.guardrails) {
+    saveToLocalStorage('finsight_guardrails', state.guardrails);
+  }
+}
+
+function loadGuardrails() {
+  const saved = loadFromLocalStorage('finsight_guardrails');
+  if (saved) {
+    state.guardrails = saved;
+    updateGuardrailsUI();
+    return true;
+  }
+  return false;
+}
+
+function persistStrategy() {
+  if (state.strategy) {
+    saveToLocalStorage('finsight_strategy', state.strategy);
+  }
+}
+
+function loadStrategy() {
+  const saved = loadFromLocalStorage('finsight_strategy');
+  if (saved) {
+    state.strategy = saved;
+    updateStrategyUI();
+    return true;
+  }
+  return false;
+}
+
+function saveSettings() {
+  const settings = {
+    exchange: elements.exchangeSelect?.value || 'binance',
+    testnet: elements.testnetCheckbox?.checked || false,
+    testMode: state.testMode || false
+  };
+  saveToLocalStorage('finsight_settings', settings);
+}
+
+function loadSettings() {
+  const saved = loadFromLocalStorage('finsight_settings');
+  if (saved) {
+    if (elements.exchangeSelect && saved.exchange) {
+      elements.exchangeSelect.value = saved.exchange;
+    }
+    if (elements.testnetCheckbox) {
+      elements.testnetCheckbox.checked = saved.testnet || false;
+    }
+    if (elements.testModeCheckbox) {
+      const testMode = saved.testMode || false;
+      elements.testModeCheckbox.checked = testMode;
+      state.testMode = testMode;
+      // Update test mode UI if checkbox exists
+      if (testMode) {
+        const testModeIndicator = document.getElementById('testModeIndicator');
+        if (testModeIndicator) {
+          testModeIndicator.style.display = 'inline-flex';
+        }
+        if (elements.apiKeyInput && elements.apiSecretInput && elements.exchangeSelect) {
+          elements.apiKeyInput.disabled = true;
+          elements.apiSecretInput.disabled = true;
+          elements.exchangeSelect.disabled = true;
+          elements.apiKeyInput.placeholder = 'Not required in test mode';
+          elements.apiSecretInput.placeholder = 'Not required in test mode';
+        }
+        if (elements.allowedSymbolsInput) {
+          elements.allowedSymbolsInput.value = 'BTC, ETH, AAPL';
+          elements.allowedSymbolsInput.disabled = true;
+        }
+      }
+    }
+    return true;
+  }
+  return false;
+}
+
 function formatCurrency(value) {
   if (value === null || value === undefined || isNaN(value)) return '$ 0.00';
   return new Intl.NumberFormat('en-US', {
@@ -147,6 +308,70 @@ function formatDate(dateString) {
     minute: '2-digit',
     second: '2-digit'
   });
+}
+
+function getSymbolIcon(symbol) {
+  const symbolUpper = symbol.toUpperCase();
+  
+  // Bitcoin
+  if (symbolUpper.includes('BTC')) {
+    return `
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2Z" fill="#F7931A"/>
+        <path d="M16.5 10.5C16.7 9.4 16.1 8.6 14.8 8.3L15.4 6.1L14.1 5.8L13.5 8C13.1 7.9 12.7 7.8 12.3 7.7L12.9 5.5L11.6 5.2L11 7.4C10.7 7.3 10.4 7.3 10.1 7.2L10.7 5L9.4 4.7L8.8 6.9C8.5 6.9 8.2 6.9 7.9 7L7.3 4.8L6 4.5L6.6 6.7C6.3 6.8 6 6.9 5.8 7L4.5 6.7L4.2 7.8L5.4 8.1C5.3 8.4 5.2 8.7 5.2 9L4 9.3L4.3 10.4L5.5 10.1C5.5 10.6 5.6 11.1 5.7 11.5L4.5 11.8L4.8 12.9L6 12.6C6.4 13.4 7 14.1 7.8 14.6L6.9 16.5L8.1 16.8L9 14.9C9.4 15 9.8 15.1 10.2 15.1L9.6 17.3L10.9 17.6L11.5 15.4C11.9 15.5 12.3 15.5 12.7 15.6L12.1 17.8L13.4 18.1L14 15.9C15.8 16.1 17 15.6 17.4 14.1C17.7 13 17.4 12.3 16.7 11.8C17.2 11.4 17.5 10.8 17.3 10L16.5 10.5ZM15.1 13.8C14.9 15.1 13.2 15.6 11.8 15.8L12.4 13.6C13.8 13.4 15.3 13.1 15.1 13.8ZM15.4 11.2C15.2 12.4 13.7 12.8 12.5 13L11.9 15.2C13.1 15 14.6 14.6 15.4 11.2Z" fill="white"/>
+      </svg>
+    `;
+  }
+  
+  // Ethereum
+  if (symbolUpper.includes('ETH')) {
+    return `
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L5 12.5L12 16.5L19 12.5L12 2Z" fill="#627EEA"/>
+        <path d="M12 17.5L5 13.5L12 22L19 13.5L12 17.5Z" fill="#627EEA"/>
+      </svg>
+    `;
+  }
+  
+  // Solana
+  if (symbolUpper.includes('SOL')) {
+    const gradientId1 = `sol-grad-${symbolUpper}-1`;
+    const gradientId2 = `sol-grad-${symbolUpper}-2`;
+    return `
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="${gradientId1}" x1="12" y1="2" x2="12" y2="16.5" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#9945FF"/>
+            <stop offset="1" stop-color="#14F195"/>
+          </linearGradient>
+          <linearGradient id="${gradientId2}" x1="12" y1="7.5" x2="12" y2="22" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#9945FF"/>
+            <stop offset="1" stop-color="#14F195"/>
+          </linearGradient>
+        </defs>
+        <path d="M5.5 16.5L12 2L18.5 16.5H5.5Z" fill="url(#${gradientId1})"/>
+        <path d="M5.5 7.5L12 22L18.5 7.5H5.5Z" fill="url(#${gradientId2})"/>
+      </svg>
+    `;
+  }
+  
+  // Stock/Equity (AAPL, etc.)
+  if (symbolUpper.match(/^[A-Z]{1,5}$/)) {
+    return `
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 18H21V20H3V18ZM5 14H19L18 10H6L5 14ZM3 6V8H21V6H3ZM7 10H17L16.5 8H7.5L7 10Z" fill="currentColor"/>
+        <path d="M12 4L14 8H10L12 4Z" fill="currentColor"/>
+      </svg>
+    `;
+  }
+  
+  // Default/Generic
+  return `
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/>
+      <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  `;
 }
 
 function showLoading(title = 'Loading', message = 'Please wait...') {
@@ -307,6 +532,8 @@ async function getAgentStatus() {
       data = getMockAgentStatus();
     } else {
       data = await apiCall(API_CONFIG.endpoints.agentStatus);
+      // Debug: Log agent status to see all available fields
+      console.log('Agent Status from API:', data);
     }
     state.agentStatus = data;
     updateAgentStatusUI();
@@ -335,6 +562,10 @@ async function getOpenTrades() {
       data = getMockOpenTrades();
     } else {
       data = await apiCall(API_CONFIG.endpoints.tradesOpen);
+      // Debug: Log first trade to see all available fields
+      if (Array.isArray(data) && data.length > 0) {
+        console.log('Sample trade from API:', data[0]);
+      }
     }
     const newTrades = Array.isArray(data) ? data : [];
     const currentCount = newTrades.length;
@@ -379,6 +610,11 @@ async function getLogs(limit = 50) {
       data = await apiCall(`${API_CONFIG.endpoints.logs}?limit=${limit}`);
     }
     const newLogs = Array.isArray(data) ? data : [];
+    
+    // Debug: Log first log entry to see all available fields
+    if (newLogs.length > 0 && !state.testMode) {
+      console.log('Sample log entry from API:', newLogs[0]);
+    }
     
     // Only add new logs
     const existingIds = new Set(state.logs.map(log => log.id));
@@ -455,103 +691,229 @@ async function controlAgent(action, closeAllPositions = false) {
   }
 }
 
-// Mock data for test mode
-const getMockExchangeStatus = () => ({
-  connected: true,
-  exchange: 'test',
-  test_mode: true,
-  balance: {
-    total: 10000.00,
-    available: 8500.00,
-    in_positions: 1500.00,
-    currency: 'USD'
-  }
-});
+// ============================================================================
+// SIMULATION ENGINE - Dynamic Mock Data
+// ============================================================================
 
-const getMockAgentStatus = () => ({
-  agent_status: 'stopped',
-  test_mode: true,
-  last_update: new Date().toISOString()
-});
+function simulatePriceChange(trade) {
+  // Random walk with trend and volatility
+  const randomChange = (Math.random() - 0.5) * 2 * trade.volatility;
+  const trendChange = trade.price_trend;
+  const totalChange = trendChange + randomChange;
+  
+  // Update current price
+  trade.current_price = Math.max(0.01, trade.current_price * (1 + totalChange));
+  
+  // Calculate P&L
+  const priceDiff = trade.current_price - trade.entry_price;
+  const pnl = priceDiff * trade.quantity;
+  const pnlPercent = (priceDiff / trade.entry_price) * 100;
+  
+  trade.pnl = pnl;
+  trade.pnl_percent = pnlPercent;
+  
+  return trade;
+}
 
-const getMockOpenTrades = () => [
-  {
-    id: 'test-1',
-    symbol: 'BTC',
-    side: 'long',
-    quantity: 0.1,
-    entry_price: 45000.00,
-    current_price: 45250.00,
-    pnl: 25.00,
-    pnl_percent: 0.56,
-    test_mode: true
-  },
-  {
-    id: 'test-2',
-    symbol: 'ETH',
-    side: 'long',
-    quantity: 2.5,
-    entry_price: 2800.00,
-    current_price: 2825.00,
-    pnl: 62.50,
-    pnl_percent: 0.89,
-    test_mode: true
-  },
-  {
-    id: 'test-3',
-    symbol: 'AAPL',
-    side: 'long',
-    quantity: 10,
-    entry_price: 175.50,
-    current_price: 176.25,
-    pnl: 7.50,
-    pnl_percent: 0.43,
-    test_mode: true
+function generateInsight(trades) {
+  const totalPnl = trades.reduce((sum, t) => sum + (t.pnl || 0), 0);
+  const totalPnlPercent = trades.reduce((sum, t) => sum + (t.pnl_percent || 0), 0) / trades.length;
+  const worstTrade = trades.reduce((worst, t) => (t.pnl_percent < worst.pnl_percent ? t : worst), trades[0]);
+  const bestTrade = trades.reduce((best, t) => (t.pnl_percent > best.pnl_percent ? t : best), trades[0]);
+  
+  const insights = [];
+  
+  // Generate insights based on portfolio performance
+  if (totalPnlPercent < -3) {
+    insights.push({
+      level: 'WARNING',
+      message: `🤖 FinSight AI: Portfolio down ${totalPnlPercent.toFixed(2)}%. Consider reviewing positions.`,
+      insight: `Market volatility detected. ${worstTrade.symbol} showing ${worstTrade.pnl_percent.toFixed(2)}% loss.`
+    });
+  } else if (totalPnlPercent > 3) {
+    insights.push({
+      level: 'INFO',
+      message: `🤖 FinSight AI: Portfolio performing well: +${totalPnlPercent.toFixed(2)}%`,
+      insight: `${bestTrade.symbol} leading gains at +${bestTrade.pnl_percent.toFixed(2)}%. Consider taking partial profits.`
+    });
   }
-]);
+  
+  // Check for individual position alerts
+  trades.forEach(trade => {
+    if (trade.pnl_percent < -5) {
+      insights.push({
+        level: 'WARNING',
+        message: `🤖 FinSight AI: ${trade.symbol} position down ${trade.pnl_percent.toFixed(2)}%`,
+        insight: `Consider stop-loss activation for ${trade.symbol}. Current loss: ${formatCurrency(Math.abs(trade.pnl))}`
+      });
+    } else if (trade.pnl_percent > 5) {
+      insights.push({
+        level: 'INFO',
+        message: `🤖 FinSight AI: ${trade.symbol} showing strong gains: +${trade.pnl_percent.toFixed(2)}%`,
+        insight: `${trade.symbol} up ${formatCurrency(trade.pnl)}. Consider trailing stop to protect profits.`
+      });
+    }
+  });
+  
+  return insights;
+}
 
-const getMockLogs = () => [
-  {
-    id: Date.now() - 1000,
-    timestamp: new Date().toISOString(),
-    level: 'INFO',
-    message: 'Test mode activated - Using demo data',
-    test_mode: true
-  },
-  {
-    id: Date.now() - 2000,
-    timestamp: new Date(Date.now() - 2000).toISOString(),
-    level: 'INFO',
-    message: 'Guard-rails configured for test symbols: BTC, ETH, AAPL',
-    test_mode: true
-  },
-  {
-    id: Date.now() - 3000,
-    timestamp: new Date(Date.now() - 3000).toISOString(),
-    level: 'INFO',
-    message: 'Strategy set to: moderate',
-    test_mode: true
+function generateMarketLog(trades) {
+  const now = Date.now();
+  const timeSinceLastLog = now - state.simulation.lastLogTime;
+  
+  // Generate log every 10-15 seconds
+  if (timeSinceLastLog < 10000) {
+    return null;
   }
-];
+  
+  state.simulation.lastLogTime = now;
+  
+  const randomTrade = trades[Math.floor(Math.random() * trades.length)];
+  const priceChange = randomTrade.current_price - randomTrade.base_price;
+  const priceChangePercent = (priceChange / randomTrade.base_price) * 100;
+  
+  const logTypes = [
+    {
+      level: 'INFO',
+      message: `🤖 FinSight AI: ${randomTrade.symbol} price update: ${formatCurrency(randomTrade.current_price)} (${priceChangePercent >= 0 ? '+' : ''}${priceChangePercent.toFixed(2)}%)`
+    },
+    {
+      level: 'TRADE',
+      message: `🤖 FinSight AI: Position ${randomTrade.symbol}: ${randomTrade.pnl >= 0 ? 'Profit' : 'Loss'} of ${formatCurrency(Math.abs(randomTrade.pnl))} (${randomTrade.pnl_percent >= 0 ? '+' : ''}${randomTrade.pnl_percent.toFixed(2)}%)`
+    },
+    {
+      level: 'INFO',
+      message: `🤖 FinSight AI: Market monitoring active. ${trades.length} open position${trades.length > 1 ? 's' : ''}.`
+    }
+  ];
+  
+  return logTypes[Math.floor(Math.random() * logTypes.length)];
+}
+
+// Mock data for test mode - now dynamic
+const getMockExchangeStatus = () => {
+  // Calculate total P&L from simulated trades
+  const totalPnl = state.simulation.trades.reduce((sum, t) => sum + (t.pnl || 0), 0);
+  const totalBalance = state.simulation.baseBalance + totalPnl;
+  const inPositions = state.simulation.trades.reduce((sum, t) => sum + (t.entry_price * t.quantity), 0);
+  
+  return {
+    connected: true,
+    exchange: 'test',
+    test_mode: true,
+    balance: {
+      total: totalBalance,
+      available: Math.max(0, totalBalance - inPositions),
+      in_positions: inPositions,
+      currency: 'USD'
+    }
+  };
+};
+
+const getMockAgentStatus = () => {
+  const totalPnl = state.simulation.trades.reduce((sum, t) => sum + (t.pnl || 0), 0);
+  
+  return {
+    agent_status: state.agentStatus?.agent_status || 'stopped',
+    test_mode: true,
+    balance: state.simulation.baseBalance + totalPnl,
+    daily_pnl: totalPnl,
+    last_update: new Date().toISOString()
+  };
+};
+
+const getMockOpenTrades = () => {
+  // Update prices for all trades
+  state.simulation.trades.forEach(trade => {
+    simulatePriceChange(trade);
+  });
+  
+  // Return trades with calculated P&L
+  return state.simulation.trades.map(trade => ({
+    id: trade.id,
+    symbol: trade.symbol,
+    side: trade.side,
+    quantity: trade.quantity,
+    entry_price: trade.entry_price,
+    current_price: parseFloat(trade.current_price.toFixed(2)),
+    pnl: parseFloat(trade.pnl.toFixed(2)),
+    pnl_percent: parseFloat(trade.pnl_percent.toFixed(2)),
+    test_mode: true
+  }));
+};
+
+const getMockLogs = () => {
+  const logs = [];
+  const now = Date.now();
+  
+  // Generate market log
+  const marketLog = generateMarketLog(state.simulation.trades);
+  if (marketLog) {
+    logs.push({
+      id: now,
+      timestamp: new Date().toISOString(),
+      level: marketLog.level,
+      message: marketLog.message,
+      test_mode: true
+    });
+  }
+  
+  // Generate insights every 20-30 seconds
+  const timeSinceLastInsight = now - state.simulation.lastInsightTime;
+  if (timeSinceLastInsight > 20000) {
+    state.simulation.lastInsightTime = now;
+    const insights = generateInsight(state.simulation.trades);
+    
+    insights.forEach(insight => {
+      logs.push({
+        id: now + state.simulation.insightCounter++,
+        timestamp: new Date().toISOString(),
+        level: insight.level,
+        message: insight.message,
+        insight: insight.insight,
+        test_mode: true
+      });
+    });
+  }
+  
+  // Keep last 3 logs if no new ones generated
+  if (logs.length === 0 && state.logs.length > 0) {
+    return state.logs.slice(-3);
+  }
+  
+  return logs;
+};
 
 async function connectExchange(exchange, apiKey, apiSecret, testnet = false, testMode = false) {
   try {
     let data;
     
     if (testMode) {
-      // Test mode - use mock data or call test mode endpoint
-      try {
-        // Try to call test mode endpoint first
-        data = await apiCall(API_CONFIG.endpoints.testMode, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'connect',
-            test_mode: true
-          })
-        });
-      } catch (error) {
-        // If endpoint doesn't exist, use mock data
-        console.log('Test mode endpoint not available, using mock data');
+      // Test mode - use mock data (don't call API if not authenticated)
+      // Only try API if we have a token
+      const token = localStorage.getItem('finsight_token');
+      if (token) {
+        try {
+          // Try to call test mode endpoint first
+          data = await apiCall(API_CONFIG.endpoints.testMode, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: 'connect',
+              test_mode: true
+            })
+          });
+        } catch (error) {
+          // If endpoint doesn't exist or requires auth, use mock data
+          if (error.message && error.message.includes('Authentication')) {
+            console.log('Test mode requires authentication, using mock data');
+          } else {
+            console.log('Test mode endpoint not available, using mock data');
+          }
+          data = getMockExchangeStatus();
+        }
+      } else {
+        // No auth token, just use mock data
         data = getMockExchangeStatus();
       }
     } else {
@@ -580,6 +942,7 @@ async function connectExchange(exchange, apiKey, apiSecret, testnet = false, tes
     
     // Save test mode state to localStorage
     localStorage.setItem('finsight_test_mode', testMode.toString());
+    saveSettings(); // Persist all settings
     
     const modeText = testMode ? 'Test Mode' : (testnet ? 'Testnet' : 'Live');
     showToast(`Exchange connected successfully (${modeText})`, 'success');
@@ -651,6 +1014,7 @@ async function getExchangeStatus() {
       data = await apiCall(API_CONFIG.endpoints.exchangeStatus);
     }
     state.exchangeStatus = data;
+    saveExchangeStatus(); // Persist to localStorage
     updateExchangeStatusUI();
     // Update dashboard visibility when exchange status changes
     updateDashboardVisibility();
@@ -661,6 +1025,7 @@ async function getExchangeStatus() {
     if (state.testMode) {
       const mockData = getMockExchangeStatus();
       state.exchangeStatus = mockData;
+      saveExchangeStatus(); // Persist to localStorage
       updateExchangeStatusUI();
       updateDashboardVisibility();
       return mockData;
@@ -671,11 +1036,23 @@ async function getExchangeStatus() {
 
 async function getGuardrails() {
   try {
+    // Only fetch if we have exchange connected or are in test mode
+    if (!state.exchangeStatus?.connected && !state.testMode) {
+      console.log('Skipping guardrails fetch - no exchange connected');
+      return null;
+    }
+    
     const data = await apiCall(API_CONFIG.endpoints.guardrails);
     state.guardrails = data;
+    persistGuardrails(); // Persist to localStorage
     updateGuardrailsUI();
     return data;
   } catch (error) {
+    // Silently fail if it's a "Field required" error (API expects data we don't have yet)
+    if (error.message && error.message.includes('Field required')) {
+      console.log('Guardrails endpoint requires fields - skipping fetch');
+      return null;
+    }
     console.error('Failed to fetch guardrails:', error);
     return null;
   }
@@ -696,6 +1073,7 @@ async function saveGuardrails(guardrails) {
     });
     
     state.guardrails = data;
+    persistGuardrails(); // Persist to localStorage
     
     const message = state.testMode 
       ? 'Guard-rails saved successfully (Test Mode: BTC, ETH, AAPL)'
@@ -724,11 +1102,23 @@ async function saveGuardrails(guardrails) {
 
 async function getStrategy() {
   try {
+    // Only fetch if we have exchange connected or are in test mode
+    if (!state.exchangeStatus?.connected && !state.testMode) {
+      console.log('Skipping strategy fetch - no exchange connected');
+      return null;
+    }
+    
     const data = await apiCall(API_CONFIG.endpoints.strategy);
     state.strategy = data;
+    persistStrategy(); // Persist to localStorage
     updateStrategyUI();
     return data;
   } catch (error) {
+    // Silently fail if it's a "Field required" error (API expects data we don't have yet)
+    if (error.message && error.message.includes('Field required')) {
+      console.log('Strategy endpoint requires fields - skipping fetch');
+      return null;
+    }
     console.error('Failed to fetch strategy:', error);
     return null;
   }
@@ -742,6 +1132,7 @@ async function saveStrategy(mode) {
     });
     
     state.strategy = data;
+    persistStrategy(); // Persist to localStorage
     showToast('Strategy saved successfully', 'success');
     
     // Add notification
@@ -804,26 +1195,72 @@ function updateAgentStatusUI() {
     return;
   }
   
-  const { balance, daily_pnl, agent_status } = state.agentStatus;
+  let balance = state.agentStatus.balance;
+  let daily_pnl = state.agentStatus.daily_pnl;
+  const agent_status = state.agentStatus.agent_status;
   
-  // Update balance
+  // In test mode, calculate balance from exchangeStatus and open trades P&L
+  if (state.testMode && (balance === null || balance === undefined)) {
+    // Get base balance from exchangeStatus
+    const baseBalance = state.exchangeStatus && state.exchangeStatus.balance 
+      ? (state.exchangeStatus.balance.total || state.exchangeStatus.balance)
+      : 10000.00; // Default test balance
+    
+    // Calculate total P&L from open trades
+    const totalPnl = state.openTrades.reduce((sum, trade) => {
+      const tradePnl = trade.pnl || 0;
+      return sum + (isNaN(tradePnl) ? 0 : tradePnl);
+    }, 0);
+    
+    // Current balance = base balance + total P&L
+    balance = baseBalance + totalPnl;
+    
+    // Use total P&L as daily_pnl if not provided
+    if (daily_pnl === null || daily_pnl === undefined) {
+      daily_pnl = totalPnl;
+    }
+  }
+  
+  // Update balance with animation
   if (balance !== null && balance !== undefined && !isNaN(balance)) {
-    elements.balanceAmount.textContent = formatCurrency(balance);
+    const formattedBalance = formatCurrency(balance);
+    if (elements.balanceAmount.textContent !== formattedBalance) {
+      // Animate number change
+      elements.balanceAmount.style.opacity = '0';
+      elements.balanceAmount.style.transform = 'translateY(5px)';
+      setTimeout(() => {
+        elements.balanceAmount.textContent = formattedBalance;
+        elements.balanceAmount.style.transition = 'opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1)';
+        elements.balanceAmount.style.opacity = '1';
+        elements.balanceAmount.style.transform = 'translateY(0)';
+      }, 150);
+    }
   } else {
     elements.balanceAmount.textContent = '—';
   }
   
-  // Update daily P&L
+  // Update daily P&L with animation
   if (daily_pnl !== null && daily_pnl !== undefined && !isNaN(daily_pnl)) {
     const isPositive = daily_pnl >= 0;
     const balanceValue = (balance !== null && balance !== undefined && !isNaN(balance) && balance > 0) ? balance : 1;
     const pnlPercent = (daily_pnl / balanceValue) * 100;
     
-    elements.balanceChange.className = `balance-change ${isPositive ? 'positive' : 'negative'}`;
-    elements.balanceChange.innerHTML = `
+    const newHTML = `
       <span class="change-amount">${isPositive ? '+' : ''}${formatCurrency(daily_pnl)}</span>
       <span class="change-percent">(${formatPercent(pnlPercent)})</span>
     `;
+    
+    if (elements.balanceChange.innerHTML !== newHTML) {
+      elements.balanceChange.style.opacity = '0';
+      elements.balanceChange.style.transform = 'translateY(5px)';
+      setTimeout(() => {
+        elements.balanceChange.className = `balance-change ${isPositive ? 'positive' : 'negative'}`;
+        elements.balanceChange.innerHTML = newHTML;
+        elements.balanceChange.style.transition = 'opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1)';
+        elements.balanceChange.style.opacity = '1';
+        elements.balanceChange.style.transform = 'translateY(0)';
+      }, 150);
+    }
   } else {
     elements.balanceChange.className = 'balance-change';
     elements.balanceChange.innerHTML = `
@@ -906,7 +1343,7 @@ function updatePositionsUI() {
     return;
   }
   
-  elements.positionsGrid.innerHTML = state.openTrades.map(trade => {
+  const cardsHTML = state.openTrades.map((trade, index) => {
     // For open positions, P&L is typically null - show position value instead
     const positionValue = (trade.entry_price && trade.quantity) 
       ? trade.entry_price * trade.quantity 
@@ -926,10 +1363,8 @@ function updatePositionsUI() {
       pnlDisplay = `${isPositive ? '+' : ''}${formatPercent(pnlPercent)}`;
     }
     
-    // Get crypto icon (simplified - you can enhance this)
-    const symbolIcon = trade.symbol.includes('BTC') ? '₿' : 
-                      trade.symbol.includes('ETH') ? 'Ξ' : 
-                      trade.symbol.includes('SOL') ? '◎' : '💱';
+    // Get professional SVG icon for symbol
+    const symbolIcon = getSymbolIcon(trade.symbol);
     
     return `
       <div class="position-card">
@@ -945,6 +1380,8 @@ function updatePositionsUI() {
       </div>
     `;
   }).join('');
+  
+  elements.positionsGrid.innerHTML = cardsHTML;
 }
 
 function updateTerminalUI() {
@@ -995,13 +1432,31 @@ function updateTerminalUI() {
   elements.terminalContent.innerHTML = logsToShow.map(log => {
     const timestamp = formatDate(log.timestamp);
     const level = log.level || 'INFO';
-    const message = log.message || '';
+    let message = log.message || '';
+    
+    // Check for additional fields that might contain insights or analysis
+    const insight = log.insight || log.insights || log.analysis || log.recommendation || log.recommendations || '';
+    const data = log.data ? (typeof log.data === 'object' ? JSON.stringify(log.data) : log.data) : '';
+    
+    // If message doesn't already have AI indicator and has insight, add it
+    if (insight && !message.includes('FinSight AI') && !message.includes('🤖')) {
+      message = `🤖 FinSight AI: ${message}`;
+    }
+    
+    // Build message with additional info if available
+    let fullMessage = message;
+    if (insight) {
+      fullMessage += ` | 💡 Insight: ${insight}`;
+    }
+    if (data && !message.includes(data)) {
+      fullMessage += ` | Data: ${data}`;
+    }
     
     return `
       <div class="terminal-line">
         <span class="terminal-timestamp">[${timestamp}]</span>
         <span class="terminal-level ${level}">${level}</span>
-        <span class="terminal-message">${message}</span>
+        <span class="terminal-message">${fullMessage}</span>
       </div>
     `;
   }).join('');
@@ -1202,6 +1657,7 @@ function setupEventHandlers() {
     
     elements.testModeCheckbox.addEventListener('change', (e) => {
       updateTestModeUI(e.target.checked);
+      saveSettings(); // Persist settings when changed
     });
     
     // Initialize test mode state from localStorage or checkbox state
@@ -1210,6 +1666,19 @@ function setupEventHandlers() {
       elements.testModeCheckbox.checked = true;
       updateTestModeUI(true);
     }
+  }
+  
+  // Settings - Save settings when exchange or testnet changes
+  if (elements.exchangeSelect) {
+    elements.exchangeSelect.addEventListener('change', () => {
+      saveSettings();
+    });
+  }
+  
+  if (elements.testnetCheckbox) {
+    elements.testnetCheckbox.addEventListener('change', () => {
+      saveSettings();
+    });
   }
   
   // Settings - Exchange connection
@@ -1243,6 +1712,7 @@ function setupEventHandlers() {
       showLoading(testMode ? 'Activating Test Mode' : 'Connecting Exchange', 'Please wait...');
       try {
         await connectExchange(exchange, apiKey, apiSecret, testnet, testMode);
+        saveSettings(); // Persist settings after connecting
       } catch (error) {
         // Error is already handled in connectExchange, but we can add additional context
         console.error('Exchange connection error:', error);
@@ -1369,6 +1839,12 @@ async function initialize() {
   showLoading('Initializing FinSight', 'Connecting to API...');
   
   try {
+    // Load persisted data from localStorage first
+    loadSettings();
+    const hadExchangeStatus = loadExchangeStatus();
+    const hadGuardrails = loadGuardrails();
+    const hadStrategy = loadStrategy();
+    
     // Warmup API if utils available
     if (window.RenderAPIUtils) {
       window.RenderAPIUtils.warmupAPI(API_CONFIG.baseURL, API_CONFIG.endpoints.health)
@@ -1379,15 +1855,31 @@ async function initialize() {
     await checkAuthStatus();
     
     // Initial data load (don't fail if some endpoints fail)
-    await Promise.allSettled([
+    const promises = [
       getAgentStatus(),
       getOpenTrades(),
       getLogs(),
-      getPortfolioHistory(),
-      getExchangeStatus(),
-      getGuardrails(),
-      getStrategy()
-    ]);
+      getPortfolioHistory()
+    ];
+    
+    // Only fetch exchange status if we don't have it saved
+    if (!hadExchangeStatus) {
+      promises.push(getExchangeStatus().catch(() => null));
+    }
+    
+    // Only fetch guardrails/strategy if we have exchange connected or are in test mode
+    // AND we don't already have saved data
+    const hasExchange = state.exchangeStatus?.connected || state.testMode;
+    if (hasExchange) {
+      if (!hadGuardrails) {
+        promises.push(getGuardrails().catch(() => null));
+      }
+      if (!hadStrategy) {
+        promises.push(getStrategy().catch(() => null));
+      }
+    }
+    
+    await Promise.allSettled(promises);
     
     // Update UI based on current state
     updateDashboardVisibility();
