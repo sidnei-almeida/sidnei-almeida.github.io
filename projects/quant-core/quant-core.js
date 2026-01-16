@@ -803,10 +803,23 @@ function generateMarketLog(trades) {
 
 // Mock data for test mode - now dynamic
 const getMockExchangeStatus = () => {
-  // Calculate total P&L from simulated trades
-  const totalPnl = state.simulation.trades.reduce((sum, t) => sum + (t.pnl || 0), 0);
-  const totalBalance = state.simulation.baseBalance + totalPnl;
-  const inPositions = state.simulation.trades.reduce((sum, t) => sum + (t.entry_price * t.quantity), 0);
+  // Calculate current value of all open positions (real-time)
+  const inPositions = state.simulation.trades.reduce((sum, t) => {
+    const currentPrice = t.current_price || t.entry_price;
+    return sum + (currentPrice * t.quantity);
+  }, 0);
+  
+  // Calculate total invested at entry prices
+  const totalInvested = state.simulation.trades.reduce((sum, t) => {
+    return sum + (t.entry_price * t.quantity);
+  }, 0);
+  
+  // Calculate available cash: base balance minus what was invested
+  const availableCash = Math.max(0, state.simulation.baseBalance - totalInvested);
+  
+  // Total balance = available cash + current value of positions
+  // This is the realistic way: your total portfolio value is cash + positions value
+  const totalBalance = availableCash + inPositions;
   
   return {
     connected: true,
@@ -814,7 +827,7 @@ const getMockExchangeStatus = () => {
     test_mode: true,
     balance: {
       total: totalBalance,
-      available: Math.max(0, totalBalance - inPositions),
+      available: availableCash,
       in_positions: inPositions,
       currency: 'USD'
     }
@@ -822,12 +835,18 @@ const getMockExchangeStatus = () => {
 };
 
 const getMockAgentStatus = () => {
+  // Calculate total P&L for daily_pnl
   const totalPnl = state.simulation.trades.reduce((sum, t) => sum + (t.pnl || 0), 0);
+  
+  // Get balance from exchangeStatus (which is calculated correctly as available + in_positions)
+  // This ensures consistency across all status calls
+  const exchangeBalance = getMockExchangeStatus();
+  const balance = exchangeBalance.balance.total;
   
   return {
     agent_status: state.agentStatus?.agent_status || 'stopped',
     test_mode: true,
-    balance: state.simulation.baseBalance + totalPnl,
+    balance: balance,
     daily_pnl: totalPnl,
     last_update: new Date().toISOString()
   };
@@ -1245,21 +1264,18 @@ function updateAgentStatusUI() {
   let daily_pnl = state.agentStatus.daily_pnl;
   const agent_status = state.agentStatus.agent_status;
   
-  // In test mode, calculate balance from exchangeStatus and open trades P&L
+  // In test mode, use balance from exchangeStatus (which is calculated correctly)
   if (state.testMode && (balance === null || balance === undefined)) {
-    // Get base balance from exchangeStatus
-    const baseBalance = state.exchangeStatus && state.exchangeStatus.balance 
+    // Get total balance from exchangeStatus (already calculated as available + in_positions)
+    balance = state.exchangeStatus && state.exchangeStatus.balance 
       ? (state.exchangeStatus.balance.total || state.exchangeStatus.balance)
       : 10000.00; // Default test balance
     
-    // Calculate total P&L from open trades
+    // Calculate total P&L from open trades for daily_pnl
     const totalPnl = state.openTrades.reduce((sum, trade) => {
       const tradePnl = trade.pnl || 0;
       return sum + (isNaN(tradePnl) ? 0 : tradePnl);
     }, 0);
-    
-    // Current balance = base balance + total P&L
-    balance = baseBalance + totalPnl;
     
     // Use total P&L as daily_pnl if not provided
     if (daily_pnl === null || daily_pnl === undefined) {
@@ -1390,21 +1406,38 @@ function updatePositionsUI() {
   }
   
   const cardsHTML = state.openTrades.map((trade, index) => {
-    // For open positions, P&L is typically null - show position value instead
-    const positionValue = (trade.entry_price && trade.quantity) 
+    // Calculate position value using current price (real-time) if available, otherwise entry price
+    // This makes the position value dynamic and realistic
+    const currentPrice = trade.current_price || trade.entry_price;
+    const positionValue = (currentPrice && trade.quantity) 
+      ? currentPrice * trade.quantity 
+      : 0;
+    
+    // Calculate entry value for P&L percentage calculation
+    const entryValue = (trade.entry_price && trade.quantity) 
       ? trade.entry_price * trade.quantity 
       : 0;
     
-    // If P&L is available (shouldn't be for open positions, but handle it)
+    // If P&L is available, calculate percentage based on entry value
     const pnl = trade.pnl;
     let pnlDisplay = '—';
     let pnlClass = '';
     
     if (pnl !== null && pnl !== undefined && !isNaN(pnl)) {
-      const pnlPercent = positionValue > 0 
-        ? ((pnl / positionValue) * 100) 
+      // P&L percentage should be calculated based on entry value, not current value
+      const pnlPercent = entryValue > 0 
+        ? ((pnl / entryValue) * 100) 
         : 0;
       const isPositive = pnl >= 0;
+      pnlClass = isPositive ? 'positive' : 'negative';
+      pnlDisplay = `${isPositive ? '+' : ''}${formatPercent(pnlPercent)}`;
+    } else if (currentPrice && trade.entry_price && trade.entry_price !== currentPrice) {
+      // If P&L is not provided but we have current price, calculate it
+      const calculatedPnl = (currentPrice - trade.entry_price) * trade.quantity;
+      const pnlPercent = entryValue > 0 
+        ? ((calculatedPnl / entryValue) * 100) 
+        : 0;
+      const isPositive = calculatedPnl >= 0;
       pnlClass = isPositive ? 'positive' : 'negative';
       pnlDisplay = `${isPositive ? '+' : ''}${formatPercent(pnlPercent)}`;
     }
