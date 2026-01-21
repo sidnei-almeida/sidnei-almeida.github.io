@@ -2231,10 +2231,22 @@ async function handleLogin(event) {
     // Update state
     state.user = response.user;
     
+    // Debug: Log user data to see what we're getting
+    console.log('Login response - user data:', state.user);
+    console.log('Avatar URL from API:', state.user?.avatar_url);
+    
     // Clean up invalid avatar_url (empty strings, null, etc.)
-    if (state.user.avatar_url && 
-        (typeof state.user.avatar_url !== 'string' || state.user.avatar_url.trim() === '')) {
-      delete state.user.avatar_url;
+    // But preserve valid URLs (http/https/data URLs)
+    if (state.user.avatar_url) {
+      const avatarUrl = typeof state.user.avatar_url === 'string' ? state.user.avatar_url.trim() : state.user.avatar_url;
+      if (avatarUrl === '' || avatarUrl === 'null' || avatarUrl === 'undefined') {
+        console.log('Removing invalid avatar_url (empty/null string)');
+        delete state.user.avatar_url;
+      } else {
+        console.log('Keeping avatar_url:', avatarUrl);
+      }
+    } else {
+      console.log('No avatar_url in user data');
     }
     
     state.isAuthenticated = true;
@@ -2340,12 +2352,24 @@ async function checkAuthStatus() {
     
     state.user = response.user || JSON.parse(savedUser);
     
+    // Debug: Log user data
+    console.log('Auth check - user data:', state.user);
+    console.log('Avatar URL:', state.user?.avatar_url);
+    
     // Clean up invalid avatar_url (empty strings, null, etc.)
-    if (state.user.avatar_url && 
-        (typeof state.user.avatar_url !== 'string' || state.user.avatar_url.trim() === '')) {
-      delete state.user.avatar_url;
-      // Update localStorage without avatar_url
-      localStorage.setItem('finsight_user', JSON.stringify(state.user));
+    // But preserve valid URLs (http/https/data URLs)
+    if (state.user.avatar_url) {
+      const avatarUrl = typeof state.user.avatar_url === 'string' ? state.user.avatar_url.trim() : state.user.avatar_url;
+      if (avatarUrl === '' || avatarUrl === 'null' || avatarUrl === 'undefined') {
+        console.log('Removing invalid avatar_url (empty/null string)');
+        delete state.user.avatar_url;
+        // Update localStorage without avatar_url
+        localStorage.setItem('finsight_user', JSON.stringify(state.user));
+      } else {
+        console.log('Keeping avatar_url:', avatarUrl);
+      }
+    } else {
+      console.log('No avatar_url in user data');
     }
     
     state.isAuthenticated = true;
@@ -2392,7 +2416,11 @@ function updateProfileUI() {
     
     if (!isDataUrl) {
       // Ensure URL is absolute (only for HTTP/HTTPS URLs)
-      if (!avatarUrl.startsWith('http://') && !avatarUrl.startsWith('https://')) {
+      // Handle protocol-relative URLs (//example.com/image.jpg)
+      if (avatarUrl.startsWith('//')) {
+        // Use HTTPS for protocol-relative URLs
+        avatarUrl = 'https:' + avatarUrl;
+      } else if (!avatarUrl.startsWith('http://') && !avatarUrl.startsWith('https://')) {
         // If it's a relative URL, make it absolute
         if (avatarUrl.startsWith('/')) {
           avatarUrl = API_CONFIG.baseURL.replace(/\/$/, '') + avatarUrl;
@@ -2402,7 +2430,10 @@ function updateProfileUI() {
       }
       
       // Add cache-busting timestamp (only for HTTP URLs, not data URLs)
-      avatarUrl = avatarUrl + (avatarUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+      // But skip if URL already has a timestamp
+      if (!avatarUrl.includes('t=')) {
+        avatarUrl = avatarUrl + (avatarUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+      }
     }
     // Data URLs are used as-is, no modification needed
     
@@ -2428,6 +2459,8 @@ function updateProfileUI() {
         }
       };
       
+      // Set crossorigin attribute for CORS support
+      profileAvatarImg.crossOrigin = 'anonymous';
       profileAvatarImg.src = avatarUrl;
       profileAvatarImg.style.display = 'block';
     }
@@ -2515,19 +2548,31 @@ function updateUserUI() {
     let avatarUrl = state.user.avatar_url.trim();
     const isDataUrl = avatarUrl.startsWith('data:');
     
+    console.log('Processing avatar URL:', avatarUrl, 'isDataUrl:', isDataUrl);
+    
     if (!isDataUrl) {
       // Ensure URL is absolute (only for HTTP/HTTPS URLs)
-      if (!avatarUrl.startsWith('http://') && !avatarUrl.startsWith('https://')) {
+      // Handle protocol-relative URLs (//example.com/image.jpg)
+      if (avatarUrl.startsWith('//')) {
+        // Use HTTPS for protocol-relative URLs
+        avatarUrl = 'https:' + avatarUrl;
+        console.log('Converted protocol-relative URL:', avatarUrl);
+      } else if (!avatarUrl.startsWith('http://') && !avatarUrl.startsWith('https://')) {
         // If it's a relative URL, make it absolute
         if (avatarUrl.startsWith('/')) {
           avatarUrl = API_CONFIG.baseURL.replace(/\/$/, '') + avatarUrl;
         } else {
           avatarUrl = API_CONFIG.baseURL.replace(/\/$/, '') + '/' + avatarUrl;
         }
+        console.log('Converted relative URL to absolute:', avatarUrl);
       }
       
       // Add cache-busting timestamp (only for HTTP URLs, not data URLs)
-      avatarUrl = avatarUrl + (avatarUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+      // But skip if it's already a data URL or if URL already has a timestamp
+      if (!avatarUrl.includes('t=')) {
+        avatarUrl = avatarUrl + (avatarUrl.includes('?') ? '&' : '?') + 't=' + Date.now();
+      }
+      console.log('Final avatar URL:', avatarUrl);
     }
     // Data URLs are used as-is, no modification needed
     
@@ -2541,7 +2586,14 @@ function updateUserUI() {
       
       // Error handler - fallback to icon
       imgElement.onerror = function() {
-        console.warn('Avatar image failed to load, showing default icon:', avatarUrl);
+        console.error('Avatar image failed to load:', avatarUrl);
+        console.error('Image element:', this);
+        console.error('Error details:', {
+          src: this.src,
+          naturalWidth: this.naturalWidth,
+          naturalHeight: this.naturalHeight,
+          complete: this.complete
+        });
         this.style.display = 'none';
         this.src = ''; // Clear invalid src
         if (iconElement) {
@@ -2558,6 +2610,8 @@ function updateUserUI() {
         }
       };
       
+      // Set crossorigin attribute for CORS support
+      imgElement.crossOrigin = 'anonymous';
       imgElement.src = avatarUrl;
       imgElement.style.display = 'block';
     };
