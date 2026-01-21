@@ -265,6 +265,17 @@
             </div>
           </div>
           
+          <!-- Strategy Mode Indicator -->
+          <div class="strategy-mode-indicator" id="strategyModeIndicator" style="display: none;">
+            <div class="strategy-mode-icon" id="strategyModeIcon">
+              <!-- SVG will be inserted by JS -->
+            </div>
+            <div class="strategy-mode-info">
+              <div class="strategy-mode-label">OPERATING MODE</div>
+              <div class="strategy-mode-value" id="strategyModeValue">—</div>
+            </div>
+          </div>
+          
           <button class="stop-system-btn" id="stopSystemBtn" style="display: none;">
             <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="6" y="6" width="8" height="8" rx="1" fill="currentColor"/>
@@ -339,24 +350,31 @@
               <input type="password" id="apiSecretInput" class="form-control" placeholder="Enter API secret">
             </div>
             <div class="form-group">
-              <label class="checkbox-label">
-                <input type="checkbox" id="testnetCheckbox">
-                <span>Testnet</span>
-              </label>
-            </div>
-            <div class="form-group">
-              <label class="checkbox-label">
-                <input type="checkbox" id="testModeCheckbox">
-                <span>Test Mode</span>
-                <span class="test-mode-indicator" id="testModeIndicator" style="display: none;">
-                  <svg viewBox="0 0 20 20">
-                    <path d="M10 2 L12 7 L17 8 L13 12 L14 17 L10 14 L6 17 L7 12 L3 8 L8 7 Z"/>
-                  </svg>
-                  Demo Mode Active
-                </span>
-              </label>
-              <div class="form-help-text" style="margin-top: var(--spacing-xs); padding-left: 28px;">
-                Use demo data with BTC, ETH, AAPL. No API keys required.
+              <div class="checkbox-group-inline">
+                <div class="checkbox-item">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="testnetCheckbox">
+                    <span>Testnet</span>
+                  </label>
+                  <div class="form-help-text" style="margin-top: var(--spacing-xs); padding-left: 28px;">
+                    Connect to exchange testnet environment. Use testnet API keys for safe testing without real funds.
+                  </div>
+                </div>
+                <div class="checkbox-item">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="testModeCheckbox">
+                    <span>Test Mode</span>
+                    <span class="test-mode-indicator" id="testModeIndicator" style="display: none;">
+                      <svg viewBox="0 0 20 20">
+                        <path d="M10 2 L12 7 L17 8 L13 12 L14 17 L10 14 L6 17 L7 12 L3 8 L8 7 Z"/>
+                      </svg>
+                      Demo Mode Active
+                    </span>
+                  </label>
+                  <div class="form-help-text" style="margin-top: var(--spacing-xs); padding-left: 28px;">
+                    Use demo data with BTC, ETH, AAPL. No API keys required.
+                  </div>
+                </div>
               </div>
             </div>
             <button class="btn-primary" id="connectExchangeBtn">Connect</button>

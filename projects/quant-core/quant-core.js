@@ -1254,6 +1254,9 @@ function updateAgentStatusUI() {
   if (balanceSection) balanceSection.style.display = 'flex';
   if (positionsSection) positionsSection.style.display = 'block';
   
+  // Update strategy mode indicator
+  updateStrategyModeIndicator();
+  
   if (!state.agentStatus) {
     // Still update terminal even if no agent status
     updateTerminalUI();
@@ -1592,12 +1595,123 @@ function updateGuardrailsUI() {
   }
 }
 
+function getStrategyModeIcon(mode) {
+  const icons = {
+    conservative: `
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Face outline -->
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <!-- Calm, relaxed eyes -->
+        <circle cx="9" cy="10" r="1.5" fill="currentColor"/>
+        <circle cx="15" cy="10" r="1.5" fill="currentColor"/>
+        <!-- Gentle, content smile -->
+        <path d="M8 15.5C8 15.5 9.5 17.5 12 17.5C14.5 17.5 16 15.5 16 15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </svg>
+    `,
+    moderate: `
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Face outline -->
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <!-- Neutral, focused eyes -->
+        <ellipse cx="9" cy="10" rx="1.5" ry="1" fill="currentColor"/>
+        <ellipse cx="15" cy="10" rx="1.5" ry="1" fill="currentColor"/>
+        <!-- Straight, determined mouth -->
+        <line x1="9" y1="15.5" x2="15" y2="15.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    `,
+    aggressive: `
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Face outline -->
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <!-- Intense, focused eyes (slightly narrowed) -->
+        <path d="M7.5 9.5L9 11L7.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M16.5 9.5L15 11L16.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <!-- Determined, focused mouth (slight frown) -->
+        <path d="M9 16C9 16 10.5 14 12 14C13.5 14 15 16 15 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <!-- Intensity lines (subtle) -->
+        <line x1="6.5" y1="12.5" x2="7.5" y2="13.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+        <line x1="17.5" y1="12.5" x2="16.5" y2="13.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+    `
+  };
+  
+  return icons[mode?.toLowerCase()] || icons.moderate;
+}
+
+function getStrategyModeDisplayName(mode) {
+  const names = {
+    conservative: 'Conservative',
+    moderate: 'Moderate',
+    aggressive: 'Aggressive'
+  };
+  return names[mode?.toLowerCase()] || 'Moderate';
+}
+
+function updateStrategyModeIndicator() {
+  const indicator = document.getElementById('strategyModeIndicator');
+  const iconContainer = document.getElementById('strategyModeIcon');
+  const valueElement = document.getElementById('strategyModeValue');
+  
+  if (!indicator || !iconContainer || !valueElement) return;
+  
+  if (state.strategy && state.strategy.mode) {
+    const mode = state.strategy.mode.toLowerCase();
+    iconContainer.innerHTML = getStrategyModeIcon(mode);
+    valueElement.textContent = getStrategyModeDisplayName(mode);
+    indicator.style.display = 'flex';
+    
+    // Add mode-specific class for styling
+    indicator.className = 'strategy-mode-indicator';
+    indicator.classList.remove('mode-conservative', 'mode-moderate', 'mode-aggressive');
+    indicator.classList.add(`mode-${mode}`);
+  } else {
+    indicator.style.display = 'none';
+  }
+}
+
 function updateStrategyUI() {
-  if (!state.strategy) return;
+  if (!state.strategy) {
+    updateStrategyModeIndicator();
+    return;
+  }
   
   const radio = document.querySelector(`input[name="strategyMode"][value="${state.strategy.mode}"]`);
   if (radio) {
     radio.checked = true;
+    // Update visual state of radio label
+    const label = radio.closest('.radio-label');
+    if (label) {
+      document.querySelectorAll('.radio-label').forEach(l => l.classList.remove('checked'));
+      label.classList.add('checked');
+    }
+  }
+  
+  // Update dashboard indicator
+  updateStrategyModeIndicator();
+}
+
+function restoreSettingsState() {
+  // Restore other settings (already handled by loadSettings, but ensure UI is updated)
+  loadSettings();
+  
+  // Restore guardrails UI
+  if (state.guardrails) {
+    updateGuardrailsUI();
+  } else {
+    // Try loading from localStorage
+    loadGuardrails();
+  }
+  
+  // Restore strategy radio buttons
+  if (state.strategy && state.strategy.mode) {
+    updateStrategyUI();
+  } else {
+    // If no strategy saved, check localStorage for last selected value
+    const savedStrategy = loadFromLocalStorage('finsight_strategy');
+    if (savedStrategy && savedStrategy.mode) {
+      state.strategy = savedStrategy;
+      updateStrategyUI();
+    }
   }
 }
 
@@ -1831,7 +1945,30 @@ function setupEventHandlers() {
     });
   }
   
-  // Settings - Strategy
+  // Settings - Strategy radio buttons
+  const strategyRadios = document.querySelectorAll('input[name="strategyMode"]');
+  strategyRadios.forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        // Update visual state
+        document.querySelectorAll('.radio-label').forEach(l => l.classList.remove('checked'));
+        const label = e.target.closest('.radio-label');
+        if (label) {
+          label.classList.add('checked');
+        }
+        
+        // Save to localStorage immediately for persistence
+        const strategyData = {
+          mode: e.target.value,
+          ...(state.strategy || {})
+        };
+        state.strategy = strategyData;
+        persistStrategy();
+      }
+    });
+  });
+  
+  // Settings - Strategy Save Button
   if (elements.saveStrategyBtn) {
     elements.saveStrategyBtn.addEventListener('click', async () => {
       const selectedMode = document.querySelector('input[name="strategyMode"]:checked');
@@ -1894,6 +2031,8 @@ function switchView(viewName) {
     elements.dashboardView.classList.add('active');
   } else if (viewName === 'settings' && elements.settingsView) {
     elements.settingsView.classList.add('active');
+    // Restore settings state when entering settings view
+    restoreSettingsState();
   } else if (viewName === 'profile' && elements.profileView) {
     elements.profileView.classList.add('active');
   }
@@ -2091,13 +2230,20 @@ async function handleLogin(event) {
     
     // Update state
     state.user = response.user;
+    
+    // Clean up invalid avatar_url (empty strings, null, etc.)
+    if (state.user.avatar_url && 
+        (typeof state.user.avatar_url !== 'string' || state.user.avatar_url.trim() === '')) {
+      delete state.user.avatar_url;
+    }
+    
     state.isAuthenticated = true;
     
     // Save token and user data
     if (response.token) {
       localStorage.setItem('finsight_token', response.token);
     }
-    localStorage.setItem('finsight_user', JSON.stringify(response.user));
+    localStorage.setItem('finsight_user', JSON.stringify(state.user));
     
     // Update UI
     updateUserUI();
@@ -2193,6 +2339,15 @@ async function checkAuthStatus() {
     });
     
     state.user = response.user || JSON.parse(savedUser);
+    
+    // Clean up invalid avatar_url (empty strings, null, etc.)
+    if (state.user.avatar_url && 
+        (typeof state.user.avatar_url !== 'string' || state.user.avatar_url.trim() === '')) {
+      delete state.user.avatar_url;
+      // Update localStorage without avatar_url
+      localStorage.setItem('finsight_user', JSON.stringify(state.user));
+    }
+    
     state.isAuthenticated = true;
     updateUserUI();
     updateProfileUI();
@@ -2223,7 +2378,12 @@ function updateProfileUI() {
   const profileAvatarImg = document.getElementById('profileAvatarImg');
   const profileAvatarIcon = document.getElementById('profileAvatarIcon');
   
-  if (state.user.avatar_url) {
+  // Check if avatar_url exists and is not empty/null
+  const hasAvatarUrl = state.user.avatar_url && 
+                       typeof state.user.avatar_url === 'string' && 
+                       state.user.avatar_url.trim() !== '';
+  
+  if (hasAvatarUrl) {
     // Add timestamp to force refresh if image was just uploaded
     let avatarUrl = state.user.avatar_url.trim();
     
@@ -2252,8 +2412,9 @@ function updateProfileUI() {
       
       // Add error handler - if image fails to load, show icon instead
       profileAvatarImg.onerror = function() {
-        console.error('Failed to load avatar image:', avatarUrl);
+        console.warn('Profile avatar image failed to load, showing default icon:', avatarUrl);
         this.style.display = 'none';
+        this.src = ''; // Clear invalid src
         if (profileAvatarIcon) {
           profileAvatarIcon.style.display = 'block';
         }
@@ -2344,7 +2505,12 @@ function updateUserUI() {
   const menuAvatarIcon = document.getElementById('userMenuAvatarIcon');
   
   // Use avatar image if available, otherwise use initials
-  if (state.user.avatar_url) {
+  // Check if avatar_url exists and is not empty/null
+  const hasAvatarUrl = state.user.avatar_url && 
+                       typeof state.user.avatar_url === 'string' && 
+                       state.user.avatar_url.trim() !== '';
+  
+  if (hasAvatarUrl) {
     // Check if it's a data URL (data:image/... or data:image/jpeg;base64,...)
     let avatarUrl = state.user.avatar_url.trim();
     const isDataUrl = avatarUrl.startsWith('data:');
@@ -2375,8 +2541,9 @@ function updateUserUI() {
       
       // Error handler - fallback to icon
       imgElement.onerror = function() {
-        console.error('Failed to load avatar image:', avatarUrl);
+        console.warn('Avatar image failed to load, showing default icon:', avatarUrl);
         this.style.display = 'none';
+        this.src = ''; // Clear invalid src
         if (iconElement) {
           iconElement.style.display = 'flex';
           iconElement.textContent = getInitials(state.user.full_name || state.user.name || 'U');

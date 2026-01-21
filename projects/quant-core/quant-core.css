@@ -597,6 +597,74 @@ body::before {
 
 .stop-system-btn:hover {
   background: var(--bg-tertiary);
+}
+
+/* Strategy Mode Indicator */
+.strategy-mode-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  min-width: 200px;
+  transition: all var(--transition-base);
+}
+
+.strategy-mode-indicator:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-primary);
+}
+
+.strategy-mode-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  transition: color var(--transition-base);
+}
+
+.strategy-mode-indicator.mode-conservative .strategy-mode-icon {
+  color: var(--accent-success);
+}
+
+.strategy-mode-indicator.mode-moderate .strategy-mode-icon {
+  color: var(--accent-warning);
+}
+
+.strategy-mode-indicator.mode-aggressive .strategy-mode-icon {
+  color: var(--accent-danger);
+}
+
+.strategy-mode-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.strategy-mode-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.strategy-mode-label {
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-tertiary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.strategy-mode-value {
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+}
   border-color: var(--accent-danger);
   color: var(--accent-danger);
 }
@@ -1046,6 +1114,29 @@ body::before {
   color: var(--text-tertiary);
   margin-top: var(--spacing-xs);
   display: block;
+}
+
+/* Checkbox Group Inline - Side by side checkboxes */
+.checkbox-group-inline {
+  display: flex;
+  gap: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
+.checkbox-item {
+  flex: 1;
+  min-width: 200px;
+}
+
+@media (max-width: 768px) {
+  .checkbox-group-inline {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+  
+  .checkbox-item {
+    min-width: 100%;
+  }
 }
 
 /* Test Mode Indicator */
