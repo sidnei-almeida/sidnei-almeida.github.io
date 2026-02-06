@@ -1266,6 +1266,12 @@ body::-webkit-scrollbar-thumb:hover {
   border-color: var(--accent-blue);
 }
 
+.status-badge.status-open-source {
+  background: var(--accent-blue-subtle);
+  color: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+
 .status-active {
   background: transparent;
   color: var(--text-muted);
