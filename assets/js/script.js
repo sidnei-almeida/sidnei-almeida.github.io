@@ -50,31 +50,32 @@ document.addEventListener('DOMContentLoaded', function() {
       const categories = card.getAttribute('data-category');
       
       if (filter === 'all') {
-        // Show all projects with animation
         card.classList.remove('hidden');
-        card.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-        card.style.opacity = '1';
-        card.style.transform = 'scale(1)';
+        card.style.transition = '';
+        card.style.opacity = '';
+        card.style.transform = '';
+        if (card.dataset.revealDone === '1') {
+          card.classList.add('is-visible');
+        }
       } else {
-        // Split categories by space and check if any category matches the filter
         if (categories && categories.split(' ').includes(filter)) {
-          // Show matching projects with animation
           card.classList.remove('hidden');
-          card.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-          card.style.opacity = '1';
-          card.style.transform = 'scale(1)';
+          card.style.transition = '';
+          card.style.opacity = '';
+          card.style.transform = '';
+          if (card.dataset.revealDone === '1') {
+            card.classList.add('is-visible');
+          }
         } else {
-          // Hide non-matching projects with animation
-          card.style.transition = 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+          card.style.transition = 'opacity 0.32s ease, transform 0.32s ease';
           card.style.opacity = '0';
-          card.style.transform = 'scale(0.8)';
-          
+          card.style.transform = 'translateY(6px)';
           setTimeout(() => {
             card.classList.add('hidden');
             card.style.transition = '';
             card.style.opacity = '';
             card.style.transform = '';
-          }, 400);
+          }, 320);
         }
       }
     });
@@ -115,44 +116,7 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// Premium Animation on Scroll
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -100px 0px'
-};
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('fade-in-elegant');
-    }
-  });
-}, observerOptions);
-
-// Observe elements for premium animation
-document.querySelectorAll('.project-card, .skill-item, .section-title, .section-subtitle').forEach(el => {
-  observer.observe(el);
-});
-
-// Add staggered animation to project cards
 document.addEventListener('DOMContentLoaded', function() {
-  const projectCards = document.querySelectorAll('.project-card');
-  projectCards.forEach((card, index) => {
-    card.style.animationDelay = `${index * 0.1}s`;
-  });
-  
-  // Add premium hover effects
-  projectCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-      this.style.transition = 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-      this.style.transition = 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-    });
-  });
-
-  // Initialize premium features
   initScrollProgress();
   initParallax();
   initSectionAnimations();
@@ -191,22 +155,18 @@ document.addEventListener('DOMContentLoaded', function() {
     carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
     carousel.addEventListener('touchend', handleTouchEnd);
     
-    // Hover pause
-      carousel.addEventListener('mouseenter', () => {
-        isCarouselPaused = true;
-        clearInterval(carouselInterval);
-      });
-      
-      carousel.addEventListener('mouseleave', () => {
-        isCarouselPaused = false;
-      if (!isDragging) {
-        startCarouselAnimation();
-      }
-      });
+    // Hover pause — avoid duplicate mouseleave handlers (each called startCarouselAnimation and leaked an extra setInterval)
+    carousel.addEventListener('mouseenter', () => {
+      isCarouselPaused = true;
+      clearInterval(carouselInterval);
+      carouselInterval = undefined;
+    });
   }
 });
 
 function startCarouselAnimation() {
+  clearInterval(carouselInterval);
+  carouselInterval = undefined;
   if (!isCarouselPaused && !isDragging) {
     carouselInterval = setInterval(() => {
       carouselPosition -= 1;
@@ -220,7 +180,7 @@ function startCarouselAnimation() {
           carouselPosition = 0;
         }
       }
-    }, 30);
+    }, 20);
   }
 }
 
@@ -265,7 +225,7 @@ function handleMouseLeave() {
     carousel.style.cursor = 'grab';
   }
   isCarouselPaused = false;
-  if (!isCarouselPaused) {
+  if (!isDragging) {
     startCarouselAnimation();
   }
 }
@@ -352,8 +312,16 @@ function openProjectModal(projectCard) {
   const modalValueSection = document.getElementById('modalValueSection');
   const modalValueBenefits = document.getElementById('modalValueBenefits');
   
-  // Extract project data
-  const title = projectCard.querySelector('.project-title').textContent;
+  // Extract project data (stacked titles: join lines with a space for modal)
+  const titleEl = projectCard.querySelector('.project-title');
+  const titleLines = titleEl.querySelectorAll('.project-title-line');
+  const title =
+    titleLines.length > 0
+      ? Array.from(titleLines)
+          .map((el) => el.textContent.trim())
+          .filter(Boolean)
+          .join(' ')
+      : titleEl.textContent.trim();
   const image = projectCard.querySelector('.project-image img');
   const description = projectCard.querySelector('.description-full').textContent;
   const metrics = projectCard.querySelector('.project-metrics');
@@ -498,80 +466,101 @@ function initParallax() {
   window.addEventListener('scroll', handleScroll, { passive: true });
 }
 
-// Section Animation System
+/**
+ * Scroll reveals: run once per element (no re-trigger / blink on scroll back).
+ * Sections get .section-revealed; cards get .is-visible + data-reveal-done.
+ */
 function initSectionAnimations() {
-  // Select all sections and their elements
-  const sections = document.querySelectorAll('.section');
-  const sectionElements = document.querySelectorAll('.section-title, .section-subtitle, .project-card, .skill-item, .about-content, .contact-info, .project-filters, .skills-carousel, .color-palette, .language-selector');
-  
-  // Intersection Observer options
-  const observerOptions = {
-    root: null,
-    rootMargin: '-10% 0px -10% 0px', // Trigger when section is 10% visible
-    threshold: 0.1
-  };
-  
-  // Section observer
-  const sectionObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      const section = entry.target;
-      
-      if (entry.isIntersecting) {
-        // Section entering viewport
-        section.classList.add('animate-in');
-        section.classList.remove('animate-out');
-        
-        // Animate section elements with delay
-        setTimeout(() => {
-          const elements = section.querySelectorAll('.section-title, .section-subtitle, .project-card, .skill-item, .about-content, .contact-info');
-          elements.forEach((el, index) => {
-            setTimeout(() => {
-              el.classList.add('animate-in');
-            }, index * 100); // Staggered animation
-          });
-        }, 200);
-        
-      } else {
-        // Section leaving viewport
-        if (entry.boundingClientRect.top < 0) {
-          // Section is above viewport (scrolling down)
-          section.classList.add('animate-out');
-          section.classList.remove('animate-in');
-          
-          // Fade out section elements
-          const elements = section.querySelectorAll('.section-title, .section-subtitle, .project-card, .skill-item, .about-content, .contact-info');
-          elements.forEach(el => {
-            el.classList.remove('animate-in');
-          });
-        }
-      }
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduceMotion) {
+    document.querySelectorAll('.section').forEach((s) => s.classList.add('section-revealed'));
+    document.querySelectorAll('.project-card').forEach((c) => {
+      c.classList.add('is-visible');
+      c.dataset.revealDone = '1';
     });
-  }, observerOptions);
-  
-  // Element observer for individual elements
-  const elementObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('animate-in');
-      }
-    });
-  }, {
-    root: null,
-    rootMargin: '0px 0px -20% 0px',
-    threshold: 0.1
-  });
-  
-  // Observe all sections
-  sections.forEach(section => {
+    const hero = document.querySelector('.hero');
+    if (hero) {
+      hero.style.opacity = '1';
+      hero.style.transform = 'translateY(0)';
+    }
+    return;
+  }
+
+  const sectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('section-revealed');
+        sectionObserver.unobserve(entry.target);
+      });
+    },
+    { root: null, rootMargin: '0px 0px -6% 0px', threshold: 0.12 }
+  );
+
+  document.querySelectorAll('.section').forEach((section) => {
     sectionObserver.observe(section);
   });
-  
-  // Observe individual elements
-  sectionElements.forEach(element => {
-    elementObserver.observe(element);
+
+  const cardObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const card = entry.target;
+        card.classList.add('is-visible');
+        card.dataset.revealDone = '1';
+        cardObserver.unobserve(card);
+      });
+    },
+    { root: null, rootMargin: '0px 0px -5% 0px', threshold: 0.08 }
+  );
+
+  /**
+   * Project grids (home + /projects/): one observer per grid, single batch reveal.
+   * Stagger follows visual order (top → left), not DOM order — fixes featured `order`
+   * and chaotic per-card intersection (same row appearing out of sync).
+   */
+  function revealProjectGridOnce(grid) {
+    const cards = Array.from(grid.querySelectorAll(':scope > .project-card'));
+    if (!cards.length) return;
+    const rowTolerance = 8;
+    cards.sort((a, b) => {
+      const ra = a.getBoundingClientRect();
+      const rb = b.getBoundingClientRect();
+      if (Math.abs(ra.top - rb.top) > rowTolerance) return ra.top - rb.top;
+      return ra.left - rb.left;
+    });
+    const staggerStep = 0.065;
+    const maxStaggerIndex = 40;
+    cards.forEach((card, i) => {
+      const delay = Math.min(i, maxStaggerIndex) * staggerStep;
+      card.style.setProperty('--reveal-delay', `${delay}s`);
+      card.classList.add('is-visible');
+      card.dataset.revealDone = '1';
+    });
+  }
+
+  const gridObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        revealProjectGridOnce(entry.target);
+        gridObserver.unobserve(entry.target);
+      });
+    },
+    { root: null, rootMargin: '0px 0px 12% 0px', threshold: 0.04 }
+  );
+
+  document.querySelectorAll('.projects-grid').forEach((grid) => {
+    gridObserver.observe(grid);
   });
-  
-  // Initialize hero as visible (no animation needed)
+
+  document.querySelectorAll('.project-card').forEach((card) => {
+    if (card.closest('.projects-grid')) return;
+    card.style.setProperty('--reveal-delay', '0s');
+    cardObserver.observe(card);
+  });
+
   const hero = document.querySelector('.hero');
   if (hero) {
     hero.style.opacity = '1';
