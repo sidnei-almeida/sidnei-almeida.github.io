@@ -9,6 +9,19 @@ const POLL_INTERVAL = 12000;
 const FETCH_TIMEOUT_MS = 8000;
 const OVERLAY_FAILSAFE_MS = 12000;
 const INFER_TIMEOUT_MS = 16000;
+/** Máximo de linhas no log da linha de produção (performance do DOM) */
+const MAX_DATASET_ROWS = 600;
+/** Pausa entre inferências contínuas (ms) */
+const PRODUCTION_CYCLE_GAP_MS = 400;
+/** Valor vazio nos campos de inspeção (traço longo —, cor via CSS accent) */
+const INSPECTION_VALUE_PLACEHOLDER = "—";
+/**
+ * Vista de topo: garrafa ~circular no centro, fundo branco nos cantos do quadrado.
+ * Só desenhamos caixas cujo centro cai dentro deste círculo inscrito (raio < 0.5),
+ * para não mostrar falsos positivos só no fundo (cantos).
+ */
+const BOUNDING_BOX_ROI_RADIUS = 0.485;
+const BOUNDING_BOX_ROI_RADIUS_SQ = BOUNDING_BOX_ROI_RADIUS * BOUNDING_BOX_ROI_RADIUS;
 
 const SAMPLE_IMAGES = [
   { label: "Reference Good", src: "../../images/bottles/000.png", rotation: 0 },
@@ -35,7 +48,6 @@ const SELECTORS = {
   sampleGrid: "sampleGrid",
   dropzone: "dropzone",
   fileInput: "fileInput",
-  toggleVisualizations: "toggleVisualizations",
   runBtn: "runBtn",
   previewImage: "previewImage",
   resultEmpty: "resultEmpty",
@@ -48,27 +60,28 @@ const SELECTORS = {
   thresholdBox: "thresholdBox",
   toastStack: "toastStack",
   footerYear: "footerYear",
-  artifactSection: "artifactSection",
-  artifactGrid: "artifactGrid",
-  lightbox: "lightbox",
-  lightboxImage: "lightboxImage",
-  lightboxCaption: "lightboxCaption",
-  lightboxClose: "lightboxClose",
   previewStage: "previewStage",
   overlayCanvas: "previewOverlay",
   resultShell: "resultShell",
+  inspectionDetails: "inspectionDetails",
+  inspectionVerdictRow: "inspectionVerdictRow",
+  productionDatasetBody: "productionDatasetBody",
+  productionDatasetScroll: "productionDatasetScroll",
+  productionLineStart: "productionLineStart",
+  productionLineStop: "productionLineStop",
 };
 
 let selectedFile = null;
 let previewUrl = null;
-let includeArtifacts = true;
 let activeSampleIndex = null;
-let lightboxOpen = false;
-let lightboxLastFocus = null;
 let boundingBoxCache = null;
 let bboxRenderFrame = null;
 let bboxResizeObserver = null;
 let overlayFailSafeTimer = null;
+let inspectionBusy = false;
+let productionActive = false;
+let productionSequentialCursor = -1;
+let productionRunNumber = 0;
 
 /** Utility: Element by id */
 function byId(id) {
@@ -127,13 +140,216 @@ function showToast(message, variant = "info", duration = 3200) {
   }, duration);
 }
 
-/** Utility: toggle progress rail */
-function setLoading(state) {
+/** Utility: progress rail + overlay; run button respeita linha de produção */
+function setLoading(state, options = {}) {
+  const useOverlay = options.overlay !== false;
+  inspectionBusy = Boolean(state);
   const progress = byId(SELECTORS.progressRail);
-  const runBtn = byId(SELECTORS.runBtn);
+  const inspectionDetails = byId(SELECTORS.inspectionDetails);
+  const verdictRow = byId(SELECTORS.inspectionVerdictRow);
   if (progress) progress.hidden = !state;
-  if (runBtn) runBtn.disabled = state || !selectedFile;
-  toggleOverlay(state);
+  inspectionDetails?.classList.toggle("is-loading", Boolean(state));
+  verdictRow?.classList.toggle("is-loading", Boolean(state));
+  if (useOverlay) toggleOverlay(state);
+  syncProductionUi();
+}
+
+function syncProductionUi() {
+  const start = byId(SELECTORS.productionLineStart);
+  const stop = byId(SELECTORS.productionLineStop);
+  if (start) start.disabled = productionActive;
+  if (stop) stop.disabled = !productionActive;
+  const runBtn = byId(SELECTORS.runBtn);
+  if (runBtn) runBtn.disabled = productionActive || inspectionBusy || !selectedFile;
+}
+
+function verdictFromPrediction(predictionText) {
+  const raw = String(predictionText ?? "").trim();
+  if (!raw) return { display: INSPECTION_VALUE_PLACEHOLDER, kind: "empty" };
+  const lower = raw.toLowerCase();
+  if (lower.includes("anomaly")) return { display: "Anomaly", kind: "anomaly" };
+  return { display: "Normal", kind: "normal" };
+}
+
+function pickProductionSampleIndex() {
+  productionSequentialCursor = (productionSequentialCursor + 1) % SAMPLE_IMAGES.length;
+  return productionSequentialCursor;
+}
+
+/** Nome da coluna Image: rótulo da amostra curada ou nome do ficheiro carregado */
+function datasetDisplayNameForFile(file) {
+  if (activeSampleIndex != null && SAMPLE_IMAGES[activeSampleIndex]) {
+    return SAMPLE_IMAGES[activeSampleIndex].label;
+  }
+  const name = file?.name?.trim();
+  return name || INSPECTION_VALUE_PLACEHOLDER;
+}
+
+function recordInspectionInDatasetSuccess(file, payload, latency) {
+  const v = verdictFromPrediction(payload?.prediction);
+  appendProductionRow({
+    run: ++productionRunNumber,
+    time: new Date().toISOString().slice(11, 23),
+    image: datasetDisplayNameForFile(file),
+    latencyMs: latency,
+    recon: payload?.reconstruction_error,
+    thrClass: payload?.thresholds?.classification,
+    thrHeat: payload?.thresholds?.pixel_visualization,
+    thrBox: payload?.thresholds?.bounding_box,
+    verdict: v.display,
+    verdictKind: v.kind,
+  });
+}
+
+function recordInspectionInDatasetError(file, message) {
+  appendProductionRow({
+    run: ++productionRunNumber,
+    time: new Date().toISOString().slice(11, 23),
+    image: datasetDisplayNameForFile(file),
+    errorMessage: message || "Inspection failed.",
+  });
+}
+
+function appendProductionRow(fields) {
+  const tbody = byId(SELECTORS.productionDatasetBody);
+  const scroll = byId(SELECTORS.productionDatasetScroll);
+  if (!tbody) return;
+
+  const tr = document.createElement("tr");
+  const tdText = (text) => {
+    const td = document.createElement("td");
+    td.textContent = text;
+    return td;
+  };
+
+  const {
+    run,
+    time,
+    image,
+    latencyMs,
+    recon,
+    thrClass,
+    thrHeat,
+    thrBox,
+    verdict,
+    verdictKind,
+    errorMessage,
+  } = fields;
+
+  tr.appendChild(tdText(String(run)));
+  tr.appendChild(tdText(time));
+  tr.appendChild(tdText(image));
+
+  if (errorMessage) {
+    const msg =
+      errorMessage.length > 120 ? `${errorMessage.slice(0, 117)}…` : errorMessage;
+    tr.appendChild(tdText(INSPECTION_VALUE_PLACEHOLDER));
+    tr.appendChild(tdText(msg));
+    tr.appendChild(tdText(INSPECTION_VALUE_PLACEHOLDER));
+    tr.appendChild(tdText(INSPECTION_VALUE_PLACEHOLDER));
+    tr.appendChild(tdText(INSPECTION_VALUE_PLACEHOLDER));
+    const tdV = document.createElement("td");
+    const span = document.createElement("span");
+    span.className = "production-verdict production-verdict--error";
+    span.textContent = "Error";
+    tdV.appendChild(span);
+    tr.appendChild(tdV);
+  } else {
+    tr.appendChild(tdText(`${Number(latencyMs ?? 0).toFixed(1)} ms`));
+    tr.appendChild(
+      tdText(Number.isFinite(recon) ? recon.toFixed(4) : INSPECTION_VALUE_PLACEHOLDER),
+    );
+    tr.appendChild(
+      tdText(Number.isFinite(thrClass) ? thrClass.toFixed(4) : INSPECTION_VALUE_PLACEHOLDER),
+    );
+    tr.appendChild(
+      tdText(Number.isFinite(thrHeat) ? thrHeat.toFixed(4) : INSPECTION_VALUE_PLACEHOLDER),
+    );
+    tr.appendChild(
+      tdText(Number.isFinite(thrBox) ? thrBox.toFixed(4) : INSPECTION_VALUE_PLACEHOLDER),
+    );
+    const tdV = document.createElement("td");
+    const span = document.createElement("span");
+    span.className = "production-verdict";
+    if (verdictKind === "anomaly") span.classList.add("production-verdict--anomaly");
+    else if (verdictKind === "normal") span.classList.add("production-verdict--normal");
+    else span.classList.add("production-verdict--error");
+    span.textContent = verdict;
+    tdV.appendChild(span);
+    tr.appendChild(tdV);
+  }
+
+  tbody.appendChild(tr);
+  while (tbody.children.length > MAX_DATASET_ROWS) {
+    tbody.removeChild(tbody.firstChild);
+  }
+  scroll?.classList.add("has-rows");
+}
+
+async function executeInfer(file) {
+  const form = new FormData();
+  form.append("file", file);
+  form.append("include_visualizations", "false");
+  const start = performance.now();
+  const payload = await fetchJson(
+    endpoint("/infer"),
+    {
+      method: "POST",
+      body: form,
+    },
+    INFER_TIMEOUT_MS,
+  );
+  const latency = payload?.latency_ms ?? performance.now() - start;
+  return { payload, latency };
+}
+
+async function runProductionLineLoop() {
+  while (productionActive) {
+    const idx = pickProductionSampleIndex();
+    const sample = SAMPLE_IMAGES[idx];
+    const imageFilename = sample.src.split("/").pop() || `sample-${idx}.png`;
+    activeSampleIndex = idx;
+    highlightSample(idx);
+
+    setLoading(true, { overlay: false });
+    try {
+      const file = await imageUrlToFile(sample.src, imageFilename, sample.rotation || 0);
+      selectedFile = file;
+      setPreview(file);
+      resetResults();
+      const { payload, latency } = await executeInfer(file);
+      updateResults(payload, latency, { silent: true });
+      recordInspectionInDatasetSuccess(file, payload, latency);
+    } catch (err) {
+      console.error("[GlassGuard] production line infer failed", err);
+      recordInspectionInDatasetError(selectedFile, err?.message || "Inspection failed.");
+    } finally {
+      setLoading(false, { overlay: false });
+    }
+
+    if (!productionActive) break;
+    await new Promise((resolve) => setTimeout(resolve, PRODUCTION_CYCLE_GAP_MS));
+  }
+}
+
+async function startProductionLine() {
+  if (productionActive) return;
+  productionActive = true;
+  syncProductionUi();
+  await runProductionLineLoop();
+  syncProductionUi();
+}
+
+function stopProductionLine() {
+  productionActive = false;
+  syncProductionUi();
+}
+
+function setupProductionLine() {
+  byId(SELECTORS.productionLineStart)?.addEventListener("click", () => {
+    void startProductionLine();
+  });
+  byId(SELECTORS.productionLineStop)?.addEventListener("click", stopProductionLine);
 }
 
 /** Utility: clamp helper */
@@ -367,6 +583,18 @@ function normaliseBoundingBoxes(payload, dims) {
     .filter(Boolean);
 }
 
+/** Descarta caixas centradas fora da ROI circular (fundo em cantos do crop). */
+function filterBoundingBoxesToBottleRoi(boxes) {
+  if (!boxes?.length) return [];
+  return boxes.filter((box) => {
+    const cx = box.x + box.w / 2;
+    const cy = box.y + box.h / 2;
+    const dx = cx - 0.5;
+    const dy = cy - 0.5;
+    return dx * dx + dy * dy <= BOUNDING_BOX_ROI_RADIUS_SQ;
+  });
+}
+
 /** Reset overlay canvas */
 function clearBoundingBoxes() {
   const canvas = byId(SELECTORS.overlayCanvas);
@@ -434,7 +662,8 @@ function drawBoundingBoxes() {
   ctx.font = `600 ${fontSize}px "Space Grotesk", "Inter", sans-serif`;
   ctx.textBaseline = "alphabetic";
 
-  const scale = Math.min(displayWidth / sourceWidth, displayHeight / sourceHeight);
+  /* Alinhar com object-fit: cover no preview */
+  const scale = Math.max(displayWidth / sourceWidth, displayHeight / sourceHeight);
   const renderedWidth = sourceWidth * scale;
   const renderedHeight = sourceHeight * scale;
   const offsetX = (displayWidth - renderedWidth) / 2;
@@ -548,7 +777,7 @@ async function renderBoundingBoxes(payload) {
   if (!preview || !canvas || !stage || !shell) return;
 
   const dims = getImageDimensions(payload, preview);
-  const boxes = normaliseBoundingBoxes(payload, dims);
+  const boxes = filterBoundingBoxesToBottleRoi(normaliseBoundingBoxes(payload, dims));
 
   if (!boxes.length) {
     clearBoundingBoxes();
@@ -654,13 +883,13 @@ function setPreview(file) {
 /** Reset result fields */
 function resetResults() {
   clearBoundingBoxes();
-  byId(SELECTORS.verdictValue).textContent = "—";
-  byId(SELECTORS.latencyValue).textContent = "—";
-  byId(SELECTORS.errorValue).textContent = "—";
-  byId(SELECTORS.thresholdClass).textContent = "—";
-  byId(SELECTORS.thresholdHeat).textContent = "—";
-  byId(SELECTORS.thresholdBox).textContent = "—";
-  renderArtifacts(null);
+  byId(SELECTORS.verdictValue).textContent = INSPECTION_VALUE_PLACEHOLDER;
+  byId(SELECTORS.latencyValue).textContent = INSPECTION_VALUE_PLACEHOLDER;
+  byId(SELECTORS.errorValue).textContent = INSPECTION_VALUE_PLACEHOLDER;
+  byId(SELECTORS.thresholdClass).textContent = INSPECTION_VALUE_PLACEHOLDER;
+  byId(SELECTORS.thresholdHeat).textContent = INSPECTION_VALUE_PLACEHOLDER;
+  byId(SELECTORS.thresholdBox).textContent = INSPECTION_VALUE_PLACEHOLDER;
+  byId(SELECTORS.inspectionVerdictRow)?.classList.remove("is-anomaly");
 }
 
 /** Highlight active sample */
@@ -681,8 +910,7 @@ function handleFile(file, origin = "upload") {
   selectedFile = file;
   setPreview(file);
   resetResults();
-  const runBtn = byId(SELECTORS.runBtn);
-  if (runBtn) runBtn.disabled = false;
+  syncProductionUi();
   if (origin === "sample") {
     showToast("Sample ready for inspection.", "success", 2000);
   } else {
@@ -743,126 +971,6 @@ function renderSamples() {
   });
 }
 
-/** Render artifact cards */
-function renderArtifacts(rawArtifacts) {
-  const section = byId(SELECTORS.artifactSection);
-  const grid = byId(SELECTORS.artifactGrid);
-  if (!section || !grid) return;
-
-  grid.innerHTML = "";
-  const items = normalizeArtifacts(rawArtifacts);
-  if (!items.length) {
-    section.hidden = true;
-    return;
-  }
-
-  section.hidden = false;
-  items.forEach((item) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "artifact-card";
-    button.setAttribute("aria-label", `Preview ${item.label}`);
-
-    const img = document.createElement("img");
-    img.src = item.url;
-    img.alt = item.label;
-    img.decoding = "async";
-
-    const tag = document.createElement("span");
-    tag.textContent = item.label;
-
-    button.append(img, tag);
-    button.addEventListener("click", () => openLightbox(item.url, item.label));
-
-    grid.appendChild(button);
-  });
-}
-
-function normalizeArtifacts(raw) {
-  if (!raw) return [];
-  const items = [];
-  if (Array.isArray(raw)) {
-    raw.forEach((entry, index) => {
-      if (!entry) return;
-      if (typeof entry === "string") {
-        items.push({ label: `Artifact ${index + 1}`, url: entry });
-        return;
-      }
-      if (typeof entry === "object") {
-        const url = entry.url || entry.image || entry.src;
-        if (url) {
-          items.push({ label: entry.label || entry.name || `Artifact ${index + 1}`, url });
-        }
-      }
-    });
-    return items;
-  }
-
-  if (typeof raw === "object") {
-    Object.entries(raw).forEach(([key, value]) => {
-      if (!value) return;
-      if (typeof value === "string") {
-        items.push({ label: key, url: value });
-        return;
-      }
-      if (typeof value === "object") {
-        const url = value.url || value.image || value.src;
-        if (url) {
-          items.push({ label: value.label || value.name || key, url });
-        }
-      }
-    });
-  }
-  return items;
-}
-
-function openLightbox(url, label) {
-  const overlay = byId(SELECTORS.lightbox);
-  const image = byId(SELECTORS.lightboxImage);
-  const caption = byId(SELECTORS.lightboxCaption);
-  const closeBtn = byId(SELECTORS.lightboxClose);
-  if (!overlay || !image || !caption) return;
-  lightboxLastFocus = document.activeElement;
-  overlay.hidden = false;
-  image.src = url;
-  image.alt = label || "Inspection artifact";
-  caption.textContent = label || "Artifact preview";
-  lightboxOpen = true;
-  closeBtn?.focus({ preventScroll: true });
-}
-
-function closeLightbox() {
-  const overlay = byId(SELECTORS.lightbox);
-  if (!overlay || overlay.hidden) return;
-  overlay.hidden = true;
-  lightboxOpen = false;
-  const image = byId(SELECTORS.lightboxImage);
-  if (image) image.src = "";
-  if (lightboxLastFocus && typeof lightboxLastFocus.focus === "function") {
-    lightboxLastFocus.focus({ preventScroll: true });
-  }
-}
-
-function initLightbox() {
-  const overlay = byId(SELECTORS.lightbox);
-  const closeBtn = byId(SELECTORS.lightboxClose);
-  if (!overlay || !closeBtn) return;
-
-  overlay.addEventListener("click", (event) => {
-    if (event.target instanceof HTMLElement && event.target.dataset.close === "true") {
-      closeLightbox();
-    }
-  });
-
-  closeBtn.addEventListener("click", closeLightbox);
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && lightboxOpen) {
-      closeLightbox();
-    }
-  });
-}
-
 /** Handle manual file selection */
 function setupDropzone() {
   const zone = byId(SELECTORS.dropzone);
@@ -901,7 +1009,7 @@ function setupShortcuts() {
       byId(SELECTORS.fileInput)?.click();
     }
     if (event.key === "Enter" && !event.shiftKey && !event.metaKey) {
-      if (!byId(SELECTORS.runBtn)?.disabled) {
+      if (!productionActive && !byId(SELECTORS.runBtn)?.disabled) {
         event.preventDefault();
         runInspection();
       }
@@ -933,48 +1041,46 @@ async function runInspection() {
     showToast("Select a frame before running.", "error");
     return;
   }
+  if (productionActive) return;
+  const file = selectedFile;
   setLoading(true);
   showToast("Running inspection…", "info", 1800);
 
   try {
-    const form = new FormData();
-    form.append("file", selectedFile);
-    includeArtifacts = byId(SELECTORS.toggleVisualizations)?.checked ?? true;
-    form.append("include_visualizations", String(includeArtifacts));
-
-    const start = performance.now();
-    const payload = await fetchJson(
-      endpoint("/infer"),
-      {
-        method: "POST",
-        body: form,
-      },
-      INFER_TIMEOUT_MS,
-    );
-    const latency = payload?.latency_ms ?? performance.now() - start;
+    const { payload, latency } = await executeInfer(file);
     updateResults(payload, latency);
+    recordInspectionInDatasetSuccess(file, payload, latency);
   } catch (error) {
     console.error("[GlassGuard] inspection failed", error);
     showToast(error?.message || "Inspection failed.", "error");
+    recordInspectionInDatasetError(file, error?.message || "Inspection failed.");
   } finally {
     setLoading(false);
   }
 }
 
 /** Update result metrics */
-function updateResults(payload, latency) {
+function updateResults(payload, latency, options = {}) {
+  const silent = Boolean(options.silent);
   byId(SELECTORS.latencyValue).textContent = `${(latency ?? 0).toFixed(1)} ms`;
-  byId(SELECTORS.verdictValue).textContent = payload?.prediction ?? "—";
-  byId(SELECTORS.errorValue).textContent = payload?.reconstruction_error?.toFixed(4) ?? "—";
-  byId(SELECTORS.thresholdClass).textContent = payload?.thresholds?.classification?.toFixed(4) ?? "—";
-  byId(SELECTORS.thresholdHeat).textContent = payload?.thresholds?.pixel_visualization?.toFixed(4) ?? "—";
-  byId(SELECTORS.thresholdBox).textContent = payload?.thresholds?.bounding_box?.toFixed(4) ?? "—";
+  const verdictText = payload?.prediction ?? INSPECTION_VALUE_PLACEHOLDER;
+  byId(SELECTORS.verdictValue).textContent = verdictText;
+  byId(SELECTORS.errorValue).textContent =
+    payload?.reconstruction_error?.toFixed(4) ?? INSPECTION_VALUE_PLACEHOLDER;
+  byId(SELECTORS.thresholdClass).textContent =
+    payload?.thresholds?.classification?.toFixed(4) ?? INSPECTION_VALUE_PLACEHOLDER;
+  byId(SELECTORS.thresholdHeat).textContent =
+    payload?.thresholds?.pixel_visualization?.toFixed(4) ?? INSPECTION_VALUE_PLACEHOLDER;
+  byId(SELECTORS.thresholdBox).textContent =
+    payload?.thresholds?.bounding_box?.toFixed(4) ?? INSPECTION_VALUE_PLACEHOLDER;
 
-  renderArtifacts(payload?.artifacts);
-
-  const verdict = (payload?.prediction || "").toLowerCase();
-  const success = !verdict.includes("anomaly");
-  showToast(success ? "No anomaly detected." : "Anomaly detected.", success ? "success" : "error");
+  const verdict = (verdictText || "").toLowerCase();
+  const anomaly = verdict.includes("anomaly");
+  byId(SELECTORS.inspectionVerdictRow)?.classList.toggle("is-anomaly", anomaly);
+  if (!silent) {
+    const success = !anomaly;
+    showToast(success ? "No anomaly detected." : "Anomaly detected.", success ? "success" : "error");
+  }
   renderBoundingBoxes(payload).catch((error) => {
     console.warn("[GlassGuard] unable to render bounding boxes", error);
   });
@@ -1015,7 +1121,6 @@ function init() {
   renderSamples();
   setupDropzone();
   setupShortcuts();
-  initLightbox();
   window.addEventListener("resize", handleViewportChange);
   if (typeof ResizeObserver !== "undefined") {
     const stage = byId(SELECTORS.previewStage);
@@ -1025,10 +1130,9 @@ function init() {
       bboxResizeObserver.observe(stage);
     }
   }
-  byId(SELECTORS.toggleVisualizations)?.addEventListener("change", (event) => {
-    includeArtifacts = event.target.checked;
-  });
   byId(SELECTORS.runBtn)?.addEventListener("click", runInspection);
+  setupProductionLine();
+  syncProductionUi();
   const year = byId(SELECTORS.footerYear);
   if (year) year.textContent = new Date().getFullYear().toString();
 
