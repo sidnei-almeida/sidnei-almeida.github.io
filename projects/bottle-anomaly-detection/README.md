@@ -29,8 +29,6 @@ The app targets industrial quality‑control scenarios, allowing operators and d
   - Overlaid segmentation mask on top of the original frame.
   - Configurable visibility of bounding boxes vs. pixel‑level heat‑map.
   - Verdict and anomaly score displayed in a dedicated results shell.
-- **Artifact Gallery**
-  - Lightbox viewer with zoom and captioning to inspect qualitative model artefacts.
 
 ### Data & Model Notes
 
