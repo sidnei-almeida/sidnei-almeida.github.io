@@ -629,7 +629,11 @@ function queueBoundingBoxRender() {
   });
 }
 
-/** Draw bounding boxes using cached data */
+function rectsOverlap2D(a, b) {
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+
+/** Draw bounding boxes — estilo minimal: traço fino, pill discreta, linha-guia e ponto de âncora */
 function drawBoundingBoxes() {
   if (!boundingBoxCache || !boundingBoxCache.boxes.length) return;
   const canvas = byId(SELECTORS.overlayCanvas);
@@ -658,104 +662,135 @@ function drawBoundingBoxes() {
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
 
-  const fontSize = clamp(Math.round(displayWidth * 0.036), 12, 24);
-  ctx.font = `600 ${fontSize}px "Space Grotesk", "Inter", sans-serif`;
-  ctx.textBaseline = "alphabetic";
+  const ACCENT = "rgba(255, 44, 70, 0.92)";
+  const ACCENT_LINE = "rgba(255, 44, 70, 0.38)";
+  const LABEL_BG = "rgba(7, 7, 9, 0.9)";
+  const LABEL_BORDER = "rgba(255, 255, 255, 0.11)";
+  const LABEL_MUTED = "rgba(228, 228, 232, 0.88)";
 
-  /* Alinhar com object-fit: cover no preview */
+  const fontSize = clamp(Math.round(displayWidth * 0.026), 10, 15);
+  const pad = 6;
+  const pillR = 5;
+  const leaderGap = 10;
+
+  ctx.font = `500 ${fontSize}px "Space Grotesk", system-ui, sans-serif`;
+  ctx.textBaseline = "bottom";
+
   const scale = Math.max(displayWidth / sourceWidth, displayHeight / sourceHeight);
   const renderedWidth = sourceWidth * scale;
   const renderedHeight = sourceHeight * scale;
   const offsetX = (displayWidth - renderedWidth) / 2;
   const offsetY = (displayHeight - renderedHeight) / 2;
 
-  boundingBoxCache.boxes.forEach((box, index) => {
+  const items = [];
+  for (const box of boundingBoxCache.boxes) {
     const x = offsetX + box.x * renderedWidth;
     const y = offsetY + box.y * renderedHeight;
     const w = box.w * renderedWidth;
     const h = box.h * renderedHeight;
-    if (w < 4 || h < 4) return;
+    if (w < 4 || h < 4) continue;
 
-    const gradient = ctx.createLinearGradient(x, y, x + w, y + h);
-    gradient.addColorStop(0, "rgba(255, 36, 66, 0.92)");
-    gradient.addColorStop(1, "rgba(255, 90, 110, 0.8)");
-
-    const radius = clamp(Math.min(w, h) * 0.18, 10, 32);
-
-    ctx.save();
-    ctx.globalAlpha = 0.16;
-    ctx.fillStyle = gradient;
-    drawRoundedRect(ctx, x, y, w, h, radius);
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
-    ctx.shadowBlur = 14;
-    ctx.lineWidth = clamp(w * 0.02, 3, 6);
-    ctx.strokeStyle = gradient;
-    drawRoundedRect(ctx, x, y, w, h, radius);
-    ctx.stroke();
-    ctx.restore();
-
-    ctx.save();
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
-    ctx.lineWidth = clamp(w * 0.008, 1.2, 3);
-    drawRoundedRect(ctx, x + 2, y + 2, Math.max(0, w - 4), Math.max(0, h - 4), Math.max(6, radius - 6));
-    ctx.stroke();
-    ctx.restore();
-
-    const labelParts = [];
-    if (box.label) labelParts.push(box.label.toUpperCase());
+    const mainText = box.label ? String(box.label).toUpperCase() : "ANOMALY";
+    let pctStr = "";
     if (box.score !== null && box.score !== undefined) {
       const pct = box.score > 1 ? box.score : box.score * 100;
-      labelParts.push(`${clamp(pct, 0, 100).toFixed(1)}%`);
+      pctStr = `${clamp(pct, 0, 100).toFixed(1)}%`;
     }
-    const label = labelParts.join(" · ");
-    if (!label) return;
+    const sepW = pctStr ? ctx.measureText(" · ").width : 0;
+    const wMain = ctx.measureText(mainText).width;
+    const wPct = pctStr ? ctx.measureText(pctStr).width : 0;
+    const labelW = wMain + sepW + wPct + pad * 2;
+    const labelH = fontSize + pad * 2;
 
-    const metrics = ctx.measureText(label);
-    const paddingX = clamp(fontSize * 0.75, 10, 18);
-    const paddingY = clamp(fontSize * 0.55, 6, 12);
-    const labelWidth = metrics.width + paddingX * 2;
-    const labelHeight = fontSize + paddingY * 2;
+    items.push({ box, x, y, w, h, mainText, pctStr, sepW, wMain, wPct, labelW, labelH });
+  }
 
-    let labelX = x;
-    let labelY = y - labelHeight - 8;
-    if (labelY < 8) {
-      labelY = y + h + 8;
+  const placed = [];
+  for (const it of items) {
+    const cx = it.x + it.w / 2;
+    let labelX = clamp(cx - it.labelW / 2, 6, canvas.width - it.labelW - 6);
+    let labelY = it.y - it.labelH - leaderGap - 4;
+    let anchorX = cx;
+    let anchorY = it.y;
+    let fromBelow = false;
+    if (labelY < 6) {
+      labelY = it.y + it.h + leaderGap + 4;
+      anchorY = it.y + it.h;
+      fromBelow = true;
     }
-    if (labelX + labelWidth > canvas.width - 8) {
-      labelX = canvas.width - labelWidth - 8;
+
+    const rect = { x: labelX, y: labelY, w: it.labelW, h: it.labelH };
+    let nudge = 0;
+    while (placed.some((p) => rectsOverlap2D(rect, p)) && nudge < 40) {
+      nudge += 1;
+      if (!fromBelow) {
+        labelY -= 5;
+        if (labelY < 4) {
+          labelY = it.y + it.h + leaderGap + 4;
+          fromBelow = true;
+          anchorY = it.y + it.h;
+        }
+      } else {
+        labelY += 5;
+      }
+      rect.y = labelY;
     }
+    placed.push({ x: rect.x, y: rect.y, w: rect.w, h: rect.h });
+    it.layout = { labelX, labelY, anchorX, anchorY, fromBelow };
+  }
 
-    const badgeGradient = ctx.createLinearGradient(labelX, labelY, labelX + labelWidth, labelY + labelHeight);
-    badgeGradient.addColorStop(0, "rgba(6, 6, 8, 0.96)");
-    badgeGradient.addColorStop(1, "rgba(12, 12, 16, 0.9)");
+  for (const it of items) {
+    const cornerR = clamp(Math.min(it.w, it.h) * 0.05, 3, 9);
 
-    ctx.save();
-    ctx.shadowColor = "rgba(0, 0, 0, 0.65)";
-    ctx.shadowBlur = 18;
-    ctx.fillStyle = badgeGradient;
-    ctx.strokeStyle = gradient;
-    ctx.lineWidth = 1.6;
-    drawRoundedRect(ctx, labelX, labelY, labelWidth, labelHeight, 14);
+    ctx.fillStyle = "rgba(255, 44, 70, 0.045)";
+    drawRoundedRect(ctx, it.x, it.y, it.w, it.h, cornerR);
     ctx.fill();
+
+    ctx.strokeStyle = ACCENT;
+    ctx.lineWidth = 1.2;
+    drawRoundedRect(ctx, it.x, it.y, it.w, it.h, cornerR);
     ctx.stroke();
-    ctx.restore();
 
-    const accentWidth = clamp(labelWidth * 0.14, 10, 18);
-    ctx.save();
-    ctx.fillStyle = gradient;
-    drawRoundedRect(ctx, labelX, labelY, accentWidth, labelHeight, 14);
+    const { labelX, labelY, anchorX, anchorY, fromBelow } = it.layout;
+    const lcX = labelX + it.labelW / 2;
+    const lineStartY = fromBelow ? labelY : labelY + it.labelH;
+
+    ctx.strokeStyle = ACCENT_LINE;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(lcX, lineStartY);
+    ctx.lineTo(anchorX, anchorY);
+    ctx.stroke();
+
+    ctx.fillStyle = LABEL_BG;
+    drawRoundedRect(ctx, labelX, labelY, it.labelW, it.labelH, pillR);
     ctx.fill();
-    ctx.restore();
+    ctx.strokeStyle = LABEL_BORDER;
+    ctx.lineWidth = 1;
+    drawRoundedRect(ctx, labelX, labelY, it.labelW, it.labelH, pillR);
+    ctx.stroke();
 
-    ctx.save();
-    ctx.fillStyle = "rgba(245, 245, 247, 0.96)";
-    ctx.fillText(label, labelX + paddingX + accentWidth * 0.4, labelY + labelHeight - paddingY);
-    ctx.restore();
-  });
+    const textY = labelY + it.labelH - pad;
+    let tx = labelX + pad;
+    ctx.fillStyle = LABEL_MUTED;
+    ctx.fillText(it.mainText, tx, textY);
+    tx += it.wMain;
+    if (it.pctStr) {
+      ctx.fillStyle = LABEL_MUTED;
+      ctx.fillText(" · ", tx, textY);
+      tx += it.sepW;
+      ctx.fillStyle = ACCENT;
+      ctx.fillText(it.pctStr, tx, textY);
+    }
+
+    ctx.fillStyle = ACCENT;
+    ctx.beginPath();
+    ctx.arc(anchorX, anchorY, 2.75, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+    ctx.lineWidth = 0.75;
+    ctx.stroke();
+  }
 
   shell.classList.add("boxed");
   stage.dataset.boxed = "true";

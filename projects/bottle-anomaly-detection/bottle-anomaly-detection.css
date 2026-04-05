@@ -600,8 +600,8 @@ input:focus-visible {
 }
 
 .result-shell.boxed {
-  border-color: rgba(255, 36, 66, 0.22);
-  box-shadow: 0 22px 38px rgba(255, 36, 66, 0.08), inset 0 0 0 1px rgba(255, 36, 66, 0.18);
+  border-color: rgba(255, 44, 70, 0.16);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 44, 70, 0.12);
 }
 
 .result-shell.ready .preview-stage {
