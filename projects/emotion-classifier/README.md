@@ -1,49 +1,102 @@
-## Facial Emotion Classifier
+<p align="center">
+  <strong>Facial Emotion Classifier</strong><br />
+  <em>Affective computing · VGG16 CNN · 7-class emotion recognition · Webcam + upload inputs · Contextual coaching feedback.</em>
+</p>
 
-The Facial Emotion Classifier is an AI‑powered web interface that recognises **facial expressions** from images or live webcam streams and maps them to discrete emotions (angry, disgust, fear, happy, neutral, sad, surprise).
-It is designed as a UX‑focused client for a deep‑learning model deployed on a remote API.
+<p align="center">
+  <a href="https://sidnei-almeida.github.io/projects/emotion-classifier/emotion-classifier.html"><strong>Live Demo</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/sidnei-almeida/sidnei-almeida.github.io/tree/main/projects/emotion-classifier">Source</a>
+</p>
 
-### Architecture & Tech Stack
+<p align="center">
+  Maintainer: <a href="https://github.com/sidnei-almeida">@sidnei-almeida</a>
+</p>
 
-- **Frontend**: HTML + CSS + vanilla JavaScript.
-- **Model Serving API**: Hugging Face Space at  
-  `https://salmeida-vgg16-emotion-classifier.hf.space`
-  - Exposes standard health and prediction endpoints, consumed via `fetch` with timeout handling.
-- **Model**: CNN (VGG16‑style) trained on facial emotion datasets, returning softmax probabilities over the 7 emotion classes.
+<p align="center">
+  <img alt="Status" src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat" />
+  <img alt="Model" src="https://img.shields.io/badge/Model-VGG16_CNN-EE4C2C?style=flat&logo=pytorch&logoColor=white" />
+  <img alt="Classes" src="https://img.shields.io/badge/Classes-7_Emotions-EC4899?style=flat" />
+  <img alt="API" src="https://img.shields.io/badge/API-Hugging_Face_Spaces-FF9A00?style=flat&logo=huggingface&logoColor=white" />
+</p>
 
-### Key Features
+---
 
-- **Multi‑input Support**
-  - Live webcam capture (start / capture / stop flow).
-  - Drag‑and‑drop and file‑picker image uploads.
-  - Pre‑loaded example images for quick demos.
-- **RAG‑style Feedback Layer**
-  - For each predicted emotion, the UI shows a **contextual coaching message** (e.g. how to respond to anger, fear, etc.), turning raw predictions into actionable insights.
-- **Robust Networking**
-  - All HTTP calls go through `fetchWithTimeout`, with explicit handling of timeouts and invalid JSON.
-  - Clear user feedback when the API is unreachable or returns errors.
+## Executive summary
 
-### API Contract
+The **Facial Emotion Classifier** is an AI-powered web interface that recognises facial expressions from images or live webcam streams and maps them to seven discrete emotion classes: angry, disgust, fear, happy, neutral, sad, surprise. Beyond raw classification, the application surfaces contextual coaching messages for each predicted emotion — turning model output into actionable human insight.
 
-- Images are sent as `multipart/form-data` to the API, which responds with:
-  - Predicted emotion label.
-  - Per‑class probability distribution.
-  - Inference latency (when provided by the backend).
-- The UI converts probabilities into:
-  - A highlighted **primary emotion**.
-  - Secondary emotion chips for the top‑N classes.
+---
 
-### Running the App
+## Architecture
 
-- Host the portfolio and open  
-  `projects/emotion-classifier/emotion-classifier.html`.
-- Ensure the Hugging Face Space `salmeida-vgg16-emotion-classifier.hf.space` is available.
-- Webcam access requires HTTPS or `localhost` due to browser security policies.
+| Component | Detail |
+|-----------|--------|
+| **Frontend** | HTML + CSS + vanilla JavaScript |
+| **Inference API** | `https://salmeida-vgg16-emotion-classifier.hf.space` |
+| **API protocol** | `multipart/form-data` image upload; JSON response |
+| **Model** | VGG16-style CNN trained on facial emotion datasets |
+| **Output** | Softmax probability distribution over 7 emotion classes |
 
-### Example Use Cases
+---
 
-- Demonstrating **affective computing** concepts in workshops or lectures.
-- Rapidly testing new emotion models against real‑world camera feeds.
-- Adding an “emotion‑aware” layer to interactive experiences or games.
+## API contract
 
+**Request:** `POST /predict` with image as `multipart/form-data`.
 
+**Response:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `emotion` | `string` | Top predicted emotion label |
+| `probabilities` | `object` | Per-class probability distribution (0–1) |
+| `latency_ms` | `number` | Server-side inference time (when available) |
+
+The UI converts probabilities into:
+- A highlighted **primary emotion** card.
+- Secondary emotion chips for the top-N confidence classes.
+- A **contextual coaching message** based on the primary emotion.
+
+---
+
+## Functional specification
+
+### Input modes
+
+| Mode | Flow |
+|------|------|
+| **Live webcam** | Start → capture frame → stop lifecycle |
+| **File upload** | Drag-and-drop or file-picker |
+| **Sample images** | Pre-loaded gallery for quick demos |
+
+### Resilience
+
+- All HTTP calls pass through `fetchWithTimeout` with explicit timeout handling.
+- Clear feedback when the API is unreachable, slow, or returns invalid JSON.
+- Console warnings when served from `file://` instead of a proper HTTP origin.
+
+---
+
+## Running the app
+
+```bash
+python -m http.server 8080
+# open http://localhost:8080/projects/emotion-classifier/emotion-classifier.html
+```
+
+> Webcam access requires HTTPS or `localhost` due to browser MediaDevices security policies.  
+> Requires `salmeida-vgg16-emotion-classifier.hf.space` to be available.
+
+---
+
+## Example use cases
+
+- Demonstrating **affective computing** concepts in workshops, lectures or interactive exhibits.
+- Testing emotion model generalisation against live real-world camera feeds.
+- Adding an emotion-aware interaction layer to educational or entertainment applications.
+
+---
+
+## License
+
+Part of the [Sidnei Almeida portfolio](https://sidnei-almeida.github.io). Licensed under **GPL-3.0**.
