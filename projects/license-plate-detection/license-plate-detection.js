@@ -309,20 +309,13 @@ function preparePreview(src, alt, source) {
   setRuntimeDisplay("—");
   toggleResultLoading(false);
 
-  if (source?.kind === "sample") {
-    showToast("Sample staged for detection.", "success", 2000);
-  } else if (source?.kind === "file") {
-    showToast("Upload staged for detection.", "success", 2000);
-  } else if (source?.kind === "camera") {
-    showToast("Frame captured from camera.", "success", 2000);
-  }
 }
 
 function createAnnotatedImage(image, detections, meta = {}) {
-  const baseWidth = meta.width || image.naturalWidth;
+  const baseWidth  = meta.width  || image.naturalWidth;
   const baseHeight = meta.height || image.naturalHeight;
   const canvas = document.createElement("canvas");
-  canvas.width = baseWidth;
+  canvas.width  = baseWidth;
   canvas.height = baseHeight;
   const ctx = canvas.getContext("2d");
   ctx.drawImage(image, 0, 0, baseWidth, baseHeight);
@@ -331,114 +324,169 @@ function createAnnotatedImage(image, detections, meta = {}) {
     return canvas.toDataURL("image/png");
   }
 
-  const lineWidth = Math.max(2, baseWidth * 0.003);
-  ctx.lineWidth = lineWidth;
-  ctx.textBaseline = "top";
-  ctx.font = `600 ${Math.max(18, baseWidth * 0.024)}px "Oxanium", "Inter", sans-serif`;
-  ctx.lineJoin = "round";
-  ctx.lineCap = "round";
+  // ── Design tokens — amber theme matching the page
+  const ACCENT       = "rgba(245, 158, 11, 0.92)";
+  const ACCENT_LINE  = "rgba(245, 158, 11, 0.38)";
+  const ACCENT_FILL  = "rgba(245, 158, 11, 0.045)";
+  const LABEL_BG     = "rgba(7, 9, 13, 0.9)";
+  const LABEL_BORDER = "rgba(255, 255, 255, 0.11)";
+  const LABEL_MUTED  = "rgba(228, 228, 232, 0.88)";
 
-  const drawRoundedRect = (context, x, y, width, height, radius) => {
-    const r = Math.max(6, Math.min(radius, Math.min(width, height) / 2));
-    context.beginPath();
-    context.moveTo(x + r, y);
-    context.lineTo(x + width - r, y);
-    context.quadraticCurveTo(x + width, y, x + width, y + r);
-    context.lineTo(x + width, y + height - r);
-    context.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
-    context.lineTo(x + r, y + height);
-    context.quadraticCurveTo(x, y + height, x, y + height - r);
-    context.lineTo(x, y + r);
-    context.quadraticCurveTo(x, y, x + r, y);
-    context.closePath();
+  const fontSize  = Math.max(11, Math.round(baseWidth * 0.022));
+  const pad       = Math.max(5, Math.round(fontSize * 0.55));
+  const pillR     = 5;
+  const leaderGap = Math.max(8, baseWidth * 0.012);
+
+  ctx.font         = `500 ${fontSize}px "JetBrains Mono","IBM Plex Mono","Courier New",monospace`;
+  ctx.textBaseline = "bottom";
+  ctx.lineJoin     = "round";
+  ctx.lineCap      = "round";
+
+  // ── Helper: rounded rect path
+  const roundedRect = (rx, ry, rw, rh, r) => {
+    const cr = Math.max(2, Math.min(r, rw / 2, rh / 2));
+    ctx.beginPath();
+    ctx.moveTo(rx + cr, ry);
+    ctx.lineTo(rx + rw - cr, ry);
+    ctx.quadraticCurveTo(rx + rw, ry,      rx + rw, ry + cr);
+    ctx.lineTo(rx + rw, ry + rh - cr);
+    ctx.quadraticCurveTo(rx + rw, ry + rh, rx + rw - cr, ry + rh);
+    ctx.lineTo(rx + cr, ry + rh);
+    ctx.quadraticCurveTo(rx, ry + rh,      rx, ry + rh - cr);
+    ctx.lineTo(rx, ry + cr);
+    ctx.quadraticCurveTo(rx, ry,           rx + cr, ry);
+    ctx.closePath();
   };
 
-  detections.forEach((det, index) => {
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+  const rectsOverlap = (a, b) =>
+    a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+
+  // ── Build item list
+  const items = [];
+  for (const det of detections) {
     const { box, confidence } = det;
     const x = box?.xmin ?? 0;
     const y = box?.ymin ?? 0;
     const w = (box?.xmax ?? 0) - x;
     const h = (box?.ymax ?? 0) - y;
-    const label = `${(det.class_name ?? "plate").toUpperCase()} ${(confidence * 100).toFixed(1)}%`;
+    if (w < 4 || h < 4) continue;
 
-    const gradient = ctx.createLinearGradient(x, y, x + w, y + h);
-    gradient.addColorStop(0, "rgba(0, 139, 119, 0.92)");
-    gradient.addColorStop(1, "rgba(40, 220, 196, 0.88)");
+    const mainText = (det.class_name ?? "PLACA").toUpperCase();
+    const pctStr   = confidence != null
+      ? `${clamp(confidence * 100, 0, 100).toFixed(1)}%`
+      : "";
 
-    const radius = Math.max(lineWidth * 6, Math.min(w, h) * 0.16);
+    const sepW   = pctStr ? ctx.measureText(" · ").width : 0;
+    const wMain  = ctx.measureText(mainText).width;
+    const wPct   = pctStr ? ctx.measureText(pctStr).width : 0;
+    const labelW = wMain + sepW + wPct + pad * 2;
+    const labelH = fontSize + pad * 2;
 
-    ctx.save();
-    ctx.globalAlpha = 0.18;
-    ctx.fillStyle = gradient;
-    drawRoundedRect(ctx, x, y, w, h, radius);
-    ctx.fill();
-    ctx.restore();
+    items.push({ x, y, w, h, mainText, pctStr, sepW, wMain, wPct, labelW, labelH });
+  }
 
-    ctx.save();
-    ctx.shadowColor = "rgba(0, 0, 0, 0.45)";
-    ctx.shadowBlur = lineWidth * 2.4;
-    ctx.strokeStyle = gradient;
-    ctx.lineWidth = Math.max(3, lineWidth * 1.4);
-    drawRoundedRect(ctx, x, y, w, h, radius);
-    ctx.stroke();
-    ctx.restore();
+  // ── Label placement with collision avoidance
+  const placed = [];
+  for (const it of items) {
+    const cx = it.x + it.w / 2;
+    let labelX    = clamp(cx - it.labelW / 2, 6, canvas.width  - it.labelW - 6);
+    let labelY    = it.y - it.labelH - leaderGap - 4;
+    let anchorX   = cx;
+    let anchorY   = it.y;
+    let fromBelow = false;
 
-    ctx.save();
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.16)";
-    ctx.lineWidth = Math.max(1, lineWidth * 0.65);
-    drawRoundedRect(
-      ctx,
-      x + lineWidth * 0.55,
-      y + lineWidth * 0.55,
-      w - lineWidth * 1.1,
-      h - lineWidth * 1.1,
-      Math.max(4, radius - lineWidth)
-    );
-    ctx.stroke();
-    ctx.restore();
-
-    const metrics = ctx.measureText(label);
-    const paddingX = Math.max(lineWidth * 2, 14);
-    const paddingY = Math.max(lineWidth * 1.2, 8);
-    const labelWidth = metrics.width + paddingX * 2;
-    const labelHeight =
-      (metrics.actualBoundingBoxAscent || 0) +
-      (metrics.actualBoundingBoxDescent || 0) +
-      paddingY * 2;
-
-    let labelX = x;
-    let labelY = y - labelHeight - lineWidth * 0.8;
     if (labelY < 6) {
-      labelY = y + h + lineWidth * 0.8;
-    }
-    if (labelX + labelWidth > canvas.width) {
-      labelX = canvas.width - labelWidth - 6;
+      labelY    = it.y + it.h + leaderGap + 4;
+      anchorY   = it.y + it.h;
+      fromBelow = true;
     }
 
-    ctx.save();
-    const labelGradient = ctx.createLinearGradient(labelX, labelY, labelX + labelWidth, labelY + labelHeight);
-    labelGradient.addColorStop(0, "rgba(10, 18, 18, 0.9)");
-    labelGradient.addColorStop(1, "rgba(14, 28, 28, 0.95)");
-    ctx.fillStyle = labelGradient;
-    ctx.strokeStyle = gradient;
-    ctx.lineWidth = Math.max(1.2, lineWidth * 0.7);
-    drawRoundedRect(ctx, labelX, labelY, labelWidth, labelHeight, Math.max(6, lineWidth * 3));
-    ctx.shadowColor = "rgba(0, 0, 0, 0.45)";
-    ctx.shadowBlur = lineWidth * 1.6;
+    const rect = { x: labelX, y: labelY, w: it.labelW, h: it.labelH };
+    let nudge = 0;
+    while (placed.some(p => rectsOverlap(rect, p)) && nudge < 40) {
+      nudge += 1;
+      if (!fromBelow) {
+        labelY -= 5;
+        if (labelY < 4) {
+          labelY    = it.y + it.h + leaderGap + 4;
+          fromBelow = true;
+          anchorY   = it.y + it.h;
+        }
+      } else {
+        labelY += 5;
+      }
+      rect.y = labelY;
+    }
+
+    placed.push({ x: rect.x, y: rect.y, w: rect.w, h: rect.h });
+    it.layout = { labelX, labelY, anchorX, anchorY, fromBelow };
+  }
+
+  // ── Draw
+  for (const it of items) {
+    const cornerR = clamp(Math.min(it.w, it.h) * 0.05, 3, 9);
+
+    // Subtle fill
+    ctx.fillStyle = ACCENT_FILL;
+    roundedRect(it.x, it.y, it.w, it.h, cornerR);
     ctx.fill();
+
+    // Box stroke — thin, 1.2px
+    ctx.strokeStyle = ACCENT;
+    ctx.lineWidth   = 1.2;
+    roundedRect(it.x, it.y, it.w, it.h, cornerR);
     ctx.stroke();
-    ctx.shadowBlur = 0;
 
-    const accentWidth = Math.max(lineWidth * 2.2, 8);
-    ctx.fillStyle = gradient;
-    drawRoundedRect(ctx, labelX, labelY, accentWidth, labelHeight, Math.max(6, lineWidth * 3));
+    const { labelX, labelY, anchorX, anchorY, fromBelow } = it.layout;
+    const lcX        = labelX + it.labelW / 2;
+    const lineStartY = fromBelow ? labelY : labelY + it.labelH;
+
+    // Leader line
+    ctx.strokeStyle = ACCENT_LINE;
+    ctx.lineWidth   = 1;
+    ctx.beginPath();
+    ctx.moveTo(lcX, lineStartY);
+    ctx.lineTo(anchorX, anchorY);
+    ctx.stroke();
+
+    // Label background
+    ctx.fillStyle = LABEL_BG;
+    roundedRect(labelX, labelY, it.labelW, it.labelH, pillR);
     ctx.fill();
 
-    ctx.fillStyle = "rgba(241, 245, 244, 0.94)";
-    ctx.textBaseline = "alphabetic";
-    ctx.fillText(label, labelX + paddingX + accentWidth * 0.35, labelY + labelHeight - paddingY * 0.55);
-    ctx.restore();
-  });
+    // Label border
+    ctx.strokeStyle = LABEL_BORDER;
+    ctx.lineWidth   = 1;
+    roundedRect(labelX, labelY, it.labelW, it.labelH, pillR);
+    ctx.stroke();
+
+    // Label text: class name (muted) + " · " + percentage (amber)
+    const textY = labelY + it.labelH - pad;
+    let tx = labelX + pad;
+
+    ctx.fillStyle = LABEL_MUTED;
+    ctx.fillText(it.mainText, tx, textY);
+    tx += it.wMain;
+
+    if (it.pctStr) {
+      ctx.fillStyle = LABEL_MUTED;
+      ctx.fillText(" · ", tx, textY);
+      tx += it.sepW;
+      ctx.fillStyle = ACCENT;
+      ctx.fillText(it.pctStr, tx, textY);
+    }
+
+    // Anchor dot
+    ctx.fillStyle = ACCENT;
+    ctx.beginPath();
+    ctx.arc(anchorX, anchorY, 2.75, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+    ctx.lineWidth   = 0.75;
+    ctx.stroke();
+  }
 
   return canvas.toDataURL("image/png");
 }
@@ -732,8 +780,6 @@ async function executeDetection() {
     image.src = "";
     image.alt = "";
   }
-  showToast("Running detection...", "info", 1800);
-
   try {
     isProcessing = true;
     updateRunButton();
@@ -759,7 +805,7 @@ async function executeDetection() {
       detections.length && topSummary
         ? `${detectionMessage} Top confidence: ${topSummary}.`
         : detectionMessage;
-    showToast(finalMessage, detections.length ? "success" : "info");
+    void finalMessage;
   } catch (error) {
     console.error("[PlatePulse] Detection failed", error);
     renderError(error);
