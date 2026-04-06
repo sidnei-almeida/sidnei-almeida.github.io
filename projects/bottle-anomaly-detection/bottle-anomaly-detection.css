@@ -41,8 +41,8 @@
   --radius-md: 12px;
   --radius-sm: 8px;
   --transition: 160ms ease;
-  /* Preview 1:1 + toolbar + chips; teto da grelha principal (paleta com scroll interno) */
-  --gg-preview-cap: min(56vh, min(88vw, 720px));
+  /* Preview 1:1 + toolbar + chips; teto da grelha (ligeiramente mais baixo para dar ar ao dataset em baixo) */
+  --gg-preview-cap: min(52vh, min(88vw, 680px));
   /* Dropzone + Inspect + gaps + faixa de métricas sob o output */
   --gg-workspace-chrome: clamp(8.25rem, 14.5vh, 11.5rem);
   --gg-main-max-height: calc(var(--gg-preview-cap) + var(--gg-workspace-chrome));
@@ -52,16 +52,23 @@
   box-sizing: border-box;
 }
 
-html,
-body {
-  height: 100%;
-  min-height: 100vh;
+/* Raiz com scroll explícito — evita alguns motores a comportarem-se como “app fullscreen” */
+html {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 body {
   position: relative;
   z-index: 0;
   margin: 0;
+  min-height: 100vh;
+  height: auto;
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
   background-color: #030304;
   /* Grelha tipo piso + ambiente escuro + acento (versão após o fundo “clássico”) */
@@ -72,9 +79,15 @@ body {
     linear-gradient(180deg, #12151a 0%, #040506 55%, #020203 100%);
   background-size: 32px 32px, 32px 32px, 100% 100%, 100% 100%;
   color: var(--text-primary);
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+}
+
+/* Scroll do documento mantido no browser */
+html {
+  overflow-y: auto;
+}
+
+body {
+  overflow-y: auto;
 }
 
 body::after {
@@ -114,16 +127,22 @@ input:focus-visible {
   width: min(1800px, 92vw);
   max-width: 1800px;
   margin: clamp(24px, 3vh, 40px) auto;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(20px, 2.5vw, 32px);
+  display: block;
   padding: 0 clamp(16px, 2vw, 24px);
   padding-left: calc(clamp(16px, 2vw, 24px) + 6px);
-  flex: 1;
-  min-height: 0;
+  /* Altura = só o conteúdo; scroll no html/body (sem min-height:100vh que ancorava ao ecrã) */
+  height: auto;
+  max-height: none;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: visible;
 }
+
+.glassguard > * + * {
+  margin-top: clamp(20px, 2.5vw, 32px);
+}
+
+/* Empilha main + dataset; altura = conteúdo (sem teto à viewport — scroll é no body) */
+/* Layout sequencial simples: header -> main -> dataset -> footer */
 
 /* Fita vertical fina à esquerda (só um toque) */
 .glassguard::before {
@@ -360,8 +379,8 @@ input:focus-visible {
 }
 
 /*
- * Altura máxima da grelha: força a coluna da paleta a limitar a lista — .palette-scroll volta a ter scroll.
- * O workspace à direita continua sem scroll interno (.workspace-bottom overflow visible).
+ * Grelha com altura natural: sem teto fixo à viewport (antes height/max-height + overflow:hidden
+ * criavam “dashboard” com scroll interno na paleta e tudo espremido). Scroll = browser.
  */
 .gg-main {
   display: grid;
@@ -369,11 +388,10 @@ input:focus-visible {
   grid-template-rows: minmax(0, 1fr);
   column-gap: clamp(18px, 2vw, 28px);
   row-gap: clamp(10px, 1.2vw, 18px);
-  flex: 0 0 auto;
   min-height: 0;
   height: var(--gg-main-max-height);
   max-height: var(--gg-main-max-height);
-  align-items: stretch;
+  align-items: start;
   align-content: start;
   overflow: hidden;
 }
@@ -393,7 +411,7 @@ input:focus-visible {
   display: flex;
   flex-direction: column;
   gap: clamp(12px, 1.5vw, 18px);
-  min-height: 0;
+  min-height: auto;
 }
 
 /* Canto tipo marcação de chapa (tabela cobre o canto inferior no dataset) */
@@ -420,18 +438,17 @@ input:focus-visible {
   height: 100%;
 }
 
-/* Mesma altura que o painel workspace na linha da grelha */
 .panel.workspace {
   min-height: 0;
   height: 100%;
 }
 
-/* Scroll interno: amostras não transbordam para fora do painel */
+/* Amostras com scroll interno (como no layout de referência) */
 .palette-scroll {
-  flex: 1;
+  flex: 1 1 auto;
   min-height: 0;
-  overflow-y: auto;
   overflow-x: hidden;
+  overflow-y: auto;
   padding: clamp(10px, 1.2vw, 14px);
   border-radius: var(--radius-md);
   border: 1px dashed rgba(255, 255, 255, 0.1);
@@ -640,7 +657,7 @@ input:focus-visible {
 
 .project-details {
   flex: unset;
-  min-height: 0;
+  min-height: auto;
   margin-top: 0;
   padding: 11px 12px;
   display: flex;
@@ -684,7 +701,11 @@ input:focus-visible {
 .project-details--footer {
   width: 100%;
   max-width: 100%;
-  padding: clamp(12px, 1.5vw, 16px) clamp(14px, 2vw, 20px);
+  padding: clamp(18px, 2.2vw, 26px) clamp(14px, 2vw, 20px);
+}
+
+.project-details--footer .inspection-details__title {
+  padding-top: clamp(4px, 0.55vw, 10px);
 }
 
 .project-details__block {
@@ -1041,7 +1062,7 @@ input:focus-visible {
   font-size: clamp(0.6rem, 0.85vw, 0.78rem);
   color: var(--text-tertiary);
   padding: calc(clamp(12px, 1.5vw, 20px) + 3px) 0 clamp(12px, 1.5vw, 20px);
-  margin-top: auto;
+  /* Sem margin-top:auto: o rodapé fica no fim do conteúdo; o scroll é na página, não “preso” à viewport */
   flex-shrink: 0;
   border-top: none;
 }
@@ -1126,7 +1147,6 @@ input:focus-visible {
 @media (max-width: 1200px) {
   .gg-main {
     grid-template-columns: 1fr;
-    /* Duas faixas com altura partilhada: paleta com scroll interno, workspace abaixo */
     grid-template-rows: minmax(0, 1fr) minmax(0, 1.2fr);
     height: min(var(--gg-main-max-height), 88vh);
     max-height: min(var(--gg-main-max-height), 88vh);
@@ -1146,6 +1166,10 @@ input:focus-visible {
 
   .gg-main {
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    height: auto;
+    max-height: none;
+    overflow: visible;
   }
 
   .workspace-top {
@@ -1402,33 +1426,34 @@ textarea::placeholder {
   color: var(--text-tertiary);
 }
 
-/*
- * Dataset: flex-1 no bloco entre main e footer.
- * min-height: 0 é obrigatório no item flex — senão min-height:auto usa a altura da tabela e o painel
- * cresce sem limite, transbordando por cima do footer (scroll interno nunca aparece).
- */
+/* Dataset: altura por conteúdo + mínimos explícitos na zona da tabela (pai já não tem teto flex à viewport) */
 .panel.overview.production-dataset-panel {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 0%;
-  gap: 0;
-  min-height: 0;
+  display: block;
+  align-self: stretch;
   min-width: 0;
+  min-height: 42rem;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .production-dataset-panel__header {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: flex-start;
   gap: 1rem 1.25rem;
   flex-shrink: 0;
+  padding-top: clamp(6px, 0.9vw, 12px);
   padding-bottom: clamp(10px, 1.2vw, 14px);
   margin-bottom: clamp(10px, 1.2vw, 14px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+.production-dataset-panel__header > div:first-child {
+  flex: 1 1 min(100%, 22rem);
+  min-width: 0;
 }
 
 .production-dataset-panel__header h2 {
@@ -1449,8 +1474,10 @@ textarea::placeholder {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
   gap: 10px;
   flex-shrink: 0;
+  margin-inline-start: auto;
 }
 
 .production-line-toolbar .primary-btn {
@@ -1474,17 +1501,19 @@ textarea::placeholder {
   transform: none;
 }
 
-/* Mesmo bloco visual do painel; min-height: 0 para o overflow criar scroll em vez de esticar o pai */
 .production-table-scroll {
   position: relative;
-  flex: 1 1 0%;
-  min-height: 0;
+  display: block;
+  min-width: 0;
+  width: 100%;
+  min-height: 34rem;
+  height: 34rem;
+  max-height: none;
   overflow-x: auto;
   overflow-y: auto;
   border-radius: 0;
   border: none;
   background: transparent;
-  scrollbar-gutter: stable;
 }
 
 .production-table {
@@ -1497,9 +1526,7 @@ textarea::placeholder {
 }
 
 .production-table thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
+  position: static;
   padding: 0.55rem 0.65rem;
   text-align: left;
   font-size: 0.68rem;
