@@ -17,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -47,11 +47,18 @@
       <div class="container">
         <div class="brand">
           <div class="brand-icon" aria-hidden="true">
-            <svg viewBox="0 0 32 32">
-              <rect class="logo-frame" x="3.5" y="9" width="25" height="14" rx="4"></rect>
-              <rect class="logo-line" x="7" y="13" width="17" height="2" rx="1"></rect>
-              <rect class="logo-line logo-line--short" x="7" y="17" width="12" height="2" rx="1"></rect>
-              <circle class="logo-dot" cx="23" cy="18" r="2"></circle>
+            <svg viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect class="lp-outer" x="1" y="1" width="34" height="22" rx="3.5"/>
+              <rect class="lp-band" x="1" y="1" width="34" height="6" rx="3.5"/>
+              <rect class="lp-band-fill" x="1" y="5" width="34" height="2"/>
+              <rect class="lp-char" x="5.5" y="10" width="5" height="8" rx="1.5"/>
+              <rect class="lp-char" x="12.5" y="10" width="5" height="8" rx="1.5"/>
+              <rect class="lp-char" x="19.5" y="10" width="5" height="8" rx="1.5"/>
+              <rect class="lp-char" x="26.5" y="10" width="4" height="8" rx="1.5"/>
+              <path class="lp-corner" d="M3 6.5V3H6.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="lp-corner" d="M29.5 3H33V6.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="lp-corner" d="M33 17.5V21H29.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="lp-corner" d="M6.5 21H3V17.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
           <div class="brand-copy">
@@ -217,7 +224,23 @@
               <div class="result-stage" id="resultStage">
                 <div class="progress-bar" id="progressBar" hidden></div>
                 <figure class="result-figure">
+                  <div class="scan-frame" aria-hidden="true"></div>
                   <img id="resultImage" alt="Detection preview" />
+                  <div class="result-empty-state" aria-hidden="true">
+                    <svg viewBox="0 0 64 64" fill="none">
+                      <rect class="es-plate" x="8" y="18" width="48" height="28" rx="5"/>
+                      <rect class="es-band" x="8" y="18" width="48" height="9" rx="5"/>
+                      <rect class="es-band-fill" x="8" y="24" width="48" height="3"/>
+                      <rect class="es-char" x="13" y="31" width="8" height="10" rx="2"/>
+                      <rect class="es-char" x="24" y="31" width="8" height="10" rx="2"/>
+                      <rect class="es-char" x="35" y="31" width="8" height="10" rx="2"/>
+                      <path class="es-corner" d="M11 22.5V18H15.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path class="es-corner" d="M48.5 18H53V22.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path class="es-corner" d="M53 41.5V46H48.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path class="es-corner" d="M15.5 46H11V41.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p>Select a sample or upload an image to run detection</p>
+                  </div>
                 </figure>
               </div>
             </div>
