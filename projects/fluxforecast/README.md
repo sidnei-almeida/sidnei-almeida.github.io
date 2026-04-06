@@ -24,7 +24,7 @@
 
 ## Executive summary
 
-**FluxForecast** is a real-time monitoring interface for liquid flow prediction in offshore riser systems, powered by an LSTM regression model. The application simulates a live telemetry stream from a historical sensor dataset, calls a hosted prediction API, and visualises predicted versus actual flow rates — complete with configurable threshold-based anomaly detection and an operations-ready UI.
+**FluxForecast** is a real-time monitoring interface for liquid flow prediction in offshore riser systems, powered by an LSTM regression model. The application simulates a live telemetry stream from a historical sensor dataset, calls a hosted prediction API, and visualises predicted versus actual flow rates — complete with fixed P05/P95 threshold-based anomaly zones and an operations-ready UI.
 
 ---
 
@@ -57,10 +57,9 @@
 | **Absolute error** | Per-inference deviation |
 | **Inference latency** | API round-trip time per prediction |
 
-### Threshold configuration
+### Thresholds (fixed)
 
-- **P05 / P95 percentiles** from the dataset distribution define default low and high thresholds.
-- User-overridable sliders for both bounds.
+- **P05 / P95** bounds are constants in the client (`FLOW_RATE_P05` / `FLOW_RATE_P95`), aligned with the dataset distribution; they drive the dashed guide lines, segment colouring, and verdict logic — no manual override in the UI.
 - Flow anomaly zones highlighted on the canvas chart.
 
 ### Visualisation layer
@@ -75,7 +74,7 @@
 
 - Input features: **7 pressure channels** normalised between empirically observed min/max values.
 - Flow rate is de-normalised for display using dataset-derived scale parameters.
-- Percentile thresholds are computed from the dataset at load time.
+- Percentile thresholds are fixed constants derived from prior dataset analysis (same scale as flow denormalisation).
 
 ---
 
