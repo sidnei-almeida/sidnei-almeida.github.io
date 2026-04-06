@@ -1,93 +1,134 @@
-# Professional Portfolio – Sidnei Almeida
+<p align="center">
+  <strong>Sidnei Almeida · AI Engineering Portfolio</strong><br />
+  <em>Production-grade machine learning systems, computer vision, LLM applications, and quantitative analytics — all with live interactive demos.</em>
+</p>
 
-This repository contains the portfolio website of Sidnei Almeida, a Software Engineer & Architect specialized in Machine Learning, Data Science, APIs, and analytical solutions.
+<p align="center">
+  <a href="https://sidnei-almeida.github.io"><strong>sidnei-almeida.github.io</strong></a>
+</p>
 
-## :rocket: About the Website
+<p align="center">
+  Maintainer: <a href="https://github.com/sidnei-almeida">@sidnei-almeida</a>
+  &nbsp;·&nbsp;
+  <a href="https://www.linkedin.com/in/saaelmeida93/">LinkedIn</a>
+  &nbsp;·&nbsp;
+  <a href="mailto:sidnei.almeida1806@gmail.com">sidnei.almeida1806@gmail.com</a>
+</p>
 
-Premium, responsive portfolio created to highlight Sidnei’s experience and projects in Software Engineering and Data Science. The site features a sleek dark/light theme, glassmorphism effects, and premium color accents that reflect technical expertise in data analytics, machine learning, and full-stack development.
-
-### Main Sections
-- **Projects**: Showcase of real Machine Learning, API, Web Scraping, and Analytics projects with detailed descriptions and source code links.
-- **Skills**: Interactive carousel featuring technologies and tools across Python, Machine Learning, FastAPI, and modern web development.
-- **About Me**: Professional overview emphasizing academic background, experience, and certifications.
-- **Contact**: Contact information and social media links.
-
-## :computer: Featured Projects
-
-### 1. Business Potential Predictive Analysis
-Machine Learning system that forecasts the growth potential of stocks based on financial indicators, using FastAPI and classification algorithms.
-
-- **Technologies:** FastAPI, Machine Learning, Python, JavaScript
-- **Status:** Active and highlighted
-- **Accuracy:** 87%
-- **Access:** [GitHub Repository](https://github.com/sidnei-almeida/potencial_empresarial)
-
-### 2. South American Economic Monitoring
-Interactive dashboard for exploratory analysis and visualization of economic indicators from South American countries, with multiple visualizations and dynamic filters.
-
-- **Technologies:** Streamlit, Python, Pandas, Plotly, Requests
-- **Status:** Active
-- **Users:** 500+
-- **Access:** [GitHub Repository](https://github.com/sidnei-almeida/monitoramento_sulamericano)
-
-### 3. Intelligent News Analysis
-Automated news classification platform combining NLP, machine learning, and real-time data visualization.
-
-- **Technologies:** Pandas, Scikit-learn, NLTK, Matplotlib, HTML/CSS/JS
-- **Status:** Active and highlighted
-- **Sources:** 20+ news outlets
-- **Access:** [GitHub Repository](https://github.com/sidnei-almeida/api_noticias)
-
-### 4. CS2 Valuation API
-API for evaluating Counter-Strike 2 inventories, including price scraping, Storage Unit analysis, and item classification.
-
-- **Technologies:** FastAPI, Python, Web Scraping, Steam API, JWT
-- **Status:** Active and recent
-- **Access:** [GitHub Repository](https://github.com/sidnei-almeida/cotacao_cs2) | [Demo](https://elite-skins-2025.github.io/api.html)
-
-### 5. Elite Skins CS2
-Community platform for Counter-Strike 2 skin trading, featuring group management, offers, and giveaways.
-
-- **Technologies:** HTML5, CSS3, JavaScript, Bootstrap, Responsive Design
-- **Status:** Active and collaborative
-- **Access:** [GitHub Repository](https://github.com/elite-skins-2025/elite-skins-2025.github.io) | [Website](https://elite-skins-2025.github.io/)
-
-### 6. Pao de Acucar Scraping
-Automated web scraper built to collect nutritional data from Pão de Açúcar products, leveraging advanced Selenium scraping techniques.
-
-- **Technologies:** Python, Selenium, Pandas, Web Scraping, Docker
-- **Status:** Active and complex
-- **Access:** [GitHub Repository](https://github.com/sidnei-almeida/pao_de_acucar_scraping)
-
-## :scroll: Technical Highlights
-
-- **Premium design** with dark/light themes and glassmorphism effects
-- **Responsive layout** using a fixed grid of 3 columns (desktop), 2 columns (tablet), 1 column (mobile)
-- **Smooth animations** and interactions powered by IntersectionObserver
-- **Skills carousel** with infinite scroll and drag/swipe support
-- **Animated project filters** with seamless transitions
-- **Premium color system** with multiple themes (gold, blue, purple, emerald, pink)
-- **Custom favicon** with minimalist design
-- **SEO optimized** using meta tags and structured data
-
-## :file_folder: Repository Structure
-
-- `index.html` – Portfolio landing page
-- `style.css` – Premium CSS styles with glassmorphism
-- `script.js` – Advanced JavaScript interactions
-- `favicon.ico`, `favicon.svg` – Custom favicons
-- `images/` – Visual assets
-  - `project-1.png`, `project-2.png`, `project-3.png` – Project thumbnails
-  - `csso2.png`, `eliteskins.png`, `paodeacucar.png` – Specific project previews
-  - `github.svg`, `linkedin.svg` – Social icons
-
-## :email: Contact
-
-Get in touch by email: [sidnei.almeida1806@gmail.com](mailto:sidnei.almeida1806@gmail.com)
-
-Connect on [LinkedIn](https://www.linkedin.com/in/saaelmeida93/) or explore more projects on [GitHub](https://github.com/sidnei-almeida).
+<p align="center">
+  <img alt="Status" src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat" />
+  <img alt="License" src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat" />
+  <img alt="HTML5" src="https://img.shields.io/badge/Frontend-HTML5_·_CSS3_·_JS-E34F26?style=flat&logo=html5&logoColor=white" />
+  <img alt="Python" src="https://img.shields.io/badge/Backend-Python_·_FastAPI-3776AB?style=flat&logo=python&logoColor=white" />
+  <img alt="ML" src="https://img.shields.io/badge/ML-PyTorch_·_YOLO_·_LangChain-EE4C2C?style=flat" />
+</p>
 
 ---
 
-> **Sidnei Almeida** – Software Engineer & Architect  
-> Turning data into solutions with passion and technology.
+## Executive summary
+
+This repository is the source for a professional engineering portfolio that showcases end-to-end AI systems spanning computer vision, natural language processing, time-series forecasting, and quantitative finance. Each project is backed by a live API (hosted on Hugging Face Spaces or Render) and presented through a custom-built, premium web interface with real-time inference capabilities.
+
+The site is intentionally a pure static frontend — no build toolchain, no dependencies — deployable from any CDN or GitHub Pages with zero configuration.
+
+---
+
+## Site architecture
+
+| Layer | Detail |
+|-------|--------|
+| **Hosting** | GitHub Pages (static, `main` branch) |
+| **Frontend** | Vanilla HTML5 + CSS3 + JavaScript — no frameworks |
+| **Design system** | Custom dark-mode design system; glassmorphism effects; CSS variables; responsive grid |
+| **Internationalisation** | PT / EN / ES via `data-pt`, `data-en`, `data-es` attributes + JS swapper |
+| **Animations** | IntersectionObserver-driven scroll reveals; CSS keyframe transitions |
+| **SEO** | Structured data (JSON-LD), Open Graph, Twitter Card meta tags |
+
+---
+
+## Featured projects
+
+| Project | Domain | Model / Stack | Live API |
+|---------|--------|---------------|----------|
+| [GlassGuard](./projects/bottle-anomaly-detection/) | Industrial CV | UNet anomaly segmentation | Hugging Face |
+| [PlatePulse](./projects/license-plate-detection/) | Traffic CV | YOLOv8 + OCR | Render |
+| [RoadSight](./projects/roadsign-detection/) | ADAS CV | YOLOv8 detector | Hugging Face |
+| [DogBreed Vision](./projects/canine-detection/) | Object detection | YOLOv8 fine-tune | Hugging Face |
+| [Gray Matter](./projects/research-agent/) | LLM · Agents | LangChain + LangGraph | Hugging Face |
+| [DocMind](./projects/docmind-chat/) | RAG · NLP | Embeddings + LLM | Hugging Face |
+| [Axiom Foundry](./projects/secom-anomaly/) | Industrial ML | LSTM anomaly detection | Hugging Face |
+| [PulseBridge](./projects/predictive-maintenance/) | Predictive ML | LSTM classification | Hugging Face |
+| [FluxForecast](./projects/fluxforecast/) | Time-series | LSTM regression | Render |
+| [Cinescope](./projects/tmdb-cinema/) | Recommender | BERT semantics + TMDb | Render |
+| [FinSight](./projects/quant-core/) | Quant finance | Deep RL (PPO) + FastAPI | Render |
+| [RL Trading Agent](./projects/rl_trading_dashboard/) | Quant finance | Deep RL · PPO/ONNX | YFinance |
+| [Economic Monitor SA](./projects/economic_monitoring_sa/) | Macro analytics | World Bank API | Public API |
+| [CS2 Valuation](./projects/cs2-valuation/) | Gaming / Finance | Steam API + pricing | Render |
+| [Business Growth](./projects/business_growth_potential/) | Corporate ML | Random Forest | Render |
+
+---
+
+## Repository layout
+
+```
+sidnei-almeida.github.io/
+├── index.html                  # Portfolio landing page
+├── style.css                   # Global design system
+├── script.js                   # Interactions, filters, i18n
+├── images/                     # Project thumbnails and assets
+├── includes/
+│   └── projects-section.html   # Injected project cards
+└── projects/
+    ├── bottle-anomaly-detection/
+    ├── license-plate-detection/
+    ├── roadsign-detection/
+    ├── canine-detection/
+    ├── research-agent/
+    ├── docmind-chat/
+    ├── secom-anomaly/
+    ├── predictive-maintenance/
+    ├── fluxforecast/
+    ├── tmdb-cinema/
+    ├── quant-core/
+    ├── rl_trading_dashboard/
+    ├── economic_monitoring_sa/
+    ├── monitoramento-sulamericano/
+    ├── cs2-valuation/
+    ├── business_growth_potential/
+    ├── elite-skins-2025/
+    └── emotion-classifier/
+```
+
+---
+
+## Running locally
+
+```bash
+git clone https://github.com/sidnei-almeida/sidnei-almeida.github.io.git
+cd sidnei-almeida.github.io
+python -m http.server 8080
+# open http://localhost:8080
+```
+
+> Camera-based demos and API calls require HTTPS or `localhost`. Serving via `file://` will trigger CORS and camera-permission blocks.
+
+---
+
+## Contact
+
+| Channel | Link |
+|---------|------|
+| Portfolio | [sidnei-almeida.github.io](https://sidnei-almeida.github.io) |
+| GitHub | [github.com/sidnei-almeida](https://github.com/sidnei-almeida) |
+| LinkedIn | [linkedin.com/in/saaelmeida93](https://www.linkedin.com/in/saaelmeida93/) |
+| Email | [sidnei.almeida1806@gmail.com](mailto:sidnei.almeida1806@gmail.com) |
+
+---
+
+## License
+
+This project is licensed under the **GNU General Public License v3.0**.
+
+- License file: [`LICENSE.md`](./LICENSE.md)
+- SPDX identifier: `GPL-3.0-only`
+- Reference: [gnu.org/licenses/gpl-3.0](https://www.gnu.org/licenses/gpl-3.0)

@@ -1,54 +1,114 @@
-## Deep RL Trading Agent – Live Portfolio Dashboard
+<p align="center">
+  <strong>Deep RL Trading Agent · Live Portfolio Dashboard</strong><br />
+  <em>Deep reinforcement learning · PPO policy · AAPL · AMZN · GOOGL · MSFT · NVDA · Buy & Hold benchmark comparison.</em>
+</p>
 
-This project is a premium, horizontal dashboard to monitor a **Deep Reinforcement Learning (RL) trading agent** that allocates a portfolio across large technology stocks.  
-The UI is inspired by professional trading/research tools and focuses on answering a simple question: **“Is the RL agent really creating value versus a Buy & Hold benchmark?”**
+<p align="center">
+  <a href="https://sidnei-almeida.github.io/projects/rl_trading_dashboard/rl_trading_dashboard.html"><strong>Live Demo</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/sidnei-almeida/sidnei-almeida.github.io/tree/main/projects/rl_trading_dashboard">Source</a>
+</p>
 
-### Architecture & Tech Stack
+<p align="center">
+  Maintainer: <a href="https://github.com/sidnei-almeida">@sidnei-almeida</a>
+</p>
 
-- **Frontend**: HTML5 + CSS3 (custom dark design system) + vanilla JavaScript.
-- **Visualisation**: Plotly.js for interactive charts (equity curves, drawdown, allocation pies, multi‑ticker price lines).
-- **Dados**:
-  - Snapshot local (`data/sp500.csv`) coletado com `yfinance` contendo histórico ajustado de AAPL, AMZN, GOOGL, MSFT e NVDA.
-  - Atualização incremental diretamente da API pública do **YFinance** (`https://query1.finance.yahoo.com/v8/finance/chart/{ticker}`) quando o usuário clica em **Refresh data**. Apenas candles inexistentes são anexados ao dataframe em memória.
-- **Model**: Deep RL policy (PPO / ONNX) that decides portfolio weights for a basket of tech tickers.
+<p align="center">
+  <img alt="Status" src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat" />
+  <img alt="Model" src="https://img.shields.io/badge/Agent-PPO_·_ONNX-EE4C2C?style=flat&logo=pytorch&logoColor=white" />
+  <img alt="Data" src="https://img.shields.io/badge/Data-YFinance_·_CSV-22C55E?style=flat" />
+  <img alt="Charts" src="https://img.shields.io/badge/Charts-Plotly.js-3B82F6?style=flat" />
+</p>
 
-### Dashboard Views
+---
 
-- **Overview**
-  - Metric cards for **final equity of the agent**, **final equity of Buy & Hold** and **Agent vs Benchmark** (excess return + narrative).
-  - **Equity Curve** chart: RL agent vs Buy & Hold on the same time axis.
-  - **Current Allocation Snapshot**: donut chart and allocation table by ticker.
-  - **Drawdown Profile (Agent)**: running max drawdown in %.
-  - **Live Agent Insight**: real‑time narrative combining excess return, max drawdown, per‑ticker returns and portfolio concentration.
+## Executive summary
 
-- **Allocation**
-  - **Prices per Ticker**: multi‑line price chart for all active tickers with a ticker filter in the sidebar.
-  - **Allocation Table**: tabular view of current weights by ticker.
+This dashboard monitors a Deep Reinforcement Learning trading agent that dynamically allocates a portfolio across five large-cap technology stocks. It answers a focused question: **"Is the RL agent generating real alpha versus a passive Buy & Hold benchmark?"** The UI is inspired by professional trading and research tools, providing equity curves, drawdown profiles, allocation snapshots and a live narrative insight engine.
 
-### Data Contract – `/api/v1/dashboard-data`
+---
 
-The dashboard expects a JSON payload with (at minimum) the following structure:
+## Architecture
 
-- `tickers: string[]` – list of tickers in the basket.  
-- `price_history: Array<{ Date: string, [ticker: string]: number }>` – daily prices per ticker.  
-- `agent_history: number[]` – portfolio equity path of the RL agent.  
-- `benchmark_history: number[]` – equity path of a Buy & Hold benchmark.  
-- `current_allocation: { [ticker: string]: number }` – current weights (0–1) per ticker.  
-- `initial_balance: number` – starting capital used for equity calculations.  
-- `transaction_cost: number` – per‑trade cost (fractional, e.g. `0.001`).
+| Component | Detail |
+|-----------|--------|
+| **Frontend** | HTML5 + CSS3 (custom dark design system) + vanilla JavaScript |
+| **Charts** | Plotly.js — equity curves, drawdown, allocation pie, multi-ticker price lines |
+| **Baseline data** | `data/sp500.csv` — adjusted price history for AAPL, AMZN, GOOGL, MSFT, NVDA (collected via `yfinance`) |
+| **Live refresh** | YFinance public API `https://query1.finance.yahoo.com/v8/finance/chart/{ticker}` |
+| **RL model** | Deep RL policy (PPO / ONNX) — portfolio weight allocation |
 
-If some fields are missing the dashboard may render partially or fallback to neutral values.
+---
 
-### Atualização dos Dados
+## Dashboard views
 
-- Na carga inicial o dashboard lê o CSV `data/sp500.csv`, reconstrói as curvas de equity (agente x benchmark) e exibe todas as visualizações imediatamente, mesmo offline.
-- Ao clicar em **Refresh data** o navegador consulta a API pública do YFinance apenas para o período posterior ao último candle presente no CSV. Os novos preços são anexados ao dataframe em memória e todo o painel é re-renderizado.
-- Caso não existam candles novos (por exemplo em fins de semana) o usuário recebe o aviso correspondente.
+### Overview
 
-### Running the Dashboard
+| Widget | Description |
+|--------|-------------|
+| **Final equity cards** | Agent final equity, Buy & Hold final equity, excess return |
+| **Equity curve** | RL agent vs Buy & Hold on the same time axis |
+| **Allocation snapshot** | Donut chart + table of current weights by ticker |
+| **Drawdown profile** | Running max drawdown (%) for the agent |
+| **Live insight** | Dynamic narrative: excess return, max drawdown, per-ticker returns, concentration |
 
-- Serve the portfolio with any static HTTP server and open:  
-  `projects/rl_trading_dashboard/rl_trading_dashboard.html`
-- Para utilizar o botão de refresh é necessário acesso à internet (mesmo domínio do dashboard) para consultar `query1.finance.yahoo.com`. A visualização principal continua funcionando 100% offline graças ao CSV.
+### Allocation view
 
+- Multi-line price chart for all active tickers with sidebar ticker filter.
+- Allocation table with current portfolio weights.
 
+---
+
+## Data refresh
+
+| Trigger | Behaviour |
+|---------|-----------|
+| **Page load** | Reads `data/sp500.csv`, reconstructs equity curves, renders all views — works fully offline |
+| **Refresh button** | Queries YFinance for the period after the last candle in the CSV; appends new data in memory and re-renders |
+| **No new candles** | Notifies the user (common on weekends and market holidays) |
+
+---
+
+## Data contract
+
+The dashboard expects the following structure when rendering from an API or CSV:
+
+```json
+{
+  "tickers": ["AAPL", "AMZN", "GOOGL", "MSFT", "NVDA"],
+  "price_history": [{ "Date": "2024-01-02", "AAPL": 185.20, "..." }],
+  "agent_history": [100000, 101200, ...],
+  "benchmark_history": [100000, 100850, ...],
+  "current_allocation": { "AAPL": 0.35, "NVDA": 0.30, "..." },
+  "initial_balance": 100000,
+  "transaction_cost": 0.001
+}
+```
+
+Missing fields result in partial rendering or neutral fallback values — the dashboard never fully fails.
+
+---
+
+## Running the dashboard
+
+```bash
+python -m http.server 8080
+# open http://localhost:8080/projects/rl_trading_dashboard/rl_trading_dashboard.html
+```
+
+> Offline mode (CSV only) works without internet access.  
+> The live refresh button requires access to `query1.finance.yahoo.com`.
+
+---
+
+## Example use cases
+
+- Evaluating whether a trained RL policy generates **statistically meaningful alpha** over a passive benchmark.
+- Visualising portfolio evolution, drawdown episodes and allocation shifts over a multi-year backtest.
+- Presenting RL trading research to stakeholders through an interactive, self-contained dashboard.
+
+---
+
+## License
+
+Part of the [Sidnei Almeida portfolio](https://sidnei-almeida.github.io). Licensed under **GPL-3.0**.

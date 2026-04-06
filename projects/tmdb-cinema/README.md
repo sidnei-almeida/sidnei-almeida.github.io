@@ -1,57 +1,112 @@
-## Cinescope – TMDb Cinema Recommender
+<p align="center">
+  <strong>Cinescope · TMDb Cinema Recommender</strong><br />
+  <em>Hybrid recommendation engine · BERT semantic similarity · Genre re-ranking · TMDb metadata · Pure frontend.</em>
+</p>
 
-Cinescope is a cinema discovery experience that blends **TMDb metadata** with a **semantic recommender API**.
-Users can search for a title, explore rich movie details and receive smart recommendations powered by BERT‑style embeddings and genre‑based re‑ranking.
+<p align="center">
+  <a href="https://sidnei-almeida.github.io/projects/tmdb-cinema/tmdb-cinema.html"><strong>Live Demo</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/sidnei-almeida/sidnei-almeida.github.io/tree/main/projects/tmdb-cinema">Source</a>
+</p>
 
-### Architecture & Tech Stack
+<p align="center">
+  Maintainer: <a href="https://github.com/sidnei-almeida">@sidnei-almeida</a>
+</p>
 
-- **Frontend**: HTML + CSS + JavaScript.
-- **External APIs**:
-  - **TMDb REST API** at `https://api.themoviedb.org/3`
-    - Accessed using an API key or read token configured via `tmdb-config.js` (`TMDB_API_KEY` / `TMDB_READ_TOKEN`).
-  - **Semantic Recommender**:  
-    `https://tmdb-semantic-recommender.onrender.com`
-    - Exposed via `RECOMMENDER_BASE_URL` and used for BERT‑based similarity ranking.
-- **Media Assets**: TMDb image CDN at `https://image.tmdb.org/t/p`.
+<p align="center">
+  <img alt="Status" src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat" />
+  <img alt="Model" src="https://img.shields.io/badge/Model-BERT_Semantic_Similarity-3B82F6?style=flat" />
+  <img alt="TMDb" src="https://img.shields.io/badge/Data-TMDb_API-01B4E4?style=flat" />
+  <img alt="Recommender" src="https://img.shields.io/badge/Backend-Render-46E3B7?style=flat" />
+</p>
 
-### Functional Overview
+---
 
-- **Search & Autocomplete**
-  - Debounced text search with TMDb suggestions dropdown.
-  - Keyboard navigation and selection support.
-- **Movie Detail View**
-  - Hero layout with poster, background, tagline and full overview.
-  - Structured facts: genres, origin countries, studios, languages, budget, revenue, profit and popularity.
-  - Embedded YouTube trailer when available.
-- **Hybrid Recommendation Engine**
-  - Base candidates fetched from TMDb recommender endpoints.
-  - BERT similarity scores from the semantic API are combined with **genre overlap scores** using a weighted scheme:
-    - 40% BERT similarity.
-    - 60% genre‑based similarity.
-  - Top‑N recommendations (default 12) are surfaced in the UI.
+## Executive summary
 
-### Technical Notes
+**Cinescope** is a cinema discovery experience that blends TMDb metadata with a semantic recommendation API. Users search for a title, explore rich movie detail pages, and receive smart recommendations powered by BERT-style embeddings combined with genre-based re-ranking. The entire application runs as a pure frontend — no proprietary backend required beyond the two external APIs.
 
-- Networking is handled through `fetchWithTimeout`, with clear error messages when TMDb credentials are missing or responses fail.
-- Financial values are normalised and formatted (budget, revenue, profit) to reduce noise and present realistic figures.
-- The app is pure frontend; no backend beyond the external APIs is required.
+---
 
-### Running the App
+## Architecture
 
-- Create a `tmdb-config.js` file alongside the project with:
+| Component | Detail |
+|-----------|--------|
+| **Frontend** | HTML + CSS + JavaScript |
+| **TMDb REST API** | `https://api.themoviedb.org/3` — search, metadata, trailers |
+| **TMDb credentials** | `TMDB_API_KEY` or `TMDB_READ_TOKEN` via `tmdb-config.js` |
+| **Semantic recommender** | `https://tmdb-semantic-recommender.onrender.com` — BERT similarity scoring |
+| **Media CDN** | `https://image.tmdb.org/t/p` — poster and backdrop images |
+
+---
+
+## Recommendation engine
+
+The hybrid recommender combines two signals:
+
+| Signal | Weight | Source |
+|--------|--------|--------|
+| **BERT semantic similarity** | 40% | Semantic recommender API |
+| **Genre overlap score** | 60% | TMDb genre metadata |
+
+Top-N recommendations (default 12) are ranked by the combined weighted score and surfaced in the UI.
+
+---
+
+## Functional specification
+
+### Search & autocomplete
+
+- Debounced text search against TMDb with live suggestions dropdown.
+- Keyboard navigation (↑ / ↓ / Enter) and pointer selection.
+
+### Movie detail view
+
+| Section | Data |
+|---------|------|
+| **Hero** | Poster, backdrop, tagline, full overview |
+| **Facts** | Genres, origin countries, production studios, languages |
+| **Financials** | Budget, revenue, profit — normalised and formatted |
+| **Popularity** | TMDb popularity score |
+| **Trailer** | Embedded YouTube player when available |
+
+### Networking
+
+- All HTTP calls use `fetchWithTimeout`.
+- Clear error messages when TMDb credentials are missing, requests fail, or the recommender is unreachable.
+- Financial values normalised to reduce noise from unreported data.
+
+---
+
+## Configuration
+
+Create a `tmdb-config.js` file alongside `tmdb-cinema.html`:
 
 ```js
-window.TMDB_API_KEY = "YOUR_TMDB_API_KEY"; // or
+window.TMDB_API_KEY = "YOUR_TMDB_API_KEY";
+// or
 window.TMDB_READ_TOKEN = "YOUR_TMDB_READ_TOKEN";
 ```
 
-- Serve the portfolio and open  
-  `projects/tmdb-cinema/tmdb-cinema.html`.
+---
 
-### Example Use Cases
+## Running the app
 
-- Exploring titles and recommendations for **movie nights** or personal watchlists.
+```bash
+python -m http.server 8080
+# open http://localhost:8080/projects/tmdb-cinema/tmdb-cinema.html
+```
+
+---
+
+## Example use cases
+
+- Exploring titles and building **personal watchlists** with semantic discovery.
 - Showcasing a **hybrid recommender system** that combines content (BERT) and metadata (genres).
-- Testing semantic recommendation quality against TMDb’s native recommendation endpoints.
+- Comparing semantic recommendation quality against TMDb's native recommendation endpoints.
 
+---
 
+## License
+
+Part of the [Sidnei Almeida portfolio](https://sidnei-almeida.github.io). Licensed under **GPL-3.0**.

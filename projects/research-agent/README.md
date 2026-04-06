@@ -1,53 +1,106 @@
-## Research Assistant – AI‑Powered Research Platform
+<p align="center">
+  <strong>Gray Matter · Research Intelligence</strong><br />
+  <em>Autonomous AI research agent · LangChain + LangGraph · ArXiv · Wikipedia · Web search · Scientific computation.</em>
+</p>
 
-Research Assistant is a browser‑based UI for an **autonomous research agent** built on top of LLM tooling.
-It orchestrates multi‑step research tasks (web search, synthesis, summarisation) while exposing clear controls, history and artefacts to the user.
+<p align="center">
+  <a href="https://sidnei-almeida.github.io/projects/research-agent/research-agent.html"><strong>Live Demo</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/sidnei-almeida/sidnei-almeida.github.io/tree/main/projects/research-agent">Source</a>
+</p>
 
-### Architecture & Tech Stack
+<p align="center">
+  Maintainer: <a href="https://github.com/sidnei-almeida">@sidnei-almeida</a>
+</p>
 
-- **Frontend**: Single HTML document with a modern, panel‑based layout and rich micro‑interactions.
-- **Backend API**: Hugging Face Space at  
-  `https://salmeida-langchain-agent.hf.space`
-  - Exposed to the client as `API_BASE_URL`.
-  - Main endpoints:
-    - `GET /health` – service health and tool configuration.
-    - `POST /api/chat` – send a research brief or follow‑up question and receive structured agent responses.
-- **Agent Stack (backend)**:
-  - LLM‑driven agent (likely LangChain‑based) with tools such as web search, summarisation and note‑taking.
-  - Conversation memory for multi‑turn research sessions.
+<p align="center">
+  <img alt="Status" src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat" />
+  <img alt="LangChain" src="https://img.shields.io/badge/Agent-LangChain_·_LangGraph-1C3C3C?style=flat" />
+  <img alt="LLM" src="https://img.shields.io/badge/LLM-Groq-F55036?style=flat" />
+  <img alt="API" src="https://img.shields.io/badge/API-Hugging_Face_Spaces-FF9A00?style=flat&logo=huggingface&logoColor=white" />
+  <img alt="Frontend" src="https://img.shields.io/badge/Frontend-Vanilla_JS-F7DF1E?style=flat&logo=javascript&logoColor=black" />
+</p>
 
-### Functional Overview
+---
 
-- **Workspace Layout**
-  - Left sidebar for research briefs, saved sessions and quick actions.
-  - Central conversation panel where the agent’s reasoning and results appear.
-  - Right‑hand panel for artefacts such as extracted citations, links, and structured summaries.
-- **Agent Interaction**
-  - User submits a high‑level research query; the UI sends it to `/api/chat`.
-  - Responses may include:
-    - Natural‑language explanation.
-    - Structured bullets, links and metadata, rendered as rich cards.
-- **Health & Status**
-  - On load, the client calls `/health` to check the backend and display a status banner.
-  - Toast notifications and status chips inform the user about connectivity problems or long‑running tasks.
+## Executive summary
 
-### Networking & Resilience
+**Gray Matter** is a browser-based research intelligence interface for an autonomous LLM agent built on LangChain and LangGraph. The agent orchestrates multi-step research tasks across four tool categories — ArXiv scientific papers, Wikipedia encyclopaedic knowledge, live DuckDuckGo web search, and a scientific calculator — and synthesises results into coherent, cited responses.
 
-- Uses `fetchWithTimeout` and `requestJson` helpers to:
-  - Add request timeouts.
-  - Provide detailed console logs for debugging (including attempted URLs).
-  - Show actionable messages when the service is down or misconfigured.
+You're damn right it's pure research. No half measures.
 
-### Running the App
+---
 
-- Serve the portfolio and open  
-  `projects/research-agent/research-agent.html`.
-- Ensure the backend `https://salmeida-langchain-agent.hf.space` is online and configured with the necessary tools (web search keys, LLM credentials, etc.).
+## Architecture
 
-### Example Use Cases
+| Component | Detail |
+|-----------|--------|
+| **Frontend** | Single HTML document — custom CSS design system, panel layout, rich micro-interactions |
+| **Backend API** | `https://salmeida-langchain-agent.hf.space` |
+| **Health endpoint** | `GET /health` — service status and tool configuration |
+| **Chat endpoint** | `POST /api/chat` — multi-turn research queries |
+| **Agent framework** | LangChain + LangGraph (tool-calling, planning, reflection) |
+| **LLM** | Groq-hosted inference |
+| **Conversation memory** | Multi-turn session context maintained server-side |
 
-- Running **literature reviews** or market scans with an autonomous agent.
-- Demonstrating agentic workflows built on LangChain (tool calling, planning, reflection).
-- Providing a friendly interface for non‑technical stakeholders to benefit from LLM research capabilities.
+---
 
+## Agent tools
 
+| Tool | Source | Capability |
+|------|--------|------------|
+| **ArXiv** | arXiv.org API | Search and retrieve scientific paper abstracts, titles, authors, links |
+| **Wikipedia** | Wikipedia API | Encyclopaedic knowledge and concept disambiguation |
+| **Web Search** | DuckDuckGo | Real-time web queries for current events and up-to-date information |
+| **Calculator** | Scientific evaluator | Advanced mathematical and scientific computation |
+
+---
+
+## Functional specification
+
+### Research flow
+
+```
+User query → POST /api/chat → Agent plans tool calls → Tools execute
+→ Results synthesised by LLM → Structured response rendered in UI
+```
+
+### UI components
+
+| Panel | Function |
+|-------|----------|
+| **Chat area** | Conversation thread with user and assistant bubbles; markdown rendering |
+| **Welcome screen** | Capability overview, example prompts, tool cards |
+| **Status indicator** | Live API health from `/health`; "Lab: Online" badge |
+| **Input field** | Multi-line textarea; send on `Enter`; keyboard shortcut support |
+
+### Resilience
+
+- `fetchWithTimeout` wraps all API calls with configurable deadlines.
+- Actionable error messages when the Space is cold-starting or unreachable.
+- Health check on page load; status badge reflects `ready`, `degraded`, or `offline`.
+
+---
+
+## Running the app
+
+```bash
+python -m http.server 8080
+# open http://localhost:8080/projects/research-agent/research-agent.html
+```
+
+> Requires the backend `https://salmeida-langchain-agent.hf.space` to be online and configured with LLM credentials and tool API keys.
+
+---
+
+## Example use cases
+
+- Running **literature reviews** or market scans with a zero-setup autonomous agent.
+- Demonstrating **agentic LLM workflows** — tool calling, multi-step planning, result synthesis.
+- Providing a research interface for non-technical stakeholders who need structured, cited answers.
+
+---
+
+## License
+
+Part of the [Sidnei Almeida portfolio](https://sidnei-almeida.github.io). Licensed under **GPL-3.0**.

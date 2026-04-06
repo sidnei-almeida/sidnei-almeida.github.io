@@ -1,52 +1,96 @@
-## Economic Monitoring – South America
+<p align="center">
+  <strong>Economic Monitor SA · South American Macroeconomic Dashboard</strong><br />
+  <em>World Bank API · 5 macro indicators · Country risk scoring · Single-country & comparative views · SheetJS export.</em>
+</p>
 
-This project is a professional analytics dashboard for **macroeconomic monitoring across South American countries**.
-It combines World Bank indicators with custom risk scoring logic to support research, macro analysis and investment decisions.
+<p align="center">
+  <a href="https://sidnei-almeida.github.io/projects/economic_monitoring_sa/economic_monitoring_sa.html"><strong>Live Demo</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/sidnei-almeida/monitoramento_sulamericano">Source</a>
+</p>
 
-### Architecture & Tech Stack
+<p align="center">
+  Maintainer: <a href="https://github.com/sidnei-almeida">@sidnei-almeida</a>
+</p>
 
-- **Frontend**: HTML5 + CSS3 + JavaScript (same SPA pattern as the Business Growth Potential dashboard).
-- **Visualisation**: Plotly.js for time series, distribution charts and comparative views.
-- **Data Sources**:
-  - **World Bank API** (primary source for macro indicators):  
-    - `NY.GDP.MKTP.CD` – GDP (current US$)  
-    - `FP.CPI.TOTL.ZG` – Inflation, consumer prices (% annual)  
-    - `FR.INR.RINR` – Real interest rate (%)  
-    - `SL.UEM.TOTL.ZS` – Unemployment (% of labour force)  
-    - `PA.NUS.FCRF` – Official exchange rate (LCU per US$)
-  - **Presidential History**: CSV from GitHub  
-    `https://raw.githubusercontent.com/sidnei-almeida/monitoramento_sulamericano/refs/heads/main/presidentes.csv`
+<p align="center">
+  <img alt="Status" src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat" />
+  <img alt="Data" src="https://img.shields.io/badge/Data-World_Bank_API-3B82F6?style=flat" />
+  <img alt="Charts" src="https://img.shields.io/badge/Charts-Plotly.js-636EFA?style=flat" />
+  <img alt="Export" src="https://img.shields.io/badge/Export-SheetJS-22C55E?style=flat" />
+</p>
 
-### Functional Overview
+---
 
-- **View Modes**
-  - **Single Country**: deep dive into one country’s macro time series, risk score and descriptive statistics.
-  - **Compare**: select multiple countries to compare trajectories and distributions on the same chart.
-- **Dynamic Indicator Selection**
-  - Sidebar selector for the active indicator, with all subsequent views and metrics updating accordingly.
-- **Risk Scoring Engine**
-  - Weighted combination of GDP, inflation, real interest rate, unemployment and FX to compute a **country risk score**.
-  - Risk bands and colour‑coded risk bar help communicate macro risk at a glance.
-- **Storytelling Layer**
-  - Timeline card and contextual text tie together data movements, risk score shifts and political leadership (via the presidents dataset).
+## Executive summary
 
-### Technical Notes
+**Economic Monitor SA** is a professional analytics dashboard for macroeconomic monitoring across South American countries. It combines five World Bank indicators with a custom risk-scoring algorithm and a presidential history dataset to provide a comprehensive picture of macro stability, political context and policy outcomes — all from the browser, with no proprietary backend.
 
-- All macro data is pulled lazily from the **World Bank REST API**, then cached client‑side.
-- Y‑axis formatting is indicator‑aware (e.g. compact GDP notation in trillions/billions, percentage formatting for inflation and unemployment).
-- CSV downloads and Excel exports are powered by SheetJS, allowing analysts to continue exploration in external tools.
+---
 
-### Running the Dashboard
+## Data sources
 
-- Serve the portfolio site and open  
-  `projects/monitoramento-sulamericano/monitoramento-sulamericano.html`  
-  (which loads `economic_monitoring_sa.css` and `economic_monitoring_sa.js`).
-- The app contacts the World Bank API directly from the browser; no backend is required.
+| Source | Indicators | Series code |
+|--------|-----------|-------------|
+| **World Bank API** | GDP (current US$) | `NY.GDP.MKTP.CD` |
+| **World Bank API** | Inflation, consumer prices (% annual) | `FP.CPI.TOTL.ZG` |
+| **World Bank API** | Real interest rate (%) | `FR.INR.RINR` |
+| **World Bank API** | Unemployment (% of labour force) | `SL.UEM.TOTL.ZS` |
+| **World Bank API** | Official exchange rate (LCU per US$) | `PA.NUS.FCRF` |
+| **Presidential CSV** | Leadership history per country | [GitHub CSV](https://raw.githubusercontent.com/sidnei-almeida/monitoramento_sulamericano/refs/heads/main/presidentes.csv) |
 
-### Example Use Cases
+All macro data is lazily pulled from the World Bank REST API and cached client-side. No backend required.
 
-- Monitoring **macro stability and risk** across South American countries over time.
-- Comparing policy regimes and macro outcomes across administrations.
-- Creating visuals for investment memos and macroeconomic research notes.
+---
 
+## Functional specification
 
+### View modes
+
+| Mode | Description |
+|------|-------------|
+| **Single country** | Deep dive — macro time series, risk score, descriptive statistics, presidential timeline |
+| **Compare** | Select multiple countries — overlay trajectories and distributions on the same chart |
+
+### Risk scoring engine
+
+A weighted composite of the five macro indicators produces a **country risk score** per period:
+
+- Score normalisation accounts for indicator direction (e.g. higher inflation = higher risk, higher GDP = lower risk).
+- Colour-coded risk bar communicates macro risk at a glance: low → moderate → high → critical.
+
+### Storytelling layer
+
+- Timeline card links data movements and risk score shifts to presidential administrations.
+- Contextual text narratives tie together key regime changes and policy outcomes.
+
+### Technical notes
+
+- Y-axis formatting is indicator-aware: compact GDP notation (trillions / billions); percentage formatting for inflation and unemployment.
+- CSV and Excel exports powered by **SheetJS** — analysts can continue exploration in external tools.
+- Plotly.js for time-series charts, distribution views and comparative overlays.
+
+---
+
+## Running the dashboard
+
+```bash
+python -m http.server 8080
+# open http://localhost:8080/projects/economic_monitoring_sa/economic_monitoring_sa.html
+```
+
+> The app contacts the World Bank API directly from the browser — a live internet connection is required for data loading.
+
+---
+
+## Example use cases
+
+- Monitoring **macro stability and risk** across South American economies over multi-decade time spans.
+- Comparing policy regimes and macro outcomes across presidential administrations.
+- Producing visuals for investment memos, academic papers and macroeconomic research notes.
+
+---
+
+## License
+
+Part of the [Sidnei Almeida portfolio](https://sidnei-almeida.github.io). Licensed under **GPL-3.0**.
