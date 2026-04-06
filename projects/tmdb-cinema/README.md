@@ -42,14 +42,16 @@
 
 ## Recommendation engine
 
-The hybrid recommender combines two signals:
+The hybrid recommender combines:
 
-| Signal | Weight | Source |
-|--------|--------|--------|
-| **BERT semantic similarity** | 40% | Semantic recommender API |
-| **Genre overlap score** | 60% | TMDb genre metadata |
+| Signal | Role | Notes |
+|--------|------|--------|
+| **BERT rank (API order)** | Position-based proxy | Short synopses use **lower** BERT weight (semantic noise on words like “island”). |
+| **Genre Jaccard** | \|A∩B\| / \|A∪B\| | Replaces raw intersection/source — fairer vs blockbusters sharing one genre. |
+| **Tone & leak penalties** | Multipliers | Down-ranks Family/Animation/Romance vs dark source; Adventure/Comedy when absent from source. |
+| **TMDb vote tiers** | Quality gate | 1000+ votes, or 450+ with rating ≥6.2, or 280+ with rating ≥6.5 — keeps niche horror in play. |
 
-Top-N recommendations (default 12) are ranked by the combined weighted score and surfaced in the UI.
+The **Match %** in the UI reflects the **hybrid score** (not raw BERT position). Self-recommendations (duplicate title) are filtered out.
 
 ---
 

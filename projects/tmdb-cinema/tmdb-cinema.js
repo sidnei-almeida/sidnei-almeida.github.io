@@ -15,9 +15,16 @@ const BERT_API_TIMEOUT_MS = 8000; // Timeout mais curto para BERT API - se não 
 const MAX_RECOMMENDATIONS = 50; // API retorna até 50 filmes para re-ranking (top_k padrão)
 const TOP_N_DISPLAY = 12; // Quantos filmes mostrar na UI após re-ranking (aumentado de 8 para 12)
 
-// Pesos para re-ranking híbrido - Priorizando mais os gêneros
-const BERT_WEIGHT = 0.4; // 40% da pontuação BERT
-const GENRE_WEIGHT = 0.6; // 60% da pontuação de gênero
+/** Sinopses curtas: BERT pesa palavras genéricas ("island"); priorizamos metadados de gênero. */
+const SPARSE_OVERVIEW_MAX_CHARS = 380;
+
+// Pesos default (sinopse longa)
+const BERT_WEIGHT_DEFAULT = 0.32;
+const GENRE_WEIGHT_DEFAULT = 0.68;
+
+// Pesos para sinopse curta / pouco texto (cold semantic)
+const BERT_WEIGHT_SPARSE = 0.18;
+const GENRE_WEIGHT_SPARSE = 0.82;
 
 const SELECTORS = {
   searchInput: "searchInput",
@@ -336,43 +343,68 @@ async function loadMovie(movieId) {
 }
 
 /**
- * Calcula a pontuação de gênero usando Interseção Jaccard
- * Retorna: gêneros em comum / total de gêneros do filme buscado
- * @param {Array} sourceGenres - Gêneros do filme buscado (ex: ["Horror", "Drama"] ou [{name: "Horror"}, ...])
- * @param {Array} candidateGenres - Gêneros do filme candidato (ex: ["Horror", "Fantasy"] ou [{name: "Horror"}, ...])
- * @returns {number} Pontuação entre 0 e 1
+ * Normaliza nomes de gênero para comparação.
  */
-function calculateGenreScore(sourceGenres, candidateGenres) {
-  // Se não houver gêneros no filme buscado, retorna 0
-  if (!Array.isArray(sourceGenres) || sourceGenres.length === 0) {
-    return 0;
-  }
-  
-  // Se não houver gêneros no candidato, retorna 0
-  if (!Array.isArray(candidateGenres) || candidateGenres.length === 0) {
-    return 0;
-  }
-  
-  // Normalizar gêneros (aceita tanto strings quanto objetos com .name)
-  const normalizeGenre = (g) => {
-    if (typeof g === 'string') return g.toLowerCase().trim();
-    return (g.name || String(g)).toLowerCase().trim();
-  };
-  
-  // Extrair nomes dos gêneros e converter para sets (para comparação case-insensitive)
-  const sourceGenreNames = new Set(sourceGenres.map(normalizeGenre).filter(g => g.length > 0));
-  const candidateGenreNames = new Set(candidateGenres.map(normalizeGenre).filter(g => g.length > 0));
-  
-  // Calcular interseção (gêneros em comum)
+function normalizeGenreName(g) {
+  if (typeof g === "string") return g.toLowerCase().trim();
+  return (g.name || String(g)).toLowerCase().trim();
+}
+
+/**
+ * Jaccard similarity entre conjuntos de gêneros: |A∩B| / |A∪B|
+ * Evita favorecer blockbusters que só compartilham 1–2 gêneros genéricos com o filme fonte.
+ */
+function calculateGenreScoreJaccard(sourceGenres, candidateGenres) {
+  if (!Array.isArray(sourceGenres) || sourceGenres.length === 0) return 0;
+  if (!Array.isArray(candidateGenres) || candidateGenres.length === 0) return 0;
+
+  const sourceSet = new Set(sourceGenres.map(normalizeGenreName).filter((g) => g.length > 0));
+  const candSet = new Set(candidateGenres.map(normalizeGenreName).filter((g) => g.length > 0));
+  if (sourceSet.size === 0 || candSet.size === 0) return 0;
+
   let intersection = 0;
-  for (const genre of sourceGenreNames) {
-    if (candidateGenreNames.has(genre)) {
-      intersection++;
-    }
+  for (const g of sourceSet) {
+    if (candSet.has(g)) intersection++;
   }
-  
-  // Retornar: gêneros em comum / total de gêneros do filme buscado
-  return sourceGenreNames.size > 0 ? intersection / sourceGenreNames.size : 0;
+  const union = sourceSet.size + candSet.size - intersection;
+  return union > 0 ? intersection / union : 0;
+}
+
+/**
+ * Penalidade quando o tom do candidato não combina (ex.: Family/Animation vs Horror psicológico).
+ * Retorna multiplicador em (0, 1].
+ */
+function toneMismatchMultiplier(sourceGenres, candidateGenres) {
+  const s = new Set((sourceGenres || []).map(normalizeGenreName).filter(Boolean));
+  const c = new Set((candidateGenres || []).map(normalizeGenreName).filter(Boolean));
+
+  const sourceDark = s.has("horror") || s.has("thriller") || s.has("mystery");
+  const sourceLight = s.has("family") || s.has("animation") || s.has("comedy");
+
+  const candDark = c.has("horror") || c.has("thriller") || c.has("mystery");
+  const candLightOnly =
+    !candDark &&
+    (c.has("family") || c.has("animation") || (c.has("comedy") && !c.has("horror")));
+
+  if (sourceDark && !sourceLight && candLightOnly) return 0.28;
+  if (sourceDark && c.has("romance") && !candDark) return 0.35;
+
+  return 1;
+}
+
+/**
+ * Penaliza candidatos com gêneros de blockbuster (Adventure, Comedy) quando o filme fonte não os tem —
+ * reduz "ilha aventura" e comédias que só casam por palavras na sinopse.
+ */
+function blockbusterGenreLeakPenalty(sourceGenres, candidateGenres) {
+  const s = new Set((sourceGenres || []).map(normalizeGenreName).filter(Boolean));
+  const c = new Set((candidateGenres || []).map(normalizeGenreName).filter(Boolean));
+  let m = 1;
+  if (!s.has("adventure") && c.has("adventure")) m *= 0.58;
+  if (!s.has("comedy") && c.has("comedy")) m *= 0.52;
+  if (!s.has("family") && c.has("family")) m *= 0.42;
+  if (!s.has("animation") && c.has("animation")) m *= 0.45;
+  return m;
 }
 
 /**
@@ -405,106 +437,90 @@ function calculateCommonGenresCount(sourceGenres, candidateGenres) {
 }
 
 /**
- * Faz re-ranking híbrido combinando pontuação BERT e pontuação de gênero
- * A API retorna os filmes ordenados por similaridade BERT (primeiro = maior pontuação)
- * Calculamos a pontuação BERT baseada na posição (0.9 para o primeiro, decrescente)
- * Fórmula base: Pontuação_Final = (0.4 × Pontuação_BERT) + (0.6 × Pontuação_Gênero)
- * Com boost/penalidade baseado na quantidade de gêneros em comum
- * @param {Array} recommendations - Array de {tmdb_id, title, year, poster_path, genres_list} da API
- * @param {Array} sourceGenresList - Lista de nomes de gêneros do filme buscado (ex: ["Horror", "Drama"])
- * @returns {Array} Array re-rankado com nova pontuação
+ * Re-ranking híbrido: posição na lista da API (proxy de similaridade BERT) + Jaccard de gêneros + tom.
+ * Sinopses curtas: pesos favorecem gênero (BERT confunde tokens como "island").
  */
-function hybridRerank(recommendations, sourceGenresList) {
-  if (!Array.isArray(sourceGenresList) || sourceGenresList.length === 0) {
-    // Se não tiver gêneros do filme buscado, retorna ordenação original
+function hybridRerank(recommendations, sourceGenresList, overviewLength = 9999) {
+  if (!Array.isArray(recommendations) || recommendations.length === 0) {
     return recommendations;
   }
-  
-  const totalSourceGenres = sourceGenresList.length;
-  
-  // Calcular pontuação BERT baseada na posição (primeiro = maior pontuação)
-  const maxBertScore = 0.9;
-  const minBertScore = 0.5;
+
+  const sparse = Number(overviewLength) <= SPARSE_OVERVIEW_MAX_CHARS;
+  const bertW = sparse ? BERT_WEIGHT_SPARSE : BERT_WEIGHT_DEFAULT;
+  const genreW = sparse ? GENRE_WEIGHT_SPARSE : GENRE_WEIGHT_DEFAULT;
+
+  if (!Array.isArray(sourceGenresList) || sourceGenresList.length === 0) {
+    return recommendations.map((item, index) => {
+      const n = Math.max(recommendations.length, 1);
+      const bertScore = 0.92 - (index / n) * 0.42;
+      return { ...item, finalScore: bertScore, bertScore, genreScore: 0, commonGenres: 0, totalSourceGenres: 0, candidateGenres: "" };
+    });
+  }
+
+  const sourceNames = sourceGenresList.map((g) => (typeof g === "string" ? g : g.name || g));
+  const totalSourceGenres = sourceNames.length;
+
+  const maxBertScore = 0.92;
+  const minBertScore = 0.48;
   const bertScoreRange = maxBertScore - minBertScore;
-  
-  // Calcular pontuação híbrida para cada recomendação
+  const n = recommendations.length;
+
   const reranked = recommendations.map((item, index) => {
-    // Calcular pontuação BERT baseada na posição (primeiro = maior)
-    const positionRatio = index / recommendations.length;
-    const bertScore = maxBertScore - (positionRatio * bertScoreRange);
-    
-    // Obter gêneros do candidato (pode vir como genres_list da API ou genres do TMDB)
-    const candidateGenres = Array.isArray(item.genres_list) 
-      ? item.genres_list 
-      : (Array.isArray(item.genres) ? item.genres.map(g => g.name || g) : []);
-    
-    // Calcular pontuação de gênero
-    const genreScore = calculateGenreScore(
-      sourceGenresList.map(g => typeof g === 'string' ? g : g.name || g),
-      candidateGenres
-    );
-    
-    // Calcular pontuação base: 40% BERT + 60% Gênero
-    let finalScore = (BERT_WEIGHT * bertScore) + (GENRE_WEIGHT * genreScore);
-    
-    // Calcular quantos gêneros em comum
-    const commonGenres = calculateCommonGenresCount(
-      sourceGenresList.map(g => typeof g === 'string' ? g : g.name || g),
-      candidateGenres
-    );
-    
-    // Boost/penalidade baseado na quantidade de gêneros em comum
-    // PENALIDADE MAIS SEVERA para filmes que faltam gêneros
-    // Se o filme buscado tem 3+ gêneros:
+    const positionRatio = n <= 1 ? 0 : index / (n - 1);
+    const bertScore = maxBertScore - positionRatio * bertScoreRange;
+
+    const candidateGenres = Array.isArray(item.genres_list)
+      ? item.genres_list
+      : Array.isArray(item.genres)
+        ? item.genres.map((g) => g.name || g)
+        : [];
+
+    const candGenreSet = new Set(candidateGenres.map(normalizeGenreName).filter(Boolean));
+
+    const genreScore = calculateGenreScoreJaccard(sourceNames, candidateGenres);
+
+    let finalScore = bertW * bertScore + genreW * genreScore;
+
+    const commonGenres = calculateCommonGenresCount(sourceNames, candidateGenres);
+
+    const toneMul = toneMismatchMultiplier(sourceNames, candidateGenres);
+    const leakMul = blockbusterGenreLeakPenalty(sourceNames, candidateGenres);
+    finalScore *= toneMul * leakMul;
+
+    const srcNorm = sourceNames.map(normalizeGenreName);
+    const hasDark = srcNorm.some((g) => ["horror", "thriller", "mystery"].includes(g));
+    if (hasDark && (candGenreSet.has("thriller") || candGenreSet.has("mystery") || candGenreSet.has("horror"))) {
+      finalScore *= 1.06;
+    }
+
     if (totalSourceGenres >= 3) {
-      // Todos os gêneros em comum: boost significativo
-      if (commonGenres === totalSourceGenres) {
-        finalScore *= 1.30; // +30% boost
-      }
-      // Faltando apenas 1 gênero: SEM boost (neutro)
-      else if (commonGenres === totalSourceGenres - 1) {
-        finalScore *= 1.0; // Sem boost quando falta 1 gênero
-      }
-      // Faltando 2+ gêneros quando há 3+: PENALIDADE MUITO MAIOR
-      else if (commonGenres <= totalSourceGenres - 2) {
-        finalScore *= 0.65; // -35% penalidade
-      }
+      if (commonGenres === totalSourceGenres) finalScore *= 1.22;
+      else if (commonGenres === totalSourceGenres - 1) finalScore *= 1.02;
+      else if (commonGenres <= totalSourceGenres - 2) finalScore *= 0.62;
+    } else if (totalSourceGenres === 2) {
+      if (commonGenres === 2) finalScore *= 1.15;
+      else if (commonGenres === 1) finalScore *= 0.72;
     }
-    // Se o filme buscado tem 2 gêneros:
-    else if (totalSourceGenres === 2) {
-      // Ambos em comum: boost
-      if (commonGenres === 2) {
-        finalScore *= 1.20; // +20% boost
-      }
-      // Apenas 1 em comum: penalidade maior
-      else if (commonGenres === 1) {
-        finalScore *= 0.70; // -30% penalidade
-      }
-    }
-    
+
     return {
       ...item,
-      finalScore: finalScore,
-      bertScore: bertScore,
-      genreScore: genreScore,
-      commonGenres: commonGenres,
-      totalSourceGenres: totalSourceGenres, // Para debug
-      candidateGenres: candidateGenres.join(", ") || "", // Para debug
+      finalScore,
+      bertScore,
+      genreScore,
+      commonGenres,
+      totalSourceGenres,
+      candidateGenres: candidateGenres.join(", ") || "",
+      hybridSparse: sparse,
     };
   });
-  
-  // Ordenar por pontuação final (maior primeiro)
-  // Em caso de empate, usar rating (vote_average) como desempate
+
   reranked.sort((a, b) => {
-    if (a.finalScore !== b.finalScore) {
-      return b.finalScore - a.finalScore; // Descending order
-    }
-    // Em caso de empate na pontuação final, usar rating como desempate
+    if (a.finalScore !== b.finalScore) return b.finalScore - a.finalScore;
     const ratingA = Number.isFinite(a.vote_average) ? a.vote_average : 0;
     const ratingB = Number.isFinite(b.vote_average) ? b.vote_average : 0;
-    return ratingB - ratingA; // Maior rating primeiro
+    return ratingB - ratingA;
   });
-  
+
   return reranked;
 }
 
@@ -659,13 +675,18 @@ async function loadRecommendations(movieId) {
     
     console.log(`[CineScope] Processing ${bertRecommendations.length} BERT recommendations (NOT using TMDB fallback)`);
     
-    // Validar recomendações inválidas (IDs inválidos)
+    // Validar recomendações inválidas (IDs inválidos) e remover o próprio filme
     const validRecommendations = bertRecommendations.filter((item) => {
       const isValid = item.tmdb_id && typeof item.tmdb_id === "number" && item.tmdb_id > 0;
       if (!isValid) {
         console.warn(`[CineScope] Invalid movie ID filtered out:`, item);
+        return false;
       }
-      return isValid;
+      if (item.tmdb_id === movieId) {
+        console.log(`[CineScope] Skipping self-recommendation: ${item.title} (${item.tmdb_id})`);
+        return false;
+      }
+      return true;
     });
     
     console.log(`[CineScope] Valid recommendations: ${validRecommendations.length}`);
@@ -681,9 +702,14 @@ async function loadRecommendations(movieId) {
           const voteCount = Number.isFinite(movieData?.vote_count) ? movieData.vote_count : 0;
           const overview = movieData?.overview || "";
           
-          // Considerar rating válido se vote_average > 0 e vote_count >= 1000
-          // Filtrar filmes com poucas avaliações para manter qualidade
-          const hasValidRating = voteAverage !== null && voteAverage > 0 && voteCount >= 1000;
+          // Qualidade de votos em camadas: blockbusters (1000+) OU filmes bem avaliados com amostra média
+          // (evita eliminar todo horror de nicho quando a API já ranqueou bem)
+          const hasValidRating =
+            voteAverage !== null &&
+            voteAverage > 0 &&
+            (voteCount >= 1000 ||
+              (voteCount >= 450 && voteAverage >= 6.2) ||
+              (voteCount >= 280 && voteAverage >= 6.5));
           
           return {
             ...item,
@@ -726,10 +752,10 @@ async function loadRecommendations(movieId) {
       return;
     }
     
-    // Apply hybrid re-ranking (BERT + Genre)
-    // Passar lista de gêneros como strings para o re-ranking
-    console.log("[CineScope] Applying hybrid re-ranking (BERT + Genre)...");
-    const reranked = hybridRerank(recommendationsWithValidRatings, sourceGenresList);
+    // Apply hybrid re-ranking (BERT + Genre + tom); sinopse curta = mais peso em gênero
+    const overviewLen = (movieDetails.overview || "").trim().length;
+    console.log("[CineScope] Applying hybrid re-ranking (BERT + Genre + tone); overviewLen=", overviewLen, "sparse=", overviewLen <= SPARSE_OVERVIEW_MAX_CHARS);
+    const reranked = hybridRerank(recommendationsWithValidRatings, sourceGenresList, overviewLen);
     
     console.log("[CineScope] Re-ranking complete. Top 5 scores:", 
       reranked.slice(0, 5).map(r => ({
@@ -763,7 +789,7 @@ async function loadRecommendations(movieId) {
           vote_average: item.vote_average ?? null,
           runtime: item.runtime ?? null,
         },
-        score: item.bertScore ?? null,
+        score: Number.isFinite(item.finalScore) ? Math.min(1, item.finalScore) : null,
         finalScore: item.finalScore,
         bertScore: item.bertScore,
         genreScore: item.genreScore,
