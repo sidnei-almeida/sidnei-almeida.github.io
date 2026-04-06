@@ -1233,17 +1233,16 @@ button:focus-visible, input:focus-visible {
 }
 
 /* ================================================================
-   PRELOADER
+   PRELOADER — minimal
    ================================================================ */
 .preloader {
   position: fixed;
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgba(5, 7, 10, 0.96);
-  backdrop-filter: blur(20px);
+  background: var(--bg-0);
   z-index: 40;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 .preloader.hidden {
@@ -1252,90 +1251,65 @@ button:focus-visible, input:focus-visible {
   pointer-events: none;
 }
 
-.preloader-ring {
-  display: grid;
-  place-items: center;
-  gap: 20px;
-  padding: 32px 44px;
-  border-radius: var(--r-xl);
-  border: 1px solid var(--border-amber);
-  background: var(--bg-1);
-  box-shadow: 0 0 60px rgba(245, 158, 11, 0.08), 0 32px 80px rgba(0,0,0,0.8);
-  position: relative;
+.preloader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: preloaderFadeIn 0.5s ease both;
+}
+
+@keyframes preloaderFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.preloader-logo svg {
+  width: 64px;
+  height: 42px;
+  display: block;
+}
+
+.preloader-name {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--text-1) 30%, var(--amber) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.preloader-bar {
+  width: 120px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--bg-3);
   overflow: hidden;
 }
 
-/* Ambient amber glow in preloader */
-.preloader-ring::before {
-  content: '';
-  position: absolute;
-  inset: -40px;
-  background: radial-gradient(circle at 50% 50%, rgba(245,158,11,0.06), transparent 60%);
-  pointer-events: none;
+.preloader-bar-fill {
+  height: 100%;
+  width: 40%;
+  border-radius: 2px;
+  background: var(--amber);
+  animation: barSlide 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-.preloader-ring span {
+@keyframes barSlide {
+  0%   { transform: translateX(-150%); opacity: 0.6; }
+  50%  { opacity: 1; }
+  100% { transform: translateX(350%); opacity: 0.6; }
+}
+
+.preloader-label {
   font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 0.65rem;
   color: var(--text-3);
-  position: relative;
-  z-index: 1;
-}
-
-.preloader-ring .inner {
-  width: 110px;
-  height: 110px;
-  position: relative;
-  display: grid;
-  place-items: center;
-  z-index: 1;
-}
-
-/* Outer ring */
-.preloader-ring .inner::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1.5px solid transparent;
-  border-top-color: var(--amber);
-  border-right-color: rgba(245,158,11,0.3);
-  animation: spinRing 1.2s linear infinite;
-}
-
-/* Inner ring */
-.preloader-ring .inner::after {
-  content: '';
-  position: absolute;
-  inset: 14px;
-  border-radius: 50%;
-  border: 1.5px solid transparent;
-  border-top-color: rgba(245, 158, 11, 0.5);
-  border-left-color: rgba(245, 158, 11, 0.15);
-  animation: spinRing 1.8s linear infinite reverse;
-}
-
-@keyframes spinRing { to { transform: rotate(360deg); } }
-
-.preloader-ring .inner svg {
-  width: 48px;
-  height: 32px;
-  position: relative;
-  z-index: 1;
-}
-
-/* Reuse logo parts in preloader */
-.loader-frame { fill: none; stroke: rgba(245,158,11,0.25); stroke-width: 1.2; }
-.loader-body  { fill: var(--bg-2); stroke: rgba(255,255,255,0.07); stroke-width: 1; }
-.loader-band  { fill: rgba(245,158,11,0.25); animation: platePulse 1.5s ease-in-out infinite; }
-.loader-node  { fill: var(--amber); filter: drop-shadow(0 0 4px var(--amber-glow)); }
-
-@keyframes platePulse {
-  0%   { opacity: 0.3; }
-  50%  { opacity: 1;   }
-  100% { opacity: 0.3; }
 }
 
 /* ================================================================
