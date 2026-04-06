@@ -3,23 +3,26 @@
  */
 
 const API_BASE_URL = "https://virtual-flow-forecasting.onrender.com";
-const DATASET_PATH = "../../data/riser_pq_uni.csv";
+const DATASET_PATH = "https://raw.githubusercontent.com/sidnei-almeida/virtual_flow_forecasting/main/data/test_data_scaled_manual.csv";
 const FETCH_TIMEOUT_MS = 9000;
 const STREAM_TIMEOUT_MS = 14000;
 const MAX_TELEMETRY_POINTS = 180;
+/** Espaçamento horizontal fixo entre amostras (px). Faixa tipo “linha de produção”: último ponto à direita; amostras antigas saem à esquerda. */
+const TELEMETRY_STEP_PX = 6;
 const HISTORY_LIMIT = 80;
 const OVERLAY_FAILSAFE_MS = 15000;
 const PRESSURE_COUNT = 7;
 
-// Pressure normalization ranges (from CSV data analysis)
+// Physical range used only for display (denormalization from [0,1] to kg/s)
 const PRESSURE_MIN = 1.0;
 const PRESSURE_MAX = 2.07;
 const FLOW_RATE_MIN = 14.34;
 const FLOW_RATE_MAX = 89.95;
 
-// Flow rate percentiles (from user-provided data analysis)
-const FLOW_RATE_P05 = 21.2734; // 5th percentile - Low threshold
-const FLOW_RATE_P95 = 49.0210; // 95th percentile - High threshold
+// Flow rate percentiles — derived from test_data_scaled_manual.csv (p05=0.277, p95=0.305 normalised)
+// Converted back to physical kg/s so that FIXED_*_THRESHOLD_NORM is computed consistently via normalize()
+const FLOW_RATE_P05 = 35.28; // ≈ denormalize(0.277) — 5th percentile low threshold
+const FLOW_RATE_P95 = 37.40; // ≈ denormalize(0.305) — 95th percentile high threshold
 
 const SELECTORS = {
   footerYear: "footerYear",
@@ -59,12 +62,6 @@ const SELECTORS = {
   sequenceScroll: "sequenceScroll",
   sequenceClose: "sequenceClose",
   streamLatency: "streamLatency",
-  inputLowThreshold: "inputLowThreshold",
-  inputHighThreshold: "inputHighThreshold",
-  inputLowThresholdNumber: "inputLowThresholdNumber",
-  inputHighThresholdNumber: "inputHighThresholdNumber",
-  labelLowThreshold: "labelLowThreshold",
-  labelHighThreshold: "labelHighThreshold",
   telemetryLowThreshold: "telemetryLowThreshold",
   telemetryHighThreshold: "telemetryHighThreshold",
 };
@@ -73,13 +70,12 @@ const datasetState = {
   samples: [],
   cursor: 0,
   source: "Embedded CSV",
+  preScaled: false, // true when CSV data is already normalised [0,1]
 };
 
-const controlState = {
-  lowThreshold: normalize(FLOW_RATE_P05, FLOW_RATE_MIN, FLOW_RATE_MAX), // P05 normalized
-  highThreshold: normalize(FLOW_RATE_P95, FLOW_RATE_MIN, FLOW_RATE_MAX), // P95 normalized
-  userModified: false,
-};
+/** Normalized P05/P95 — fixed from FLOW_RATE_P05 / FLOW_RATE_P95 (no manual override). */
+const FIXED_LOW_THRESHOLD_NORM = normalize(FLOW_RATE_P05, FLOW_RATE_MIN, FLOW_RATE_MAX);
+const FIXED_HIGH_THRESHOLD_NORM = normalize(FLOW_RATE_P95, FLOW_RATE_MIN, FLOW_RATE_MAX);
 
 const streamState = {
   active: false,
@@ -129,6 +125,26 @@ function denormalize(value, min, max) {
     return (min + max) / 2;
   }
   return clamp(value * (max - min) + min, min, max);
+}
+
+/**
+ * A API `/predict` pode devolver vazão em unidades físicas (~FLOW_RATE_MIN…FLOW_RATE_MAX) ou já normalizada [0,1].
+ * `actual` e comparações no canvas usam [0,1] normalizado. Sem isto, valores ~40 comparados com threshold ~0.46 marcam sempre alerta.
+ */
+function flowRateToNormalizedFromApi(value) {
+  if (!Number.isFinite(value)) return null;
+  if (value > 1) {
+    return normalize(value, FLOW_RATE_MIN, FLOW_RATE_MAX);
+  }
+  return clamp(value, 0, 1);
+}
+
+/** Garante low ≤ high. */
+function getThresholdPair() {
+  const a = getLowThreshold();
+  const b = getHighThreshold();
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return { low: a, high: b };
+  return a <= b ? { low: a, high: b } : { low: b, high: a };
 }
 
 function formatNumber(value, digits = 2) {
@@ -291,56 +307,69 @@ function parseDataset(csvText) {
     throw new Error("CSV dataset has no rows");
   }
   const header = lines.shift();
-  const columns = header.split(",");
-  
-  // Extract pressure column indices (7 pressure columns)
+  const columns = header.split(",").map((c) => c.trim().toLowerCase());
+
+  // Support two layouts:
+  //   A) test_data_scaled_manual.csv  → pressure_1…pressure_7, time, liquid_flow_rate  (pre-scaled [0,1])
+  //   B) legacy riser_pq_uni.csv      → columns with "Pressure" substring (raw bar values)
   const pressureIndices = [];
-  const flowRateIndex = columns.length - 1; // Last column is Liquid mass rate
-  const gasRateIndex = columns.length - 2; // Second to last is Gas mass rate
-  
-  for (let i = 1; i < columns.length - 2; i++) {
-    if (columns[i].includes("Pressure")) {
-      pressureIndices.push(i);
+  let flowRateIndex = -1;
+
+  // Layout A — named columns
+  const namedPressureCols = ["pressure_1","pressure_2","pressure_3","pressure_4","pressure_5","pressure_6","pressure_7"];
+  const allNamed = namedPressureCols.every((n) => columns.includes(n));
+  if (allNamed) {
+    namedPressureCols.forEach((n) => pressureIndices.push(columns.indexOf(n)));
+    flowRateIndex = columns.indexOf("liquid_flow_rate");
+  } else {
+    // Layout B — legacy
+    flowRateIndex = columns.length - 1;
+    for (let i = 1; i < columns.length - 2; i++) {
+      if (columns[i].includes("pressure")) {
+        pressureIndices.push(i);
+      }
     }
   }
-  
+
   if (pressureIndices.length !== PRESSURE_COUNT) {
     console.warn(`Expected ${PRESSURE_COUNT} pressure columns, found ${pressureIndices.length}`);
   }
-  
+
   const samples = [];
-  
+
   lines.forEach((line, index) => {
     if (!line.trim()) return;
     const cells = line.split(",");
     if (cells.length < columns.length) return;
-    
-    const time = cells[0] ? parseFloat(cells[0]) : index;
+
+    const timeIdx = columns.indexOf("time");
+    const time = timeIdx >= 0 && cells[timeIdx] ? parseFloat(cells[timeIdx]) : index;
     const pressures = pressureIndices.slice(0, PRESSURE_COUNT).map((idx) => {
-      const raw = cells[idx];
-      const parsed = Number(raw);
+      const parsed = Number(cells[idx]);
       return Number.isFinite(parsed) ? parsed : 0;
     });
-    
-    const liquidMassRate = cells[flowRateIndex] ? Number(cells[flowRateIndex]) : null;
-    
+
+    const liquidMassRate = flowRateIndex >= 0 && cells[flowRateIndex] ? Number(cells[flowRateIndex]) : null;
+
     if (pressures.length === PRESSURE_COUNT && pressures.every((p) => Number.isFinite(p))) {
       samples.push({
         index,
         time,
         pressures,
         liquidMassRate: Number.isFinite(liquidMassRate) ? liquidMassRate : null,
+        preScaled: allNamed, // flag: true when data is already in [0,1]
       });
     }
   });
-  
-  return { samples, pressureIndices };
+
+  return { samples, pressureIndices, preScaled: allNamed };
 }
 
 function applyDataset(parsed, sourceLabel) {
   datasetState.samples = parsed.samples;
   datasetState.source = sourceLabel;
   datasetState.cursor = 0;
+  datasetState.preScaled = parsed.preScaled === true;
   updateDatasetStatus(`${parsed.samples.length} samples • ${sourceLabel}`, "success");
   showToast(`Dataset ready: ${parsed.samples.length} samples.`, "success", 2800);
 }
@@ -418,12 +447,14 @@ function handleDatasetFile(file) {
 /** Sampling helpers */
 function nextDatasetSample() {
   if (!datasetState.samples.length) {
-    const pressures = Array.from({ length: PRESSURE_COUNT }, () => randomBetween(PRESSURE_MIN, PRESSURE_MAX));
+    // Synthetic fallback: generate pressures in [0,1] so they are always API-ready
+    const pressures = Array.from({ length: PRESSURE_COUNT }, () => randomBetween(0, 1));
     return {
       index: `synthetic-${streamState.ingested}`,
       time: Date.now() / 1000,
       pressures,
       liquidMassRate: null,
+      preScaled: true,
     };
   }
   const sample = datasetState.samples[datasetState.cursor % datasetState.samples.length];
@@ -447,99 +478,13 @@ function nextTimestamp() {
   return streamState.lastTimestamp;
 }
 
-/** Threshold handling */
+/** Threshold handling — always FLOW_RATE_P05 / FLOW_RATE_P95 in normalized canvas space */
 function getLowThreshold() {
-  return Number.isFinite(controlState.lowThreshold) ? controlState.lowThreshold : normalize(FLOW_RATE_P05, FLOW_RATE_MIN, FLOW_RATE_MAX);
+  return FIXED_LOW_THRESHOLD_NORM;
 }
 
 function getHighThreshold() {
-  return Number.isFinite(controlState.highThreshold) ? controlState.highThreshold : normalize(FLOW_RATE_P95, FLOW_RATE_MIN, FLOW_RATE_MAX);
-}
-
-function setLowThreshold(value, { syncSlider = true, announce = false } = {}) {
-  const parsed = Number(value);
-  const normalized = Number.isFinite(parsed) ? clamp(parsed, 0, 1) : getLowThreshold();
-  controlState.lowThreshold = normalized;
-  controlState.userModified = true;
-  
-  if (syncSlider) {
-    const slider = byId(SELECTORS.inputLowThreshold);
-    if (slider) slider.value = String(normalized);
-  }
-  const label = byId(SELECTORS.labelLowThreshold);
-  if (label) {
-    const denormalized = denormalize(normalized, FLOW_RATE_MIN, FLOW_RATE_MAX);
-    label.textContent = formatNumber(denormalized, 2);
-  }
-  
-  updateTelemetryMeta();
-  
-  if (announce) {
-    const denormalized = denormalize(normalized, FLOW_RATE_MIN, FLOW_RATE_MAX);
-    showToast(`Low threshold set to ${formatNumber(denormalized, 2)} kg/sec`, "info", 2200);
-  }
-  
-  // Update existing points and verdict
-  if (telemetryPoints.length) {
-    const lastPoint = telemetryPoints[telemetryPoints.length - 1];
-    if (lastPoint && Number.isFinite(lastPoint.predicted)) {
-      const lowThresh = getLowThreshold();
-      const highThresh = getHighThreshold();
-      const isWarn = lastPoint.predicted < lowThresh || lastPoint.predicted > highThresh;
-      const warnType = lastPoint.predicted < lowThresh ? "low" : lastPoint.predicted > highThresh ? "high" : null;
-      updateVerdict(lastPoint.predicted, lowThresh, highThresh, isWarn, warnType);
-    }
-    queueTelemetryRender();
-  }
-}
-
-function setHighThreshold(value, { syncSlider = true, announce = false } = {}) {
-  const parsed = Number(value);
-  const normalized = Number.isFinite(parsed) ? clamp(parsed, 0, 1) : getHighThreshold();
-  controlState.highThreshold = normalized;
-  controlState.userModified = true;
-  
-  if (syncSlider) {
-    const slider = byId(SELECTORS.inputHighThreshold);
-    if (slider) slider.value = String(normalized);
-  }
-  const label = byId(SELECTORS.labelHighThreshold);
-  if (label) {
-    const denormalized = denormalize(normalized, FLOW_RATE_MIN, FLOW_RATE_MAX);
-    label.textContent = formatNumber(denormalized, 2);
-  }
-  
-  updateTelemetryMeta();
-  
-  if (announce) {
-    const denormalized = denormalize(normalized, FLOW_RATE_MIN, FLOW_RATE_MAX);
-    showToast(`High threshold set to ${formatNumber(denormalized, 2)} kg/sec`, "info", 2200);
-  }
-  
-  // Update existing points and verdict
-  if (telemetryPoints.length) {
-    const lastPoint = telemetryPoints[telemetryPoints.length - 1];
-    if (lastPoint && Number.isFinite(lastPoint.predicted)) {
-      const lowThresh = getLowThreshold();
-      const highThresh = getHighThreshold();
-      const isWarn = lastPoint.predicted < lowThresh || lastPoint.predicted > highThresh;
-      const warnType = lastPoint.predicted < lowThresh ? "low" : lastPoint.predicted > highThresh ? "high" : null;
-      updateVerdict(lastPoint.predicted, lowThresh, highThresh, isWarn, warnType);
-    }
-    queueTelemetryRender();
-  }
-}
-
-function handleLowThresholdSlider() {
-  const slider = byId(SELECTORS.inputLowThreshold);
-  if (!slider) return;
-  setLowThreshold(slider.value, { announce: false });
-}
-
-function handleHighThresholdSlider() {
-  const slider = byId(SELECTORS.inputHighThreshold);
-  if (!slider) return;
-  setHighThreshold(slider.value, { announce: false });
+  return FIXED_HIGH_THRESHOLD_NORM;
 }
 
 /** Telemetry */
@@ -549,9 +494,14 @@ function pushTelemetry(point) {
   const predicted = Number.isFinite(rawPredicted) ? rawPredicted : null;
   const rawActual = Number(point.actual);
   const actual = Number.isFinite(rawActual) ? rawActual : null;
-  const error = Number.isFinite(predicted) && Number.isFinite(actual) ? Math.abs(predicted - actual) : null;
-  const lowThreshold = getLowThreshold();
-  const highThreshold = getHighThreshold();
+  const error =
+    Number.isFinite(predicted) && Number.isFinite(actual)
+      ? Math.abs(
+          denormalize(predicted, FLOW_RATE_MIN, FLOW_RATE_MAX) -
+            denormalize(actual, FLOW_RATE_MIN, FLOW_RATE_MAX)
+        )
+      : null;
+  const { low: lowThreshold, high: highThreshold } = getThresholdPair();
   const isWarning = Number.isFinite(predicted) && (predicted < lowThreshold || predicted > highThreshold);
   const warningType = Number.isFinite(predicted) 
     ? (predicted < lowThreshold ? "low" : predicted > highThreshold ? "high" : null)
@@ -600,9 +550,12 @@ function updateTelemetryMeta() {
   
   const lastPoint = telemetryPoints[telemetryPoints.length - 1];
   if (latestNode) {
-    latestNode.textContent = Number.isFinite(lastPoint?.predicted) ? formatNumber(lastPoint.predicted, 4) : "—";
+    const lp = lastPoint?.predicted;
+    latestNode.textContent = Number.isFinite(lp)
+      ? formatNumber(denormalize(lp, FLOW_RATE_MIN, FLOW_RATE_MAX), 2)
+      : "—";
   }
-  
+
   if (lowThresholdNode) {
     const lowThresh = getLowThreshold();
     const denormalized = denormalize(lowThresh, FLOW_RATE_MIN, FLOW_RATE_MAX);
@@ -642,134 +595,153 @@ function drawTelemetry() {
 
   if (!telemetryPoints.length) return;
 
-  const padding = { top: 20, right: 24, bottom: 32, left: 54 };
+  const padding = { top: 22, right: 24, bottom: 34, left: 58 };
   const plotWidth = width - padding.left - padding.right;
   const plotHeight = height - padding.top - padding.bottom;
 
-  const values = telemetryPoints
-    .map((point) => [point.predicted, point.actual])
-    .flat()
-    .filter((v) => Number.isFinite(v));
-  const maxValue = Math.max(0.01, ...values, 1.0);
+  const originX = padding.left;
+  const originY = padding.top + plotHeight;
+  const plotRight = originX + plotWidth;
 
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+  const buffered = telemetryPoints.slice(-MAX_TELEMETRY_POINTS);
+  const maxSlots = Math.max(1, Math.floor(plotWidth / TELEMETRY_STEP_PX) + 1);
+  const points = buffered.slice(-Math.min(buffered.length, maxSlots));
+  const nPts = points.length;
+  const xAtIndex = (idx) => plotRight - (nPts - 1 - idx) * TELEMETRY_STEP_PX;
+
+  const { low: lowThreshold, high: highThreshold } = getThresholdPair();
+
+  // Auto-scale Y axis to the visible data range (+thresholds), with padding
+  const visibleValues = points
+    .flatMap((p) => [p.predicted, p.actual])
+    .concat([lowThreshold, highThreshold])
+    .filter((v) => Number.isFinite(v));
+  let yMax = visibleValues.length ? Math.max(...visibleValues) : 1;
+  let yMin = visibleValues.length ? Math.min(...visibleValues) : 0;
+  const range = Math.max(yMax - yMin, 1e-4);
+  const pad = range * 0.18;
+  yMin = Math.max(0, yMin - pad);
+  yMax = yMax + pad;
+  const yRange = yMax - yMin;
+
+  // Map a data value → canvas Y coordinate
+  const toY = (v) => originY - clamp((v - yMin) / yRange, 0, 1) * plotHeight;
+
+  // ── Horizontal grid + Y-axis labels ─────────────────────────
   ctx.lineWidth = 1;
   const horizontalSteps = 4;
-  ctx.font = `600 11px ${getComputedStyle(document.documentElement).getPropertyValue("--font-mono").trim()}`;
+  ctx.font = `500 10px "IBM Plex Mono", monospace`;
   ctx.textBaseline = "middle";
-  ctx.fillStyle = "rgba(215, 220, 224, 0.34)";
 
-  for (let i = 0; i <= horizontalSteps; i += 1) {
-    const ratio = 1 - i / horizontalSteps;
-    const y = padding.top + plotHeight * (1 - ratio);
-    ctx.globalAlpha = i === horizontalSteps ? 0.45 : 0.2;
+  for (let i = 0; i <= horizontalSteps; i++) {
+    const ratio = i / horizontalSteps;
+    const value = yMin + yRange * (1 - ratio);
+    const y = padding.top + plotHeight * ratio;
+    ctx.globalAlpha = i === horizontalSteps ? 0.32 : 0.13;
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
     ctx.beginPath();
     ctx.moveTo(padding.left, y);
     ctx.lineTo(width - padding.right, y);
     ctx.stroke();
-    ctx.fillText(formatNumber(maxValue * ratio, 2), 8, y);
+    ctx.globalAlpha = 0.38;
+    ctx.fillStyle = "rgba(203, 213, 225, 1)";
+    ctx.fillText(formatNumber(value, 3), 4, y);
   }
   ctx.globalAlpha = 1;
 
-  const points = telemetryPoints.slice(-MAX_TELEMETRY_POINTS);
-  const originX = padding.left;
-  const originY = padding.top + plotHeight;
-  const stepX = points.length > 1 ? plotWidth / (points.length - 1) : plotWidth;
+  // ── Threshold lines ─────────────────────────────────────────
+  const lowThreshY  = toY(lowThreshold);
+  const highThreshY = toY(highThreshold);
 
-  // Draw low threshold line (P05)
-  const lowThreshold = getLowThreshold();
-  const lowThresholdY = originY - clamp(lowThreshold / maxValue, 0, 1) * plotHeight;
-  
   ctx.save();
-  ctx.globalAlpha = 0.7;
-  ctx.strokeStyle = "rgba(139, 92, 246, 0.5)";
-  ctx.setLineDash([6, 6]);
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(originX, lowThresholdY);
-  ctx.lineTo(width - padding.right, lowThresholdY);
-  ctx.stroke();
+  ctx.globalAlpha = 0.65;
+  ctx.strokeStyle = "rgba(100, 116, 139, 0.85)";
+  ctx.setLineDash([5, 7]);
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(originX, lowThreshY);  ctx.lineTo(width - padding.right, lowThreshY);  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(originX, highThreshY); ctx.lineTo(width - padding.right, highThreshY); ctx.stroke();
   ctx.restore();
   ctx.setLineDash([]);
 
-  // Draw high threshold line (P95)
-  const highThreshold = getHighThreshold();
-  const highThresholdY = originY - clamp(highThreshold / maxValue, 0, 1) * plotHeight;
-  
-  ctx.save();
-  ctx.globalAlpha = 0.7;
-  ctx.strokeStyle = "rgba(236, 72, 153, 0.6)";
-  ctx.setLineDash([6, 6]);
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(originX, highThresholdY);
-  ctx.lineTo(width - padding.right, highThresholdY);
-  ctx.stroke();
-  ctx.restore();
-  ctx.setLineDash([]);
+  // ── Color helpers ────────────────────────────────────────────
+  const COLOR_ACTUAL_OK   = "rgba(52, 211, 153, 0.90)";
+  const COLOR_ACTUAL_WARN = "rgba(251, 191, 36, 0.94)";
+  const SHADOW_OK   = "rgba(52, 211, 153, 0.22)";
+  const SHADOW_WARN = "rgba(251, 191, 36, 0.30)";
 
-  // Draw actual flow rate line
-  const actualPoints = points
-    .map((point, index) => {
-      const actual = Number.isFinite(point.actual) ? point.actual : null;
-      if (actual === null) return null;
-      const clamped = clamp(actual / maxValue, 0, 1);
-      return {
-        x: originX + stepX * index,
-        y: originY - clamped * plotHeight,
-        value: actual,
-      };
-    })
-    .filter((p) => p !== null);
-
-  if (actualPoints.length >= 2) {
-    ctx.save();
-    ctx.strokeStyle = "rgba(139, 92, 246, 0.75)";
-    ctx.lineWidth = 2.4;
-    ctx.globalAlpha = 0.8;
-    ctx.shadowColor = "rgba(139, 92, 246, 0.3)";
-    ctx.shadowBlur = 8;
-    ctx.beginPath();
-    ctx.moveTo(actualPoints[0].x, actualPoints[0].y);
-    actualPoints.slice(1).forEach(({ x, y }) => {
-      ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-    ctx.restore();
+  function flowZone(value, lowT, highT) {
+    if (!Number.isFinite(value)) return "ok";
+    if (value < lowT) return "low";
+    if (value > highT) return "high";
+    return "ok";
   }
 
-  // Draw predicted flow rate line
+  // ── Actual flow rate line ────────────────────────────────────
+  const actualPoints = points
+    .map((point, idx) => {
+      const actual = Number.isFinite(point.actual) ? point.actual : null;
+      if (actual === null) return null;
+      return { x: xAtIndex(idx), y: toY(actual), value: actual };
+    })
+    .filter(Boolean);
+
+  if (actualPoints.length >= 2) {
+    for (let i = 0; i < actualPoints.length - 1; i++) {
+      const p0 = actualPoints[i];
+      const p1 = actualPoints[i + 1];
+      const warn = flowZone(p0.value, lowThreshold, highThreshold) !== "ok"
+                || flowZone(p1.value, lowThreshold, highThreshold) !== "ok";
+      ctx.save();
+      ctx.strokeStyle = warn ? COLOR_ACTUAL_WARN : COLOR_ACTUAL_OK;
+      ctx.lineWidth = 2.4;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.globalAlpha = warn ? 0.96 : 0.86;
+      ctx.shadowColor = warn ? SHADOW_WARN : SHADOW_OK;
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.moveTo(p0.x, p0.y);
+      ctx.lineTo(p1.x, p1.y);
+      ctx.stroke();
+      ctx.restore();
+    }
+    actualPoints.forEach((p) => {
+      if (flowZone(p.value, lowThreshold, highThreshold) === "ok") return;
+      ctx.save();
+      ctx.fillStyle = "rgba(251, 191, 36, 0.88)";
+      ctx.strokeStyle = "rgba(180, 120, 0, 0.90)";
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke();
+      ctx.restore();
+    });
+  }
+
+  // ── Predicted flow rate line ─────────────────────────────────
   const predictedPoints = points
-    .map((point, index) => {
+    .map((point, idx) => {
       const predicted = Number.isFinite(point.predicted) ? point.predicted : null;
       if (predicted === null) return null;
-      const clamped = clamp(predicted / maxValue, 0, 1);
-      return {
-        x: originX + stepX * index,
-        y: originY - clamped * plotHeight,
-        value: predicted,
-        originalIndex: index,
-        point: point,
-      };
+      return { x: xAtIndex(idx), y: toY(predicted), value: predicted };
     })
-    .filter((p) => p !== null);
+    .filter(Boolean);
 
   if (predictedPoints.length >= 2) {
     const gradient = ctx.createLinearGradient(originX, padding.top, originX, originY);
-    gradient.addColorStop(0, "rgba(99, 102, 241, 0.28)");
-    gradient.addColorStop(1, "rgba(99, 102, 241, 0.08)");
+    gradient.addColorStop(0, "rgba(226, 232, 240, 0.10)");
+    gradient.addColorStop(1, "rgba(226, 232, 240, 0.02)");
 
     ctx.save();
-    ctx.strokeStyle = "rgba(99, 102, 241, 0.95)";
+    ctx.strokeStyle = "rgba(226, 232, 240, 0.88)";
     ctx.fillStyle = gradient;
-    ctx.lineWidth = 3;
-    ctx.shadowColor = "rgba(99, 102, 241, 0.35)";
-    ctx.shadowBlur = 14;
+    ctx.lineWidth = 2.4;
+    ctx.lineJoin = "round";
+    ctx.shadowColor = "rgba(226, 232, 240, 0.18)";
+    ctx.shadowBlur = 10;
     ctx.beginPath();
     ctx.moveTo(predictedPoints[0].x, predictedPoints[0].y);
-    predictedPoints.slice(1).forEach(({ x, y }) => {
-      ctx.lineTo(x, y);
-    });
+    predictedPoints.slice(1).forEach(({ x, y }) => ctx.lineTo(x, y));
     ctx.stroke();
     ctx.shadowBlur = 0;
     ctx.lineTo(predictedPoints[predictedPoints.length - 1].x, originY);
@@ -866,10 +838,14 @@ function appendHistory(entry) {
   const body = byId(SELECTORS.historyBody);
   if (!body || !entry) return;
 
-  const actualValue = Number.isFinite(entry.actual) ? formatNumber(entry.actual, 4) : "—";
-  const errorValue = Number.isFinite(entry.error) ? formatNumber(entry.error, 4) : "—";
-  const lowThreshold = getLowThreshold();
-  const highThreshold = getHighThreshold();
+  const actualValue = Number.isFinite(entry.actual)
+    ? formatNumber(denormalize(entry.actual, FLOW_RATE_MIN, FLOW_RATE_MAX), 2)
+    : "—";
+  const predValue = Number.isFinite(entry.predicted)
+    ? formatNumber(denormalize(entry.predicted, FLOW_RATE_MIN, FLOW_RATE_MAX), 2)
+    : "—";
+  const errorValue = Number.isFinite(entry.error) ? formatNumber(entry.error, 2) : "—";
+  const { low: lowThreshold, high: highThreshold } = getThresholdPair();
   const isWarning = Number.isFinite(entry.predicted) && (entry.predicted < lowThreshold || entry.predicted > highThreshold);
   const warningType = entry.warningType || (Number.isFinite(entry.predicted) 
     ? (entry.predicted < lowThreshold ? "low" : entry.predicted > highThreshold ? "high" : null)
@@ -879,7 +855,7 @@ function appendHistory(entry) {
   if (isWarning && warningType) {
     statusText = warningType === "low" ? "Too Low" : "Too High";
   } else if (Number.isFinite(entry.error)) {
-    statusText = entry.error < 0.05 ? "Good" : entry.error < 0.1 ? "Fair" : "Poor";
+    statusText = entry.error < 3 ? "Good" : entry.error < 10 ? "Fair" : "Poor";
   } else if (entry.actual === null) {
     statusText = "Normal";
   }
@@ -890,7 +866,7 @@ function appendHistory(entry) {
   row.innerHTML = `
     <span role="cell">${entry.time}</span>
     <span role="cell">${entry.source}</span>
-    <span role="cell">${formatNumber(entry.predicted, 4)}</span>
+    <span role="cell">${predValue}</span>
     <span role="cell">${actualValue}</span>
     <span role="cell">${errorValue}</span>
     <span role="cell">${statusText}</span>
@@ -997,10 +973,13 @@ async function performStreamStep() {
 
   const sample = nextDatasetSample();
   const timestamp = nextTimestamp();
-  
-  // Normalize pressures
-  const normalizedPressures = sample.pressures.map((p) => normalize(p, PRESSURE_MIN, PRESSURE_MAX));
-  
+
+  // If the dataset is already pre-scaled [0,1] (e.g. test_data_scaled_manual.csv) skip normalisation.
+  // For legacy raw CSVs the pressures are still in bar and must be normalised.
+  const normalizedPressures = datasetState.preScaled
+    ? sample.pressures.map((p) => clamp(p, 0, 1))
+    : sample.pressures.map((p) => normalize(p, PRESSURE_MIN, PRESSURE_MAX));
+
   const payload = {
     pressure_1: normalizedPressures[0],
     pressure_2: normalizedPressures[1],
@@ -1031,14 +1010,18 @@ async function performStreamStep() {
     streamState.lastSampleIndex = sample.index;
     const latency = performance.now() - started;
 
-    const predictedFlowRate = Number(response?.predicted_flow_rate);
+    const rawPredicted = Number(response?.predicted_flow_rate);
+    const predictedFlowRate = flowRateToNormalizedFromApi(rawPredicted);
+    // Pre-scaled datasets already have liquidMassRate in [0,1]; legacy raw CSVs need normalisation.
     const actualFlowRate = sample.liquidMassRate !== null
-      ? normalize(sample.liquidMassRate, FLOW_RATE_MIN, FLOW_RATE_MAX)
+      ? (datasetState.preScaled ? clamp(sample.liquidMassRate, 0, 1) : normalize(sample.liquidMassRate, FLOW_RATE_MIN, FLOW_RATE_MAX))
       : null;
-    
+
     let error = null;
     if (Number.isFinite(predictedFlowRate) && Number.isFinite(actualFlowRate)) {
-      error = Math.abs(predictedFlowRate - actualFlowRate);
+      const predPhys = denormalize(predictedFlowRate, FLOW_RATE_MIN, FLOW_RATE_MAX);
+      const actPhys = denormalize(actualFlowRate, FLOW_RATE_MIN, FLOW_RATE_MAX);
+      error = Math.abs(predPhys - actPhys);
       streamState.errors.push(error);
       streamState.totalError += error;
       if (streamState.errors.length > 100) {
@@ -1049,12 +1032,11 @@ async function performStreamStep() {
 
     updateLatency(latency);
     lastPayload = payload;
-    lastPrediction = response?.predicted_flow_rate ?? null;
+    lastPrediction = predictedFlowRate;
     lastActual = actualFlowRate;
     setApiState("live");
 
-    const lowThreshold = getLowThreshold();
-    const highThreshold = getHighThreshold();
+    const { low: lowThreshold, high: highThreshold } = getThresholdPair();
     const isWarning = Number.isFinite(predictedFlowRate) && (predictedFlowRate < lowThreshold || predictedFlowRate > highThreshold);
     const warningType = Number.isFinite(predictedFlowRate) 
       ? (predictedFlowRate < lowThreshold ? "low" : predictedFlowRate > highThreshold ? "high" : null)
@@ -1070,7 +1052,11 @@ async function performStreamStep() {
       warningType,
       timestamp: Date.now(),
     });
-    updatePredictionDisplay(predictedFlowRate, actualFlowRate, error);
+    updatePredictionDisplay(
+      Number.isFinite(predictedFlowRate) ? denormalize(predictedFlowRate, FLOW_RATE_MIN, FLOW_RATE_MAX) : null,
+      Number.isFinite(actualFlowRate) ? denormalize(actualFlowRate, FLOW_RATE_MIN, FLOW_RATE_MAX) : null,
+      error
+    );
     updateVerdict(predictedFlowRate, lowThreshold, highThreshold, isWarning, warningType);
     updateRecentPressures(normalizedPressures);
     appendHistory({
@@ -1197,9 +1183,7 @@ function registerEventListeners() {
     event.preventDefault();
     resetStream();
   });
-  byId(SELECTORS.inputLowThreshold)?.addEventListener("input", handleLowThresholdSlider);
-  byId(SELECTORS.inputHighThreshold)?.addEventListener("input", handleHighThresholdSlider);
-  
+
   byId(SELECTORS.intervalInput)?.addEventListener("input", (event) => {
     const value = Number(event.target.value);
     if (!Number.isFinite(value)) return;
@@ -1236,13 +1220,7 @@ async function bootstrap() {
   setFooterYear();
   updateIntervalLabels();
   updateStreamIndicators();
-  
-  // Initialize thresholds with normalized values
-  const lowThreshNorm = normalize(FLOW_RATE_P05, FLOW_RATE_MIN, FLOW_RATE_MAX);
-  const highThreshNorm = normalize(FLOW_RATE_P95, FLOW_RATE_MIN, FLOW_RATE_MAX);
-  setLowThreshold(lowThreshNorm, { announce: false });
-  setHighThreshold(highThreshNorm, { announce: false });
-  
+
   updateTelemetryMeta();
 
   await checkHealth();
