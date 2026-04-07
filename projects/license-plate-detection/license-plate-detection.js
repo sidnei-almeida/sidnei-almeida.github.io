@@ -17,48 +17,33 @@ let pendingSource = null;
 let lightboxOpen = false;
 let lightboxLastFocus = null;
 
-const sampleImages = [
-  {
-    src: "../../images/license_plates/DCAM0015_JPG_jpg.rf.72c86340f8f15c0a24c50bde98fa8f57.jpg",
-    label: "Silver Hatchback Rear",
-  },
-  {
-    src: "../../images/license_plates/DCAM0019_JPG_jpg.rf.4fe1c21ca9db3bf51ecb2eca2dfa2924.jpg",
-    label: "White Van Head-On",
-  },
-  {
-    src: "../../images/license_plates/DCAM0019_JPG_jpg.rf.9b2a03f1db093f23eebaab9ae0c24d0c.jpg",
-    label: "Green Minibus Front",
-  },
-  {
-    src: "../../images/license_plates/DCAM0019_jpg.rf.b83d52425fc18b9861a453d0555be5dc.jpg",
-    label: "Gray Hatchback Front",
-  },
-  {
-    src: "../../images/license_plates/DCAM0026_JPG_jpg.rf.f04431ad830e8af87618e14df2ede13a.jpg",
-    label: "Silver Hatchback Turning",
-  },
-  {
-    src: "../../images/license_plates/DCAM0027_JPG_jpg.rf.75c8a42daa4ee11e52e33f9f81524440.jpg",
-    label: "Plate Close-Up",
-  },
-  {
-    src: "../../images/license_plates/DCAM0037_JPG_jpg.rf.da0ac338a913572b8246466136be098d.jpg",
-    label: "Gray Hatchback Front",
-  },
-  {
-    src: "../../images/license_plates/DCAM0040_JPG_jpg.rf.f0319334d8ed56b1102db20b11f6f138.jpg",
-    label: "Downtown Hatchback",
-  },
-  {
-    src: "../../images/license_plates/DCAM0046_JPG_jpg.rf.650333eab92ea5ae034cc4d8ea43273b.jpg",
-    label: "White Minibus Close-Up",
-  },
-  {
-    src: "../../images/license_plates/DCAM0046_JPG_jpg.rf.9a074131c18947bc622fee6b31df3602.jpg",
-    label: "Classic VW Beetle",
-  },
-];
+/** Populated from ../../images/license_plates/samples.json on startup */
+let sampleImages = [];
+
+const SAMPLE_MANIFEST_URL = "../../images/license_plates/samples.json";
+
+async function loadSampleImagesFromManifest() {
+  try {
+    const response = await fetchWithTimeout(SAMPLE_MANIFEST_URL, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`Manifest HTTP ${response.status}`);
+    }
+    const data = await response.json();
+    if (!Array.isArray(data)) {
+      throw new Error("Manifest must be a JSON array of filenames");
+    }
+    return data
+      .filter((name) => typeof name === "string" && name.trim().length > 0)
+      .map((name, index) => ({
+        src: `../../images/license_plates/${encodeURIComponent(name.trim())}`,
+        label: `Sample ${index + 1}`,
+      }));
+  } catch (error) {
+    console.warn("[PlatePulse] Could not load sample manifest", error);
+    showToast("Sample images list unavailable.", "warning");
+    return [];
+  }
+}
 
 const ids = {
   preloader: "preloader",
@@ -964,9 +949,10 @@ function setupCurrentYear() {
   }
 }
 
-function initialise() {
+async function initialise() {
   showPreloader();
   setupCurrentYear();
+  sampleImages = await loadSampleImagesFromManifest();
   populateSamples();
   initialiseTabs();
   attachSampleHandlers();
@@ -1009,7 +995,9 @@ function initialise() {
   window.setInterval(pollHealth, HEALTH_POLL_INTERVAL);
 }
 
-document.addEventListener("DOMContentLoaded", initialise);
+document.addEventListener("DOMContentLoaded", () => {
+  void initialise();
+});
 
 function openLightbox(src, caption) {
   const overlay = getElement(ids.lightbox);
