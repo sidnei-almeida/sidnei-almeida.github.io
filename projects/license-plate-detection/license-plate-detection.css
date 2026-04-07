@@ -375,6 +375,11 @@ button:focus-visible, input:focus-visible {
   align-items: start;
 }
 
+/* Evita coluna esquerda a encolher a zero em grelha minmax(0, 1fr) */
+.input-panel {
+  min-width: 0;
+}
+
 /* ── Panel ── */
 .panel {
   background: var(--bg-1);
@@ -473,21 +478,37 @@ button:focus-visible, input:focus-visible {
 }
 
 /* ── Tab panels ── */
-.tab-panels { flex: 1; min-height: 0; }
+.tab-panels {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
 
 .tab-panel { display: none; opacity: 0; transition: opacity var(--t); }
 .tab-panel.active { opacity: 1; }
-.tab-panel.samples.active { display: flex; flex-direction: column; }
+.tab-panel.samples.active {
+  display: flex;
+  flex-direction: column;
+}
 .tab-panel.upload.active, .tab-panel.camera.active { display: block; }
 
-/* ── Sample grid ── */
+/* ── Sample grid ──
+   Flex-wrap em vez de grid: evita que linhas implícitas sejam “partilhadas” em altura
+   e achatem as miniaturas. O scroll fica só neste bloco (max-height + overflow-y). */
 .sample-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(clamp(120px, 13vw, 160px), 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: flex-start;
+  justify-content: flex-start;
   gap: 10px;
   padding: 2px;
+  min-width: 0;
   max-height: clamp(340px, 50vh, 540px);
+  overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: rgba(245, 158, 11, 0.25) transparent;
 }
@@ -500,13 +521,19 @@ button:focus-visible, input:focus-visible {
 
 /* ── Sample card ── */
 .sample-card {
+  flex: 0 0 auto;
+  width: clamp(120px, 13vw, 160px);
+  max-width: 100%;
   background: var(--bg-2);
   border-radius: var(--r-lg);
   border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   gap: 7px;
   padding: 7px;
+  min-width: 0;
+  box-sizing: border-box;
   cursor: pointer;
   transition: border-color var(--ts), transform var(--ts), box-shadow var(--ts);
   position: relative;
@@ -514,9 +541,10 @@ button:focus-visible, input:focus-visible {
   animation: cardReveal 0.4s ease both;
 }
 
+/* Avoid animating opacity on the card — it hides nested images in some browsers. */
 @keyframes cardReveal {
-  from { opacity: 0; transform: translateY(6px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0)  scale(1); }
+  from { transform: translateY(6px) scale(0.97); }
+  to   { transform: translateY(0) scale(1); }
 }
 
 .sample-card:hover {
@@ -542,35 +570,46 @@ button:focus-visible, input:focus-visible {
   box-shadow: 0 0 8px var(--amber-glow);
 }
 
+/* Proporção 4:3 — largura vem do card (fixa em clamp); altura segue o ratio. */
 .sample-card .thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  flex-shrink: 0;
   border-radius: calc(var(--r-lg) - 2px);
   overflow: hidden;
-  aspect-ratio: 4 / 3;
   background: var(--bg-0);
-  position: relative;
+  isolation: isolate;
 }
 
 .sample-card .thumb img {
-  width: 100%; height: 100%;
-  object-fit: cover; display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 1;
   transition: transform var(--ts);
 }
 
 .sample-card:hover .thumb img { transform: scale(1.06); }
 
-/* Amber flash on active selection */
+/* Subtle tint on active — keep below overlays, do not cover pixels fully */
 .sample-card.active .thumb::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent 50%, rgba(245,158,11,0.08));
+  z-index: 2;
+  background: linear-gradient(135deg, transparent 55%, rgba(245, 158, 11, 0.06));
   pointer-events: none;
 }
 
 .sample-card .label {
   font-size: 0.62rem;
   letter-spacing: 0.07em;
-  color: var(--text-3);
+  color: var(--text-2);
   font-family: var(--mono);
   text-overflow: ellipsis;
   overflow: hidden;
