@@ -4,7 +4,10 @@ const DEFAULT_EMPTY_MESSAGE = "No license plates detected.";
 const LOCAL_STORAGE_KEY = "licensePlateApiBaseUrl";
 const INITIAL_MIN_LOADER = 1200;
 const REQUEST_TIMEOUT_MS = 9000;
-const DETECTION_TIMEOUT_MS = 16000;
+/** Mobile networks + large photos need more headroom than desktop. */
+const DETECTION_TIMEOUT_MS = 24000;
+/** Long edge cap before upload (API accepts up to 1280px; keeps payloads small on 4G). */
+const MAX_IMAGE_EDGE = 1280;
 const HEALTH_POLL_INTERVAL = 20000;
 
 let loaderTimer = null;
@@ -170,14 +173,31 @@ function hidePreloader() {
   }, remaining);
 }
 
+function isLikelyBlockedCrossOriginFetch(error) {
+  if (!error || error.name !== "TypeError") return false;
+  const m = String(error.message || "").toLowerCase();
+  return m.includes("fetch") || m.includes("failed") || m.includes("network") || m.includes("load");
+}
+
 async function fetchWithTimeout(url, options = {}, timeout = REQUEST_TIMEOUT_MS) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeout);
+  const merged = {
+    ...options,
+    signal: controller.signal,
+    mode: options.mode ?? "cors",
+    credentials: options.credentials ?? "omit",
+  };
   try {
-    return await fetch(url, { ...options, signal: controller.signal });
+    return await fetch(url, merged);
   } catch (error) {
     if (error?.name === "AbortError") {
       throw new Error("Request timed out.");
+    }
+    if (isLikelyBlockedCrossOriginFetch(error)) {
+      throw new Error(
+        "Could not reach the API (request blocked). In Brave: tap the lion icon → turn Shields off for this site, then try again. Ad blockers may block the same request."
+      );
     }
     throw error;
   } finally {
@@ -772,11 +792,19 @@ function attachUploadHandlers() {
   });
 }
 
+function isLikelyImageFile(file) {
+  if (file.type && file.type.startsWith("image/")) return true;
+  // iOS/Android sometimes return an empty type for camera captures or legacy picks.
+  if (!file.type || file.type === "") return true;
+  const name = (file.name || "").toLowerCase();
+  return /\.(jpe?g|png|gif|webp|bmp|heic|heif)$/i.test(name);
+}
+
 function handleFile(file, sourceKind = "file") {
   if (isProcessing) return;
 
-  if (!file.type.startsWith("image/")) {
-    renderError(new Error("Unsupported file type. Please upload an image."));
+  if (!isLikelyImageFile(file)) {
+    renderError(new Error("Unsupported file type. Please upload an image (JPEG/PNG)."));
     return;
   }
 
@@ -822,7 +850,11 @@ async function resolvePendingFile() {
 }
 
 async function executeDetection() {
-  if (isProcessing || !pendingSource) return;
+  if (isProcessing) return;
+  if (!pendingSource) {
+    showToast("Load a sample, upload a photo, or capture from the camera first.", "warning", 3600);
+    return;
+  }
 
   const runButton = getElement(ids.runDetection);
   if (runButton) {
@@ -839,10 +871,12 @@ async function executeDetection() {
   try {
     isProcessing = true;
     updateRunButton();
-    const file = await resolvePendingFile();
-    if (!file) {
+    const rawFile = await resolvePendingFile();
+    if (!rawFile) {
       throw new Error("Select or upload an image before running detection.");
     }
+
+    const file = await normalizeImageForDetection(rawFile);
 
     const { payload, runtimeMs } = await runPrediction(file);
     setRuntimeDisplay(formatRuntime(runtimeMs));
@@ -881,10 +915,21 @@ async function startCamera() {
   if (!video || !start || !capture || !stop) return;
 
   try {
-    cameraStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "environment" },
-    });
+    try {
+      cameraStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } },
+      });
+    } catch (e1) {
+      console.warn("[PlatePulse] Rear camera unavailable, using default camera", e1);
+      cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
+    }
     video.srcObject = cameraStream;
+    video.muted = true;
+    try {
+      await video.play();
+    } catch (e2) {
+      console.warn("[PlatePulse] video.play()", e2);
+    }
     start.disabled = true;
     capture.disabled = false;
     stop.disabled = false;
@@ -913,20 +958,127 @@ function stopCamera() {
   if (stop) stop.disabled = true;
 }
 
+function waitForVideoFrame(video) {
+  if (video.readyState >= 2 && video.videoWidth > 0) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const tid = setTimeout(() => {
+      cleanup();
+      reject(new Error("Camera preview is not ready yet. Wait a moment and try again."));
+    }, 8000);
+    const cleanup = () => {
+      clearTimeout(tid);
+      video.removeEventListener("loadeddata", onReady);
+      video.removeEventListener("canplay", onReady);
+    };
+    const onReady = () => {
+      cleanup();
+      resolve();
+    };
+    video.addEventListener("loadeddata", onReady);
+    video.addEventListener("canplay", onReady);
+  });
+}
+
+async function captureFrameFromVideoCanvas(video) {
+  await waitForVideoFrame(video);
+  const w = video.videoWidth;
+  const h = video.videoHeight;
+  if (!w || !h) {
+    throw new Error("Camera has no usable frame size yet.");
+  }
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Could not read camera frame.");
+  ctx.drawImage(video, 0, 0, w, h);
+  const blob = await new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (b) => (b ? resolve(b) : reject(new Error("Could not encode camera photo."))),
+      "image/jpeg",
+      0.92
+    );
+  });
+  return new File([blob], "camera-capture.jpg", { type: "image/jpeg" });
+}
+
+/**
+ * iOS Safari and many mobile WebViews do not support ImageCapture; canvas fallback is required.
+ */
 async function captureFrame() {
   if (!cameraStream) return;
   const video = getElement(ids.cameraFeed);
   if (!video) return;
 
   const track = cameraStream.getVideoTracks()[0];
-  const imageCapture = new ImageCapture(track);
+  if (!track) {
+    renderError(new Error("No camera track."));
+    return;
+  }
+
   try {
-    const blob = await imageCapture.takePhoto();
-    const file = new File([blob], "camera-capture.jpg", { type: blob.type || "image/jpeg" });
+    if (typeof ImageCapture !== "undefined") {
+      try {
+        const imageCapture = new ImageCapture(track);
+        const blob = await imageCapture.takePhoto();
+        const mime = blob.type && blob.type.startsWith("image/") ? blob.type : "image/jpeg";
+        const file = new File([blob], "camera-capture.jpg", { type: mime });
+        handleFile(file, "camera");
+        return;
+      } catch (e) {
+        console.warn("[PlatePulse] ImageCapture failed, using canvas capture", e);
+      }
+    }
+    const file = await captureFrameFromVideoCanvas(video);
     handleFile(file, "camera");
   } catch (error) {
     console.error("[PlatePulse] Unable to capture frame", error);
-    renderError(error);
+    renderError(error instanceof Error ? error : new Error("Could not capture photo."));
+  }
+}
+
+async function normalizeImageForDetection(file) {
+  let bitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch (e) {
+    console.warn("[PlatePulse] createImageBitmap skipped, sending original", e);
+    return file;
+  }
+  try {
+    let { width, height } = bitmap;
+    const maxDim = Math.max(width, height);
+    if (maxDim <= MAX_IMAGE_EDGE) {
+      bitmap.close();
+      return file;
+    }
+    const scale = MAX_IMAGE_EDGE / maxDim;
+    const w = Math.round(width * scale);
+    const h = Math.round(height * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      bitmap.close();
+      return file;
+    }
+    ctx.drawImage(bitmap, 0, 0, w, h);
+    bitmap.close();
+    const blob = await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error("Could not resize image."))),
+        "image/jpeg",
+        0.92
+      );
+    });
+    return new File([blob], "plate-input.jpg", { type: "image/jpeg" });
+  } catch (e) {
+    try {
+      bitmap.close();
+    } catch (_) {}
+    console.warn("[PlatePulse] Resize failed, sending original", e);
+    return file;
   }
 }
 
