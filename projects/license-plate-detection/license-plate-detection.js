@@ -20,24 +20,58 @@ let lightboxLastFocus = null;
 /** Populated from ../../images/license_plates/samples.json on startup */
 let sampleImages = [];
 
-const SAMPLE_MANIFEST_URL = "../../images/license_plates/samples.json";
+function getLicensePlateSamplesDirUrl() {
+  return new URL("../../images/license_plates/", document.baseURI);
+}
+
+function sampleImageUrlFromFilename(filename) {
+  const name = String(filename).trim();
+  if (!name) return "";
+  return new URL(name, getLicensePlateSamplesDirUrl()).href;
+}
+
+function parseManifestFilenames(data) {
+  if (!Array.isArray(data)) return [];
+  return data.filter((name) => typeof name === "string" && name.trim().length > 0);
+}
+
+function buildSampleEntries(names) {
+  return names
+    .map((name, index) => ({
+      src: sampleImageUrlFromFilename(name),
+      label: `Sample ${index + 1}`,
+    }))
+    .filter((entry) => Boolean(entry.src));
+}
+
+/** Inlined in license-plate-detection.html — avoids fetch/CORS/offline issues. */
+function readEmbeddedPlateSamplesManifest() {
+  const el = document.getElementById("plate-samples-manifest");
+  if (!el) return null;
+  try {
+    const data = JSON.parse(el.textContent);
+    const names = parseManifestFilenames(data);
+    return names.length ? names : null;
+  } catch {
+    return null;
+  }
+}
 
 async function loadSampleImagesFromManifest() {
+  const embeddedNames = readEmbeddedPlateSamplesManifest();
+  if (embeddedNames) {
+    return buildSampleEntries(embeddedNames);
+  }
+
+  const manifestUrl = new URL("../../images/license_plates/samples.json", document.baseURI).href;
   try {
-    const response = await fetchWithTimeout(SAMPLE_MANIFEST_URL, { cache: "no-store" });
+    const response = await fetchWithTimeout(manifestUrl, { cache: "default" });
     if (!response.ok) {
       throw new Error(`Manifest HTTP ${response.status}`);
     }
     const data = await response.json();
-    if (!Array.isArray(data)) {
-      throw new Error("Manifest must be a JSON array of filenames");
-    }
-    return data
-      .filter((name) => typeof name === "string" && name.trim().length > 0)
-      .map((name, index) => ({
-        src: `../../images/license_plates/${encodeURIComponent(name.trim())}`,
-        label: `Sample ${index + 1}`,
-      }));
+    const names = parseManifestFilenames(data);
+    return buildSampleEntries(names);
   } catch (error) {
     console.warn("[PlatePulse] Could not load sample manifest", error);
     showToast("Sample images list unavailable.", "warning");
@@ -210,11 +244,23 @@ function getTopDetectionSummary(detections = []) {
   );
   if (!topDetection) return "";
 
-  const confidence = typeof topDetection.confidence === "number"
-    ? `${(topDetection.confidence * 100).toFixed(1)}%`
-    : "";
-  const label = topDetection.class_name ?? "plate";
-  return confidence ? `${confidence} · ${label}` : label;
+  const rawPlate =
+    typeof topDetection.plate_text === "string" ? topDetection.plate_text.trim() : "";
+  const plateRead = rawPlate.length > 0 ? rawPlate.toUpperCase() : "";
+  const detPct =
+    typeof topDetection.confidence === "number"
+      ? `${(topDetection.confidence * 100).toFixed(1)}%`
+      : "";
+  const ocrPct =
+    plateRead && typeof topDetection.plate_text_confidence === "number"
+      ? `${(topDetection.plate_text_confidence * 100).toFixed(0)}%`
+      : "";
+
+  const label = plateRead || (topDetection.class_name ?? "plate");
+  const parts = [label];
+  if (detPct) parts.push(`det ${detPct}`);
+  if (ocrPct) parts.push(`OCR ${ocrPct}`);
+  return parts.join(" · ");
 }
 
 function applyModelMetrics(metrics) {
@@ -348,28 +394,58 @@ function createAnnotatedImage(image, detections, meta = {}) {
   const rectsOverlap = (a, b) =>
     a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
 
+  const buildPlateLabelSegments = (det) => {
+    const rawPlate = typeof det.plate_text === "string" ? det.plate_text.trim() : "";
+    const hasRead = rawPlate.length > 0;
+    const mainText = hasRead
+      ? rawPlate.toUpperCase()
+      : (det.class_name ?? "PLACA").toUpperCase();
+    const pctStr =
+      det.confidence != null
+        ? `${clamp(det.confidence * 100, 0, 100).toFixed(1)}%`
+        : "";
+    const ocrPctStr =
+      hasRead && typeof det.plate_text_confidence === "number"
+        ? `${clamp(det.plate_text_confidence * 100, 0, 100).toFixed(0)}%`
+        : "";
+
+    const parts = [];
+    parts.push({ text: mainText, style: hasRead ? "accent" : "muted" });
+    if (pctStr) {
+      parts.push({ text: " · ", style: "muted" });
+      parts.push({ text: pctStr, style: "accent" });
+    }
+    if (ocrPctStr) {
+      parts.push({ text: " · ", style: "muted" });
+      parts.push({ text: "OCR ", style: "muted" });
+      parts.push({ text: ocrPctStr, style: "accent" });
+    }
+
+    let labelW = 0;
+    const segments = [];
+    for (const p of parts) {
+      const width = ctx.measureText(p.text).width;
+      segments.push({ ...p, width });
+      labelW += width;
+    }
+    return { segments, labelW };
+  };
+
   // ── Build item list
   const items = [];
   for (const det of detections) {
-    const { box, confidence } = det;
+    const { box } = det;
     const x = box?.xmin ?? 0;
     const y = box?.ymin ?? 0;
     const w = (box?.xmax ?? 0) - x;
     const h = (box?.ymax ?? 0) - y;
     if (w < 4 || h < 4) continue;
 
-    const mainText = (det.class_name ?? "PLACA").toUpperCase();
-    const pctStr   = confidence != null
-      ? `${clamp(confidence * 100, 0, 100).toFixed(1)}%`
-      : "";
-
-    const sepW   = pctStr ? ctx.measureText(" · ").width : 0;
-    const wMain  = ctx.measureText(mainText).width;
-    const wPct   = pctStr ? ctx.measureText(pctStr).width : 0;
-    const labelW = wMain + sepW + wPct + pad * 2;
+    const { segments, labelW: measuredLabelW } = buildPlateLabelSegments(det);
+    const labelW = measuredLabelW + pad * 2;
     const labelH = fontSize + pad * 2;
 
-    items.push({ x, y, w, h, mainText, pctStr, sepW, wMain, wPct, labelW, labelH });
+    items.push({ x, y, w, h, segments, labelW, labelH });
   }
 
   // ── Label placement with collision avoidance
@@ -447,20 +523,13 @@ function createAnnotatedImage(image, detections, meta = {}) {
     roundedRect(labelX, labelY, it.labelW, it.labelH, pillR);
     ctx.stroke();
 
-    // Label text: class name (muted) + " · " + percentage (amber)
+    // Label: plate text (OCR) or class · det % · OCR %
     const textY = labelY + it.labelH - pad;
     let tx = labelX + pad;
-
-    ctx.fillStyle = LABEL_MUTED;
-    ctx.fillText(it.mainText, tx, textY);
-    tx += it.wMain;
-
-    if (it.pctStr) {
-      ctx.fillStyle = LABEL_MUTED;
-      ctx.fillText(" · ", tx, textY);
-      tx += it.sepW;
-      ctx.fillStyle = ACCENT;
-      ctx.fillText(it.pctStr, tx, textY);
+    for (const seg of it.segments) {
+      ctx.fillStyle = seg.style === "accent" ? ACCENT : LABEL_MUTED;
+      ctx.fillText(seg.text, tx, textY);
+      tx += seg.width;
     }
 
     // Anchor dot
@@ -514,6 +583,8 @@ function populateSamples() {
     const img = document.createElement("img");
     img.src = sample.src;
     img.alt = sample.label;
+    img.loading = "eager";
+    img.decoding = "async";
 
     thumb.appendChild(img);
 
@@ -788,9 +859,9 @@ async function executeDetection() {
     const topSummary = getTopDetectionSummary(detections);
     const finalMessage =
       detections.length && topSummary
-        ? `${detectionMessage} Top confidence: ${topSummary}.`
+        ? `${detectionMessage} Top: ${topSummary}.`
         : detectionMessage;
-    void finalMessage;
+    showToast(finalMessage, detections.length ? "success" : "info", 4200);
   } catch (error) {
     console.error("[PlatePulse] Detection failed", error);
     renderError(error);
@@ -863,10 +934,13 @@ async function runPrediction(file) {
   const start = performance.now();
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("return_image", "false");
+
+  const detectUrl = new URL(buildUrl("/v1/detect"));
+  detectUrl.searchParams.set("return_image", "false");
+  detectUrl.searchParams.set("read_plate", "true");
 
   const payload = await fetchJson(
-    buildUrl("/v1/detect"),
+    detectUrl.toString(),
     {
       method: "POST",
       body: formData,
@@ -952,9 +1026,11 @@ function setupCurrentYear() {
 async function initialise() {
   showPreloader();
   setupCurrentYear();
+  /* Tabs first so the Samples panel is visible before thumbnails mount; otherwise
+   * some browsers skip image decode while the panel is display:none. */
+  initialiseTabs();
   sampleImages = await loadSampleImagesFromManifest();
   populateSamples();
-  initialiseTabs();
   attachSampleHandlers();
   attachUploadHandlers();
   attachGlobalListeners();
