@@ -3969,7 +3969,7 @@ body::before {
 
 /* Loading spinner enhancement */
 .loading-spinner {
-  animation: spin 0.8s linear infinite, pulse 2s ease-in-out infinite;
+  animation: spin 0.8s linear infinite;
 }
 
 /* Smooth transitions */
@@ -3989,3 +3989,295 @@ body::before {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================================================
+   Sober 3D Refinement (less flat, no glow/LED)
+   ============================================================================ */
+
+:root {
+  --accent-primary-glow: rgba(36, 192, 168, 0);
+  --accent-success-glow: rgba(22, 163, 74, 0);
+  --accent-danger-glow: rgba(220, 38, 38, 0);
+  --accent-warning-glow: rgba(234, 88, 12, 0);
+  --glow-primary: none;
+  --glow-success: none;
+  --glow-danger: none;
+  --gradient-bg: none;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 1px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 10px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-lg: 0 10px 22px rgba(15, 23, 42, 0.1), 0 2px 5px rgba(15, 23, 42, 0.05);
+  --shadow-xl: 0 16px 28px rgba(15, 23, 42, 0.12), 0 3px 8px rgba(15, 23, 42, 0.06);
+}
+
+body::before {
+  background: none;
+}
+
+.networth-panel,
+.evolution-panel,
+.holdings-panel,
+.signals-panel,
+.onboarding-card,
+.settings-card,
+.profile-card,
+.auth-modal-content,
+.user-menu,
+.notifications-menu,
+.messages-menu {
+  background: linear-gradient(180deg, #f9fafb 0%, #f2f4f7 100%);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: var(--shadow-md);
+}
+
+.networth-panel:hover,
+.evolution-panel:hover,
+.holdings-panel:hover,
+.signals-panel:hover {
+  border-color: rgba(15, 23, 42, 0.14);
+  box-shadow: var(--shadow-lg);
+}
+
+.holding-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
+  border: 1px solid rgba(15, 23, 42, 0.11);
+  box-shadow: var(--shadow-sm);
+}
+
+.holding-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.kpi-stack-row,
+.risk-btn,
+.terminal-btn,
+.user-menu-btn,
+.form-control {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.risk-btn {
+  background: linear-gradient(180deg, #ffffff 0%, #eef2f7 100%);
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  color: #334155;
+}
+
+.risk-btn--active {
+  background: linear-gradient(180deg, #25b7a1 0%, #1d9e8b 100%);
+  border-color: #1d9e8b;
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 4px 10px rgba(15, 23, 42, 0.14);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #27b8a3 0%, #1f9f8c 100%);
+  border-color: #1f9f8c;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 4px 10px rgba(15, 23, 42, 0.14);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, #22aa96 0%, #1c9382 100%);
+  border-color: #1c9382;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 6px 12px rgba(15, 23, 42, 0.15);
+}
+
+.signal-feed,
+.terminal-content.signal-feed {
+  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+.signal-row:hover {
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.signal-link,
+.signal-ai-icon {
+  text-shadow: none;
+  filter: none;
+}
+
+.panorama-chart-wrap--illustrated {
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), var(--shadow-sm);
+}
+
+/* ============================================================================
+   Hard Dark Theme Override — ultra-dark, premium (no neon)
+   ============================================================================ */
+
+:root {
+  --bg-primary: #040608;
+  --bg-secondary: #080c11;
+  --bg-tertiary: #0c1118;
+  --bg-card: #0e141c;
+  --bg-elevated: #131b24;
+  --glass-bg: #0e141c;
+  --glass-border: rgba(255, 255, 255, 0.065);
+  --glass-hover: rgba(255, 255, 255, 0.035);
+  --glass-active: rgba(255, 255, 255, 0.055);
+  --text-primary: #f0f3f8;
+  --text-secondary: #9aa8b8;
+  --text-tertiary: #758696;
+  --text-muted: #5c6b7a;
+  --text-inverse: #040608;
+  --accent-primary: #b08a5a;
+  --accent-primary-muted: rgba(176, 138, 90, 0.55);
+  --border-color: rgba(255, 255, 255, 0.075);
+  --gradient-bg: none;
+  --shadow-sm: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 4px 12px rgba(0, 0, 0, 0.45),
+    0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 1px 0 rgba(255, 255, 255, 0.045) inset, 0 10px 28px rgba(0, 0, 0, 0.5),
+    0 2px 6px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 18px 40px rgba(0, 0, 0, 0.55),
+    0 4px 10px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 1px 0 rgba(255, 255, 255, 0.055) inset, 0 24px 56px rgba(0, 0, 0, 0.58),
+    0 8px 16px rgba(0, 0, 0, 0.45);
+}
+
+body {
+  background: #040608;
+  background-image: radial-gradient(ellipse 90% 55% at 50% -15%, rgba(35, 48, 62, 0.35) 0%, transparent 55%);
+  color: var(--text-primary);
+}
+
+body::before {
+  background: none;
+}
+
+.header {
+  background: rgba(8, 12, 17, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom-color: var(--border-color);
+}
+
+.header-search,
+.user-avatar,
+.form-control {
+  background: #0c1118;
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.networth-panel,
+.evolution-panel,
+.holdings-panel,
+.signals-panel,
+.onboarding-card,
+.settings-card,
+.profile-card,
+.auth-modal-content,
+.user-menu,
+.notifications-menu,
+.messages-menu {
+  background: linear-gradient(165deg, #121a24 0%, #0a0e14 48%, #070a0f 100%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+}
+
+.networth-panel:hover,
+.evolution-panel:hover,
+.holdings-panel:hover,
+.signals-panel:hover {
+  border-color: rgba(176, 138, 90, 0.18);
+  box-shadow: var(--shadow-lg);
+}
+
+.kpi-stack-row,
+.holding-card,
+.signal-feed,
+.terminal-content.signal-feed,
+.risk-btn,
+.terminal-btn,
+.user-menu-btn {
+  background: linear-gradient(180deg, #141c26 0%, #0d1219 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-secondary);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 3px 10px rgba(0, 0, 0, 0.35);
+}
+
+.holding-card__ticker,
+.holding-card__price,
+.kpi-value,
+.balance-amount,
+.signal-ticker {
+  color: var(--text-primary);
+}
+
+.holding-card__meta,
+.kpi-label,
+.balance-label,
+.signal-summary,
+.signal-confidence-value {
+  color: var(--text-secondary);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #b08a5a 0%, #8f6c43 100%);
+  border-color: #8f6c43;
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, #bd9665 0%, #9b7549 100%);
+  border-color: #9b7549;
+  color: #ffffff;
+  box-shadow: var(--shadow-md);
+}
+
+.risk-btn--active {
+  background: linear-gradient(180deg, #b08a5a 0%, #8f6c43 100%);
+  border-color: #8f6c43;
+  color: #ffffff;
+  box-shadow: var(--shadow-md);
+}
+
+.signal-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.panorama-chart-wrap--illustrated {
+  background: linear-gradient(165deg, #121a24 0%, #080c11 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.signal-details-panel {
+  background: linear-gradient(180deg, #0c1118 0%, #06090d 100%);
+  border-left: 1px solid var(--glass-border);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.45);
+}
+
+.settings-modal {
+  background: rgba(2, 4, 7, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.auth-modal {
+  background: rgba(2, 4, 7, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.loading-overlay {
+  background: #040608;
+}
+
+#settingsModal .bg-card-surface {
+  background: linear-gradient(165deg, #121a24 0%, #080c11 100%) !important;
+  border-color: var(--glass-border) !important;
+}
+
+#settingsModal .bg-deep-charcoal,
+#settingsModal input[type="text"],
+#settingsModal input[type="password"],
+#settingsModal select,
+#settingsModal .number-input-wrapper.flex {
+  background: #0c1118 !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
