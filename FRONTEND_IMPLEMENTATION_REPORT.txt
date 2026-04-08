@@ -1,0 +1,335 @@
+FInsight - Phase 2 Frontend Integration Report
+==============================================
+
+Date: 2026-04-08
+Scope: Paper Trading + Mocked Wallet (Test Mode) + Performance Dashboard
+
+
+1) WHAT WAS IMPLEMENTED
+-----------------------
+
+Phase 2 is now available with persistent simulation data and dashboard-ready endpoints.
+
+Core features delivered:
+- Paper trading execution (BUY/SELL) with persisted portfolio state
+- Cash/equity/return updates after each signal execution
+- Open positions tracking
+- Trade history (open + closed)
+- Signal history
+- Win rate and KPI summary
+- Equity history time series for charting
+- Simulation reset and seed balance
+
+Mocked wallet mode is integrated with the same simulation engine:
+- Mocked mode now uses the same paper trading service for core logic
+- No placeholder behavior for Phase 2 in mocked mode
+- Mocked balance is synchronized with paper portfolio state
+- Dedicated test-mode Phase 2 endpoints are available (authenticated)
+
+
+2) BACKEND MODULES ADDED/UPDATED (FOR FRONTEND REFERENCE)
+---------------------------------------------------------
+
+- app/api/paper_trading.py
+  Main Phase 2 REST routes under /api/paper
+
+- app/services/paper_trading_service.py
+  Signal processing logic, portfolio/position/trade updates
+
+- app/services/portfolio_service.py
+  Dashboard summary + portfolio reads
+
+- app/services/metrics_service.py
+  KPI calculations (win rate, return, equity helpers)
+
+- app/repositories/paper_trading_repo.py
+  SQL access layer for portfolios, signals, trades, equity history
+
+- app/services/test_mode.py
+  Mocked wallet integration with Phase 2 engine
+
+- app/main.py
+  Test mode endpoints and dashboard route wiring
+
+- app/static/dashboard.html
+  Reference UI implementation
+
+- app/services/database.py
+  Paper tables and indexes initialization
+
+
+3) DATA FLOW FOR FRONTEND
+-------------------------
+
+Recommended flow (standard paper endpoints):
+1. Seed balance for user
+2. Create signal or process inline signal
+3. Refresh summary + positions + trades + equity-history + signals
+4. Render KPI cards, table data, and equity chart
+
+Recommended flow (mocked wallet endpoints):
+1. Connect test mode
+2. Seed/reset/process via /api/test-mode/paper/*
+3. Pull all dashboard data using /api/test-mode/paper-dashboard
+
+
+4) ALL ENDPOINTS + HOW TO IMPLEMENT IN FRONTEND
+------------------------------------------------
+
+4.1 PHASE 2 MAIN ENDPOINTS (prefix: /api/paper)
+-----------------------------------------------
+
+[Portfolio]
+
+GET /api/paper/portfolio/{user_id}
+- Purpose: full simulated portfolio row
+- Use when: you need base portfolio state
+- Frontend: fetch once on page load or after mutations
+
+GET /api/paper/portfolio/{user_id}/summary
+- Purpose: KPI cards payload
+- Returns: initial_balance, current_cash, total_equity, total_return_pct, total_trades, win_rate, etc.
+- Frontend: map directly to summary cards
+
+GET /api/paper/portfolio/{user_id}/positions
+- Purpose: open positions table
+- Frontend: render symbol, quantity, avg_entry_price, current_price, unrealized_pnl
+
+GET /api/paper/portfolio/{user_id}/trades?limit=200
+- Purpose: trade history table
+- Frontend: render side, qty, entry, exit, realized pnl, status, opened_at/closed_at
+
+GET /api/paper/portfolio/{user_id}/equity-history?limit=500
+- Purpose: line chart source
+- Returns: recorded_at, equity, cash_balance
+- Frontend: x=recorded_at, y=equity
+
+[Signals]
+
+POST /api/paper/signals
+- Purpose: create signal first, process later
+- Body:
+  {
+    "symbol": "AAPL",
+    "signal_type": "BUY",
+    "signal_price": 180.5,
+    "confidence_score": 0.8,
+    "explanation": "optional text"
+  }
+
+GET /api/paper/signals?limit=100
+- Purpose: global signal list (plus user-scoped where applicable)
+- Frontend: signal history table
+
+POST /api/paper/signals/process/{user_id}
+- Purpose: process existing signal by ID
+- Body:
+  {
+    "signal_id": 1
+  }
+- Frontend: after success, refresh summary/positions/trades/equity/signal list
+
+[Simulation]
+
+POST /api/paper/simulation/{user_id}/seed-balance
+- Purpose: create/reset paper portfolio with initial balance
+- Body:
+  {
+    "initial_balance": 10000
+  }
+
+POST /api/paper/simulation/{user_id}/reset
+- Purpose: full simulation reset (positions/trades/equity history)
+- Body:
+  {
+    "initial_balance": 10000
+  }
+
+POST /api/paper/simulation/{user_id}/process-signal
+- Purpose: create and process signal in one call
+- Body:
+  {
+    "symbol": "AAPL",
+    "signal_type": "SELL",
+    "signal_price": 185.0,
+    "confidence_score": 0.72,
+    "explanation": "optional"
+  }
+
+[Extra]
+
+POST /api/paper/signals/mock-batch
+- Purpose: insert sample signals for quick testing
+
+
+4.2 MOCKED WALLET / TEST MODE ENDPOINTS (AUTH REQUIRED)
+--------------------------------------------------------
+
+These endpoints require bearer auth and active mocked wallet connection.
+
+[Connect / status]
+
+POST /api/test-mode
+- Body: {"action":"connect"} OR {"action":"status"} OR {"action":"disconnect"}
+- Purpose: connect/disconnect mocked wallet
+
+GET /api/test-mode/status
+- Purpose: mocked wallet status + balances
+
+GET /api/test-mode/data
+- Purpose: legacy test-mode payload (exchange status, open trades, logs)
+
+[Phase 2 mocked endpoints]
+
+GET /api/test-mode/paper-dashboard
+- Purpose: one-shot payload for full dashboard
+- Returns:
+  {
+    "wallet_mode": "mocked",
+    "portfolio": {...},
+    "summary": {...},
+    "positions": [...],
+    "trades": [...],
+    "signals": [...],
+    "equity_history": [...]
+  }
+- Frontend: best endpoint for mocked mode dashboard page
+
+POST /api/test-mode/paper/seed-balance
+- Body:
+  {
+    "initial_balance": 10000
+  }
+- Purpose: initialize mocked simulation balance
+
+POST /api/test-mode/paper/reset
+- Body:
+  {
+    "initial_balance": 10000
+  }
+- Purpose: reset mocked simulation state
+
+POST /api/test-mode/paper/process-signal
+- Body:
+  {
+    "symbol": "AAPL",
+    "signal_type": "BUY",
+    "signal_price": 180.5,
+    "confidence_score": 0.8,
+    "explanation": "optional"
+  }
+- Purpose: create + execute signal in mocked mode
+
+POST /api/test-mode/paper/signals
+- Body:
+  {
+    "symbol": "AAPL",
+    "signal_type": "SELL",
+    "signal_price": 186.0,
+    "confidence_score": 0.65,
+    "explanation": "optional"
+  }
+- Purpose: create user-scoped signal in mocked mode
+
+GET /api/test-mode/paper/signals?limit=100
+- Purpose: get mocked-mode user signal history
+
+POST /api/test-mode/paper/process-signal-by-id
+- Body:
+  {
+    "signal_id": 12
+  }
+- Purpose: process existing mocked signal by id
+
+
+5) FRONTEND IMPLEMENTATION CHECKLIST
+------------------------------------
+
+A) Setup
+- Keep API base URL in config (e.g., VITE_API_URL)
+- Add auth token storage and Authorization header helper for test-mode endpoints
+- Add a mode state in frontend:
+  - wallet_mode = "connected" | "mocked"
+
+B) Dashboard rendering
+- KPI cards from summary endpoint
+- Open positions table from positions endpoint
+- Trade history table from trades endpoint
+- Signal history table from signals endpoint
+- Equity line chart from equity-history (or mocked dashboard combined payload)
+
+C) Actions
+- Seed button -> seed-balance endpoint
+- Reset button -> reset endpoint
+- Process Signal button/form -> inline signal or signal-by-id endpoint
+- After each mutation: refetch all dashboard data
+
+D) Error handling
+- Handle 401: redirect to login / request token refresh
+- Handle 404 for non-seeded portfolio: prompt seed action
+- Handle 400 validation errors: show backend message directly in UI
+
+E) Polling strategy (optional)
+- If real-time-like UX is needed:
+  - refresh summary + positions + trades every 3-5 seconds
+  - refresh equity-history less often (e.g., every 10-20 seconds)
+
+
+6) RECOMMENDED FRONTEND SERVICE LAYER
+-------------------------------------
+
+Create two API clients:
+
+1) paperApi (user_id path based)
+- getSummary(userId)
+- getPortfolio(userId)
+- getPositions(userId)
+- getTrades(userId, limit)
+- getEquityHistory(userId, limit)
+- listSignals(limit)
+- createSignal(payload)
+- processSignalById(userId, signalId)
+- processInlineSignal(userId, payload)
+- seedBalance(userId, initialBalance)
+- resetSimulation(userId, initialBalance)
+
+2) testModeApi (authenticated)
+- connect()
+- status()
+- disconnect()
+- getPaperDashboard()
+- seedBalance(initialBalance)
+- reset(initialBalance)
+- processInlineSignal(payload)
+- createSignal(payload)
+- listSignals(limit)
+- processSignalById(signalId)
+
+
+7) IMPORTANT NOTES FOR FRONTEND TEAM
+------------------------------------
+
+- Mocked mode is now first-class for Phase 2 (not placeholder).
+- Same trading business rules are used for mocked mode and paper simulation.
+- For mocked mode screens, prefer GET /api/test-mode/paper-dashboard for fast full refresh.
+- The included static dashboard is a reference implementation only.
+- Database is PostgreSQL-first. If environment is switched to SQLite later, backend SQL migration is needed.
+
+
+8) QUICK TEST SEQUENCE (MOCKED MODE)
+------------------------------------
+
+1) Authenticate and get bearer token
+2) POST /api/test-mode { "action": "connect" }
+3) POST /api/test-mode/paper/seed-balance { "initial_balance": 10000 }
+4) POST /api/test-mode/paper/process-signal with BUY payload
+5) POST /api/test-mode/paper/process-signal with SELL payload
+6) GET /api/test-mode/paper-dashboard
+7) Validate:
+   - balance and equity updated
+   - positions open/closed correctly
+   - trade history populated
+   - signal history populated
+   - win rate and return % updated
+   - chart data present in equity_history
+

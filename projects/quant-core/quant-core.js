@@ -21,7 +21,18 @@ const API_CONFIG = {
     exchangeDisconnect: '/api/exchange/disconnect',
     guardrails: '/api/guardrails',
     strategy: '/api/strategy',
-    testMode: '/api/test-mode', // Endpoint específico para modo teste
+    testMode: '/api/test-mode', // Dedicated endpoint for test mode
+    paper: {
+      portfolio: '/api/paper/portfolio',
+      signals: '/api/paper/signals',
+      simulation: '/api/paper/simulation'
+    },
+    testModePaper: {
+      dashboard: '/api/test-mode/paper-dashboard',
+      seedBalance: '/api/test-mode/paper/seed-balance',
+      reset: '/api/test-mode/paper/reset',
+      processSignal: '/api/test-mode/paper/process-signal'
+    },
     auth: {
       signup: '/api/auth/signup',
       login: '/api/auth/login',
@@ -45,6 +56,8 @@ let state = {
   agentStatus: null,
   openTrades: [],
   logs: [],
+  selectedSignal: null,
+  signalFeedItems: [],
   portfolioHistory: [],
   exchangeStatus: null,
   guardrails: null,
@@ -57,6 +70,15 @@ let state = {
   notifications: [],
   messages: [],
   testMode: false,
+  paperDashboard: {
+    wallet_mode: null,
+    portfolio: null,
+    summary: null,
+    positions: [],
+    trades: [],
+    signals: [],
+    equity_history: []
+  },
   // Simulation state for dynamic mock data
   simulation: {
     trades: [
@@ -119,15 +141,29 @@ const elements = {
   
   // Views
   dashboardView: document.getElementById('dashboardView'),
-  settingsView: document.getElementById('settingsView'),
   profileView: document.getElementById('profileView'),
+  settingsModal: document.getElementById('settingsModal'),
   
   // Dashboard
+  analysisLayout: document.getElementById('analysisLayout'),
   balanceAmount: document.getElementById('balanceAmount'),
   balanceChange: document.getElementById('balanceChange'),
   stopSystemBtn: document.getElementById('stopSystemBtn'),
   positionsGrid: document.getElementById('positionsGrid'),
+  panoramaChart: document.getElementById('panoramaChartCanvas'),
   terminalContent: document.getElementById('terminalContent'),
+  signalDetailsOverlay: document.getElementById('signalDetailsOverlay'),
+  signalDetailsPanel: document.getElementById('signalDetailsPanel'),
+  closeSignalDetailsBtn: document.getElementById('closeSignalDetailsBtn'),
+  signalDetailsTicker: document.getElementById('signalDetailsTicker'),
+  signalDetailsAction: document.getElementById('signalDetailsAction'),
+  signalDetailsConfidenceBar: document.getElementById('signalDetailsConfidenceBar'),
+  signalDetailsConfidenceValue: document.getElementById('signalDetailsConfidenceValue'),
+  signalDetailsReasoning: document.getElementById('signalDetailsReasoning'),
+  signalDetailsRsi: document.getElementById('signalDetailsRsi'),
+  signalDetailsMacd: document.getElementById('signalDetailsMacd'),
+  signalDetailsVolume: document.getElementById('signalDetailsVolume'),
+  signalDetailsMomentum: document.getElementById('signalDetailsMomentum'),
   clearLogsBtn: document.getElementById('clearLogsBtn'),
   pauseLogsBtn: document.getElementById('pauseLogsBtn'),
   
@@ -158,8 +194,30 @@ const elements = {
   messagesMenu: document.getElementById('messagesMenu'),
   messagesList: document.getElementById('messagesList'),
   messageBadge: document.getElementById('messageBadge'),
-  clearAllMessagesBtn: document.getElementById('clearAllMessagesBtn')
+  clearAllMessagesBtn: document.getElementById('clearAllMessagesBtn'),
+
+  // Paper trading dashboard
+  paperSection: document.getElementById('paperSection'),
+  paperInitialBalanceInput: document.getElementById('paperInitialBalanceInput'),
+  paperSeedBtn: document.getElementById('paperSeedBtn'),
+  paperResetBtn: document.getElementById('paperResetBtn'),
+  paperSymbolInput: document.getElementById('paperSymbolInput'),
+  paperSignalTypeInput: document.getElementById('paperSignalTypeInput'),
+  paperSignalPriceInput: document.getElementById('paperSignalPriceInput'),
+  paperConfidenceInput: document.getElementById('paperConfidenceInput'),
+  paperExplanationInput: document.getElementById('paperExplanationInput'),
+  paperProcessSignalBtn: document.getElementById('paperProcessSignalBtn'),
+  kpiTotalEquity: document.getElementById('kpiTotalEquity'),
+  kpiCurrentCash: document.getElementById('kpiCurrentCash'),
+  kpiTotalReturn: document.getElementById('kpiTotalReturn'),
+  kpiWinRate: document.getElementById('kpiWinRate'),
+  kpiTotalTrades: document.getElementById('kpiTotalTrades'),
+  equityChart: document.getElementById('equityChart'),
+  paperTradesTableBody: document.getElementById('paperTradesTableBody'),
+  paperSignalsTableBody: document.getElementById('paperSignalsTableBody')
 };
+
+let panoramaChartInstance = null;
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -228,7 +286,7 @@ function persistStrategy() {
 function loadStrategy() {
   const saved = loadFromLocalStorage('finsight_strategy');
   if (saved) {
-    state.strategy = saved;
+    state.strategy = normalizeStrategyPayload(saved);
     updateStrategyUI();
     return true;
   }
@@ -239,7 +297,14 @@ function saveSettings() {
   const settings = {
     exchange: elements.exchangeSelect?.value || 'binance',
     testnet: elements.testnetCheckbox?.checked || false,
-    testMode: state.testMode || false
+    testMode: state.testMode || false,
+    apiKey: elements.apiKeyInput?.value || '',
+    apiSecret: elements.apiSecretInput?.value || '',
+    dailyStopLoss: elements.dailyStopLossInput?.value || '',
+    maxLeverage: elements.maxLeverageInput?.value || '',
+    allowedSymbols: elements.allowedSymbolsInput?.value || '',
+    maxPositionSize: elements.maxPositionSizeInput?.value || '',
+    strategyMode: document.querySelector('input[name="strategyMode"]:checked')?.value || state.strategy?.mode || 'moderate'
   };
   saveToLocalStorage('finsight_settings', settings);
 }
@@ -276,6 +341,18 @@ function loadSettings() {
         }
       }
     }
+    if (elements.apiKeyInput) elements.apiKeyInput.value = saved.apiKey || '';
+    if (elements.apiSecretInput) elements.apiSecretInput.value = saved.apiSecret || '';
+    if (elements.dailyStopLossInput && saved.dailyStopLoss !== undefined) elements.dailyStopLossInput.value = saved.dailyStopLoss;
+    if (elements.maxLeverageInput && saved.maxLeverage !== undefined) elements.maxLeverageInput.value = saved.maxLeverage;
+    if (elements.allowedSymbolsInput && saved.allowedSymbols !== undefined) elements.allowedSymbolsInput.value = saved.allowedSymbols;
+    if (elements.maxPositionSizeInput && saved.maxPositionSize !== undefined) elements.maxPositionSizeInput.value = saved.maxPositionSize;
+    if (saved.strategyMode) {
+      const radio = document.querySelector(`input[name="strategyMode"][value="${saved.strategyMode}"]`);
+      if (radio) {
+        radio.checked = true;
+      }
+    }
     return true;
   }
   return false;
@@ -308,6 +385,56 @@ function formatDate(dateString) {
     minute: '2-digit',
     second: '2-digit'
   });
+}
+
+function generateMockData() {
+  const totalDays = 30;
+  const today = new Date();
+  const data = [];
+  let currentValue = 12850;
+
+  for (let i = totalDays - 1; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+
+    const trend = 42 + Math.random() * 28;
+    const noise = (Math.random() - 0.5) * 220;
+    currentValue = Math.max(9000, currentValue + trend + noise);
+
+    data.push({
+      date: date.toISOString().slice(0, 10),
+      value: Number(currentValue.toFixed(2))
+    });
+  }
+
+  return data;
+}
+
+function buildEvolutionData(equityHistory = []) {
+  const historySource = Array.isArray(equityHistory) && equityHistory.length
+    ? equityHistory
+    : (Array.isArray(state.portfolioHistory) ? state.portfolioHistory : []);
+
+  const normalized = historySource.map((p) => {
+    const value = Number(
+      p?.value ??
+      p?.equity ??
+      p?.balance ??
+      p?.total_equity ??
+      p?.portfolio_value ??
+      0
+    );
+    const rawDate = p?.date ?? p?.timestamp ?? p?.created_at ?? p?.time;
+    const date = rawDate ? new Date(rawDate) : null;
+    return {
+      date: date && !isNaN(date.getTime()) ? date.toISOString().slice(0, 10) : null,
+      value
+    };
+  }).filter((p) => p.date && !isNaN(p.value) && p.value > 0);
+
+  if (!normalized.length) return generateMockData();
+
+  return normalized.slice(-30);
 }
 
 function getSymbolIcon(symbol) {
@@ -370,6 +497,18 @@ function getSymbolIcon(symbol) {
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/>
       <path d="M12 8V16M8 12H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  `;
+}
+
+function getSignalAiIcon() {
+  return `
+    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="4" y="5" width="12" height="10" rx="3" stroke="currentColor" stroke-width="1.4"/>
+      <circle cx="8" cy="10" r="1" fill="currentColor"/>
+      <circle cx="12" cy="10" r="1" fill="currentColor"/>
+      <path d="M8 12.5H12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      <path d="M10 3V5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
     </svg>
   `;
 }
@@ -653,6 +792,156 @@ async function getPortfolioHistory(days = 30) {
   }
 }
 
+function getCurrentUserId() {
+  if (state.user?.id !== undefined && state.user?.id !== null) {
+    return state.user.id;
+  }
+  return 1;
+}
+
+function toUpperSide(side) {
+  return String(side || '').toUpperCase();
+}
+
+async function getPaperDashboardData(limit = 100) {
+  if (!state.isAuthenticated) return null;
+
+  if (state.testMode) {
+    const dashboard = await apiCall(API_CONFIG.endpoints.testModePaper.dashboard);
+    state.paperDashboard = {
+      wallet_mode: dashboard.wallet_mode || 'mocked',
+      portfolio: dashboard.portfolio || null,
+      summary: dashboard.summary || null,
+      positions: Array.isArray(dashboard.positions) ? dashboard.positions : [],
+      trades: Array.isArray(dashboard.trades) ? dashboard.trades : [],
+      signals: Array.isArray(dashboard.signals) ? dashboard.signals : [],
+      equity_history: Array.isArray(dashboard.equity_history) ? dashboard.equity_history : []
+    };
+    return state.paperDashboard;
+  }
+
+  const userId = getCurrentUserId();
+  const portfolioBase = `${API_CONFIG.endpoints.paper.portfolio}/${userId}`;
+  const [summary, positions, trades, equityHistory, signals] = await Promise.all([
+    apiCall(`${portfolioBase}/summary`),
+    apiCall(`${portfolioBase}/positions`),
+    apiCall(`${portfolioBase}/trades?limit=${limit}`),
+    apiCall(`${portfolioBase}/equity-history?limit=500`),
+    apiCall(`${API_CONFIG.endpoints.paper.signals}?limit=${limit}`)
+  ]);
+
+  state.paperDashboard = {
+    wallet_mode: 'paper',
+    portfolio: null,
+    summary: summary || null,
+    positions: Array.isArray(positions) ? positions : [],
+    trades: Array.isArray(trades) ? trades : [],
+    signals: Array.isArray(signals) ? signals : [],
+    equity_history: Array.isArray(equityHistory) ? equityHistory : []
+  };
+
+  return state.paperDashboard;
+}
+
+function renderPaperDashboardUI() {
+  const { summary, positions, trades, signals, equity_history: equityHistory } = state.paperDashboard;
+  if (!state.isAuthenticated) return;
+
+  if (summary) {
+    state.agentStatus = {
+      ...(state.agentStatus || {}),
+      balance: summary.total_equity ?? summary.current_cash ?? state.agentStatus?.balance ?? null,
+      daily_pnl: summary.total_return_pct ?? state.agentStatus?.daily_pnl ?? null
+    };
+  }
+
+  const mappedPositions = positions.map((p, index) => ({
+    id: p.id || `paper-pos-${index}`,
+    symbol: p.symbol || '—',
+    quantity: Number(p.quantity || 0),
+    entry_price: Number(p.avg_entry_price || 0),
+    current_price: Number(p.current_price || p.avg_entry_price || 0),
+    pnl: Number(p.unrealized_pnl || 0)
+  }));
+  state.openTrades = mappedPositions;
+  if (Array.isArray(signals) && signals.length > 0) {
+    const signalAsLogs = signals.slice(-40).map((s, index) => ({
+      id: s.id || `sig-${index}`,
+      timestamp: s.created_at || s.recorded_at || new Date().toISOString(),
+      level: toUpperSide(s.signal_type) === 'SELL' ? 'WARNING' : 'INFO',
+      message: `${toUpperSide(s.signal_type || 'BUY')} ${s.symbol || 'ASSET'} @ ${s.signal_price ?? 'MKT'}`,
+      insight: s.explanation || 'Model-driven action generated by Deep RL policy.',
+      signal_type: toUpperSide(s.signal_type || 'BUY'),
+      symbol: s.symbol || '—',
+      confidence_score: Number(s.confidence_score ?? 0.72)
+    }));
+    state.logs = signalAsLogs;
+  }
+
+  renderPanoramaChart(equityHistory);
+}
+
+async function refreshPaperDashboard() {
+  try {
+    await getPaperDashboardData();
+    renderPaperDashboardUI();
+    updatePositionsUI();
+    updateAgentStatusUI();
+  } catch (error) {
+    if (error.message && error.message.includes('404')) {
+      return;
+    }
+    console.error('Failed to refresh paper dashboard:', error);
+  }
+}
+
+async function seedPaperBalance(initialBalance) {
+  const amount = Number(initialBalance || 10000);
+  if (state.testMode) {
+    await apiCall(API_CONFIG.endpoints.testModePaper.seedBalance, {
+      method: 'POST',
+      body: JSON.stringify({ initial_balance: amount })
+    });
+    return;
+  }
+  const userId = getCurrentUserId();
+  await apiCall(`${API_CONFIG.endpoints.paper.simulation}/${userId}/seed-balance`, {
+    method: 'POST',
+    body: JSON.stringify({ initial_balance: amount })
+  });
+}
+
+async function resetPaperSimulation(initialBalance) {
+  const amount = Number(initialBalance || 10000);
+  if (state.testMode) {
+    await apiCall(API_CONFIG.endpoints.testModePaper.reset, {
+      method: 'POST',
+      body: JSON.stringify({ initial_balance: amount })
+    });
+    return;
+  }
+  const userId = getCurrentUserId();
+  await apiCall(`${API_CONFIG.endpoints.paper.simulation}/${userId}/reset`, {
+    method: 'POST',
+    body: JSON.stringify({ initial_balance: amount })
+  });
+}
+
+async function processPaperSignal(payload) {
+  if (state.testMode) {
+    await apiCall(API_CONFIG.endpoints.testModePaper.processSignal, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    return;
+  }
+  const userId = getCurrentUserId();
+  await apiCall(`${API_CONFIG.endpoints.paper.simulation}/${userId}/process-signal`, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+}
+
 let previousAgentStatus = null;
 
 async function controlAgent(action, closeAllPositions = false) {
@@ -737,13 +1026,13 @@ function generateInsight(trades) {
   if (totalPnlPercent < -3) {
     insights.push({
       level: 'WARNING',
-      message: `🤖 FinSight AI: Portfolio down ${totalPnlPercent.toFixed(2)}%. Consider reviewing positions.`,
+      message: `FinSight AI: Portfolio down ${totalPnlPercent.toFixed(2)}%. Consider reviewing positions.`,
       insight: `Market volatility detected. ${worstTrade.symbol} showing ${worstTrade.pnl_percent.toFixed(2)}% loss.`
     });
   } else if (totalPnlPercent > 3) {
     insights.push({
       level: 'INFO',
-      message: `🤖 FinSight AI: Portfolio performing well: +${totalPnlPercent.toFixed(2)}%`,
+      message: `FinSight AI: Portfolio performing well: +${totalPnlPercent.toFixed(2)}%`,
       insight: `${bestTrade.symbol} leading gains at +${bestTrade.pnl_percent.toFixed(2)}%. Consider taking partial profits.`
     });
   }
@@ -753,13 +1042,13 @@ function generateInsight(trades) {
     if (trade.pnl_percent < -5) {
       insights.push({
         level: 'WARNING',
-        message: `🤖 FinSight AI: ${trade.symbol} position down ${trade.pnl_percent.toFixed(2)}%`,
+        message: `FinSight AI: ${trade.symbol} position down ${trade.pnl_percent.toFixed(2)}%`,
         insight: `Consider stop-loss activation for ${trade.symbol}. Current loss: ${formatCurrency(Math.abs(trade.pnl))}`
       });
     } else if (trade.pnl_percent > 5) {
       insights.push({
         level: 'INFO',
-        message: `🤖 FinSight AI: ${trade.symbol} showing strong gains: +${trade.pnl_percent.toFixed(2)}%`,
+        message: `FinSight AI: ${trade.symbol} showing strong gains: +${trade.pnl_percent.toFixed(2)}%`,
         insight: `${trade.symbol} up ${formatCurrency(trade.pnl)}. Consider trailing stop to protect profits.`
       });
     }
@@ -786,15 +1075,15 @@ function generateMarketLog(trades) {
   const logTypes = [
     {
       level: 'INFO',
-      message: `🤖 FinSight AI: ${randomTrade.symbol} price update: ${formatCurrency(randomTrade.current_price)} (${priceChangePercent >= 0 ? '+' : ''}${priceChangePercent.toFixed(2)}%)`
+      message: `FinSight AI: ${randomTrade.symbol} price update: ${formatCurrency(randomTrade.current_price)} (${priceChangePercent >= 0 ? '+' : ''}${priceChangePercent.toFixed(2)}%)`
     },
     {
       level: 'TRADE',
-      message: `🤖 FinSight AI: Position ${randomTrade.symbol}: ${randomTrade.pnl >= 0 ? 'Profit' : 'Loss'} of ${formatCurrency(Math.abs(randomTrade.pnl))} (${randomTrade.pnl_percent >= 0 ? '+' : ''}${randomTrade.pnl_percent.toFixed(2)}%)`
+      message: `FinSight AI: Position ${randomTrade.symbol}: ${randomTrade.pnl >= 0 ? 'Profit' : 'Loss'} of ${formatCurrency(Math.abs(randomTrade.pnl))} (${randomTrade.pnl_percent >= 0 ? '+' : ''}${randomTrade.pnl_percent.toFixed(2)}%)`
     },
     {
       level: 'INFO',
-      message: `🤖 FinSight AI: Market monitoring active. ${trades.length} open position${trades.length > 1 ? 's' : ''}.`
+      message: `FinSight AI: Market monitoring active. ${trades.length} open position${trades.length > 1 ? 's' : ''}.`
     }
   ];
   
@@ -1019,8 +1308,8 @@ async function connectExchange(exchange, apiKey, apiSecret, testnet = false, tes
         message: `Exchange connected: test (Test Mode Active)`,
         test_mode: true
       };
-      state.logs.unshift(testLog);
-      if (state.logs.length > 50) state.logs.pop();
+      state.logs.push(testLog);
+      if (state.logs.length > 100) state.logs = state.logs.slice(-100);
       updateTerminalUI();
     }
     
@@ -1138,7 +1427,7 @@ async function getStrategy() {
     }
     
     const data = await apiCall(API_CONFIG.endpoints.strategy);
-    state.strategy = data;
+    state.strategy = normalizeStrategyPayload(data);
     persistStrategy(); // Persist to localStorage
     updateStrategyUI();
     return data;
@@ -1155,23 +1444,27 @@ async function getStrategy() {
 
 async function saveStrategy(mode) {
   try {
-    // Normalize mode to lowercase to ensure consistency
-    const normalizedMode = mode.toLowerCase();
-    
+    const normalizedMode = String(mode || '').toLowerCase();
+    const backendMode = normalizedMode === 'moderate' ? 'balanced' : normalizedMode;
+    const requestPayload = {
+      mode: backendMode,
+      strategy_mode: backendMode,
+      operation_mode: backendMode
+    };
+
     const data = await apiCall(API_CONFIG.endpoints.strategy, {
       method: 'POST',
-      body: JSON.stringify({ mode: normalizedMode })
+      body: JSON.stringify(requestPayload)
     });
-    
-    // Ensure we use the mode that was sent, not what API returned (in case API modifies it)
-    state.strategy = { ...data, mode: normalizedMode };
+
+    state.strategy = normalizeStrategyPayload({ ...data, ...requestPayload });
     persistStrategy(); // Persist to localStorage
     updateStrategyUI(); // Update UI to reflect the saved strategy
     
     showToast('Strategy saved successfully', 'success');
     
     // Capitalize mode name properly for display
-    const modeDisplay = normalizedMode.charAt(0).toUpperCase() + normalizedMode.slice(1);
+    const modeDisplay = (state.strategy?.mode || normalizedMode).charAt(0).toUpperCase() + (state.strategy?.mode || normalizedMode).slice(1);
     
     // Add notification
     addNotification({
@@ -1189,11 +1482,13 @@ async function saveStrategy(mode) {
         id: Date.now(),
         timestamp: new Date().toISOString(),
         level: 'INFO',
-        message: `🤖 FinSight AI: Strategy set to ${modeDisplay} mode`,
+        message: `FinSight AI: Strategy set to ${modeDisplay} mode`,
         test_mode: true
       };
-      state.logs.unshift(logEntry);
-      if (state.logs.length > 100) state.logs.pop();
+      // Keep only the latest strategy-mode log to avoid conflicting mode messages.
+      state.logs = state.logs.filter((log) => !(typeof log?.message === 'string' && log.message.includes('Strategy set to')));
+      state.logs.push(logEntry);
+      if (state.logs.length > 100) state.logs = state.logs.slice(-100);
       updateTerminalUI();
     }
     
@@ -1217,334 +1512,332 @@ async function saveStrategy(mode) {
   }
 }
 
+function normalizeStrategyPayload(payload) {
+  const rawMode = String(
+    payload?.mode ??
+    payload?.strategy_mode ??
+    payload?.operation_mode ??
+    payload?.risk_mode ??
+    'moderate'
+  ).toLowerCase();
+
+  const frontendMode = rawMode === 'balanced' ? 'moderate' : rawMode;
+  const allowed = ['conservative', 'moderate', 'aggressive'];
+  const safeMode = allowed.includes(frontendMode) ? frontendMode : 'moderate';
+
+  return { ...(payload || {}), mode: safeMode };
+}
+
 // ============================================================================
 // UI UPDATE FUNCTIONS
 // ============================================================================
 
 function updateAgentStatusUI() {
-  // Check if we have any meaningful data to show
-  // Consider it active if: agent is running, exchange is connected, or we have balance data
   const exchangeConnected = state.exchangeStatus && state.exchangeStatus.connected;
   const agentRunning = state.agentStatus && state.agentStatus.agent_status === 'running';
-  const hasBalance = state.agentStatus && 
-    (state.agentStatus.balance !== null && state.agentStatus.balance !== undefined);
-  
+  const hasBalance = state.agentStatus && (state.agentStatus.balance !== null && state.agentStatus.balance !== undefined);
   const hasActiveSession = agentRunning || exchangeConnected || hasBalance;
-  
+
   const onboardingSection = document.getElementById('onboardingSection');
-  const balanceSection = document.getElementById('balanceSection');
-  const positionsSection = document.getElementById('positionsSection');
-  const terminalSection = document.getElementById('terminalSection');
-  
-  // Always show terminal section
-  if (terminalSection) terminalSection.style.display = 'flex';
-  
-  // Show onboarding if no active session
+  const analysisLayout = document.getElementById('analysisLayout');
+
   if (!hasActiveSession) {
     if (onboardingSection) onboardingSection.style.display = 'block';
-    if (balanceSection) balanceSection.style.display = 'none';
-    if (positionsSection) positionsSection.style.display = 'none';
-    // Still update terminal with educational message
+    if (analysisLayout) analysisLayout.style.display = 'none';
     updateTerminalUI();
     return;
   }
-  
-  // Hide onboarding and show dashboard sections
+
   if (onboardingSection) onboardingSection.style.display = 'none';
-  if (balanceSection) balanceSection.style.display = 'flex';
-  if (positionsSection) positionsSection.style.display = 'block';
-  
-  // Update strategy mode indicator
+  if (analysisLayout) analysisLayout.style.display = 'grid';
+
   updateStrategyModeIndicator();
-  
-  if (!state.agentStatus) {
-    // Still update terminal even if no agent status
-    updateTerminalUI();
-    return;
-  }
-  
-  let balance = state.agentStatus.balance;
-  let daily_pnl = state.agentStatus.daily_pnl;
-  const agent_status = state.agentStatus.agent_status;
-  
-  // In test mode, use balance from exchangeStatus (which is calculated correctly)
+
+  let balance = state.agentStatus?.balance;
+  let dailyPnl = state.agentStatus?.daily_pnl;
+  const agentStatus = state.agentStatus?.agent_status;
+
   if (state.testMode && (balance === null || balance === undefined)) {
-    // Get total balance from exchangeStatus (already calculated as available + in_positions)
-    balance = state.exchangeStatus && state.exchangeStatus.balance 
-      ? (state.exchangeStatus.balance.total || state.exchangeStatus.balance)
-      : 10000.00; // Default test balance
-    
-    // Calculate total P&L from open trades for daily_pnl
-    const totalPnl = state.openTrades.reduce((sum, trade) => {
-      const tradePnl = trade.pnl || 0;
-      return sum + (isNaN(tradePnl) ? 0 : tradePnl);
-    }, 0);
-    
-    // Use total P&L as daily_pnl if not provided
-    if (daily_pnl === null || daily_pnl === undefined) {
-      daily_pnl = totalPnl;
-    }
+    balance = state.exchangeStatus?.balance ? (state.exchangeStatus.balance.total || state.exchangeStatus.balance) : 10000.0;
+    const totalPnl = state.openTrades.reduce((sum, trade) => sum + Number(trade.pnl || 0), 0);
+    if (dailyPnl === null || dailyPnl === undefined) dailyPnl = totalPnl;
   }
-  
-  // Update balance with animation
-  if (balance !== null && balance !== undefined && !isNaN(balance)) {
-    const formattedBalance = formatCurrency(balance);
-    if (elements.balanceAmount.textContent !== formattedBalance) {
-      // Animate number change
-      elements.balanceAmount.style.opacity = '0';
-      elements.balanceAmount.style.transform = 'translateY(5px)';
-      setTimeout(() => {
-        elements.balanceAmount.textContent = formattedBalance;
-        elements.balanceAmount.style.transition = 'opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1)';
-        elements.balanceAmount.style.opacity = '1';
-        elements.balanceAmount.style.transform = 'translateY(0)';
-      }, 150);
-    }
-  } else {
-    elements.balanceAmount.textContent = '—';
-  }
-  
-  // Update daily P&L with animation
-  if (daily_pnl !== null && daily_pnl !== undefined && !isNaN(daily_pnl)) {
-    const isPositive = daily_pnl >= 0;
-    const balanceValue = (balance !== null && balance !== undefined && !isNaN(balance) && balance > 0) ? balance : 1;
-    const pnlPercent = (daily_pnl / balanceValue) * 100;
-    
-    const newHTML = `
-      <span class="change-amount">${isPositive ? '+' : ''}${formatCurrency(daily_pnl)}</span>
+
+  elements.balanceAmount.textContent = (balance !== null && balance !== undefined && !isNaN(balance))
+    ? formatCurrency(balance)
+    : '—';
+
+  if (dailyPnl !== null && dailyPnl !== undefined && !isNaN(dailyPnl)) {
+    const isPositive = dailyPnl >= 0;
+    const baseBalance = (balance && balance > 0) ? balance : 1;
+    const pnlPercent = (dailyPnl / baseBalance) * 100;
+    elements.balanceChange.className = `balance-change ${isPositive ? 'positive' : 'negative'}`;
+    elements.balanceChange.innerHTML = `
+      <span class="change-amount">${isPositive ? '+' : ''}${formatCurrency(dailyPnl)}</span>
       <span class="change-percent">(${formatPercent(pnlPercent)})</span>
     `;
-    
-    if (elements.balanceChange.innerHTML !== newHTML) {
-      elements.balanceChange.style.opacity = '0';
-      elements.balanceChange.style.transform = 'translateY(5px)';
-      setTimeout(() => {
-        elements.balanceChange.className = `balance-change ${isPositive ? 'positive' : 'negative'}`;
-        elements.balanceChange.innerHTML = newHTML;
-        elements.balanceChange.style.transition = 'opacity 300ms cubic-bezier(0.16, 1, 0.3, 1), transform 300ms cubic-bezier(0.16, 1, 0.3, 1)';
-        elements.balanceChange.style.opacity = '1';
-        elements.balanceChange.style.transform = 'translateY(0)';
-      }, 150);
-    }
   } else {
     elements.balanceChange.className = 'balance-change';
-    elements.balanceChange.innerHTML = `
-      <span class="change-amount">—</span>
-      <span class="change-percent">(—)</span>
-    `;
+    elements.balanceChange.innerHTML = `<span class="change-amount">—</span><span class="change-percent">(—)</span>`;
   }
-  
-  // Show stop button ONLY when agent is running
-  if (agent_status === 'running' && elements.stopSystemBtn) {
+
+  if (agentStatus === 'running' && elements.stopSystemBtn) {
     elements.stopSystemBtn.style.display = 'flex';
-    elements.stopSystemBtn.disabled = false;
-    elements.stopSystemBtn.style.opacity = '1';
   } else if (elements.stopSystemBtn) {
     elements.stopSystemBtn.style.display = 'none';
-  }
-  
-  // Show helpful message if exchange not connected but we have agent status
-  const balanceCard = document.querySelector('.balance-card');
-  const existingHint = balanceCard ? balanceCard.querySelector('.setup-hint') : null;
-  
-  if (!exchangeConnected && state.agentStatus && balanceCard && !existingHint) {
-    // Show hint to connect exchange
-    const hint = document.createElement('div');
-    hint.className = 'setup-hint';
-    hint.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/>
-        <path d="M10 7V10M10 13H10.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-      <span>Connect an exchange in <strong>Settings</strong> to start trading</span>
-      <button class="btn-link" onclick="switchView('settings')">Go to Settings</button>
-    `;
-    balanceCard.appendChild(hint);
-  } else if (exchangeConnected && existingHint) {
-    // Remove hint if exchange is connected
-    existingHint.remove();
   }
 }
 
 function updatePositionsUI() {
   if (!elements.positionsGrid) return;
-  
-  // Check if exchange is connected
-  const exchangeConnected = state.exchangeStatus && state.exchangeStatus.connected;
-  
-  if (state.openTrades.length === 0) {
-    if (!exchangeConnected) {
-      // Show setup message if exchange not connected
-      elements.positionsGrid.innerHTML = `
-        <div class="empty-state setup-empty-state">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.3;">
-            <path d="M12 2V6M12 18V22M22 12H18M6 12H2M19.07 19.07L16.24 16.24M19.07 4.93L16.24 7.76M4.93 19.07L7.76 16.24M4.93 4.93L7.76 7.76" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          </svg>
-          <h3>No Exchange Connected</h3>
-          <p>Connect an exchange in Settings to view and manage your trading positions.</p>
-          <button class="btn-primary btn-outline" onclick="switchView('settings')">
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-              <path d="M10 2.5V5.5M10 14.5V17.5M17.5 10H14.5M5.5 10H2.5M15.66 4.34L13.54 6.46M6.46 13.54L4.34 15.66M15.66 15.66L13.54 13.54M6.46 6.46L4.34 4.34" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <span>Go to Settings</span>
-          </button>
-        </div>
-      `;
-    } else {
-      // Show normal empty state if exchange is connected but no positions
-      elements.positionsGrid.innerHTML = `
-        <div class="empty-state">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.3;">
-            <path d="M3 12L7 8L11 12L17 6L21 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <path d="M3 18L7 14L11 18L17 12L21 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          </svg>
-          <h3>No Open Positions</h3>
-          <p>Your open trading positions will appear here once you start trading.</p>
-        </div>
-      `;
-    }
+
+  if (!state.openTrades.length) {
+    elements.positionsGrid.innerHTML = `<tr><td colspan="4" class="table-empty">No active holdings.</td></tr>`;
     return;
   }
-  
-  const cardsHTML = state.openTrades.map((trade, index) => {
-    // Calculate position value using current price (real-time) if available, otherwise entry price
-    // This makes the position value dynamic and realistic
-    const currentPrice = trade.current_price || trade.entry_price;
-    const positionValue = (currentPrice && trade.quantity) 
-      ? currentPrice * trade.quantity 
-      : 0;
-    
-    // Calculate entry value for P&L percentage calculation
-    const entryValue = (trade.entry_price && trade.quantity) 
-      ? trade.entry_price * trade.quantity 
-      : 0;
-    
-    // If P&L is available, calculate percentage based on entry value
-    const pnl = trade.pnl;
-    let pnlDisplay = '—';
-    let pnlClass = '';
-    
-    if (pnl !== null && pnl !== undefined && !isNaN(pnl)) {
-      // P&L percentage should be calculated based on entry value, not current value
-      const pnlPercent = entryValue > 0 
-        ? ((pnl / entryValue) * 100) 
-        : 0;
-      const isPositive = pnl >= 0;
-      pnlClass = isPositive ? 'positive' : 'negative';
-      pnlDisplay = `${isPositive ? '+' : ''}${formatPercent(pnlPercent)}`;
-    } else if (currentPrice && trade.entry_price && trade.entry_price !== currentPrice) {
-      // If P&L is not provided but we have current price, calculate it
-      const calculatedPnl = (currentPrice - trade.entry_price) * trade.quantity;
-      const pnlPercent = entryValue > 0 
-        ? ((calculatedPnl / entryValue) * 100) 
-        : 0;
-      const isPositive = calculatedPnl >= 0;
-      pnlClass = isPositive ? 'positive' : 'negative';
-      pnlDisplay = `${isPositive ? '+' : ''}${formatPercent(pnlPercent)}`;
-    }
-    
-    // Get professional SVG icon for symbol
-    const symbolIcon = getSymbolIcon(trade.symbol);
-    
+
+  const totalNotional = state.openTrades.reduce((sum, trade) => {
+    const px = Number(trade.current_price || trade.entry_price || 0);
+    const qty = Number(trade.quantity || 0);
+    return sum + (px * qty);
+  }, 0);
+
+  elements.positionsGrid.innerHTML = state.openTrades.map((trade) => {
+    const currentPrice = Number(trade.current_price || trade.entry_price || 0);
+    const qty = Number(trade.quantity || 0);
+    const notional = currentPrice * qty;
+    const weight = totalNotional > 0 ? (notional / totalNotional) * 100 : 0;
+    const entryValue = Number(trade.entry_price || 0) * qty;
+    const pnl = Number(trade.pnl ?? ((currentPrice - Number(trade.entry_price || 0)) * qty));
+    const pnlPct = entryValue > 0 ? (pnl / entryValue) * 100 : 0;
+    const cls = pnl >= 0 ? 'positive' : 'negative';
+
     return `
-      <div class="position-card">
-        <div class="position-icon">${symbolIcon}</div>
-        <div class="position-info">
-          <div class="position-symbol">${trade.symbol}</div>
-          <div class="position-value">${formatCurrency(positionValue)}</div>
-          <div class="position-unit">Position Value</div>
-        </div>
-        <div class="position-change ${pnlClass}">
-          ${pnlDisplay}
-        </div>
-      </div>
+      <tr>
+        <td class="asset-cell">${trade.symbol || '—'}</td>
+        <td>${formatCurrency(currentPrice)}</td>
+        <td>${weight.toFixed(1)}%</td>
+        <td class="${cls}">${pnl >= 0 ? '+' : ''}${formatCurrency(pnl)} (${formatPercent(pnlPct)})</td>
+      </tr>
     `;
   }).join('');
-  
-  elements.positionsGrid.innerHTML = cardsHTML;
+}
+
+function renderPanoramaChart(equityHistory = []) {
+  if (!elements.panoramaChart) return;
+  if (typeof window.Chart === 'undefined') return;
+
+  const chartData = buildEvolutionData(equityHistory);
+  const labels = chartData.map((point) => point.date);
+  const values = chartData.map((point) => point.value);
+
+  if (panoramaChartInstance) {
+    panoramaChartInstance.destroy();
+  }
+
+  const ctx = elements.panoramaChart.getContext('2d');
+  const gradient = ctx.createLinearGradient(0, 0, 0, elements.panoramaChart.height || 240);
+  gradient.addColorStop(0, 'rgba(176, 138, 90, 0.30)');
+  gradient.addColorStop(1, 'rgba(176, 138, 90, 0)');
+
+  panoramaChartInstance = new window.Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          data: values,
+          borderColor: '#B08A5A',
+          borderWidth: 2.2,
+          tension: 0.35,
+          fill: true,
+          pointRadius: 0,
+          pointHoverRadius: 3.5,
+          pointHoverBackgroundColor: '#B08A5A',
+          pointHoverBorderColor: '#111417',
+          pointHoverBorderWidth: 1.5,
+          backgroundColor: gradient
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#111417',
+          borderColor: 'rgba(255, 255, 255, 0.12)',
+          borderWidth: 1,
+          titleColor: '#A7AFB8',
+          bodyColor: '#E7EAEE',
+          displayColors: false,
+          padding: 12,
+          callbacks: {
+            title(items) {
+              return items?.[0]?.label || '';
+            },
+            label(context) {
+              return formatCurrency(context.parsed.y);
+            }
+          }
+        }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false,
+            drawBorder: false
+          },
+          ticks: {
+            color: 'rgba(167, 175, 184, 0.8)',
+            maxTicksLimit: 6
+          },
+          border: { display: false }
+        },
+        y: {
+          grid: {
+            color: 'rgba(231, 234, 238, 0.08)',
+            drawBorder: false
+          },
+          ticks: {
+            color: 'rgba(167, 175, 184, 0.75)',
+            callback(value) {
+              return formatCurrency(Number(value));
+            },
+            maxTicksLimit: 5
+          },
+          border: { display: false }
+        }
+      }
+    }
+  });
 }
 
 function updateTerminalUI() {
   if (!elements.terminalContent) return;
-  
-  // Keep only last 100 logs for performance
-  const logsToShow = state.logs.slice(-100);
-  
-  // Check if exchange is connected
-  const exchangeConnected = state.exchangeStatus && state.exchangeStatus.connected;
-  
-  // Show empty state if no logs
-  if (logsToShow.length === 0) {
-    if (!exchangeConnected) {
-      elements.terminalContent.innerHTML = `
-        <div class="empty-state setup-empty-state" style="padding: var(--spacing-xl); text-align: center;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.3; margin-bottom: var(--spacing-md);">
-            <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
-            <path d="M7 9L11 12L7 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M14 9H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <h3 style="color: var(--text-primary); font-size: 14px; font-weight: 600; margin-bottom: var(--spacing-sm);">System Logs</h3>
-          <p style="color: var(--text-tertiary); font-size: 13px; margin-bottom: var(--spacing-md);">Connect an exchange to start seeing trading logs and system activity.</p>
-          <button class="btn-primary btn-outline" onclick="switchView('settings')" style="margin-top: var(--spacing-md);">
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/>
-              <path d="M10 2.5V5.5M10 14.5V17.5M17.5 10H14.5M5.5 10H2.5M15.66 4.34L13.54 6.46M6.46 13.54L4.34 15.66M15.66 15.66L13.54 13.54M6.46 6.46L4.34 4.34" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <span>Configure Exchange</span>
-          </button>
-        </div>
-      `;
-    } else {
-      elements.terminalContent.innerHTML = `
-        <div class="empty-state" style="padding: var(--spacing-xl); text-align: center;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.3; margin-bottom: var(--spacing-md);">
-            <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
-            <path d="M7 9L11 12L7 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M14 9H17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <p style="color: var(--text-tertiary); font-size: 13px;">Waiting for logs...</p>
-        </div>
-      `;
-    }
+  state.signalFeedItems = [];
+
+  const feedItems = state.logs.slice(-80).reverse();
+  if (!feedItems.length) {
+    elements.terminalContent.innerHTML = `<div class="table-empty">Waiting for AI signals...</div>`;
     return;
   }
-  
-  elements.terminalContent.innerHTML = logsToShow.map(log => {
-    const timestamp = formatDate(log.timestamp);
-    const level = log.level || 'INFO';
-    let message = log.message || '';
-    
-    // Check for additional fields that might contain insights or analysis
-    const insight = log.insight || log.insights || log.analysis || log.recommendation || log.recommendations || '';
-    const data = log.data ? (typeof log.data === 'object' ? JSON.stringify(log.data) : log.data) : '';
-    
-    // If message doesn't already have AI indicator and has insight, add it
-    if (insight && !message.includes('FinSight AI') && !message.includes('🤖')) {
-      message = `🤖 FinSight AI: ${message}`;
-    }
-    
-    // Build message with additional info if available
-    let fullMessage = message;
-    if (insight) {
-      fullMessage += ` | 💡 Insight: ${insight}`;
-    }
-    if (data && !message.includes(data)) {
-      fullMessage += ` | Data: ${data}`;
-    }
-    
+
+  const rows = feedItems.map((log) => {
+    const text = `${log.message || ''} ${log.insight || ''}`.trim();
+    const upper = text.toUpperCase();
+    const rawType = String(log.signal_type || (upper.includes('SELL') || upper.includes('SHORT') ? 'SELL' : (upper.includes('HOLD') ? 'HOLD' : 'BUY'))).toUpperCase();
+    const signalType = ['BUY', 'SELL', 'HOLD'].includes(rawType) ? rawType : '';
+    const actionLabel = signalType === 'SELL' ? 'SELL' : (signalType === 'HOLD' ? 'HOLD' : 'BUY');
+    const actionClass = signalType === 'SELL' ? 'signal-sell' : (signalType === 'HOLD' ? 'signal-hold' : 'signal-buy');
+    const symbol = log.symbol || text.match(/([A-Z]{2,6}(?:\/[A-Z]{2,6})?)/)?.[1] || '';
+    const normalizedSymbol = symbol ? (symbol.includes('/') ? symbol : `${symbol}/USDT`) : '';
+    if (!normalizedSymbol || !signalType) return null;
+
+    const summary = (log.insight || log.message || 'Signal generated by the model decision policy.')
+      .replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    const confidenceRaw = Number(log.confidence_score);
+    const confidence = !isNaN(confidenceRaw) ? Math.max(0, Math.min(100, confidenceRaw <= 1 ? confidenceRaw * 100 : confidenceRaw)) : 72;
+    const coinIcon = getSymbolIcon(normalizedSymbol);
+    const aiIcon = getSignalAiIcon();
+    const signalId = String(log.id || `${normalizedSymbol}-${signalType}-${log.timestamp || Date.now()}`);
+    const signalRecord = {
+      id: signalId,
+      ticker: normalizedSymbol,
+      action: signalType,
+      actionLabel,
+      actionClass,
+      confidence,
+      description: summary
+    };
+    state.signalFeedItems.push(signalRecord);
+
     return `
-      <div class="terminal-line">
-        <span class="terminal-timestamp">[${timestamp}]</span>
-        <span class="terminal-level ${level}">${level}</span>
-        <span class="terminal-message">${fullMessage}</span>
-      </div>
+      <article class="signal-row">
+        <div class="signal-left">
+          <span class="signal-coin">${coinIcon}</span>
+          <span class="signal-ticker">${normalizedSymbol}</span>
+          <span class="signal-tag ${actionClass}">${actionLabel}</span>
+        </div>
+        <div class="signal-main">
+          <span class="signal-ai-icon">${aiIcon}</span>
+          <p class="signal-summary">${summary}</p>
+          <span class="signal-confidence-value">${confidence.toFixed(0)}%</span>
+        </div>
+        <div class="signal-right">
+          <button type="button" class="signal-link signal-detail-btn text-accent-teal hover:text-white transition-colors text-sm font-medium focus:outline-none" data-signal-id="${signalId}">View Analysis</button>
+        </div>
+      </article>
     `;
-  }).join('');
-  
-  // Auto-scroll to bottom
-  elements.terminalContent.scrollTop = elements.terminalContent.scrollHeight;
+  }).filter(Boolean);
+
+  if (!rows.length) {
+    elements.terminalContent.innerHTML = `<div class="table-empty">Waiting for AI signals...</div>`;
+    return;
+  }
+
+  elements.terminalContent.innerHTML = rows.join('');
+}
+
+function openSignalDetails(signal) {
+  if (!signal) return;
+  state.selectedSignal = signal;
+  renderSignalDetails();
+}
+
+function closeSignalDetails() {
+  state.selectedSignal = null;
+  if (elements.signalDetailsPanel) {
+    elements.signalDetailsPanel.classList.remove('open');
+    elements.signalDetailsPanel.style.display = 'none';
+  }
+  if (elements.signalDetailsOverlay) {
+    elements.signalDetailsOverlay.classList.remove('open');
+    elements.signalDetailsOverlay.style.display = 'none';
+  }
+}
+
+function renderSignalDetails() {
+  if (!state.selectedSignal || !elements.signalDetailsPanel || !elements.signalDetailsOverlay) return;
+  const signal = state.selectedSignal;
+  const actionClass = signal.action === 'SELL' ? 'signal-sell' : (signal.action === 'HOLD' ? 'signal-hold' : 'signal-buy');
+
+  if (elements.signalDetailsTicker) elements.signalDetailsTicker.textContent = signal.ticker || '—';
+  if (elements.signalDetailsAction) {
+    elements.signalDetailsAction.className = `signal-tag ${actionClass}`;
+    elements.signalDetailsAction.textContent = signal.action || 'HOLD';
+  }
+
+  const confidence = Number(signal.confidence || 0);
+  if (elements.signalDetailsConfidenceBar) {
+    elements.signalDetailsConfidenceBar.style.width = `${Math.max(0, Math.min(100, confidence)).toFixed(0)}%`;
+  }
+  if (elements.signalDetailsConfidenceValue) {
+    elements.signalDetailsConfidenceValue.textContent = `${Math.max(0, Math.min(100, confidence)).toFixed(0)}%`;
+  }
+  if (elements.signalDetailsReasoning) {
+    elements.signalDetailsReasoning.textContent = signal.description || 'No details available for this signal.';
+  }
+
+  const rsi = Math.max(28, Math.min(72, Math.round(50 + (confidence - 50) * 0.4)));
+  if (elements.signalDetailsRsi) elements.signalDetailsRsi.textContent = String(rsi);
+  if (elements.signalDetailsMacd) elements.signalDetailsMacd.textContent = signal.action === 'SELL' ? 'Bearish Cross' : 'Bullish Cross';
+  if (elements.signalDetailsVolume) elements.signalDetailsVolume.textContent = `${signal.action === 'SELL' ? '-' : '+'}${Math.max(6, Math.round(confidence / 8))}%`;
+  if (elements.signalDetailsMomentum) elements.signalDetailsMomentum.textContent = signal.action === 'HOLD' ? 'Neutral' : (signal.action === 'SELL' ? 'Negative' : 'Positive');
+
+  elements.signalDetailsOverlay.style.display = 'block';
+  elements.signalDetailsPanel.style.display = 'block';
+  requestAnimationFrame(() => {
+    elements.signalDetailsOverlay.classList.add('open');
+    elements.signalDetailsPanel.classList.add('open');
+  });
 }
 
 function updateExchangeStatusUI() {
@@ -1658,10 +1951,9 @@ function updateStrategyModeIndicator() {
     const mode = state.strategy.mode.toLowerCase();
     iconContainer.innerHTML = getStrategyModeIcon(mode);
     valueElement.textContent = getStrategyModeDisplayName(mode);
-    indicator.style.display = 'flex';
+    indicator.style.display = 'inline-flex';
     
     // Add mode-specific class for styling
-    indicator.className = 'strategy-mode-indicator';
     indicator.classList.remove('mode-conservative', 'mode-moderate', 'mode-aggressive');
     indicator.classList.add(`mode-${mode}`);
   } else {
@@ -1743,6 +2035,11 @@ function startPolling() {
   state.pollingIntervals.history = setInterval(async () => {
     await getPortfolioHistory();
   }, API_CONFIG.pollInterval * 6); // Every 30 seconds
+
+  // Poll paper dashboard
+  state.pollingIntervals.paperDashboard = setInterval(async () => {
+    await refreshPaperDashboard();
+  }, API_CONFIG.pollInterval * 2);
 }
 
 function stopPolling() {
@@ -1757,18 +2054,6 @@ function stopPolling() {
 // ============================================================================
 
 function setupEventHandlers() {
-  // Navigation
-  elements.navItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const view = item.dataset.view;
-      switchView(view);
-      
-      // Update active state
-      elements.navItems.forEach(nav => nav.classList.remove('active'));
-      item.classList.add('active');
-    });
-  });
-  
   // Stop system button
   if (elements.stopSystemBtn) {
     elements.stopSystemBtn.addEventListener('click', async () => {
@@ -1806,6 +2091,25 @@ function setupEventHandlers() {
         elements.pauseLogsBtn.title = 'Pause logs';
       }
     });
+  }
+
+  if (elements.terminalContent) {
+    elements.terminalContent.addEventListener('click', (e) => {
+      const detailBtn = e.target.closest('.signal-detail-btn');
+      if (!detailBtn) return;
+      const signalId = detailBtn.getAttribute('data-signal-id');
+      const signal = state.signalFeedItems.find((item) => item.id === signalId);
+      if (signal) {
+        openSignalDetails(signal);
+      }
+    });
+  }
+
+  if (elements.closeSignalDetailsBtn) {
+    elements.closeSignalDetailsBtn.addEventListener('click', closeSignalDetails);
+  }
+  if (elements.signalDetailsOverlay) {
+    elements.signalDetailsOverlay.addEventListener('click', closeSignalDetails);
   }
   
   // Settings - Test Mode Toggle
@@ -1873,6 +2177,13 @@ function setupEventHandlers() {
       saveSettings();
     });
   }
+
+  [elements.apiKeyInput, elements.apiSecretInput, elements.dailyStopLossInput, elements.maxLeverageInput, elements.allowedSymbolsInput, elements.maxPositionSizeInput]
+    .filter(Boolean)
+    .forEach((input) => {
+      input.addEventListener('input', () => saveSettings());
+      input.addEventListener('change', () => saveSettings());
+    });
   
   // Settings - Exchange connection
   if (elements.connectExchangeBtn) {
@@ -1959,8 +2270,8 @@ function setupEventHandlers() {
         
         // Save to localStorage immediately for persistence
         const strategyData = {
-          mode: e.target.value,
-          ...(state.strategy || {})
+          ...(state.strategy || {}),
+          mode: e.target.value
         };
         state.strategy = strategyData;
         persistStrategy();
@@ -1980,6 +2291,117 @@ function setupEventHandlers() {
       showLoading('Saving Strategy', 'Please wait...');
       try {
         await saveStrategy(selectedMode.value);
+      } finally {
+        hideLoading();
+      }
+    });
+  }
+
+  // Header - Operating mode quick toggle
+  const strategyModeIndicator = document.getElementById('strategyModeIndicator');
+  if (strategyModeIndicator) {
+    strategyModeIndicator.addEventListener('click', async () => {
+      const modes = ['conservative', 'moderate', 'aggressive'];
+      const currentMode = (state.strategy?.mode || 'moderate').toLowerCase();
+      const currentIndex = Math.max(0, modes.indexOf(currentMode));
+      const nextMode = modes[(currentIndex + 1) % modes.length];
+
+      const nextRadio = document.querySelector(`input[name="strategyMode"][value="${nextMode}"]`);
+      if (nextRadio) {
+        nextRadio.checked = true;
+        nextRadio.dispatchEvent(new Event('change', { bubbles: true }));
+      } else {
+        state.strategy = { ...(state.strategy || {}), mode: nextMode };
+        persistStrategy();
+        updateStrategyUI();
+      }
+
+      // Persist to backend when session is available.
+      if (state.exchangeStatus?.connected || state.testMode) {
+        try {
+          await saveStrategy(nextMode);
+        } catch (error) {
+          console.warn('Failed to sync strategy mode from quick toggle:', error);
+        }
+      }
+    });
+  }
+
+  // Paper Dashboard - Seed Balance
+  if (elements.paperSeedBtn) {
+    elements.paperSeedBtn.addEventListener('click', async () => {
+      if (!state.isAuthenticated) {
+        showToast('Sign in required for paper trading actions.', 'error');
+        return;
+      }
+      const initialBalance = Number(elements.paperInitialBalanceInput?.value || 10000);
+      showLoading('Seeding Simulation', 'Initializing portfolio balance...');
+      try {
+        await seedPaperBalance(initialBalance);
+        await refreshPaperDashboard();
+        showToast('Balance seeded successfully.', 'success');
+      } catch (error) {
+        showToast(`Seed failed: ${error.message}`, 'error');
+      } finally {
+        hideLoading();
+      }
+    });
+  }
+
+  // Paper Dashboard - Reset
+  if (elements.paperResetBtn) {
+    elements.paperResetBtn.addEventListener('click', async () => {
+      if (!state.isAuthenticated) {
+        showToast('Sign in required for paper trading actions.', 'error');
+        return;
+      }
+      const initialBalance = Number(elements.paperInitialBalanceInput?.value || 10000);
+      showLoading('Resetting Simulation', 'Resetting positions and history...');
+      try {
+        await resetPaperSimulation(initialBalance);
+        await refreshPaperDashboard();
+        showToast('Simulation reset completed.', 'success');
+      } catch (error) {
+        showToast(`Reset failed: ${error.message}`, 'error');
+      } finally {
+        hideLoading();
+      }
+    });
+  }
+
+  // Paper Dashboard - Process signal
+  if (elements.paperProcessSignalBtn) {
+    elements.paperProcessSignalBtn.addEventListener('click', async () => {
+      if (!state.isAuthenticated) {
+        showToast('Sign in required for paper trading actions.', 'error');
+        return;
+      }
+      const symbol = (elements.paperSymbolInput?.value || '').trim().toUpperCase();
+      const signalType = (elements.paperSignalTypeInput?.value || 'BUY').toUpperCase();
+      const signalPrice = Number(elements.paperSignalPriceInput?.value || 0);
+      const confidenceScore = Number(elements.paperConfidenceInput?.value || 0);
+      const explanation = (elements.paperExplanationInput?.value || '').trim();
+
+      if (!symbol || !signalPrice) {
+        showToast('Provide symbol and signal price.', 'error');
+        return;
+      }
+
+      const payload = {
+        symbol,
+        signal_type: signalType,
+        signal_price: signalPrice,
+        confidence_score: confidenceScore,
+        explanation: explanation || undefined
+      };
+
+      showLoading('Processing Signal', 'Submitting and executing signal...');
+      try {
+        await processPaperSignal(payload);
+        await refreshPaperDashboard();
+        showToast(`${signalType} signal processed for ${symbol}.`, 'success');
+      } catch (error) {
+        showToast(`Signal failed: ${error.message}`, 'error');
       } finally {
         hideLoading();
       }
@@ -2014,38 +2436,18 @@ function setupEventHandlers() {
 function switchView(viewName) {
   // Hide all views
   elements.dashboardView?.classList.remove('active');
-  elements.settingsView?.classList.remove('active');
   elements.profileView?.classList.remove('active');
-  
-  // Update navigation active state
-  elements.navItems.forEach(nav => {
-    nav.classList.remove('active');
-    if (nav.dataset.view === viewName) {
-      nav.classList.add('active');
-    }
-  });
   
   // Show selected view
   state.currentView = viewName;
   if (viewName === 'dashboard' && elements.dashboardView) {
     elements.dashboardView.classList.add('active');
-  } else if (viewName === 'settings' && elements.settingsView) {
-    elements.settingsView.classList.add('active');
-    // Restore settings state when entering settings view
-    restoreSettingsState();
+  } else if (viewName === 'settings') {
+    openSettingsModal();
+    elements.dashboardView?.classList.add('active');
+    state.currentView = 'dashboard';
   } else if (viewName === 'profile' && elements.profileView) {
     elements.profileView.classList.add('active');
-  }
-  
-  // Update header title based on view
-  const headerTitle = document.querySelector('.header-title');
-  if (headerTitle) {
-    const titles = {
-      'dashboard': 'Dashboard',
-      'settings': 'Settings',
-      'profile': 'Profile'
-    };
-    headerTitle.textContent = titles[viewName] || 'Dashboard';
   }
 }
 
@@ -2098,6 +2500,9 @@ async function initialize() {
     }
     
     await Promise.allSettled(promises);
+
+    // Load new paper dashboard data
+    await refreshPaperDashboard();
     
     // Update UI based on current state
     updateDashboardVisibility();
@@ -2127,6 +2532,8 @@ function updateDashboardVisibility() {
   updateAgentStatusUI();
   updatePositionsUI();
   updateTerminalUI();
+  renderPanoramaChart();
+  renderPaperDashboardUI();
 }
 
 // ============================================================================
@@ -2260,6 +2667,7 @@ async function handleLogin(event) {
     // Update UI
     updateUserUI();
     closeLoginModal();
+    await refreshPaperDashboard();
     
     // Clear form
     document.getElementById('loginForm').reset();
@@ -2326,6 +2734,8 @@ async function handleSignOut() {
     // Update UI
     updateUserUI();
     toggleUserMenu(); // Close menu
+    state.paperDashboard = { wallet_mode: null, portfolio: null, summary: null, positions: [], trades: [], signals: [], equity_history: [] };
+    renderPaperDashboardUI();
     
     showToast('Successfully signed out', 'success');
   } catch (error) {
@@ -2375,6 +2785,7 @@ async function checkAuthStatus() {
     state.isAuthenticated = true;
     updateUserUI();
     updateProfileUI();
+    await refreshPaperDashboard();
   } catch (error) {
     console.error('Auth check failed:', error);
     // Clear invalid tokens
@@ -3046,10 +3457,26 @@ function closeSignUpModal() {
   }
 }
 
+function openSettingsModal() {
+  if (elements.settingsModal) {
+    restoreSettingsState();
+    elements.settingsModal.style.display = 'flex';
+  }
+  const userMenu = document.getElementById('userMenu');
+  if (userMenu) userMenu.style.display = 'none';
+}
+
+function closeSettingsModal() {
+  if (elements.settingsModal) {
+    elements.settingsModal.style.display = 'none';
+  }
+}
+
 // Close modals when clicking outside
 document.addEventListener('click', (e) => {
   const loginModal = document.getElementById('loginModal');
   const signUpModal = document.getElementById('signUpModal');
+  const settingsModal = document.getElementById('settingsModal');
   const userMenu = document.getElementById('userMenu');
   const userAvatar = document.getElementById('userAvatar');
   
@@ -3059,6 +3486,10 @@ document.addEventListener('click', (e) => {
   
   if (signUpModal && e.target === signUpModal) {
     closeSignUpModal();
+  }
+
+  if (settingsModal && e.target === settingsModal) {
+    closeSettingsModal();
   }
   
   if (userMenu && userAvatar && !userMenu.contains(e.target) && !userAvatar.contains(e.target)) {
@@ -3071,6 +3502,8 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     closeLoginModal();
     closeSignUpModal();
+    closeSettingsModal();
+    closeSignalDetails();
   }
 });
 
