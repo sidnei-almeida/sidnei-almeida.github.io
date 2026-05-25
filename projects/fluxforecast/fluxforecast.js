@@ -8,7 +8,7 @@ const FETCH_TIMEOUT_MS = 9000;
 const STREAM_TIMEOUT_MS = 14000;
 const MAX_TELEMETRY_POINTS = 180;
 /** Espaçamento horizontal fixo entre amostras (px). Faixa tipo “linha de produção”: último ponto à direita; amostras antigas saem à esquerda. */
-const TELEMETRY_STEP_PX = 6;
+const TELEMETRY_STEP_PX = 8;
 const HISTORY_LIMIT = 80;
 const OVERLAY_FAILSAFE_MS = 15000;
 const PRESSURE_COUNT = 7;
@@ -405,13 +405,13 @@ function updateDatasetStatus(message, tone = "info") {
       status.style.color = "var(--accent)";
       break;
     case "warning":
-      status.style.color = "#f0c674";
+      status.style.color = "var(--warning)";
       break;
     case "error":
-      status.style.color = "#f08080";
+      status.style.color = "var(--critical)";
       break;
     default:
-      status.style.color = "var(--text-tertiary)";
+      status.style.color = "var(--text-muted)";
   }
 }
 
@@ -598,159 +598,209 @@ function drawTelemetry() {
   const padding = { top: 22, right: 24, bottom: 34, left: 58 };
   const plotWidth = width - padding.left - padding.right;
   const plotHeight = height - padding.top - padding.bottom;
-
   const originX = padding.left;
   const originY = padding.top + plotHeight;
   const plotRight = originX + plotWidth;
 
-  const buffered = telemetryPoints.slice(-MAX_TELEMETRY_POINTS);
-  const maxSlots = Math.max(1, Math.floor(plotWidth / TELEMETRY_STEP_PX) + 1);
-  const points = buffered.slice(-Math.min(buffered.length, maxSlots));
-  const nPts = points.length;
-  const xAtIndex = (idx) => plotRight - (nPts - 1 - idx) * TELEMETRY_STEP_PX;
+  // ── How many points fit? Always fill the full width evenly ──────
+  // Each new point arrives at the RIGHT; old ones scroll LEFT.
+  // We keep up to MAX_TELEMETRY_POINTS but only render what fits.
+  const MAX_VISIBLE = Math.max(2, Math.floor(plotWidth / 8));
+  const pts = telemetryPoints.slice(-MAX_VISIBLE);
+  const n = pts.length;
+
+  // X position: index 0 = leftmost visible, index n-1 = plotRight
+  // Distribute evenly across the full plot width so early points
+  // are at originX and new ones are at plotRight — NO CLUSTERING.
+  const xAt = (i) => {
+    if (n === 1) return plotRight;
+    return originX + (i / (MAX_VISIBLE - 1)) * plotWidth;
+  };
 
   const { low: lowThreshold, high: highThreshold } = getThresholdPair();
 
-  // Auto-scale Y axis to the visible data range (+thresholds), with padding
-  const visibleValues = points
+  // ── Y-axis auto-scale (predicted only — actual may be null) ─────
+  const allValues = pts
     .flatMap((p) => [p.predicted, p.actual])
     .concat([lowThreshold, highThreshold])
     .filter((v) => Number.isFinite(v));
-  let yMax = visibleValues.length ? Math.max(...visibleValues) : 1;
-  let yMin = visibleValues.length ? Math.min(...visibleValues) : 0;
-  const range = Math.max(yMax - yMin, 1e-4);
-  const pad = range * 0.18;
-  yMin = Math.max(0, yMin - pad);
-  yMax = yMax + pad;
+
+  let yMin = allValues.length ? Math.min(...allValues) : 0;
+  let yMax = allValues.length ? Math.max(...allValues) : 1;
+  const yRange0 = Math.max(yMax - yMin, 1e-4);
+  yMin = Math.max(0, yMin - yRange0 * 0.2);
+  yMax = yMax + yRange0 * 0.2;
   const yRange = yMax - yMin;
 
-  // Map a data value → canvas Y coordinate
   const toY = (v) => originY - clamp((v - yMin) / yRange, 0, 1) * plotHeight;
 
-  // ── Horizontal grid + Y-axis labels ─────────────────────────
-  ctx.lineWidth = 1;
-  const horizontalSteps = 4;
-  ctx.font = `500 10px "IBM Plex Mono", monospace`;
+  // ── Grid lines + Y labels (outside clip) ────────────────────────
+  ctx.font = '500 10px "JetBrains Mono", monospace';
   ctx.textBaseline = "middle";
-
-  for (let i = 0; i <= horizontalSteps; i++) {
-    const ratio = i / horizontalSteps;
-    const value = yMin + yRange * (1 - ratio);
+  const STEPS = 4;
+  for (let i = 0; i <= STEPS; i++) {
+    const ratio = i / STEPS;
+    const val = yMin + yRange * (1 - ratio);
     const y = padding.top + plotHeight * ratio;
-    ctx.globalAlpha = i === horizontalSteps ? 0.32 : 0.13;
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.globalAlpha = 0.15;
+    ctx.strokeStyle = "rgba(0,212,255,0.3)";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([]);
     ctx.beginPath();
     ctx.moveTo(padding.left, y);
-    ctx.lineTo(width - padding.right, y);
+    ctx.lineTo(plotRight, y);
     ctx.stroke();
-    ctx.globalAlpha = 0.38;
-    ctx.fillStyle = "rgba(203, 213, 225, 1)";
-    ctx.fillText(formatNumber(value, 3), 4, y);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "rgba(232,237,245,0.28)";
+    ctx.fillText(formatNumber(val, 3), 4, y);
   }
   ctx.globalAlpha = 1;
 
-  // ── Threshold lines ─────────────────────────────────────────
-  const lowThreshY  = toY(lowThreshold);
-  const highThreshY = toY(highThreshold);
-
+  // ── Clip everything else to the plot area ───────────────────────
   ctx.save();
-  ctx.globalAlpha = 0.65;
-  ctx.strokeStyle = "rgba(100, 116, 139, 0.85)";
-  ctx.setLineDash([5, 7]);
-  ctx.lineWidth = 1.5;
-  ctx.beginPath(); ctx.moveTo(originX, lowThreshY);  ctx.lineTo(width - padding.right, lowThreshY);  ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(originX, highThreshY); ctx.lineTo(width - padding.right, highThreshY); ctx.stroke();
+  ctx.beginPath();
+  ctx.rect(originX, padding.top, plotWidth, plotHeight + 1);
+  ctx.clip();
+
+  // ── Threshold lines ──────────────────────────────────────────────
+  const lowThreshY = toY(lowThreshold);
+  const highThreshY = toY(highThreshold);
+  ctx.save();
+  ctx.globalAlpha = 0.7;
+  ctx.strokeStyle = "#FF4560";
+  ctx.setLineDash([5, 3]);
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(originX, highThreshY);
+  ctx.lineTo(plotRight, highThreshY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(originX, lowThreshY);
+  ctx.lineTo(plotRight, lowThreshY);
+  ctx.stroke();
   ctx.restore();
   ctx.setLineDash([]);
 
-  // ── Color helpers ────────────────────────────────────────────
-  const COLOR_ACTUAL_OK   = "rgba(52, 211, 153, 0.90)";
-  const COLOR_ACTUAL_WARN = "rgba(251, 191, 36, 0.94)";
-  const SHADOW_OK   = "rgba(52, 211, 153, 0.22)";
-  const SHADOW_WARN = "rgba(251, 191, 36, 0.30)";
+  // ── Shaded band between thresholds (safe zone) ──────────────────
+  ctx.save();
+  ctx.fillStyle = "rgba(0,212,255,0.025)";
+  ctx.fillRect(originX, highThreshY, plotWidth, lowThreshY - highThreshY);
+  ctx.restore();
 
-  function flowZone(value, lowT, highT) {
-    if (!Number.isFinite(value)) return "ok";
-    if (value < lowT) return "low";
-    if (value > highT) return "high";
-    return "ok";
-  }
+  // helper: zone of a value
+  const zone = (v) =>
+    !Number.isFinite(v)
+      ? "ok"
+      : v < lowThreshold
+        ? "low"
+        : v > highThreshold
+          ? "high"
+          : "ok";
 
-  // ── Actual flow rate line ────────────────────────────────────
-  const actualPoints = points
-    .map((point, idx) => {
-      const actual = Number.isFinite(point.actual) ? point.actual : null;
-      if (actual === null) return null;
-      return { x: xAtIndex(idx), y: toY(actual), value: actual };
-    })
+  const zoneColor = (z) =>
+    z === "low" ? "#FFB627" : z === "high" ? "#FF4560" : "#00D4FF";
+
+  const zoneGlow = (z) =>
+    z === "low"
+      ? "rgba(255,182,39,0.5)"
+      : z === "high"
+        ? "rgba(255,69,96,0.5)"
+        : "rgba(0,212,255,0.5)";
+
+  // ── Build point arrays ───────────────────────────────────────────
+  const predPts = pts
+    .map((p, i) =>
+      Number.isFinite(p.predicted)
+        ? { x: xAt(i), y: toY(p.predicted), v: p.predicted }
+        : null
+    )
     .filter(Boolean);
 
-  if (actualPoints.length >= 2) {
-    for (let i = 0; i < actualPoints.length - 1; i++) {
-      const p0 = actualPoints[i];
-      const p1 = actualPoints[i + 1];
-      const warn = flowZone(p0.value, lowThreshold, highThreshold) !== "ok"
-                || flowZone(p1.value, lowThreshold, highThreshold) !== "ok";
+  const actPts = pts
+    .map((p, i) =>
+      Number.isFinite(p.actual)
+        ? { x: xAt(i), y: toY(p.actual), v: p.actual }
+        : null
+    )
+    .filter(Boolean);
+
+  // ── Actual flow line (thinner, behind predicted) ─────────────────
+  if (actPts.length >= 2) {
+    for (let i = 0; i < actPts.length - 1; i++) {
+      const p0 = actPts[i];
+      const p1 = actPts[i + 1];
+      const z =
+        zone(p0.v) !== "ok" || zone(p1.v) !== "ok"
+          ? zone(p0.v) !== "ok"
+            ? zone(p0.v)
+            : zone(p1.v)
+          : "ok";
       ctx.save();
-      ctx.strokeStyle = warn ? COLOR_ACTUAL_WARN : COLOR_ACTUAL_OK;
-      ctx.lineWidth = 2.4;
+      ctx.strokeStyle = z === "ok" ? "#00E5A0" : "#FFB627";
+      ctx.lineWidth = 1.5;
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
-      ctx.globalAlpha = warn ? 0.96 : 0.86;
-      ctx.shadowColor = warn ? SHADOW_WARN : SHADOW_OK;
-      ctx.shadowBlur = 8;
+      ctx.globalAlpha = 0.75;
+      ctx.shadowColor = z === "ok" ? "rgba(0,229,160,0.3)" : "rgba(255,182,39,0.3)";
+      ctx.shadowBlur = 6;
       ctx.beginPath();
       ctx.moveTo(p0.x, p0.y);
       ctx.lineTo(p1.x, p1.y);
       ctx.stroke();
       ctx.restore();
     }
-    actualPoints.forEach((p) => {
-      if (flowZone(p.value, lowThreshold, highThreshold) === "ok") return;
-      ctx.save();
-      ctx.fillStyle = "rgba(251, 191, 36, 0.88)";
-      ctx.strokeStyle = "rgba(180, 120, 0, 0.90)";
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-      ctx.fill(); ctx.stroke();
-      ctx.restore();
-    });
   }
 
-  // ── Predicted flow rate line ─────────────────────────────────
-  const predictedPoints = points
-    .map((point, idx) => {
-      const predicted = Number.isFinite(point.predicted) ? point.predicted : null;
-      if (predicted === null) return null;
-      return { x: xAtIndex(idx), y: toY(predicted), value: predicted };
-    })
-    .filter(Boolean);
-
-  if (predictedPoints.length >= 2) {
-    const gradient = ctx.createLinearGradient(originX, padding.top, originX, originY);
-    gradient.addColorStop(0, "rgba(226, 232, 240, 0.10)");
-    gradient.addColorStop(1, "rgba(226, 232, 240, 0.02)");
-
+  // ── Predicted flow line (segment-by-segment color) ───────────────
+  if (predPts.length >= 2) {
+    // Area fill (always cyan, subtle)
+    const grad = ctx.createLinearGradient(originX, padding.top, originX, originY);
+    grad.addColorStop(0, "rgba(0,212,255,0.08)");
+    grad.addColorStop(1, "rgba(0,212,255,0.01)");
     ctx.save();
-    ctx.strokeStyle = "rgba(226, 232, 240, 0.88)";
-    ctx.fillStyle = gradient;
-    ctx.lineWidth = 2.4;
-    ctx.lineJoin = "round";
-    ctx.shadowColor = "rgba(226, 232, 240, 0.18)";
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(predPts[0].x, predPts[0].y);
+    predPts.slice(1).forEach(({ x, y }) => ctx.lineTo(x, y));
+    ctx.lineTo(predPts[predPts.length - 1].x, originY);
+    ctx.lineTo(predPts[0].x, originY);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    // Line segments — color by zone
+    for (let i = 0; i < predPts.length - 1; i++) {
+      const p0 = predPts[i];
+      const p1 = predPts[i + 1];
+      const z = zone(p0.v) !== "ok" ? zone(p0.v) : zone(p1.v);
+      ctx.save();
+      ctx.strokeStyle = zoneColor(z);
+      ctx.lineWidth = 2;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.shadowColor = zoneGlow(z);
+      ctx.shadowBlur = z === "ok" ? 4 : 8;
+      ctx.beginPath();
+      ctx.moveTo(p0.x, p0.y);
+      ctx.lineTo(p1.x, p1.y);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Dot at the latest point
+    const last = predPts[predPts.length - 1];
+    const lastZone = zone(last.v);
+    ctx.save();
+    ctx.fillStyle = zoneColor(lastZone);
+    ctx.shadowColor = zoneGlow(lastZone);
     ctx.shadowBlur = 10;
     ctx.beginPath();
-    ctx.moveTo(predictedPoints[0].x, predictedPoints[0].y);
-    predictedPoints.slice(1).forEach(({ x, y }) => ctx.lineTo(x, y));
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-    ctx.lineTo(predictedPoints[predictedPoints.length - 1].x, originY);
-    ctx.lineTo(predictedPoints[0].x, originY);
-    ctx.closePath();
+    ctx.arc(last.x, last.y, 3.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
 
+  ctx.restore(); // end clip
 }
 
 /** Updates */

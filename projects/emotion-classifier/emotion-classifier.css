@@ -1,6 +1,6 @@
-                    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;#proj-emotion-classifier 500;600&family=Space+Grotesk:wght@500&display=swap');
 
-:root {
+:root{
   --bg-body: #f3f6f7;
   --bg-panel: #ffffff;
   --bg-surface: #fdfefe;
@@ -29,15 +29,9 @@
   --spacing-xl: 1.6rem;
   --spacing-2xl: 2.4rem;
   --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-*,
-*::before,
-*::after {
+}#proj-emotion-classifier *, #proj-emotion-classifier *::before, #proj-emotion-classifier *::after{
   box-sizing: border-box;
-}
-
-body {
+}#proj-emotion-classifier body{
   margin: 0;
   min-height: 100vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -49,9 +43,7 @@ body {
   position: relative;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-body::before {
+}#proj-emotion-classifier body::before{
   content: '';
   position: fixed;
   inset: 0;
@@ -62,20 +54,14 @@ body::before {
     linear-gradient(315deg, rgba(17, 113, 122, 0.06) 12.5%, transparent 12.5%) 13px 13px/26px 26px;
   pointer-events: none;
   z-index: 0;
-}
-
-.container {
+}#proj-emotion-classifier .container{
   position: relative;
   z-index: 1;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
-}
-
-/* Header */
-
-.app-header {
+}/* Header */#proj-emotion-classifier .app-header{
   position: sticky;
   top: 0;
   z-index: 10;
@@ -84,22 +70,16 @@ body::before {
   border-bottom: 1px solid rgba(18, 33, 42, 0.06);
   box-shadow: 0 10px 24px rgba(15, 36, 45, 0.08);
   padding: var(--spacing-sm) 0;
-}
-
-.header-content {
+}#proj-emotion-classifier .header-content{
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--spacing-md);
-}
-
-.brand-block {
+}#proj-emotion-classifier .brand-block{
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-}
-
-.brand-icon {
+}#proj-emotion-classifier .brand-icon{
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -109,36 +89,26 @@ body::before {
   background: var(--accent-primary);
   border: 1px solid transparent;
   color: #ffffff;
-}
-
-.brand-icon i {
+}#proj-emotion-classifier .brand-icon i{
   font-size: 1.2rem;
-}
-
-.brand-text h1 {
+}#proj-emotion-classifier .brand-text h1{
   margin: 0;
   font-family: 'Space Grotesk', 'Inter', sans-serif;
   font-size: 1.28rem;
   letter-spacing: -0.01em;
   font-weight: 600;
   color: var(--text-primary);
-}
-
-.brand-text p {
+}#proj-emotion-classifier .brand-text p{
   margin: 0;
   font-size: 0.8rem;
   color: var(--text-secondary);
-}
-
-.header-metrics {
+}#proj-emotion-classifier .header-metrics{
   display: inline-flex;
   gap: var(--spacing-sm);
   justify-content: flex-start;
   align-items: stretch;
   flex-wrap: wrap;
-}
-
-.metric-chip {
+}#proj-emotion-classifier .metric-chip{
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
@@ -147,28 +117,20 @@ body::before {
   border: 1px solid rgba(18, 33, 42, 0.08);
   background: rgba(255, 255, 255, 0.8);
   min-width: 110px;
-}
-
-.metric-label {
+}#proj-emotion-classifier .metric-label{
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-muted);
-}
-
-.metric-value {
+}#proj-emotion-classifier .metric-value{
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--accent-primary);
-}
-
-.header-links {
+}#proj-emotion-classifier .header-links{
   display: inline-flex;
   gap: var(--spacing-sm);
   align-items: center;
-}
-
-.header-link {
+}#proj-emotion-classifier .header-link{
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -180,36 +142,24 @@ body::before {
   background: rgba(255, 255, 255, 0.6);
   transition: var(--transition-base);
   font-size: 0.82rem;
-}
-
-.header-link:hover {
+}#proj-emotion-classifier .header-link:hover{
   color: var(--accent-primary);
   border-color: rgba(26, 167, 165, 0.45);
   background: rgba(26, 167, 165, 0.16);
-}
-
-/* Layout */
-
-.main-content {
+}/* Layout */#proj-emotion-classifier .main-content{
   flex: 1;
   padding: var(--spacing-xl) 0 var(--spacing-lg);
-}
-
-.main-content > .container {
+}#proj-emotion-classifier .main-content > .container{
   min-height: calc(100vh - 140px);
   display: flex;
   flex-direction: column;
-}
-
-.app-shell {
+}#proj-emotion-classifier .app-shell{
   flex: 1;
   display: grid;
   gap: var(--spacing-2xl);
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
   align-items: stretch;
-}
-
-.info-panel {
+}#proj-emotion-classifier .info-panel{
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xl);
@@ -220,29 +170,21 @@ body::before {
   box-shadow: 0 22px 48px rgba(15, 36, 45, 0.12);
   height: 100%;
   overflow: auto;
-}
-
-.hero-section h2 {
+}#proj-emotion-classifier .hero-section h2{
   font-family: 'Space Grotesk', 'Inter', sans-serif;
   font-size: 1.9rem;
   line-height: 1.2;
   margin-bottom: var(--spacing-sm);
   letter-spacing: -0.01em;
   color: var(--text-primary);
-}
-
-.hero-description {
+}#proj-emotion-classifier .hero-description{
   font-size: 0.9rem;
   color: var(--text-secondary);
   max-width: 32ch;
-}
-
-.insight-cards {
+}#proj-emotion-classifier .insight-cards{
   display: grid;
   gap: var(--spacing-md);
-}
-
-.insight-card {
+}#proj-emotion-classifier .insight-card{
   border-radius: var(--radius-lg);
   padding: var(--spacing-md);
   background: rgba(255, 255, 255, 0.95);
@@ -250,34 +192,24 @@ body::before {
   display: grid;
   gap: var(--spacing-sm);
   box-shadow: 0 16px 32px rgba(15, 36, 45, 0.08);
-}
-
-.insight-label {
+}#proj-emotion-classifier .insight-label{
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-muted);
-}
-
-.insight-title {
+}#proj-emotion-classifier .insight-title{
   margin: 0;
   font-size: 1.05rem;
   font-weight: 600;
-}
-
-.insight-text {
+}#proj-emotion-classifier .insight-text{
   margin: 0;
   font-size: 0.86rem;
   color: var(--text-secondary);
-}
-
-.meta-grid {
+}#proj-emotion-classifier .meta-grid{
   display: grid;
   gap: var(--spacing-sm);
   grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.meta-item {
+}#proj-emotion-classifier .meta-item{
   border-radius: var(--radius-md);
   padding: var(--spacing-sm) var(--spacing-md);
   background: rgba(255, 255, 255, 0.92);
@@ -286,62 +218,40 @@ body::before {
   flex-direction: column;
   gap: 0.2rem;
   box-shadow: 0 10px 24px rgba(15, 36, 45, 0.05);
-}
-
-.meta-label {
+}#proj-emotion-classifier .meta-label{
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-muted);
-}
-
-.meta-value {
+}#proj-emotion-classifier .meta-value{
   font-size: 0.88rem;
   color: var(--text-primary);
-}
-
-.interaction-panel {
+}#proj-emotion-classifier .interaction-panel{
   display: grid;
   gap: var(--spacing-xl);
-}
-
-.analysis-shell {
+}#proj-emotion-classifier .analysis-shell{
   position: relative;
   min-height: 100%;
-}
-
-.analysis-shell.has-results .input-section {
+}#proj-emotion-classifier .analysis-shell.has-results .input-section{
   opacity: 0.35;
   pointer-events: none;
   transition: opacity var(--transition-base);
-}
-
-.analysis-shell.has-results #upload-preview {
+}#proj-emotion-classifier .analysis-shell.has-results #upload-preview{
   display: none !important;
-}
-
-.section-head {
+}#proj-emotion-classifier .section-head{
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   margin-bottom: var(--spacing-md);
-}
-
-.section-head h3 {
+}#proj-emotion-classifier .section-head h3{
   margin: 0;
   font-size: 1.15rem;
   font-weight: 600;
-}
-
-.section-head p {
+}#proj-emotion-classifier .section-head p{
   margin: 0;
   font-size: 0.84rem;
   color: var(--text-secondary);
-}
-
-/* Input Section */
-
-.input-section {
+}/* Input Section */#proj-emotion-classifier .input-section{
   border-radius: var(--radius-xl);
   padding: var(--spacing-lg);
   background: rgba(255, 255, 255, 0.97);
@@ -350,9 +260,7 @@ body::before {
   transition: opacity var(--transition-base);
   display: flex;
   flex-direction: column;
-}
-
-.input-tabs {
+}#proj-emotion-classifier .input-tabs{
   display: inline-flex;
   gap: var(--spacing-sm);
   padding: 0.35rem;
@@ -362,9 +270,7 @@ body::before {
   box-shadow: 0 12px 24px rgba(15, 36, 45, 0.08);
   margin-bottom: var(--spacing-md);
   flex-wrap: wrap;
-}
-
-.tab-btn {
+}#proj-emotion-classifier .tab-btn{
   border: none;
   background: transparent;
   color: var(--text-secondary);
@@ -378,33 +284,23 @@ body::before {
   position: relative;
   cursor: pointer;
   transition: var(--transition-base);
-}
-
-.tab-btn:hover {
+}#proj-emotion-classifier .tab-btn:hover{
   color: var(--text-primary);
   background: rgba(26, 167, 165, 0.08);
-}
-
-.tab-btn.active {
+}#proj-emotion-classifier .tab-btn.active{
   color: var(--text-primary);
   background: linear-gradient(135deg, rgba(26, 167, 165, 0.18), rgba(15, 126, 130, 0.2));
   box-shadow: inset 0 0 0 1px rgba(26, 167, 165, 0.4);
-}
-
-.tab-content {
+}#proj-emotion-classifier .tab-content{
   display: none;
   animation: fadeIn 0.35s ease;
   flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
-}
-
-.tab-content.active {
+}#proj-emotion-classifier .tab-content.active{
   display: flex;
-}
-
-@keyframes fadeIn {
+}@keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(8px);
@@ -413,17 +309,13 @@ body::before {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.camera-container {
+}#proj-emotion-classifier .camera-container{
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
   flex: 1;
   min-height: 0;
-}
-
-#video {
+}#proj-emotion-classifier #video{
   width: 100%;
   aspect-ratio: 16 / 9;
   max-height: 400px;
@@ -433,22 +325,16 @@ body::before {
   box-shadow: 0 18px 36px rgba(15, 36, 45, 0.08);
   transition: var(--transition-base);
   object-fit: contain;
-}
-
-#video:hover {
+}#proj-emotion-classifier #video:hover{
   border-color: rgba(26, 167, 165, 0.4);
   box-shadow: 0 22px 42px rgba(15, 36, 45, 0.12);
-}
-
-.camera-controls {
+}#proj-emotion-classifier .camera-controls{
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-sm);
   margin-top: auto;
   flex-shrink: 0;
-}
-
-.btn {
+}#proj-emotion-classifier .btn{
   position: relative;
   border: none;
   border-radius: var(--radius-md);
@@ -462,47 +348,33 @@ body::before {
   cursor: pointer;
   overflow: hidden;
   transition: var(--transition-base);
-}
-
-.btn:disabled {
+}#proj-emotion-classifier .btn:disabled{
   opacity: 0.45;
   cursor: not-allowed;
   box-shadow: none;
-}
-
-.btn-primary {
+}#proj-emotion-classifier .btn-primary{
   background: linear-gradient(135deg, rgba(26, 167, 165, 0.9), rgba(17, 126, 130, 0.9));
   color: var(--text-primary);
   border: 1px solid rgba(26, 167, 165, 0.55);
   box-shadow: 0 12px 26px rgba(15, 126, 130, 0.18);
-}
-
-.btn-primary:hover:not(:disabled) {
+}#proj-emotion-classifier .btn-primary:hover:not(:disabled){
   transform: translateY(-1px);
   border-color: rgba(26, 167, 165, 0.75);
-}
-
-.btn-secondary {
+}#proj-emotion-classifier .btn-secondary{
   background: rgba(240, 245, 247, 0.95);
   color: var(--text-primary);
   border: 1px solid rgba(18, 33, 42, 0.12);
-}
-
-.btn-secondary:hover:not(:disabled) {
+}#proj-emotion-classifier .btn-secondary:hover:not(:disabled){
   color: var(--text-primary);
   border-color: rgba(26, 167, 165, 0.45);
   background: rgba(255, 255, 255, 1);
-}
-
-.upload-container {
+}#proj-emotion-classifier .upload-container{
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
   flex: 1;
   min-height: 0;
-}
-
-.upload-area {
+}#proj-emotion-classifier .upload-area{
   border-radius: var(--radius-lg);
   border: 1px dashed rgba(26, 167, 165, 0.38);
   background: rgba(255, 255, 255, 0.96);
@@ -512,30 +384,20 @@ body::before {
   gap: var(--spacing-sm);
   cursor: pointer;
   transition: var(--transition-base);
-}
-
-.upload-area:hover {
+}#proj-emotion-classifier .upload-area:hover{
   border-color: rgba(26, 167, 165, 0.55);
   background: rgba(26, 167, 165, 0.16);
-}
-
-.upload-area i {
+}#proj-emotion-classifier .upload-area i{
   font-size: 2rem;
   color: var(--accent-primary);
-}
-
-.upload-area p {
+}#proj-emotion-classifier .upload-area p{
   margin: 0;
   font-size: 0.84rem;
   color: var(--text-secondary);
-}
-
-.upload-hint {
+}#proj-emotion-classifier .upload-hint{
   font-size: 0.75rem;
   color: var(--text-muted);
-}
-
-.upload-preview {
+}#proj-emotion-classifier .upload-preview{
   position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -543,18 +405,14 @@ body::before {
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 18px 36px rgba(15, 36, 45, 0.08);
   max-height: 400px;
-}
-
-#uploaded-image {
+}#proj-emotion-classifier #uploaded-image{
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   max-height: 400px;
   object-fit: contain;
   object-fit: contain;
-}
-
-.btn-remove {
+}#proj-emotion-classifier .btn-remove{
   position: absolute;
   top: 12px;
   right: 12px;
@@ -569,20 +427,14 @@ body::before {
   justify-content: center;
   cursor: pointer;
   transition: var(--transition-base);
-}
-
-.btn-remove:hover {
+}#proj-emotion-classifier .btn-remove:hover{
   background: rgba(230, 91, 91, 0.92);
   transform: scale(1.05);
-}
-
-.examples-grid {
+}#proj-emotion-classifier .examples-grid{
   display: grid;
   gap: var(--spacing-md);
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-}
-
-.example-item {
+}#proj-emotion-classifier .example-item{
   position: relative;
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -592,36 +444,24 @@ body::before {
   display: flex;
   flex-direction: column;
   box-shadow: 0 18px 34px rgba(15, 36, 45, 0.12);
-}
-
-.example-item img {
+}#proj-emotion-classifier .example-item img{
   width: 100%;
   aspect-ratio: 3 / 4;
   object-fit: cover;
-}
-
-.example-label {
+}#proj-emotion-classifier .example-label{
   padding: 0.7rem;
   text-align: center;
   font-size: 0.8rem;
   color: var(--text-secondary);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.example-item:hover {
+}#proj-emotion-classifier .example-item:hover{
   transform: translateY(-4px);
   border-color: rgba(26, 167, 165, 0.38);
   box-shadow: 0 22px 42px rgba(15, 36, 45, 0.16);
-}
-
-.example-item:hover .example-label {
+}#proj-emotion-classifier .example-item:hover .example-label{
   color: var(--accent-primary);
-}
-
-/* Results Overlay */
-
-.results-overlay {
+}/* Results Overlay */#proj-emotion-classifier .results-overlay{
   position: absolute;
   inset: 0;
   display: flex;
@@ -635,17 +475,13 @@ body::before {
   z-index: 3;
   backdrop-filter: blur(12px);
   overflow: hidden;
-}
-
-.results-container {
+}#proj-emotion-classifier .results-container{
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
   overflow: visible;
   height: 100%;
-}
-
-.results-close {
+}#proj-emotion-classifier .results-close{
   position: absolute;
   top: var(--spacing-sm);
   right: var(--spacing-sm);
@@ -660,48 +496,34 @@ body::before {
   justify-content: center;
   cursor: pointer;
   transition: var(--transition-base);
-}
-
-.results-close:hover {
+}#proj-emotion-classifier .results-close:hover{
   color: var(--accent-primary);
   border-color: rgba(26, 167, 165, 0.45);
   background: rgba(26, 167, 165, 0.15);
-}
-
-.results-head {
+}#proj-emotion-classifier .results-head{
   display: grid;
   gap: var(--spacing-xs);
   padding-right: 2.5rem;
-}
-
-.results-head h3 {
+}#proj-emotion-classifier .results-head h3{
   margin: 0;
   font-size: 1.18rem;
   font-weight: 600;
-}
-
-.results-head p {
+}#proj-emotion-classifier .results-head p{
   margin: 0;
   font-size: 0.82rem;
   color: var(--text-secondary);
   max-width: 36ch;
-}
-
-.result-label {
+}#proj-emotion-classifier .result-label{
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.13em;
   color: var(--text-muted);
-}
-
-.results-grid {
+}#proj-emotion-classifier .results-grid{
   display: grid;
   gap: var(--spacing-md);
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.1fr);
   align-items: stretch;
-}
-
-.result-summary {
+}#proj-emotion-classifier .result-summary{
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
@@ -711,17 +533,13 @@ body::before {
   background: radial-gradient(circle at 12% 12%, rgba(26, 167, 165, 0.18), transparent 55%), rgba(255, 255, 255, 0.96);
   position: relative;
   box-shadow: 0 18px 40px rgba(15, 36, 45, 0.12);
-}
-
-.emotion-display {
+}#proj-emotion-classifier .emotion-display{
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
   gap: var(--spacing-sm);
   align-items: center;
-}
-
-.emotion-icon {
+}#proj-emotion-classifier .emotion-icon{
   width: 62px;
   height: 62px;
   border-radius: var(--radius-full);
@@ -732,26 +550,18 @@ body::before {
   justify-content: center;
   font-size: 2.1rem;
   color: #ffffff;
-}
-
-.emotion-info h4 {
+}#proj-emotion-classifier .emotion-info h4{
   margin: 0;
   font-size: 1.08rem;
   text-transform: capitalize;
-}
-
-.confidence-text {
+}#proj-emotion-classifier .confidence-text{
   margin: 0;
   font-size: 0.82rem;
   color: var(--text-secondary);
-}
-
-#confidence-value {
+}#proj-emotion-classifier #confidence-value{
   color: var(--accent-tertiary);
   font-weight: 600;
-}
-
-.emotion-message {
+}#proj-emotion-classifier .emotion-message{
   margin: 0;
   font-size: 0.82rem;
   color: var(--text-secondary);
@@ -759,18 +569,14 @@ body::before {
   padding-top: var(--spacing-sm);
   border-top: 1px solid rgba(18, 33, 42, 0.1);
   flex-grow: 1;
-}
-
-.analyzed-image-container {
+}#proj-emotion-classifier .analyzed-image-container{
   display: grid;
   gap: var(--spacing-xs);
   justify-items: center;
   text-align: center;
   width: min(100%, 300px);
   margin: 0 auto;
-}
-
-#analyzed-image {
+}#proj-emotion-classifier #analyzed-image{
   width: 100%;
   aspect-ratio: 3 / 4;
   border-radius: var(--radius-md);
@@ -778,13 +584,9 @@ body::before {
   background: var(--bg-panel);
   transition: var(--transition-base);
   object-fit: cover;
-}
-
-#analyzed-image:hover {
+}#proj-emotion-classifier #analyzed-image:hover{
   border-color: rgba(26, 167, 165, 0.45);
-}
-
-.probabilities-chart {
+}#proj-emotion-classifier .probabilities-chart{
   display: grid;
   gap: var(--spacing-sm);
   border: 1px solid rgba(18, 33, 42, 0.08);
@@ -793,37 +595,27 @@ body::before {
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 18px 38px rgba(15, 36, 45, 0.1);
   max-height: 100%;
-}
-
-.chart-container {
+}#proj-emotion-classifier .chart-container{
   display: grid;
   gap: 0.6rem;
-}
-
-.probability-bar {
+}#proj-emotion-classifier .probability-bar{
   display: grid;
   grid-template-columns: minmax(110px, 0.8fr) minmax(0, 1fr);
   gap: var(--spacing-sm);
   align-items: center;
-}
-
-.probability-label {
+}#proj-emotion-classifier .probability-label{
   font-size: 0.78rem;
   text-transform: capitalize;
   color: var(--text-secondary);
   letter-spacing: 0.05em;
-}
-
-.probability-bar-inner {
+}#proj-emotion-classifier .probability-bar-inner{
   height: 32px;
   border-radius: var(--radius-full);
   background: rgba(241, 246, 247, 0.9);
   border: 1px solid rgba(18, 33, 42, 0.08);
   overflow: hidden;
   position: relative;
-}
-
-.probability-fill {
+}#proj-emotion-classifier .probability-fill{
   position: absolute;
   inset: 0;
   border-radius: var(--radius-full);
@@ -836,9 +628,7 @@ body::before {
   font-size: 0.78rem;
   font-weight: 600;
   transition: width 0.55s ease;
-}
-
-.probability-value {
+}#proj-emotion-classifier .probability-value{
   position: absolute;
   right: var(--spacing-sm);
   top: 50%;
@@ -846,34 +636,18 @@ body::before {
   font-size: 0.78rem;
   font-weight: 600;
   color: var(--text-primary);
-}
-
-@media (max-width: 900px) {
-  .results-overlay {
+}@media (max-width: 900px) {#proj-emotion-classifier .results-overlay{
     position: fixed;
     inset: var(--spacing-md);
-  }
-
-  .results-grid {
+  }#proj-emotion-classifier .results-grid{
     grid-template-columns: 1fr;
-  }
-
-  .result-summary {
+  }#proj-emotion-classifier .result-summary{
     order: 1;
-  }
-
-  .probabilities-chart {
+  }#proj-emotion-classifier .probabilities-chart{
     order: 2;
-  }
-
-  #analyzed-image {
+  }#proj-emotion-classifier #analyzed-image{
     max-width: 100%;
-  }
-}
-
-/* Loading & Error */
-
-.loading-overlay {
+  }}/* Loading & Error */#proj-emotion-classifier .loading-overlay{
   position: fixed;
   inset: 0;
   display: flex;
@@ -882,24 +656,18 @@ body::before {
   background: var(--bg-overlay);
   backdrop-filter: blur(16px);
   z-index: 20;
-}
-
-.loading-spinner {
+}#proj-emotion-classifier .loading-spinner{
   text-align: center;
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
   border: 1px solid rgba(26, 167, 165, 0.32);
   background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 18px 40px rgba(15, 36, 45, 0.15);
-}
-
-.loading-spinner i {
+}#proj-emotion-classifier .loading-spinner i{
   font-size: 3rem;
   color: var(--accent-primary);
   animation: spinPulse 1.8s ease-in-out infinite;
-}
-
-@keyframes spinPulse {
+}@keyframes spinPulse {
   0%, 100% {
     transform: scale(1) rotate(0deg);
     opacity: 0.9;
@@ -908,15 +676,11 @@ body::before {
     transform: scale(1.08) rotate(180deg);
     opacity: 1;
   }
-}
-
-.loading-spinner p {
+}#proj-emotion-classifier .loading-spinner p{
   margin: var(--spacing-sm) 0 0;
   font-size: 0.95rem;
   color: var(--text-secondary);
-}
-
-.error-message {
+}#proj-emotion-classifier .error-message{
   border-radius: var(--radius-md);
   padding: var(--spacing-sm) var(--spacing-md);
   border: 1px solid rgba(248, 113, 113, 0.32);
@@ -926,41 +690,29 @@ body::before {
   display: none;
   align-items: center;
   gap: var(--spacing-sm);
-}
-
-.error-message::before {
+}#proj-emotion-classifier .error-message::before{
   content: '\f06a';
   font-family: 'Font Awesome 6 Free';
   font-weight: 900;
-}
-
-/* Footer */
-
-.app-footer {
+}/* Footer */#proj-emotion-classifier .app-footer{
   border-top: 1px solid rgba(18, 33, 42, 0.08);
   padding: var(--spacing-lg) 0;
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 -12px 28px rgba(15, 36, 45, 0.08);
   margin-top: auto;
-}
-
-.app-footer p {
+}#proj-emotion-classifier .app-footer p{
   text-align: center;
   color: var(--text-secondary);
   font-size: 0.82rem;
   margin-bottom: var(--spacing-sm);
-}
-
-.footer-links {
+}#proj-emotion-classifier .footer-links{
   display: inline-flex;
   justify-content: center;
   align-items: center;
   gap: var(--spacing-md);
   flex-wrap: wrap;
   width: 100%;
-}
-
-.footer-links a {
+}#proj-emotion-classifier .footer-links a{
   color: var(--text-secondary);
   text-decoration: none;
   display: inline-flex;
@@ -969,139 +721,71 @@ body::before {
   padding: 0.4rem 0.75rem;
   border-radius: var(--radius-md);
   transition: var(--transition-base);
-}
-
-.footer-links a:hover {
+}#proj-emotion-classifier .footer-links a:hover{
   color: var(--accent-primary);
   background: rgba(26, 167, 165, 0.16);
-}
-
-/* Responsive */
-
-@media (max-width: 1024px) {
-  .header-content {
+}/* Responsive */@media (max-width: 1024px) {#proj-emotion-classifier .header-content{
     grid-template-columns: 1fr;
     justify-items: flex-start;
     gap: var(--spacing-md);
-  }
-
-  .header-links {
+  }#proj-emotion-classifier .header-links{
     order: 3;
-  }
-
-  .app-shell {
+  }#proj-emotion-classifier .app-shell{
     grid-template-columns: 1fr;
-  }
-
-  .interaction-panel {
+  }#proj-emotion-classifier .interaction-panel{
     order: -1;
-  }
-}
-
-@media (max-width: 768px) {
-  .main-content {
+  }}@media (max-width: 768px) {#proj-emotion-classifier .main-content{
     padding: var(--spacing-xl) 0;
-  }
-
-  .info-panel,
-  .input-section,
-  .results-section {
+  }#proj-emotion-classifier .info-panel, #proj-emotion-classifier .input-section, #proj-emotion-classifier .results-section{
     padding: var(--spacing-lg);
-  }
-
-  .meta-grid {
+  }#proj-emotion-classifier .meta-grid{
     grid-template-columns: 1fr;
-  }
-
-  .camera-controls {
+  }#proj-emotion-classifier .camera-controls{
     flex-direction: column;
-  }
-
-  .camera-controls .btn {
+  }#proj-emotion-classifier .camera-controls .btn{
     width: 100%;
     justify-content: center;
-  }
-
-  .input-tabs {
+  }#proj-emotion-classifier .input-tabs{
     width: 100%;
     justify-content: center;
-  }
-}
-
-@media (max-width: 520px) {
-  .brand-text h1 {
+  }}@media (max-width: 520px) {#proj-emotion-classifier .brand-text h1{
     font-size: 1.35rem;
-  }
-
-  .hero-section h2 {
+  }#proj-emotion-classifier .hero-section h2{
     font-size: 1.75rem;
-  }
-
-  .input-tabs {
+  }#proj-emotion-classifier .input-tabs{
     flex-direction: column;
     border-radius: var(--radius-lg);
-  }
-
-  .tab-btn {
+  }#proj-emotion-classifier .tab-btn{
     width: 100%;
     justify-content: center;
-  }
-
-  .probability-bar {
+  }#proj-emotion-classifier .probability-bar{
     grid-template-columns: 1fr;
     gap: var(--spacing-sm);
-  }
-
-  .probability-label {
+  }#proj-emotion-classifier .probability-label{
     text-align: left;
-  }
-}
-
-/* ============================================================================
+  }}/* ============================================================================
    Global Native UI Overrides
-   ============================================================================ */
-
-/* Scrollbars - Webkit */
-::-webkit-scrollbar {
+   ============================================================================ *//* Scrollbars - Webkit */#proj-emotion-classifier ::-webkit-scrollbar{
   width: 8px;
   height: 8px;
-}
-
-::-webkit-scrollbar-track {
+}#proj-emotion-classifier ::-webkit-scrollbar-track{
   background: var(--bg-body);
-}
-
-::-webkit-scrollbar-thumb {
+}#proj-emotion-classifier ::-webkit-scrollbar-thumb{
   background: rgba(26, 167, 165, 0.4);
   border-radius: 4px;
   transition: background 0.2s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
+}#proj-emotion-classifier ::-webkit-scrollbar-thumb:hover{
   background: rgba(26, 167, 165, 0.6);
-}
-
-/* Scrollbars - Firefox */
-* {
+}/* Scrollbars - Firefox */#proj-emotion-classifier *{
   scrollbar-width: thin;
   scrollbar-color: rgba(26, 167, 165, 0.4) var(--bg-body);
-}
-
-/* Text Selection */
-::selection {
+}/* Text Selection */#proj-emotion-classifier ::selection{
   background: rgba(26, 167, 165, 0.25);
   color: var(--text-primary);
-}
-
-::-moz-selection {
+}#proj-emotion-classifier ::-moz-selection{
   background: rgba(26, 167, 165, 0.25);
   color: var(--text-primary);
-}
-
-/* Inputs & Dropdowns */
-input,
-textarea,
-select {
+}/* Inputs & Dropdowns */#proj-emotion-classifier input, #proj-emotion-classifier textarea, #proj-emotion-classifier select{
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1111,30 +795,18 @@ select {
   color: var(--text-primary);
   padding: 10px 14px;
   font: inherit;
-}
-
-select {
+}#proj-emotion-classifier select{
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231aa7a5' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   padding-right: 36px;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
+}#proj-emotion-classifier input:focus, #proj-emotion-classifier textarea:focus, #proj-emotion-classifier select:focus{
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
   border-color: var(--accent-primary);
-}
-
-input::placeholder,
-textarea::placeholder {
+}#proj-emotion-classifier input::placeholder, #proj-emotion-classifier textarea::placeholder{
   color: var(--text-muted);
-}
-
-/* Focus Ring */
-*:focus-visible {
+}/* Focus Ring */#proj-emotion-classifier *:focus-visible{
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
   border-radius: var(--radius-md);
