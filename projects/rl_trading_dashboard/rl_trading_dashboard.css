@@ -1,4 +1,4 @@
-:root {
+:root{
   color-scheme: dark;
   
   /* Premium High-Contrast Dark Mode - Strict Color Palette */
@@ -57,23 +57,14 @@
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
   --shadow-glow: 0 0 20px var(--chart-primary-green-glow);
-}
-
-*,
-*::before,
-*::after {
+}#proj-rl_trading_dashboard *, #proj-rl_trading_dashboard *::before, #proj-rl_trading_dashboard *::after{
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-html,
-body {
+}#proj-rl_trading_dashboard html, #proj-rl_trading_dashboard body{
   height: 100%;
   overflow-x: hidden;
-}
-
-body {
+}#proj-rl_trading_dashboard body{
   font-family: var(--font-sans);
   font-size: clamp(14px, 0.9vw + 0.5rem, 16px);
   background: var(--bg-page);
@@ -82,38 +73,24 @@ body {
   flex-direction: column;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-button,
-input,
-select {
+}#proj-rl_trading_dashboard button, #proj-rl_trading_dashboard input, #proj-rl_trading_dashboard select{
   font: inherit;
   color: inherit;
-}
-
-button {
+}#proj-rl_trading_dashboard button{
   border: none;
   background: none;
   cursor: pointer;
-}
-
-button:focus-visible,
-input:focus-visible,
-select:focus-visible {
+}#proj-rl_trading_dashboard button:focus-visible, #proj-rl_trading_dashboard input:focus-visible, #proj-rl_trading_dashboard select:focus-visible{
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
-}
-
-.dashboard-container {
+}#proj-rl_trading_dashboard .dashboard-container{
   display: flex;
   flex-direction: column;
   height: 100vh;
   width: 100%;
   overflow: hidden;
-}
-
-.dashboard-header {
+}#proj-rl_trading_dashboard .dashboard-header{
   padding: clamp(14px, 1.2vw, 20px) clamp(20px, 2.5vw, 32px);
   border-bottom: 1px solid var(--stroke);
   background: var(--bg-panel);
@@ -121,26 +98,20 @@ select:focus-visible {
   position: relative;
   z-index: 2;
   flex-shrink: 0;
-}
-
-.header-content {
+}#proj-rl_trading_dashboard .header-content{
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: clamp(12px, 1.5vw, 20px);
   flex-wrap: wrap;
-}
-
-.dashboard-title {
+}#proj-rl_trading_dashboard .dashboard-title{
   font-size: clamp(16px, 1.1vw + 0.5rem, 22px);
   font-weight: 600;
   display: flex;
   align-items: center;
   gap: clamp(10px, 1vw, 14px);
   flex-wrap: wrap;
-}
-
-.title-icon {
+}#proj-rl_trading_dashboard .title-icon{
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,9 +123,7 @@ select:focus-visible {
   background: var(--bg-card);
   border: 1px solid var(--stroke);
   box-shadow: var(--shadow-glow);
-}
-
-.title-badge {
+}#proj-rl_trading_dashboard .title-badge{
   margin-left: 4px;
   padding: clamp(4px, 0.3vw, 6px) clamp(10px, 0.9vw, 14px);
   border-radius: 999px;
@@ -165,16 +134,12 @@ select:focus-visible {
   color: rgba(226, 232, 240, 0.9);
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.2));
   white-space: nowrap;
-}
-
-.header-meta {
+}#proj-rl_trading_dashboard .header-meta{
   display: flex;
   align-items: center;
   gap: clamp(8px, 1vw, 12px);
   flex-wrap: wrap;
-}
-
-.update-time {
+}#proj-rl_trading_dashboard .update-time{
   font-size: clamp(11px, 0.75vw + 0.3rem, 13px);
   color: var(--text-secondary);
   font-family: "Roboto Mono", "JetBrains Mono", var(--font-mono);
@@ -187,9 +152,7 @@ select:focus-visible {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   white-space: nowrap;
-}
-
-.update-time::before {
+}#proj-rl_trading_dashboard .update-time::before{
   content: "";
   width: 12px;
   height: 12px;
@@ -198,9 +161,7 @@ select:focus-visible {
   background-size: contain;
   background-repeat: no-repeat;
   flex-shrink: 0;
-}
-
-.api-status-chip {
+}#proj-rl_trading_dashboard .api-status-chip{
   font-size: clamp(11px, 0.75vw + 0.3rem, 13px);
   padding: 0;
   border: none;
@@ -213,9 +174,7 @@ select:focus-visible {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   white-space: nowrap;
-}
-
-.api-status-chip::before {
+}#proj-rl_trading_dashboard .api-status-chip::before{
   content: "";
   width: 12px;
   height: 12px;
@@ -224,13 +183,9 @@ select:focus-visible {
   background-repeat: no-repeat;
   display: inline-block;
   flex-shrink: 0;
-}
-
-.api-status-chip.error {
+}#proj-rl_trading_dashboard .api-status-chip.error{
   color: var(--chart-alert-red);
-}
-
-.btn-refresh {
+}#proj-rl_trading_dashboard .btn-refresh{
   width: clamp(28px, 2vw, 32px);
   height: clamp(28px, 2vw, 32px);
   border-radius: var(--radius-sm);
@@ -242,23 +197,17 @@ select:focus-visible {
   color: var(--text-secondary);
   transition: all var(--transition);
   flex-shrink: 0;
-}
-
-.btn-refresh:hover {
+}#proj-rl_trading_dashboard .btn-refresh:hover{
   color: var(--text-primary);
   border-color: var(--stroke-strong);
   transform: rotate(180deg);
   background: var(--bg-elevated);
-}
-
-.dashboard-main {
+}#proj-rl_trading_dashboard .dashboard-main{
   display: flex;
   flex: 1;
   overflow: hidden;
   min-height: 0;
-}
-
-.dashboard-sidebar {
+}#proj-rl_trading_dashboard .dashboard-sidebar{
   width: clamp(280px, 22vw, 340px);
   flex-shrink: 0;
   background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-panel-alt) 100%);
@@ -270,9 +219,7 @@ select:focus-visible {
   overflow-y: auto;
   overflow-x: hidden;
   box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.02);
-}
-
-.sidebar-section {
+}#proj-rl_trading_dashboard .sidebar-section{
   display: flex;
   flex-direction: column;
   gap: clamp(8px, 0.7vw, 10px);
@@ -282,14 +229,10 @@ select:focus-visible {
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: var(--shadow-sm);
   transition: all var(--transition);
-}
-
-.sidebar-section:hover {
+}#proj-rl_trading_dashboard .sidebar-section:hover{
   border-color: rgba(255, 255, 255, 0.08);
   box-shadow: var(--shadow-md);
-}
-
-.sidebar-title {
+}#proj-rl_trading_dashboard .sidebar-title{
   font-size: clamp(10px, 0.75vw + 0.25rem, 12px);
   font-weight: 700;
   color: #FFFFFF;
@@ -299,24 +242,18 @@ select:focus-visible {
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.sidebar-title::before {
+}#proj-rl_trading_dashboard .sidebar-title::before{
   content: "";
   width: 2px;
   height: 12px;
   background: linear-gradient(180deg, #00E676 0%, #00B8FF 100%);
   border-radius: 2px;
   flex-shrink: 0;
-}
-
-.sidebar-text {
+}#proj-rl_trading_dashboard .sidebar-text{
   font-size: clamp(11px, 0.85vw + 0.25rem, 13px);
   color: var(--text-secondary);
   line-height: 1.6;
-}
-
-.mode-toggle {
+}#proj-rl_trading_dashboard .mode-toggle{
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(4px, 0.4vw, 6px);
@@ -325,9 +262,7 @@ select:focus-visible {
   border-radius: var(--radius-sm);
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.mode-btn {
+}#proj-rl_trading_dashboard .mode-btn{
   padding: clamp(8px, 0.7vw, 10px) clamp(10px, 1vw, 14px);
   border-radius: var(--radius-sm);
   font-size: clamp(10px, 0.75vw + 0.25rem, 12px);
@@ -339,23 +274,17 @@ select:focus-visible {
   text-align: center;
   position: relative;
   font-family: var(--font-sans);
-}
-
-.mode-btn:hover {
+}#proj-rl_trading_dashboard .mode-btn:hover{
   background: rgba(255, 255, 255, 0.05);
   color: #FFFFFF;
   transform: translateY(-1px);
-}
-
-.mode-btn.active {
+}#proj-rl_trading_dashboard .mode-btn.active{
   background: linear-gradient(135deg, rgba(0, 230, 118, 0.15) 0%, rgba(0, 184, 255, 0.1) 100%);
   color: #00E676;
   border: 1px solid rgba(0, 230, 118, 0.3);
   box-shadow: 0 2px 8px rgba(0, 230, 118, 0.2);
   font-weight: 700;
-}
-
-.mode-btn.active::after {
+}#proj-rl_trading_dashboard .mode-btn.active::after{
   content: "";
   position: absolute;
   bottom: 2px;
@@ -365,15 +294,11 @@ select:focus-visible {
   height: 2px;
   background: linear-gradient(90deg, transparent, #00E676, transparent);
   border-radius: 2px;
-}
-
-.tickers-list {
+}#proj-rl_trading_dashboard .tickers-list{
   display: flex;
   flex-wrap: wrap;
   gap: clamp(6px, 0.5vw, 8px);
-}
-
-.ticker-chip {
+}#proj-rl_trading_dashboard .ticker-chip{
   font-size: clamp(10px, 0.75vw + 0.25rem, 12px);
   padding: clamp(6px, 0.5vw, 8px) clamp(10px, 1vw, 14px);
   border-radius: var(--radius-sm);
@@ -387,9 +312,7 @@ select:focus-visible {
   letter-spacing: 0.05em;
   position: relative;
   overflow: hidden;
-}
-
-.ticker-chip::before {
+}#proj-rl_trading_dashboard .ticker-chip::before{
   content: "";
   position: absolute;
   top: 0;
@@ -398,35 +321,25 @@ select:focus-visible {
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(0, 230, 118, 0.2), transparent);
   transition: left 0.5s ease;
-}
-
-.ticker-chip:hover::before {
+}#proj-rl_trading_dashboard .ticker-chip:hover::before{
   left: 100%;
-}
-
-.ticker-chip:hover {
+}#proj-rl_trading_dashboard .ticker-chip:hover{
   background: rgba(0, 230, 118, 0.15);
   color: #00FFC4;
   border-color: rgba(0, 230, 118, 0.5);
   box-shadow: 0 0 12px rgba(0, 230, 118, 0.3);
   transform: translateY(-2px);
-}
-
-.ticker-chip.active {
+}#proj-rl_trading_dashboard .ticker-chip.active{
   background: linear-gradient(135deg, #00E676 0%, #00B8FF 100%);
   color: #0B0E14;
   border-color: #00E676;
   box-shadow: 0 0 16px rgba(0, 230, 118, 0.4), 0 2px 8px rgba(0, 230, 118, 0.2);
   font-weight: 700;
-}
-
-.ticker-chip.active:hover {
+}#proj-rl_trading_dashboard .ticker-chip.active:hover{
   background: linear-gradient(135deg, #00FFC4 0%, #00D4FF 100%);
   box-shadow: 0 0 20px rgba(0, 230, 118, 0.5), 0 4px 12px rgba(0, 230, 118, 0.3);
   transform: translateY(-2px) scale(1.02);
-}
-
-.agent-settings {
+}#proj-rl_trading_dashboard .agent-settings{
   background: var(--bg-elevated);
   border-radius: var(--radius-sm);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -435,9 +348,7 @@ select:focus-visible {
   flex-direction: column;
   gap: clamp(6px, 0.5vw, 8px);
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.agent-setting-row {
+}#proj-rl_trading_dashboard .agent-setting-row{
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -447,38 +358,26 @@ select:focus-visible {
   padding: clamp(6px, 0.5vw, 8px) 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   transition: all var(--transition);
-}
-
-.agent-setting-row:last-child {
+}#proj-rl_trading_dashboard .agent-setting-row:last-child{
   border-bottom: none;
-}
-
-.agent-setting-row:hover {
+}#proj-rl_trading_dashboard .agent-setting-row:hover{
   color: #FFFFFF;
   padding-left: 3px;
-}
-
-.agent-setting-row span:first-child {
+}#proj-rl_trading_dashboard .agent-setting-row span:first-child{
   font-weight: 500;
   text-transform: uppercase;
   font-size: clamp(9px, 0.7vw + 0.2rem, 11px);
   letter-spacing: 0.06em;
-}
-
-.agent-setting-row span:last-child {
+}#proj-rl_trading_dashboard .agent-setting-row span:last-child{
   font-family: var(--font-mono);
   font-weight: 600;
   color: #FFFFFF;
   font-size: clamp(11px, 0.9vw + 0.25rem, 13px);
-}
-
-.sidebar-footer {
+}#proj-rl_trading_dashboard .sidebar-footer{
   margin-top: auto;
   padding-top: var(--spacing-sm);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.info-badge {
+}#proj-rl_trading_dashboard .info-badge{
   display: flex;
   gap: clamp(8px, 0.7vw, 10px);
   padding: clamp(10px, 0.9vw, 14px);
@@ -489,9 +388,7 @@ select:focus-visible {
   transition: all var(--transition);
   position: relative;
   overflow: hidden;
-}
-
-.info-badge::before {
+}#proj-rl_trading_dashboard .info-badge::before{
   content: "";
   position: absolute;
   top: 0;
@@ -500,9 +397,7 @@ select:focus-visible {
   height: 2px;
   background: linear-gradient(90deg, transparent, #00E676, transparent);
   opacity: 0.6;
-}
-
-.info-badge:hover {
+}#proj-rl_trading_dashboard .info-badge:hover{
   border-color: rgba(0, 230, 118, 0.4);
   box-shadow: 0 4px 12px rgba(0, 230, 118, 0.2);
   transform: translateY(-1px);
@@ -511,9 +406,7 @@ select:focus-visible {
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   line-height: 1.5;
-}
-
-.info-icon {
+}#proj-rl_trading_dashboard .info-icon{
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -523,16 +416,12 @@ select:focus-visible {
   width: clamp(16px, 1.1vw, 18px);
   height: clamp(16px, 1.1vw, 18px);
   filter: drop-shadow(0 0 4px rgba(0, 230, 118, 0.4));
-}
-
-.info-badge span:last-child {
+}#proj-rl_trading_dashboard .info-badge span:last-child{
   font-size: clamp(10px, 0.75vw + 0.2rem, 12px);
   color: #9CA3AF;
   line-height: 1.5;
   font-weight: 400;
-}
-
-.dashboard-content {
+}#proj-rl_trading_dashboard .dashboard-content{
   flex: 1;
   padding: clamp(20px, 2vw, 32px);
   overflow-y: auto;
@@ -542,9 +431,7 @@ select:focus-visible {
   max-width: 1800px;
   margin-inline: auto;
   width: 100%;
-}
-
-.loading-overlay {
+}#proj-rl_trading_dashboard .loading-overlay{
   position: fixed;
   inset: 0;
   background: var(--bg-overlay);
@@ -555,32 +442,22 @@ select:focus-visible {
   opacity: 0;
   visibility: hidden;
   transition: opacity 200ms ease, visibility 200ms ease;
-}
-
-.loading-overlay.visible {
+}#proj-rl_trading_dashboard .loading-overlay.visible{
   opacity: 1;
   visibility: visible;
-}
-
-.loading-content {
+}#proj-rl_trading_dashboard .loading-content{
   text-align: center;
   max-width: clamp(320px, 30vw, 400px);
   padding: clamp(20px, 2vw, 32px);
-}
-
-.loading-icon-wrapper {
+}#proj-rl_trading_dashboard .loading-icon-wrapper{
   width: clamp(60px, 5vw, 80px);
   height: clamp(60px, 5vw, 80px);
   margin: 0 auto clamp(16px, 1.5vw, 24px);
-}
-
-.loading-icon {
+}#proj-rl_trading_dashboard .loading-icon{
   width: 100%;
   height: 100%;
   animation: loaderPulse 1.6s ease-in-out infinite;
-}
-
-@keyframes loaderPulse {
+}@keyframes loaderPulse {
   0% {
     transform: scale(0.96);
     filter: drop-shadow(0 0 0 rgba(0, 229, 176, 0.0));
@@ -593,95 +470,65 @@ select:focus-visible {
     transform: scale(0.96);
     filter: drop-shadow(0 0 0 rgba(0, 229, 176, 0.0));
   }
-}
-
-.loading-title {
+}#proj-rl_trading_dashboard .loading-title{
   font-size: clamp(16px, 1.2vw + 0.5rem, 20px);
   font-weight: 600;
   margin-bottom: clamp(8px, 0.7vw, 12px);
-}
-
-.loading-message {
+}#proj-rl_trading_dashboard .loading-message{
   font-size: clamp(12px, 0.9vw + 0.3rem, 14px);
   color: var(--text-secondary);
   margin-bottom: clamp(12px, 1vw, 16px);
   line-height: 1.6;
-}
-
-.loading-progress {
+}#proj-rl_trading_dashboard .loading-progress{
   width: 100%;
   height: 3px;
   background: var(--stroke);
   border-radius: 3px;
   overflow: hidden;
-}
-
-.loading-progress-bar {
+}#proj-rl_trading_dashboard .loading-progress-bar{
   width: 60%;
   height: 100%;
   background: radial-gradient(circle at left, #00E5B0, #00FFC4);
   animation: progressFlow 1.4s ease-in-out infinite;
-}
-
-@keyframes progressFlow {
+}@keyframes progressFlow {
   0%, 100% { width: 30%; }
   50% { width: 75%; }
-}
-
-.view-container {
+}#proj-rl_trading_dashboard .view-container{
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
   max-width: 100%;
   width: 100%;
-}
-
-.metrics-row {
+}#proj-rl_trading_dashboard .metrics-row{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-sm);
   width: 100%;
   margin-bottom: var(--spacing-md);
-}
-
-.metrics-row-secondary {
+}#proj-rl_trading_dashboard .metrics-row-secondary{
   grid-template-columns: repeat(4, 1fr);
   gap: var(--spacing-sm);
   margin-bottom: var(--spacing-md);
-}
-
-.metric-card,
-.card,
-.agent-settings,
-.table-container {
+}#proj-rl_trading_dashboard .metric-card, #proj-rl_trading_dashboard .card, #proj-rl_trading_dashboard .agent-settings, #proj-rl_trading_dashboard .table-container{
   background: var(--bg-card);
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: var(--shadow-md);
   transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
-}
-
-.metric-card:hover,
-.card:hover {
+}#proj-rl_trading_dashboard .metric-card:hover, #proj-rl_trading_dashboard .card:hover{
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
   border-color: rgba(255, 255, 255, 0.08);
-}
-
-.metric-card {
+}#proj-rl_trading_dashboard .metric-card{
   padding: clamp(20px, 1.8vw, 28px) clamp(24px, 2vw, 32px);
-}
-
-.metric-label {
+}#proj-rl_trading_dashboard .metric-label{
   font-size: clamp(12px, 0.9vw + 0.3rem, 14px);
   text-transform: uppercase;
   letter-spacing: 1px;
   color: #9CA3AF;
   margin-bottom: clamp(10px, 0.8vw, 14px);
   font-weight: 500;
-}
-
-.metric-value {
+}#proj-rl_trading_dashboard .metric-value{
   font-family: var(--font-mono);
   font-size: clamp(28px, 2.8vw + 1rem, 42px);
   font-weight: 700;
@@ -689,96 +536,66 @@ select:focus-visible {
   line-height: 1.15;
   word-break: break-word;
   letter-spacing: -0.02em;
-}
-
-.metric-change {
+}#proj-rl_trading_dashboard .metric-change{
   margin-top: clamp(10px, 0.8vw, 14px);
   font-family: var(--font-mono);
   font-size: clamp(14px, 1.2vw + 0.5rem, 18px);
   color: var(--chart-primary-green);
   font-weight: 600;
   letter-spacing: 0.01em;
-}
-
-.metric-change.positive {
+}#proj-rl_trading_dashboard .metric-change.positive{
   color: #00E676;
-}
-
-.metric-change.negative {
+}#proj-rl_trading_dashboard .metric-change.negative{
   color: #FF3D00;
-}
-
-.metric-subtitle {
+}#proj-rl_trading_dashboard .metric-subtitle{
   margin-top: clamp(6px, 0.5vw, 10px);
   font-size: clamp(11px, 0.8vw + 0.2rem, 13px);
   color: #6B7280;
   font-weight: 400;
   font-family: var(--font-sans);
-}
-
-.performance-stats {
+}#proj-rl_trading_dashboard .performance-stats{
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
   padding: var(--spacing-xs) 0;
   height: 100%;
   justify-content: space-between;
-}
-
-.stat-item {
+}#proj-rl_trading_dashboard .stat-item{
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-xs) 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.stat-item:last-child {
+}#proj-rl_trading_dashboard .stat-item:last-child{
   border-bottom: none;
-}
-
-.stat-label {
+}#proj-rl_trading_dashboard .stat-label{
   font-size: clamp(13px, 1vw + 0.3rem, 15px);
   color: #9CA3AF;
   font-weight: 500;
-}
-
-.stat-value {
+}#proj-rl_trading_dashboard .stat-value{
   font-family: var(--font-mono);
   font-size: clamp(16px, 1.3vw + 0.5rem, 20px);
   font-weight: 600;
   color: #FFFFFF;
-}
-
-.stat-value.positive {
+}#proj-rl_trading_dashboard .stat-value.positive{
   color: #00E676;
-}
-
-.stat-value.negative {
+}#proj-rl_trading_dashboard .stat-value.negative{
   color: #FF3D00;
-}
-
-.risk-card .metric-value {
+}#proj-rl_trading_dashboard .risk-card .metric-value{
   font-size: clamp(22px, 2vw + 0.8rem, 28px);
-}
-
-.metric-category {
+}#proj-rl_trading_dashboard .metric-category{
   font-size: clamp(12px, 0.9vw + 0.3rem, 14px);
   color: var(--text-secondary);
   margin-top: clamp(6px, 0.5vw, 8px);
   line-height: 1.5;
-}
-
-.risk-bar {
+}#proj-rl_trading_dashboard .risk-bar{
   width: 100%;
   height: 4px;
   background: rgba(31, 41, 55, 0.9);
   border-radius: 999px;
   margin-top: clamp(8px, 0.7vw, 12px);
   overflow: hidden;
-}
-
-.risk-bar-fill {
+}#proj-rl_trading_dashboard .risk-bar-fill{
   height: 100%;
   width: 0%;
   background: linear-gradient(
@@ -788,110 +605,69 @@ select:focus-visible {
     #00E676
   );
   transition: width 350ms ease;
-}
-
-/* Main body grid: 2fr (Equity Curve) | 1fr (Donut + Table stacked) */
-.main-body-grid {
+}/* Main body grid: 2fr (Equity Curve) | 1fr (Donut + Table stacked) */#proj-rl_trading_dashboard .main-body-grid{
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: var(--spacing-md);
   width: 100%;
   align-items: stretch;
-}
-
-/* Left Column (2fr): Equity Curve and Drawdown stacked */
-.main-chart-column {
+}/* Left Column (2fr): Equity Curve and Drawdown stacked */#proj-rl_trading_dashboard .main-chart-column{
   display: grid;
   grid-template-rows: 1.2fr 1fr;
   gap: var(--spacing-sm);
   height: 100%;
-}
-
-.main-chart-column .chart-container {
+}#proj-rl_trading_dashboard .main-chart-column .chart-container{
   width: 100%;
   min-height: 0;
-}
-
-.main-chart-column .chart-container:first-of-type {
+}#proj-rl_trading_dashboard .main-chart-column .chart-container:first-of-type{
   min-height: clamp(400px, 40vh, 550px);
-}
-
-.main-chart-column .chart-container:last-of-type {
+}#proj-rl_trading_dashboard .main-chart-column .chart-container:last-of-type{
   min-height: clamp(300px, 30vh, 400px);
-}
-
-/* Right Column (1fr): Donut Chart and Performance Stats stacked */
-.sidebar-column {
+}/* Right Column (1fr): Donut Chart and Performance Stats stacked */#proj-rl_trading_dashboard .sidebar-column{
   display: grid;
   grid-template-rows: 1.2fr 1fr;
   gap: var(--spacing-sm);
   height: 100%;
-}
-
-.sidebar-column .chart-container {
+}#proj-rl_trading_dashboard .sidebar-column .chart-container{
   width: 100%;
   min-height: 0;
-}
-
-.sidebar-column .chart-container:first-of-type {
+}#proj-rl_trading_dashboard .sidebar-column .chart-container:first-of-type{
   min-height: clamp(350px, 35vh, 450px);
-}
-
-.sidebar-column .chart-container:last-of-type {
+}#proj-rl_trading_dashboard .sidebar-column .chart-container:last-of-type{
   min-height: clamp(200px, 20vh, 280px);
   display: flex;
   flex-direction: column;
-}
-
-/* Charts row - base definition for allocation view */
-.charts-row {
+}/* Charts row - base definition for allocation view */#proj-rl_trading_dashboard .charts-row{
   display: grid;
   gap: var(--spacing-sm);
   width: 100%;
-}
-
-/* Allocation view: First row - Prices and Returns side by side (equal width) */
-#allocationView > .charts-row:first-of-type {
+}/* Allocation view: First row - Prices and Returns side by side (equal width) */#proj-rl_trading_dashboard #allocationView > .charts-row:first-of-type{
   grid-template-columns: 1fr 1fr;
   min-height: clamp(400px, 35vh, 500px);
   margin-bottom: var(--spacing-sm);
-}
-
-/* Allocation view: Second row - Table full width */
-#allocationView > .charts-row:last-of-type {
+}/* Allocation view: Second row - Table full width */#proj-rl_trading_dashboard #allocationView > .charts-row:last-of-type{
   grid-template-columns: 1fr;
-}
-
-/* Ensure allocation view charts fill their containers properly */
-#allocationView .chart-container {
+}/* Ensure allocation view charts fill their containers properly */#proj-rl_trading_dashboard #allocationView .chart-container{
   height: 100%;
   min-height: clamp(400px, 35vh, 500px);
   max-height: clamp(500px, 45vh, 650px);
   overflow: hidden;
-}
-
-#allocationView .card {
+}#proj-rl_trading_dashboard #allocationView .card{
   height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.chart-container {
+}#proj-rl_trading_dashboard .chart-container{
   min-height: clamp(320px, 28vh, 450px);
   width: 100%;
   display: flex;
   flex-direction: column;
-}
-
-.chart-container > .card {
+}#proj-rl_trading_dashboard .chart-container > .card{
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   min-height: 0;
-}
-
-.chart-container > .card > div[id$="Chart"] {
+}#proj-rl_trading_dashboard .chart-container > .card > div[id$="Chart"]{
   width: 100% !important;
   max-width: 100%;
   height: 100% !important;
@@ -899,15 +675,11 @@ select:focus-visible {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-}
-
-#tickerReturnsChart {
+}#proj-rl_trading_dashboard #tickerReturnsChart{
   min-height: 100% !important;
   height: 100% !important;
   max-height: 100% !important;
-}
-
-.card {
+}#proj-rl_trading_dashboard .card{
   padding: var(--spacing-md);
   height: 100%;
   display: flex;
@@ -915,38 +687,24 @@ select:focus-visible {
   background: var(--bg-card);
   border: 1px solid rgba(255, 255, 255, 0.05);
   min-height: 0;
-}
-
-.card-title {
+}#proj-rl_trading_dashboard .card-title{
   font-size: clamp(12px, 1vw + 0.3rem, 14px);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: #9CA3AF;
   margin-bottom: var(--spacing-xs);
-}
-
-#equityCurveChart,
-#allocationPieChart,
-#drawdownChart,
-#pricesChart,
-#tickerReturnsChart {
+}#proj-rl_trading_dashboard #equityCurveChart, #proj-rl_trading_dashboard #allocationPieChart, #proj-rl_trading_dashboard #drawdownChart, #proj-rl_trading_dashboard #pricesChart, #proj-rl_trading_dashboard #tickerReturnsChart{
   flex: 1;
   min-height: clamp(280px, 25vh, 400px);
   width: 100%;
   max-width: 100%;
   display: block;
-}
-
-/* Allocation view specific chart heights */
-#allocationView #pricesChart,
-#allocationView #tickerReturnsChart {
+}/* Allocation view specific chart heights */#proj-rl_trading_dashboard #allocationView #pricesChart, #proj-rl_trading_dashboard #allocationView #tickerReturnsChart{
   min-height: clamp(350px, 32vh, 450px);
   max-height: clamp(500px, 45vh, 650px);
   height: 100%;
-}
-
-.story-card {
+}#proj-rl_trading_dashboard .story-card{
   font-size: clamp(14px, 1.1vw + 0.5rem, 16px);
   color: #9CA3AF;
   line-height: 1.75;
@@ -954,231 +712,126 @@ select:focus-visible {
   background: var(--bg-elevated);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-md);
-}
-
-.table-container {
+}#proj-rl_trading_dashboard .table-container{
   margin-top: 0;
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.05);
   background: var(--bg-elevated);
   overflow-x: auto;
   width: 100%;
-}
-
-.data-table {
+}#proj-rl_trading_dashboard .data-table{
   width: 100%;
   border-collapse: collapse;
   min-width: 200px;
-}
-
-.data-table th,
-.data-table td {
+}#proj-rl_trading_dashboard .data-table th, #proj-rl_trading_dashboard .data-table td{
   padding: clamp(12px, 1vw, 16px) clamp(16px, 1.3vw, 24px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   text-align: left;
-}
-
-.data-table th {
+}#proj-rl_trading_dashboard .data-table th{
   font-size: clamp(10px, 0.8vw + 0.3rem, 12px);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: #9CA3AF;
   font-weight: 600;
   background: transparent;
-}
-
-.data-table td {
+}#proj-rl_trading_dashboard .data-table td{
   font-size: clamp(13px, 1vw + 0.3rem, 15px);
   color: #FFFFFF;
   font-weight: 500;
   font-family: var(--font-mono);
-}
-
-.data-table tbody tr:hover {
+}#proj-rl_trading_dashboard .data-table tbody tr:hover{
   background: rgba(255, 255, 255, 0.02);
-}
-
-.data-table tbody tr:last-child td {
+}#proj-rl_trading_dashboard .data-table tbody tr:last-child td{
   border-bottom: none;
-}
-
-.dashboard-footer {
+}#proj-rl_trading_dashboard .dashboard-footer{
   padding: clamp(16px, 1.5vw, 24px) clamp(24px, 2.5vw, 40px);
   border-top: 1px solid var(--stroke);
   background: var(--bg-panel-alt);
   flex-shrink: 0;
-}
-
-.footer-content {
+}#proj-rl_trading_dashboard .footer-content{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(clamp(200px, 18vw, 280px), 1fr));
   gap: clamp(20px, 2vw, 32px);
   max-width: 100%;
-}
-
-.footer-section h4 {
+}#proj-rl_trading_dashboard .footer-section h4{
   font-size: clamp(11px, 0.9vw + 0.3rem, 13px);
   font-weight: 600;
   margin-bottom: clamp(8px, 0.7vw, 12px);
   color: var(--text-primary);
-}
-
-.footer-section p {
+}#proj-rl_trading_dashboard .footer-section p{
   font-size: clamp(11px, 0.9vw + 0.3rem, 13px);
   color: var(--text-secondary);
   line-height: 1.65;
-}
-
-/* Responsive breakpoints */
-@media (max-width: 1400px) {
-  .dashboard-content {
+}/* Responsive breakpoints */@media (max-width: 1400px) {#proj-rl_trading_dashboard .dashboard-content{
     max-width: 100%;
     padding: clamp(20px, 2vw, 32px);
-  }
-}
-
-@media (max-width: 1200px) {
-  .metrics-row {
+  }}@media (max-width: 1200px) {#proj-rl_trading_dashboard .metrics-row{
     grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 20vw, 300px), 1fr));
-  }
-  
-  .main-body-grid {
+  }#proj-rl_trading_dashboard .main-body-grid{
     grid-template-columns: 1fr;
     gap: var(--spacing-sm);
-  }
-  
-  .main-chart-column,
-  .sidebar-column {
+  }#proj-rl_trading_dashboard .main-chart-column, #proj-rl_trading_dashboard .sidebar-column{
     width: 100%;
-  }
-  
-  .main-chart-column .chart-container {
+  }#proj-rl_trading_dashboard .main-chart-column .chart-container{
     min-height: clamp(400px, 40vh, 550px);
-  }
-  
-  #allocationView > .charts-row:first-of-type {
+  }#proj-rl_trading_dashboard #allocationView > .charts-row:first-of-type{
     grid-template-columns: 1fr;
     min-height: auto;
-  }
-  
-  #allocationView .chart-container {
+  }#proj-rl_trading_dashboard #allocationView .chart-container{
     min-height: clamp(320px, 30vh, 400px);
-  }
-  
-  #allocationView #pricesChart,
-  #allocationView #tickerReturnsChart {
+  }#proj-rl_trading_dashboard #allocationView #pricesChart, #proj-rl_trading_dashboard #allocationView #tickerReturnsChart{
     min-height: clamp(300px, 28vh, 380px);
-  }
-}
-
-@media (max-width: 1024px) {
-  .dashboard-sidebar {
+  }}@media (max-width: 1024px) {#proj-rl_trading_dashboard .dashboard-sidebar{
     width: clamp(240px, 22vw, 280px);
-  }
-  
-  .charts-row {
+  }#proj-rl_trading_dashboard .charts-row{
     grid-template-columns: 1fr !important;
-  }
-}
-
-@media (max-width: 900px) {
-  .dashboard-main {
+  }}@media (max-width: 900px) {#proj-rl_trading_dashboard .dashboard-main{
     flex-direction: column;
-  }
-
-  .dashboard-sidebar {
+  }#proj-rl_trading_dashboard .dashboard-sidebar{
     width: 100%;
     max-height: clamp(300px, 40vh, 400px);
     border-right: none;
     border-bottom: 1px solid var(--stroke);
     padding: var(--spacing-sm);
     gap: var(--spacing-sm);
-  }
-
-  .metrics-row,
-  .metrics-row-secondary {
+  }#proj-rl_trading_dashboard .metrics-row, #proj-rl_trading_dashboard .metrics-row-secondary{
     grid-template-columns: 1fr;
-  }
-
-  .charts-row {
+  }#proj-rl_trading_dashboard .charts-row{
     grid-template-columns: 1fr;
-  }
-  
-  .header-content {
+  }#proj-rl_trading_dashboard .header-content{
     flex-direction: column;
     align-items: flex-start;
     gap: clamp(12px, 1.5vw, 16px);
-  }
-  
-  .header-meta {
+  }#proj-rl_trading_dashboard .header-meta{
     width: 100%;
     justify-content: space-between;
-  }
-}
-
-@media (max-width: 600px) {
-  .dashboard-content {
+  }}@media (max-width: 600px) {#proj-rl_trading_dashboard .dashboard-content{
     padding: clamp(16px, 1.5vw, 24px);
-  }
-  
-  .chart-container {
+  }#proj-rl_trading_dashboard .chart-container{
     min-height: clamp(280px, 35vh, 380px);
-  }
-  
-  #equityCurveChart,
-  #allocationPieChart,
-  #drawdownChart,
-  #pricesChart,
-  #tickerReturnsChart {
+  }#proj-rl_trading_dashboard #equityCurveChart, #proj-rl_trading_dashboard #allocationPieChart, #proj-rl_trading_dashboard #drawdownChart, #proj-rl_trading_dashboard #pricesChart, #proj-rl_trading_dashboard #tickerReturnsChart{
     min-height: clamp(240px, 30vh, 320px);
-  }
-}
-
-/* Ultrawide display optimizations - Content stays within max-width */
-@media (min-width: 1920px) {
-  .dashboard-content {
+  }}/* Ultrawide display optimizations - Content stays within max-width */@media (min-width: 1920px) {#proj-rl_trading_dashboard .dashboard-content{
     max-width: 1800px;
     margin-inline: auto;
     padding-left: clamp(32px, 3vw, 48px);
     padding-right: clamp(32px, 3vw, 48px);
-  }
-}
-
-/* Very large displays (4K, ultrawide) - Still constrained to 1800px */
-@media (min-width: 2560px) {
-  .dashboard-content {
+  }}/* Very large displays (4K, ultrawide) - Still constrained to 1800px */@media (min-width: 2560px) {#proj-rl_trading_dashboard .dashboard-content{
     max-width: 1800px;
     margin-inline: auto;
     padding-left: clamp(48px, 4vw, 64px);
     padding-right: clamp(48px, 4vw, 64px);
-  }
-}
-
-/* Smooth scrolling */
-.dashboard-content,
-.dashboard-sidebar {
+  }}/* Smooth scrolling */#proj-rl_trading_dashboard .dashboard-content, #proj-rl_trading_dashboard .dashboard-sidebar{
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
-}
-
-.dashboard-content::-webkit-scrollbar,
-.dashboard-sidebar::-webkit-scrollbar {
+}#proj-rl_trading_dashboard .dashboard-content::-webkit-scrollbar, #proj-rl_trading_dashboard .dashboard-sidebar::-webkit-scrollbar{
   width: 8px;
   height: 8px;
-}
-
-.dashboard-content::-webkit-scrollbar-track,
-.dashboard-sidebar::-webkit-scrollbar-track {
+}#proj-rl_trading_dashboard .dashboard-content::-webkit-scrollbar-track, #proj-rl_trading_dashboard .dashboard-sidebar::-webkit-scrollbar-track{
   background: transparent;
-}
-
-.dashboard-content::-webkit-scrollbar-thumb,
-.dashboard-sidebar::-webkit-scrollbar-thumb {
+}#proj-rl_trading_dashboard .dashboard-content::-webkit-scrollbar-thumb, #proj-rl_trading_dashboard .dashboard-sidebar::-webkit-scrollbar-thumb{
   background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
-}
-
-.dashboard-content::-webkit-scrollbar-thumb:hover,
-.dashboard-sidebar::-webkit-scrollbar-thumb:hover {
+}#proj-rl_trading_dashboard .dashboard-content::-webkit-scrollbar-thumb:hover, #proj-rl_trading_dashboard .dashboard-sidebar::-webkit-scrollbar-thumb:hover{
   background: rgba(255, 255, 255, 0.15);
 }

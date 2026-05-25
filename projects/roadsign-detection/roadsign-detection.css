@@ -1,4 +1,4 @@
-:root {
+:root{
   color-scheme: dark;
   --bg-base: #020203;
   --bg-elevated: #09090b;
@@ -31,20 +31,11 @@
   --spacing-md: clamp(12px, 1.5vw, 20px);
   --spacing-lg: clamp(16px, 2vw, 28px);
   --spacing-xl: clamp(24px, 3vw, 40px);
-}
-
-*,
-*::before,
-*::after {
+}#proj-roadsign-detection *, #proj-roadsign-detection *::before, #proj-roadsign-detection *::after{
   box-sizing: border-box;
-}
-
-.hidden {
+}#proj-roadsign-detection .hidden{
   display: none !important;
-}
-
-html,
-body {
+}#proj-roadsign-detection html, #proj-roadsign-detection body{
   margin: 0;
   padding: 0;
   background: var(--bg-base);
@@ -52,13 +43,9 @@ body {
   font-family: "Space Grotesk", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   min-height: 100%;
   scroll-behavior: smooth;
-}
-
-body.no-scroll {
+}#proj-roadsign-detection body.no-scroll{
   overflow: hidden;
-}
-
-.page-wrapper {
+}#proj-roadsign-detection .page-wrapper{
   position: relative;
   min-height: 100vh;
   padding: 28px clamp(22px, 4vw, 44px) 52px;
@@ -68,17 +55,11 @@ body.no-scroll {
   background: var(--bg-base);
   overflow: hidden;
   width: 100%;
-}
-
-.page-wrapper > .app-header,
-.page-wrapper > .app-main,
-.page-wrapper > .app-footer {
+}#proj-roadsign-detection .page-wrapper > .app-header, #proj-roadsign-detection .page-wrapper > .app-main, #proj-roadsign-detection .page-wrapper > .app-footer{
   max-width: 1800px;
   margin: 0 auto;
   width: 100%;
-}
-
-.page-wrapper::before {
+}#proj-roadsign-detection .page-wrapper::before{
   content: "";
   position: absolute;
   inset: 0;
@@ -86,9 +67,7 @@ body.no-scroll {
   opacity: 0.28;
   pointer-events: none;
   filter: saturate(0.85) contrast(1.05);
-}
-
-.page-wrapper::after {
+}#proj-roadsign-detection .page-wrapper::after{
   content: "";
   position: absolute;
   inset: 0;
@@ -100,9 +79,7 @@ body.no-scroll {
   pointer-events: none;
   mix-blend-mode: screen;
   opacity: 0.55;
-}
-
-.page-pattern {
+}#proj-roadsign-detection .page-pattern{
   position: absolute;
   inset: 0;
   background-image: radial-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 0);
@@ -111,16 +88,10 @@ body.no-scroll {
   pointer-events: none;
   z-index: 1;
   mix-blend-mode: soft-light;
-}
-
-.app-header,
-.app-main,
-.app-footer {
+}#proj-roadsign-detection .app-header, #proj-roadsign-detection .app-main, #proj-roadsign-detection .app-footer{
   position: relative;
   z-index: 2;
-}
-
-.app-header {
+}#proj-roadsign-detection .app-header{
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) auto;
   align-items: center;
@@ -131,15 +102,11 @@ body.no-scroll {
   border-radius: var(--radius-lg);
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(18px);
-}
-
-.brand {
+}#proj-roadsign-detection .brand{
   display: flex;
   align-items: center;
   gap: 18px;
-}
-
-.brand-icon {
+}#proj-roadsign-detection .brand-icon{
   width: 58px;
   height: 58px;
   display: grid;
@@ -148,56 +115,40 @@ body.no-scroll {
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 107, 61, 0.32);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 16px 28px rgba(0, 0, 0, 0.5);
-}
-
-.brand-icon svg {
+}#proj-roadsign-detection .brand-icon svg{
   width: 34px;
   height: 34px;
   fill: none;
-}
-
-.brand-icon .badge {
+}#proj-roadsign-detection .brand-icon .badge{
   fill: rgba(255, 107, 61, 0.26);
   stroke: rgba(255, 107, 61, 0.72);
   stroke-width: 1.6;
-}
-
-.brand-icon .inner {
+}#proj-roadsign-detection .brand-icon .inner{
   fill: rgba(255, 145, 87, 0.54);
   stroke: rgba(255, 255, 255, 0.16);
   stroke-width: 1.2;
-}
-
-.brand-icon .beacon {
+}#proj-roadsign-detection .brand-icon .beacon{
   fill: rgba(92, 243, 193, 0.76);
   stroke: rgba(255, 255, 255, 0.28);
   stroke-width: 1.2;
   filter: drop-shadow(0 0 6px rgba(92, 243, 193, 0.3));
-}
-
-.brand h1 {
+}#proj-roadsign-detection .brand h1{
   margin: 0;
   font-size: clamp(1.24rem, 1.5vw, 1.5rem);
   font-weight: 600;
   letter-spacing: 0.015em;
-}
-
-.brand span {
+}#proj-roadsign-detection .brand span{
   display: block;
   color: var(--text-secondary);
   font-size: 0.82rem;
   margin-top: 4px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-}
-
-.status-badges {
+}#proj-roadsign-detection .status-badges{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-}
-
-.badge {
+}#proj-roadsign-detection .badge{
   background: rgba(8, 8, 10, 0.92);
   border-radius: var(--radius-md);
   border: 1px solid rgba(48, 48, 58, 0.34);
@@ -206,29 +157,21 @@ body.no-scroll {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-
-.badge-label {
+}#proj-roadsign-detection .badge-label{
   color: var(--text-tertiary);
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-}
-
-.badge-value {
+}#proj-roadsign-detection .badge-value{
   font-size: 0.98rem;
   font-weight: 600;
   color: var(--text-primary);
-}
-
-.header-actions {
+}#proj-roadsign-detection .header-actions{
   display: flex;
   align-items: center;
   gap: 16px;
   justify-content: flex-end;
-}
-
-.api-indicator {
+}#proj-roadsign-detection .api-indicator{
   position: relative;
   display: flex;
   align-items: center;
@@ -241,38 +184,26 @@ body.no-scroll {
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.api-indicator .dot {
+}#proj-roadsign-detection .api-indicator .dot{
   width: 10px;
   height: 10px;
   border-radius: 50%;
   background: var(--text-tertiary);
   box-shadow: 0 0 0 0 rgba(82, 255, 168, 0.4);
   transition: var(--transition);
-}
-
-.api-indicator[data-status="checking"] .dot {
+}#proj-roadsign-detection .api-indicator[data-status="checking"] .dot{
   animation: pulse 2.2s ease infinite;
   background: rgba(255, 199, 95, 0.55);
-}
-
-.api-indicator[data-status="ready"] .dot {
+}#proj-roadsign-detection .api-indicator[data-status="ready"] .dot{
   background: var(--emerald);
   box-shadow: 0 0 0 6px rgba(82, 255, 168, 0.18);
-}
-
-.api-indicator[data-status="degraded"] .dot {
+}#proj-roadsign-detection .api-indicator[data-status="degraded"] .dot{
   background: rgba(255, 199, 95, 0.9);
   box-shadow: 0 0 0 6px rgba(255, 199, 95, 0.18);
-}
-
-.api-indicator[data-status="error"] .dot {
+}#proj-roadsign-detection .api-indicator[data-status="error"] .dot{
   background: var(--danger);
   box-shadow: 0 0 0 6px rgba(255, 111, 111, 0.18);
-}
-
-.docs-link {
+}#proj-roadsign-detection .docs-link{
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -284,30 +215,22 @@ body.no-scroll {
   font-weight: 500;
   text-decoration: none;
   transition: transform var(--transition), box-shadow var(--transition);
-}
-
-.docs-link svg {
+}#proj-roadsign-detection .docs-link svg{
   width: 18px;
   height: 18px;
   stroke: var(--accent);
   stroke-width: 2;
   fill: none;
-}
-
-.docs-link:hover {
+}#proj-roadsign-detection .docs-link:hover{
   transform: translateY(-2px);
   box-shadow: 0 12px 18px rgba(255, 145, 87, 0.14);
-}
-
-.app-main {
+}#proj-roadsign-detection .app-main{
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.3fr) minmax(260px, 0.9fr);
   gap: 28px;
   flex: 1;
   min-height: 0;
-}
-
-.panel {
+}#proj-roadsign-detection .panel{
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -319,21 +242,15 @@ body.no-scroll {
   box-shadow: var(--shadow-soft);
   min-height: 0;
   height: 100%;
-}
-
-.panel > header h2 {
+}#proj-roadsign-detection .panel > header h2{
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
-}
-
-.panel > header p {
+}#proj-roadsign-detection .panel > header p{
   margin: 6px 0 0;
   color: var(--text-secondary);
   font-size: 0.82rem;
-}
-
-.input-tabs {
+}#proj-roadsign-detection .input-tabs{
   display: inline-flex;
   align-self: flex-start;
   padding: 4px;
@@ -342,9 +259,7 @@ body.no-scroll {
   border: 1px solid rgba(38, 38, 50, 0.32);
   backdrop-filter: blur(16px);
   gap: 4px;
-}
-
-.tab {
+}#proj-roadsign-detection .tab{
   padding: 8px 16px;
   border-radius: var(--radius-sm);
   background: transparent;
@@ -354,35 +269,23 @@ body.no-scroll {
   font-weight: 500;
   cursor: pointer;
   transition: background var(--transition), color var(--transition), transform var(--transition);
-}
-
-.tab:hover {
+}#proj-roadsign-detection .tab:hover{
   color: var(--text-primary);
   transform: translateY(-2px);
-}
-
-.tab.active {
+}#proj-roadsign-detection .tab.active{
   background: rgba(255, 107, 61, 0.2);
   color: var(--text-primary);
   box-shadow: 0 12px 20px rgba(255, 107, 61, 0.16);
-}
-
-.tab-panels {
+}#proj-roadsign-detection .tab-panels{
   position: relative;
   flex: 1;
   width: 100%;
-}
-
-.tab-panel {
+}#proj-roadsign-detection .tab-panel{
   display: none;
   animation: fade-in 0.32s ease;
-}
-
-.tab-panel.active {
+}#proj-roadsign-detection .tab-panel.active{
   display: block;
-}
-
-.sample-grid {
+}#proj-roadsign-detection .sample-grid{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 12vw, 180px), 1fr));
   gap: var(--spacing-sm);
@@ -394,22 +297,14 @@ body.no-scroll {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 107, 61, 0.32) transparent;
-}
-
-.sample-grid::-webkit-scrollbar {
+}#proj-roadsign-detection .sample-grid::-webkit-scrollbar{
   width: 6px;
-}
-
-.sample-grid::-webkit-scrollbar-track {
+}#proj-roadsign-detection .sample-grid::-webkit-scrollbar-track{
   background: transparent;
-}
-
-.sample-grid::-webkit-scrollbar-thumb {
+}#proj-roadsign-detection .sample-grid::-webkit-scrollbar-thumb{
   background: rgba(255, 107, 61, 0.32);
   border-radius: 999px;
-}
-
-.sample-card {
+}#proj-roadsign-detection .sample-card{
   position: relative;
   display: flex;
   flex-direction: column;
@@ -420,40 +315,28 @@ body.no-scroll {
   border: 1px solid rgba(44, 44, 54, 0.38);
   cursor: pointer;
   transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
-}
-
-.sample-card img {
+}#proj-roadsign-detection .sample-card img{
   width: 100%;
   aspect-ratio: 3 / 2;
   object-fit: cover;
   border-radius: calc(var(--radius-sm) - 2px);
   border: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.sample-card span {
+}#proj-roadsign-detection .sample-card span{
   font-size: 0.86rem;
   font-weight: 500;
-}
-
-.sample-card p {
+}#proj-roadsign-detection .sample-card p{
   margin: 0;
   color: var(--text-secondary);
   font-size: 0.78rem;
   line-height: 1.32;
-}
-
-.sample-card:hover {
+}#proj-roadsign-detection .sample-card:hover{
   transform: translateY(-4px);
   border-color: rgba(255, 120, 72, 0.38);
   box-shadow: 0 10px 16px rgba(255, 107, 61, 0.12);
-}
-
-.sample-card.active {
+}#proj-roadsign-detection .sample-card.active{
   border-color: rgba(255, 145, 87, 0.5);
   box-shadow: 0 10px 18px rgba(255, 145, 87, 0.14);
-}
-
-.upload-dropzone {
+}#proj-roadsign-detection .upload-dropzone{
   position: relative;
   display: grid;
   place-items: center;
@@ -462,23 +345,17 @@ body.no-scroll {
   border-radius: var(--radius-lg);
   background: rgba(18, 18, 24, 0.82);
   transition: border-color var(--transition), background var(--transition);
-}
-
-.upload-dropzone.dragover {
+}#proj-roadsign-detection .upload-dropzone.dragover{
   border-color: rgba(255, 107, 61, 0.56);
   background: rgba(26, 26, 32, 0.86);
-}
-
-.dropzone-content {
+}#proj-roadsign-detection .dropzone-content{
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 18px;
   text-align: center;
   color: var(--text-secondary);
-}
-
-.dropzone-content svg {
+}#proj-roadsign-detection .dropzone-content svg{
   width: 60px;
   height: 60px;
   fill: none;
@@ -486,14 +363,10 @@ body.no-scroll {
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-
-.dropzone-content p {
+}#proj-roadsign-detection .dropzone-content p{
   margin: 0;
   font-size: 0.84rem;
-}
-
-.dropzone-content button {
+}#proj-roadsign-detection .dropzone-content button{
   padding: 10px 20px;
   border-radius: var(--radius-sm);
   border: none;
@@ -502,35 +375,25 @@ body.no-scroll {
   font-weight: 500;
   cursor: pointer;
   transition: transform var(--transition), box-shadow var(--transition);
-}
-
-.dropzone-content button:hover {
+}#proj-roadsign-detection .dropzone-content button:hover{
   transform: translateY(-2px);
   box-shadow: 0 12px 22px rgba(255, 107, 61, 0.2);
-}
-
-.camera-panel {
+}#proj-roadsign-detection .camera-panel{
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.camera-panel video {
+}#proj-roadsign-detection .camera-panel video{
   width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: var(--radius-md);
   background: #000;
   border: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
-
-.camera-actions {
+}#proj-roadsign-detection .camera-actions{
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-}
-
-.camera-actions button {
+}#proj-roadsign-detection .camera-actions button{
   flex: 1;
   min-width: 140px;
   padding: 10px 18px;
@@ -541,19 +404,13 @@ body.no-scroll {
   font-weight: 500;
   cursor: pointer;
   transition: background var(--transition), transform var(--transition);
-}
-
-.camera-actions button:disabled {
+}#proj-roadsign-detection .camera-actions button:disabled{
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.camera-actions button:not(:disabled):hover {
+}#proj-roadsign-detection .camera-actions button:not(:disabled):hover{
   background: rgba(255, 107, 61, 0.18);
   transform: translateY(-2px);
-}
-
-.result-view {
+}#proj-roadsign-detection .result-view{
   position: relative;
   flex: 1;
   background: rgba(10, 10, 12, 0.82);
@@ -566,9 +423,7 @@ body.no-scroll {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-}
-
-.result-placeholder {
+}#proj-roadsign-detection .result-placeholder{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -581,21 +436,15 @@ body.no-scroll {
   height: 100%;
   flex: 1;
   min-height: 0;
-}
-
-.result-placeholder svg {
+}#proj-roadsign-detection .result-placeholder svg{
   width: 120px;
   height: 120px;
   stroke: rgba(255, 255, 255, 0.24);
   stroke-width: 2;
   fill: none;
-}
-
-.result-placeholder .stroke {
+}#proj-roadsign-detection .result-placeholder .stroke{
   stroke: var(--accent-strong);
-}
-
-.result-figure {
+}#proj-roadsign-detection .result-figure{
   width: 100%;
   height: 100%;
   display: flex;
@@ -608,14 +457,9 @@ body.no-scroll {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-.result-figure.hidden {
+}#proj-roadsign-detection .result-figure.hidden{
   display: none;
-}
-
-/* Image Area - Middle Section (flex-1, min-height-0) */
-.result-media {
+}/* Image Area - Middle Section (flex-1, min-height-0) */#proj-roadsign-detection .result-media{
   position: relative;
   width: 100%;
   flex: 1;
@@ -631,10 +475,7 @@ body.no-scroll {
   padding: clamp(12px, 1.5vw, 20px);
   box-sizing: border-box;
   margin: 0;
-}
-
-/* Image Container - Centered with flexbox, using object-fit: contain */
-.result-media img {
+}/* Image Container - Centered with flexbox, using object-fit: contain */#proj-roadsign-detection .result-media img{
   display: block;
   max-width: calc(100% - 2px);
   max-height: calc(100% - 2px);
@@ -644,10 +485,7 @@ body.no-scroll {
   background: rgba(6, 6, 8, 0.92);
   position: relative;
   z-index: 1;
-}
-
-/* Canvas Overlay - Positioned absolutely, centered to match image position */
-.result-media canvas {
+}/* Canvas Overlay - Positioned absolutely, centered to match image position */#proj-roadsign-detection .result-media canvas{
   position: absolute;
   top: 50%;
   left: 50%;
@@ -656,10 +494,7 @@ body.no-scroll {
   z-index: 2;
   max-width: 100%;
   max-height: 100%;
-}
-
-/* Footer Section - Fixed at bottom */
-.result-figure figcaption {
+}/* Footer Section - Fixed at bottom */#proj-roadsign-detection .result-figure figcaption{
   display: flex;
   flex-direction: column;
   gap: clamp(10px, 1.2vw, 16px);
@@ -672,9 +507,7 @@ body.no-scroll {
   overflow: visible;
   min-height: fit-content;
   margin: 0;
-}
-
-.summary {
+}#proj-roadsign-detection .summary{
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: clamp(10px, 1.2vw, 14px);
@@ -683,23 +516,17 @@ body.no-scroll {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-.summary-label {
+}#proj-roadsign-detection .summary-label{
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-tertiary);
-}
-
-.summary-value {
+}#proj-roadsign-detection .summary-value{
   margin-top: 6px;
   font-size: 0.88rem;
   color: var(--text-primary);
   font-weight: 500;
-}
-
-.detections {
+}#proj-roadsign-detection .detections{
   list-style: none;
   padding: 0;
   margin: 0;
@@ -710,9 +537,7 @@ body.no-scroll {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-}
-
-.detections li {
+}#proj-roadsign-detection .detections li{
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -726,17 +551,13 @@ body.no-scroll {
   min-width: 0;
   gap: 12px;
   margin: 0;
-}
-
-.detections li span {
+}#proj-roadsign-detection .detections li span{
   font-size: clamp(0.8rem, 1vw, 0.9rem);
   overflow: visible;
   white-space: nowrap;
   min-width: 0;
   flex-shrink: 0;
-}
-
-.detections .label {
+}#proj-roadsign-detection .detections .label{
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -744,24 +565,18 @@ body.no-scroll {
   font-weight: 500;
   color: var(--text-primary); 
   letter-spacing: 0.02em;
-}
-
-.detections .confidence {
+}#proj-roadsign-detection .detections .confidence{
   flex-shrink: 0;
   white-space: nowrap;
   color: var(--text-secondary);
-}
-
-.insight-list {
+}#proj-roadsign-detection .insight-list{
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.insight-list li {
+}#proj-roadsign-detection .insight-list li{
   display: flex;
   gap: 14px;
   padding: 14px 16px;
@@ -769,9 +584,7 @@ body.no-scroll {
   background: rgba(12, 12, 14, 0.86);
   border: 1px solid rgba(70, 70, 82, 0.32);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-.insight-list .icon {
+}#proj-roadsign-detection .insight-list .icon{
   width: 44px;
   height: 44px;
   display: grid;
@@ -779,34 +592,24 @@ body.no-scroll {
   border-radius: var(--radius-md);
   background: rgba(255, 107, 61, 0.16);
   border: 1px solid rgba(255, 107, 61, 0.26);
-}
-
-.insight-list svg {
+}#proj-roadsign-detection .insight-list svg{
   width: 22px;
   height: 22px;
   fill: none;
   stroke: rgba(255, 145, 87, 0.9);
   stroke-width: 1.8;
-}
-
-.insight-list .accent {
+}#proj-roadsign-detection .insight-list .accent{
   fill: rgba(255, 145, 87, 0.4);
   stroke: none;
-}
-
-.insight-list h3 {
+}#proj-roadsign-detection .insight-list h3{
   margin: 0 0 4px;
   font-size: 0.9rem;
-}
-
-.insight-list p {
+}#proj-roadsign-detection .insight-list p{
   margin: 0;
   color: var(--text-secondary);
   font-size: 0.82rem;
   line-height: 1.4;
-}
-
-.app-footer {
+}#proj-roadsign-detection .app-footer{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -820,22 +623,16 @@ body.no-scroll {
   font-size: 0.82rem;
   box-shadow: var(--shadow-soft);
   margin-top: auto;
-}
-
-.footer-links {
+}#proj-roadsign-detection .footer-links{
   display: flex;
   gap: 18px;
   flex-wrap: wrap;
-}
-
-.footer-links a {
+}#proj-roadsign-detection .footer-links a{
   color: var(--text-primary);
   text-decoration: none;
   font-weight: 500;
   position: relative;
-}
-
-.footer-links a::after {
+}#proj-roadsign-detection .footer-links a::after{
   content: "";
   position: absolute;
   left: 0;
@@ -847,14 +644,10 @@ body.no-scroll {
   opacity: 0;
   transition: opacity var(--transition), transform var(--transition);
   transform: translateY(4px);
-}
-
-.footer-links a:hover::after {
+}#proj-roadsign-detection .footer-links a:hover::after{
   opacity: 1;
   transform: translateY(0);
-}
-
-.preloader {
+}#proj-roadsign-detection .preloader{
   position: fixed;
   inset: 0;
   background: radial-gradient(circle at top, #040405, #010101 68%);
@@ -862,15 +655,11 @@ body.no-scroll {
   place-items: center;
   z-index: 999;
   transition: opacity 0.32s ease, visibility 0.32s ease;
-}
-
-.preloader.hidden {
+}#proj-roadsign-detection .preloader.hidden{
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
-}
-
-.preloader-inner {
+}#proj-roadsign-detection .preloader-inner{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -880,9 +669,7 @@ body.no-scroll {
   border-radius: var(--radius-lg);
   border: 1px solid rgba(255, 107, 61, 0.26);
   box-shadow: 0 32px 60px rgba(0, 0, 0, 0.7);
-}
-
-.preloader-logo {
+}#proj-roadsign-detection .preloader-logo{
   width: 92px;
   height: 92px;
   display: grid;
@@ -891,39 +678,27 @@ body.no-scroll {
   background: radial-gradient(circle, rgba(255, 107, 61, 0.18) 0%, rgba(10, 10, 14, 0.94) 70%);
   border: 1px solid rgba(255, 107, 61, 0.3);
   animation: pulse 2.4s ease infinite;
-}
-
-.preloader-inner p {
+}#proj-roadsign-detection .preloader-inner p{
   color: var(--text-secondary);
   font-size: 0.84rem;
   letter-spacing: 0.05em;
-}
-
-.preloader-logo svg {
+}#proj-roadsign-detection .preloader-logo svg{
   width: 56px;
   height: 56px;
-}
-
-.preloader-logo .ring {
+}#proj-roadsign-detection .preloader-logo .ring{
   fill: none;
   stroke: rgba(255, 145, 87, 0.32);
   stroke-width: 3;
-}
-
-.preloader-logo .triangle {
+}#proj-roadsign-detection .preloader-logo .triangle{
   fill: rgba(255, 107, 61, 0.2);
   stroke: var(--accent-strong);
   stroke-width: 2;
   transform-origin: 32px 32px;
   animation: orbit 1.8s linear infinite;
-}
-
-.preloader-logo .dot {
+}#proj-roadsign-detection .preloader-logo .dot{
   fill: rgba(92, 243, 193, 0.9);
   animation: glow 1.6s ease-in-out infinite;
-}
-
-@keyframes fade-in {
+}@keyframes fade-in {
   from {
     opacity: 0;
     transform: translateY(12px);
@@ -932,9 +707,7 @@ body.no-scroll {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-@keyframes pulse {
+}@keyframes pulse {
   0%,
   100% {
     box-shadow: 0 0 0 0 rgba(255, 107, 61, 0.2);
@@ -942,18 +715,14 @@ body.no-scroll {
   50% {
     box-shadow: 0 0 0 18px rgba(255, 107, 61, 0);
   }
-}
-
-@keyframes orbit {
+}@keyframes orbit {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
   }
-}
-
-@keyframes glow {
+}@keyframes glow {
   0%,
   100% {
     transform: scale(1);
@@ -963,114 +732,57 @@ body.no-scroll {
     transform: scale(0.86);
     filter: drop-shadow(0 0 12px rgba(255, 145, 87, 0.35));
   }
-}
-
-@media (max-width: 1200px) {
-  .app-header {
+}@media (max-width: 1200px) {#proj-roadsign-detection .app-header{
     grid-template-columns: 1fr;
     gap: 20px;
-  }
-
-  .status-badges {
+  }#proj-roadsign-detection .status-badges{
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
-
-  .header-actions {
+  }#proj-roadsign-detection .header-actions{
     justify-content: flex-start;
-  }
-
-  .app-main {
+  }#proj-roadsign-detection .app-main{
     grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 900px) {
-  .app-main {
+  }}@media (max-width: 900px) {#proj-roadsign-detection .app-main{
     grid-template-columns: 1fr;
-  }
-
-  .panel {
+  }#proj-roadsign-detection .panel{
     padding: 22px;
-  }
-
-  .app-footer {
+  }#proj-roadsign-detection .app-footer{
     flex-direction: column;
     align-items: flex-start;
-  }
-}
-
-@media (max-width: 640px) {
-  .page-wrapper {
+  }}@media (max-width: 640px) {#proj-roadsign-detection .page-wrapper{
     padding: 22px 16px 36px;
-  }
-
-  .input-tabs {
+  }#proj-roadsign-detection .input-tabs{
     width: 100%;
-  }
-
-  .tab {
+  }#proj-roadsign-detection .tab{
     flex: 1;
-  }
-
-  .sample-grid {
+  }#proj-roadsign-detection .sample-grid{
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-
-  .dropzone-content button,
-  .camera-actions button {
+  }#proj-roadsign-detection .dropzone-content button, #proj-roadsign-detection .camera-actions button{
     width: 100%;
-  }
-
-  .summary {
+  }#proj-roadsign-detection .summary{
     grid-template-columns: 1fr;
-  }
-}
-
-/* ============================================================================
+  }}/* ============================================================================
    Global Native UI Overrides
-   ============================================================================ */
-
-/* Scrollbars - Webkit */
-::-webkit-scrollbar {
+   ============================================================================ *//* Scrollbars - Webkit */#proj-roadsign-detection ::-webkit-scrollbar{
   width: 8px;
   height: 8px;
-}
-
-::-webkit-scrollbar-track {
+}#proj-roadsign-detection ::-webkit-scrollbar-track{
   background: var(--bg-base);
-}
-
-::-webkit-scrollbar-thumb {
+}#proj-roadsign-detection ::-webkit-scrollbar-thumb{
   background: rgba(255, 107, 61, 0.4);
   border-radius: 4px;
   transition: background 0.2s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
+}#proj-roadsign-detection ::-webkit-scrollbar-thumb:hover{
   background: rgba(255, 107, 61, 0.6);
-}
-
-/* Scrollbars - Firefox */
-* {
+}/* Scrollbars - Firefox */#proj-roadsign-detection *{
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 107, 61, 0.4) var(--bg-base);
-}
-
-/* Text Selection */
-::selection {
+}/* Text Selection */#proj-roadsign-detection ::selection{
   background: rgba(255, 107, 61, 0.3);
   color: var(--text-primary);
-}
-
-::-moz-selection {
+}#proj-roadsign-detection ::-moz-selection{
   background: rgba(255, 107, 61, 0.3);
   color: var(--text-primary);
-}
-
-/* Inputs & Dropdowns */
-input,
-textarea,
-select {
+}/* Inputs & Dropdowns */#proj-roadsign-detection input, #proj-roadsign-detection textarea, #proj-roadsign-detection select{
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1080,32 +792,19 @@ select {
   color: var(--text-primary);
   padding: 8px 12px;
   font: inherit;
-}
-
-select {
+}#proj-roadsign-detection select{
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ff6b3d' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   padding-right: 32px;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
+}#proj-roadsign-detection input:focus, #proj-roadsign-detection textarea:focus, #proj-roadsign-detection select:focus{
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-color: var(--accent);
-}
-
-input::placeholder,
-textarea::placeholder {
+}#proj-roadsign-detection input::placeholder, #proj-roadsign-detection textarea::placeholder{
   color: var(--text-tertiary);
-}
-
-/* Focus Ring */
-*:focus-visible {
+}/* Focus Ring */#proj-roadsign-detection *:focus-visible{
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: var(--radius-md);
 }
-

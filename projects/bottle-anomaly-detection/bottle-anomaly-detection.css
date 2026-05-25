@@ -1,4 +1,4 @@
-:root {
+:root{
   color-scheme: dark;
   --bg-page: #050505;
   --bg-panel: #0a0a0a;
@@ -72,21 +72,14 @@
   /* Dropzone + Inspect + gaps + faixa de métricas sob o output */
   --gg-workspace-chrome: clamp(8.25rem, 14.5vh, 11.5rem);
   --gg-main-max-height: calc(var(--gg-preview-cap) + var(--gg-workspace-chrome));
-}
-
-* {
+}#proj-bottle-anomaly-detection *{
   box-sizing: border-box;
-}
-
-/* Raiz com scroll explícito — evita alguns motores a comportarem-se como “app fullscreen” */
-html {
+}/* Raiz com scroll explícito — evita alguns motores a comportarem-se como “app fullscreen” */#proj-bottle-anomaly-detection html{
   height: auto;
   min-height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-}
-
-body {
+}#proj-bottle-anomaly-detection body{
   position: relative;
   z-index: 0;
   margin: 0;
@@ -115,19 +108,11 @@ body {
     100% 100%,
     100% 100%;
   color: var(--text-primary);
-}
-
-/* Scroll do documento mantido no browser */
-html {
+}/* Scroll do documento mantido no browser */#proj-bottle-anomaly-detection html{
   overflow-y: auto;
-}
-
-body {
+}#proj-bottle-anomaly-detection body{
   overflow-y: auto;
-}
-
-/* Film-grain noise overlay */
-body::after {
+}/* Film-grain noise overlay */#proj-bottle-anomaly-detection body::after{
   content: "";
   position: fixed;
   inset: 0;
@@ -138,10 +123,7 @@ body::after {
   pointer-events: none;
   z-index: 0;
   mix-blend-mode: overlay;
-}
-
-/* Horizontal hazard tape at very top of page (thick industrial strip) */
-body::before {
+}/* Horizontal hazard tape at very top of page (thick industrial strip) */#proj-bottle-anomaly-detection body::before{
   content: "";
   position: fixed;
   top: 0;
@@ -152,27 +134,17 @@ body::before {
   opacity: 0.55;
   pointer-events: none;
   z-index: 9999;
-}
-
-button,
-input {
+}#proj-bottle-anomaly-detection button, #proj-bottle-anomaly-detection input{
   font: inherit;
   color: inherit;
-}
-
-button {
+}#proj-bottle-anomaly-detection button{
   border: none;
   background: none;
   cursor: pointer;
-}
-
-button:focus-visible,
-input:focus-visible {
+}#proj-bottle-anomaly-detection button:focus-visible, #proj-bottle-anomaly-detection input:focus-visible{
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-}
-
-.glassguard {
+}#proj-bottle-anomaly-detection .glassguard{
   position: relative;
   z-index: 1;
   width: min(1800px, 92vw);
@@ -186,17 +158,9 @@ input:focus-visible {
   max-height: none;
   overflow-x: hidden;
   overflow-y: visible;
-}
-
-.glassguard > * + * {
+}#proj-bottle-anomaly-detection .glassguard > * + *{
   margin-top: clamp(20px, 2.5vw, 32px);
-}
-
-/* Empilha main + dataset; altura = conteúdo (sem teto à viewport — scroll é no body) */
-/* Layout sequencial simples: header -> main -> dataset -> footer */
-
-/* Hazard tape left edge — wider and more visible */
-.glassguard::before {
+}/* Empilha main + dataset; altura = conteúdo (sem teto à viewport — scroll é no body) *//* Layout sequencial simples: header -> main -> dataset -> footer *//* Hazard tape left edge — wider and more visible */#proj-bottle-anomaly-detection .glassguard::before{
   content: "";
   position: absolute;
   left: 0;
@@ -207,9 +171,7 @@ input:focus-visible {
   background: var(--hazard-tape-v);
   opacity: 0.6;
   pointer-events: none;
-}
-
-.gg-header {
+}#proj-bottle-anomaly-detection .gg-header{
   position: relative;
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -233,10 +195,7 @@ input:focus-visible {
   backdrop-filter: blur(12px);
   flex-shrink: 0;
   overflow: hidden;
-}
-
-/* Corner rivets — bigger and more visible */
-.gg-header::before {
+}/* Corner rivets — bigger and more visible */#proj-bottle-anomaly-detection .gg-header::before{
   content: "";
   position: absolute;
   inset: 0;
@@ -249,10 +208,7 @@ input:focus-visible {
     radial-gradient(circle at calc(100% - 16px) 18px, #4a5160 0 2.5px, #22272e 2.5px 4px, transparent 4px),
     radial-gradient(circle at 16px calc(100% - 18px), #4a5160 0 2.5px, #22272e 2.5px 4px, transparent 4px),
     radial-gradient(circle at calc(100% - 16px) calc(100% - 18px), #4a5160 0 2.5px, #22272e 2.5px 4px, transparent 4px);
-}
-
-/* Hazard tape bottom strip — thick and bold */
-.gg-header::after {
+}/* Hazard tape bottom strip — thick and bold */#proj-bottle-anomaly-detection .gg-header::after{
   content: "";
   position: absolute;
   left: 0;
@@ -262,16 +218,11 @@ input:focus-visible {
   background: var(--hazard-tape-h);
   opacity: 0.55;
   pointer-events: none;
-}
-
-.gg-brand {
+}#proj-bottle-anomaly-detection .gg-brand{
   display: flex;
   align-items: center;
   gap: 14px;
-}
-
-/* Carimbo tipo painel de fábrica */
-.gg-brand::after {
+}/* Carimbo tipo painel de fábrica */#proj-bottle-anomaly-detection .gg-brand::after{
   content: "QC / A-1";
   font-family: var(--font-mono);
   font-size: 0.5rem;
@@ -284,9 +235,7 @@ input:focus-visible {
   margin-left: 4px;
   align-self: center;
   opacity: 0.9;
-}
-
-.brand-icon {
+}#proj-bottle-anomaly-detection .brand-icon{
   width: 44px;
   height: 44px;
   border-radius: var(--radius-sm);
@@ -304,35 +253,23 @@ input:focus-visible {
     0 6px 16px rgba(0,0,0,0.4);
   display: grid;
   place-items: center;
-}
-
-.brand-icon svg path {
+}#proj-bottle-anomaly-detection .brand-icon svg path{
   fill: rgba(255, 255, 255, 0.78);
-}
-
-.brand-copy {
+}#proj-bottle-anomaly-detection .brand-copy{
   display: grid;
   gap: 2px;
-}
-
-.brand-copy strong {
+}#proj-bottle-anomaly-detection .brand-copy strong{
   text-transform: uppercase;
   letter-spacing: 0.16em;
   font-size: clamp(0.88rem, 1.1vw, 1.1rem);
-}
-
-.brand-copy span {
+}#proj-bottle-anomaly-detection .brand-copy span{
   font-size: clamp(0.64rem, 0.9vw, 0.82rem);
   letter-spacing: 0.1em;
   color: var(--text-tertiary);
-}
-
-.gg-meta {
+}#proj-bottle-anomaly-detection .gg-meta{
   display: flex;
   gap: 16px;
-}
-
-.gg-meta .meta-item {
+}#proj-bottle-anomaly-detection .gg-meta .meta-item{
   padding: 8px 14px;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 35%),
@@ -343,31 +280,23 @@ input:focus-visible {
   display: grid;
   gap: 4px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 2px 6px rgba(0,0,0,0.4);
-}
-
-.meta-item span {
+}#proj-bottle-anomaly-detection .meta-item span{
   font-size: 0.6rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-tertiary);
-}
-
-.meta-item strong {
+}#proj-bottle-anomaly-detection .meta-item strong{
   font-family: var(--font-mono);
   font-size: 0.82rem;
   font-weight: 500;
   letter-spacing: 0.04em;
   color: rgba(240, 242, 245, 0.95);
-}
-
-.gg-actions {
+}#proj-bottle-anomaly-detection .gg-actions{
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 14px;
-}
-
-.ghost-btn {
+}#proj-bottle-anomaly-detection .ghost-btn{
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -389,15 +318,11 @@ input:focus-visible {
   text-transform: uppercase;
   text-decoration: none;
   transition: background var(--transition), border-color var(--transition), transform var(--transition), box-shadow var(--transition);
-}
-
-.ghost-btn svg {
+}#proj-bottle-anomaly-detection .ghost-btn svg{
   width: 16px;
   height: 16px;
   fill: currentColor;
-}
-
-.ghost-btn:hover {
+}#proj-bottle-anomaly-detection .ghost-btn:hover{
   background:
     linear-gradient(180deg, rgba(255,36,66,0.15) 0%, rgba(255,36,66,0.05) 100%),
     rgba(18, 20, 24, 0.9);
@@ -407,14 +332,10 @@ input:focus-visible {
     0 2px 0 rgba(0,0,0,0.5),
     0 6px 18px rgba(255,36,66,0.15);
   transform: translateY(-1px);
-}
-
-.ghost-btn:focus-visible {
+}#proj-bottle-anomaly-detection .ghost-btn:focus-visible{
   outline: 2px solid rgba(255, 36, 66, 0.65);
   outline-offset: 3px;
-}
-
-.gg-status {
+}#proj-bottle-anomaly-detection .gg-status{
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -433,39 +354,28 @@ input:focus-visible {
   font-size: 0.58rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-}
-
-.gg-status:has(.status-chip.live) {
+}#proj-bottle-anomaly-detection .gg-status:has(.status-chip.live){
   border-color: rgba(255, 36, 66, 0.4);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
     0 0 0 1px rgba(255, 36, 66, 0.15),
     0 0 12px rgba(255, 36, 66, 0.1);
-}
-
-.status-chip .dot {
+}#proj-bottle-anomaly-detection .status-chip .dot{
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--text-tertiary);
   transition: background var(--transition), box-shadow var(--transition);
-}
-
-.status-chip.live .dot {
+}#proj-bottle-anomaly-detection .status-chip.live .dot{
   background: var(--accent);
   box-shadow: 0 0 8px rgba(255, 36, 66, 0.5);
-}
-
-.status-chip.error .dot {
+}#proj-bottle-anomaly-detection .status-chip.error .dot{
   background: #ff5f7d;
   box-shadow: 0 0 10px rgba(255, 95, 125, 0.45);
-}
-
-/*
+}/*
  * Grelha com altura natural: sem teto fixo à viewport (antes height/max-height + overflow:hidden
  * criavam “dashboard” com scroll interno na paleta e tudo espremido). Scroll = browser.
- */
-.gg-main {
+ */#proj-bottle-anomaly-detection .gg-main{
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   grid-template-rows: minmax(0, 1fr);
@@ -477,9 +387,7 @@ input:focus-visible {
   align-items: start;
   align-content: start;
   overflow: hidden;
-}
-
-.panel {
+}#proj-bottle-anomaly-detection .panel{
   position: relative;
   background:
     var(--metal-sheen),
@@ -499,10 +407,7 @@ input:focus-visible {
   flex-direction: column;
   gap: clamp(12px, 1.5vw, 18px);
   min-height: auto;
-}
-
-/* Panel ::before — rivet cluster in top-left */
-.panel::before {
+}/* Panel ::before — rivet cluster in top-left */#proj-bottle-anomaly-detection .panel::before{
   content: "";
   position: absolute;
   top: 10px;
@@ -516,10 +421,7 @@ input:focus-visible {
     radial-gradient(circle at 0px 14px, #505b68 0 2.5px, #1d2228 2.5px 4px, transparent 4px);
   opacity: 0.7;
   z-index: 0;
-}
-
-/* Corner bracket — bottom-right engineering marking */
-.panel::after {
+}/* Corner bracket — bottom-right engineering marking */#proj-bottle-anomaly-detection .panel::after{
   content: "";
   position: absolute;
   right: 10px;
@@ -531,24 +433,15 @@ input:focus-visible {
   border-radius: 0 0 var(--radius-sm) 0;
   opacity: 1;
   pointer-events: none;
-}
-
-.panel.overview.production-dataset-panel::after {
+}#proj-bottle-anomaly-detection .panel.overview.production-dataset-panel::after{
   display: none;
-}
-
-.panel.palette {
+}#proj-bottle-anomaly-detection .panel.palette{
   min-height: 0;
   height: 100%;
-}
-
-.panel.workspace {
+}#proj-bottle-anomaly-detection .panel.workspace{
   min-height: 0;
   height: 100%;
-}
-
-/* Amostras com scroll interno */
-.palette-scroll {
+}/* Amostras com scroll interno */#proj-bottle-anomaly-detection .palette-scroll{
   flex: 1 1 auto;
   min-height: 0;
   overflow-x: hidden;
@@ -565,30 +458,20 @@ input:focus-visible {
     inset 0 2px 8px rgba(0,0,0,0.5),
     inset 0 0 0 1px rgba(0,0,0,0.4);
   scrollbar-gutter: stable;
-}
-
-.palette-scroll:focus-within {
+}#proj-bottle-anomaly-detection .palette-scroll:focus-within{
   border-color: rgba(255, 36, 66, 0.4);
   box-shadow:
     inset 0 2px 8px rgba(0,0,0,0.5),
     inset 0 0 0 1px rgba(255,36,66,0.15);
-}
-
-.palette-scroll::-webkit-scrollbar {
+}#proj-bottle-anomaly-detection .palette-scroll::-webkit-scrollbar{
   width: 6px;
-}
-
-.palette-scroll::-webkit-scrollbar-track {
+}#proj-bottle-anomaly-detection .palette-scroll::-webkit-scrollbar-track{
   background: rgba(0,0,0,0.3);
-}
-
-.palette-scroll::-webkit-scrollbar-thumb {
+}#proj-bottle-anomaly-detection .palette-scroll::-webkit-scrollbar-thumb{
   background: rgba(255, 36, 66, 0.4);
   border-radius: 2px;
   border: 1px solid rgba(0,0,0,0.3);
-}
-
-.panel header h2 {
+}#proj-bottle-anomaly-detection .panel header h2{
   margin: 0;
   font-family: var(--font-mono);
   font-size: clamp(0.66rem, 0.95vw, 0.82rem);
@@ -596,22 +479,16 @@ input:focus-visible {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(230, 232, 236, 0.92);
-}
-
-.panel header p {
+}#proj-bottle-anomaly-detection .panel header p{
   margin: 4px 0 0;
   font-size: clamp(0.62rem, 0.9vw, 0.78rem);
   color: var(--text-tertiary);
-}
-
-.palette .swatch-grid {
+}#proj-bottle-anomaly-detection .palette .swatch-grid{
   display: grid;
   gap: clamp(6px, 0.85vw, 10px);
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-content: start;
-}
-
-.sample-card {
+}#proj-bottle-anomaly-detection .sample-card{
   background:
     linear-gradient(180deg, rgba(255,255,255,0.035) 0%, transparent 40%),
     rgba(8, 9, 11, 0.95);
@@ -628,9 +505,7 @@ input:focus-visible {
   gap: 4px;
   min-width: 0;
   transition: transform var(--transition), border var(--transition), box-shadow var(--transition);
-}
-
-.sample-card img {
+}#proj-bottle-anomaly-detection .sample-card img{
   display: block;
   width: 100%;
   aspect-ratio: 1;
@@ -640,51 +515,38 @@ input:focus-visible {
   border-radius: var(--radius-sm);
   background: rgba(4, 5, 6, 0.96);
   border: 1px solid rgba(255,255,255,0.04);
-}
-
-.sample-card span {
+}#proj-bottle-anomaly-detection .sample-card span{
   font-size: 0.58rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-secondary);
   text-align: center;
   line-height: 1.25;
-}
-
-.sample-card:hover {
+}#proj-bottle-anomaly-detection .sample-card:hover{
   transform: translateY(-2px);
   border-color: rgba(255,255,255,0.14);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.07),
     0 10px 24px rgba(0,0,0,0.6);
-}
-
-.sample-card.active {
+}#proj-bottle-anomaly-detection .sample-card.active{
   border: 1px solid rgba(255, 36, 66, 0.65);
   box-shadow:
     inset 0 1px 0 rgba(255,80,80,0.1),
     0 0 0 1px rgba(255,36,66,0.2),
     0 8px 24px rgba(255,36,66,0.25);
-}
-
-
-.workspace {
+}#proj-bottle-anomaly-detection .workspace{
   --preview-slate-max: var(--gg-preview-cap);
   gap: clamp(16px, 2vw, 24px);
   display: flex;
   flex-direction: column;
   height: 100%;
   min-height: 0;
-}
-
-.workspace-top {
+}#proj-bottle-anomaly-detection .workspace-top{
   display: flex;
   gap: 16px;
   align-items: center;
   flex-shrink: 0;
-}
-
-.dropzone {
+}#proj-bottle-anomaly-detection .dropzone{
   position: relative;
   flex: 1;
   display: grid;
@@ -702,9 +564,7 @@ input:focus-visible {
     inset 0 2px 6px rgba(0,0,0,0.4),
     inset 0 1px 0 rgba(255,255,255,0.03);
   transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
-}
-
-.dropzone.dragover {
+}#proj-bottle-anomaly-detection .dropzone.dragover{
   border-color: rgba(255, 36, 66, 0.6);
   border-style: solid;
   box-shadow:
@@ -712,30 +572,20 @@ input:focus-visible {
     inset 0 2px 6px rgba(0,0,0,0.4),
     inset 0 0 0 1px rgba(255,36,66,0.12);
   transform: translateY(-2px);
-}
-
-.dropzone input[type="file"] {
+}#proj-bottle-anomaly-detection .dropzone input[type="file"]{
   position: absolute;
   inset: 0;
   opacity: 0;
   cursor: pointer;
-}
-
-.dropzone-icon svg {
+}#proj-bottle-anomaly-detection .dropzone-icon svg{
   fill: var(--accent);
-}
-
-.dropzone-copy p {
+}#proj-bottle-anomaly-detection .dropzone-copy p{
   margin: 0;
   font-size: 0.68rem;
   color: var(--text-secondary);
-}
-
-.dropzone-copy p span {
+}#proj-bottle-anomaly-detection .dropzone-copy p span{
   color: var(--accent);
-}
-
-.primary-btn {
+}#proj-bottle-anomaly-detection .primary-btn{
   padding: 9px 20px;
   border-radius: 4px;
   background:
@@ -752,33 +602,25 @@ input:focus-visible {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   transition: transform var(--transition), box-shadow var(--transition);
-}
-
-.primary-btn:disabled {
+}#proj-bottle-anomaly-detection .primary-btn:disabled{
   opacity: 0.4;
   cursor: not-allowed;
   box-shadow: none;
-}
-
-.primary-btn:not(:disabled):hover {
+}#proj-bottle-anomaly-detection .primary-btn:not(:disabled):hover{
   transform: translateY(-1px);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     0 2px 0 rgba(100, 0, 18, 0.8),
     0 8px 28px rgba(255, 36, 66, 0.38),
     0 0 16px rgba(255, 36, 66, 0.15);
-}
-
-.workspace-bottom {
+}#proj-bottle-anomaly-detection .workspace-bottom{
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
   gap: clamp(8px, 1vw, 12px);
   overflow: visible;
-}
-
-.workspace-main {
+}#proj-bottle-anomaly-detection .workspace-main{
   container-type: size;
   display: flex;
   flex-direction: column;
@@ -786,18 +628,13 @@ input:focus-visible {
   flex: 1;
   min-height: 0;
   min-width: 0;
-}
-
-/* Faixa compacta de métricas sob o output */
-.workspace-side {
+}/* Faixa compacta de métricas sob o output */#proj-bottle-anomaly-detection .workspace-side{
   display: flex;
   flex-direction: column;
   align-items: stretch;
   min-width: 0;
   flex: 0 0 auto;
-}
-
-.project-details {
+}#proj-bottle-anomaly-detection .project-details{
   flex: unset;
   min-height: auto;
   margin-top: 0;
@@ -817,76 +654,54 @@ input:focus-visible {
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     0 2px 0 rgba(0,0,0,0.4);
   min-width: 0;
-}
-
-.project-details__intro {
+}#proj-bottle-anomaly-detection .project-details__intro{
   margin: 0;
   font-size: 0.58rem;
   line-height: 1.45;
   color: var(--text-tertiary);
   opacity: 0.92;
-}
-
-.project-details__rows {
+}#proj-bottle-anomaly-detection .project-details__rows{
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-.project-details__rows--footer {
+}#proj-bottle-anomaly-detection .project-details__rows--footer{
   flex-direction: row;
   flex-wrap: wrap;
   gap: clamp(16px, 3vw, 32px);
   align-items: flex-start;
-}
-
-.project-details__rows--footer .project-details__block {
+}#proj-bottle-anomaly-detection .project-details__rows--footer .project-details__block{
   flex: 1 1 min(100%, 14rem);
   min-width: min(100%, 12rem);
-}
-
-.project-details--footer {
+}#proj-bottle-anomaly-detection .project-details--footer{
   width: 100%;
   max-width: 100%;
   padding: clamp(18px, 2.2vw, 26px) clamp(14px, 2vw, 20px);
-}
-
-.project-details--footer .inspection-details__title {
+}#proj-bottle-anomaly-detection .project-details--footer .inspection-details__title{
   padding-top: clamp(4px, 0.55vw, 10px);
-}
-
-.project-details__block {
+}#proj-bottle-anomaly-detection .project-details__block{
   display: flex;
   flex-direction: column;
   gap: 5px;
   min-width: 0;
-}
-
-.project-details__field-label {
+}#proj-bottle-anomaly-detection .project-details__field-label{
   margin: 0;
   font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-tertiary);
-}
-
-.project-details__field-label--sub {
+}#proj-bottle-anomaly-detection .project-details__field-label--sub{
   margin-top: 3px;
   font-size: 0.52rem;
   letter-spacing: 0.1em;
   opacity: 0.95;
-}
-
-.project-details__field-value {
+}#proj-bottle-anomaly-detection .project-details__field-value{
   margin: 0;
   font-size: clamp(0.68rem, 0.9vw, 0.8rem);
   font-weight: 600;
   line-height: 1.35;
   color: var(--accent);
-}
-
-.project-details__link {
+}#proj-bottle-anomaly-detection .project-details__link{
   align-self: flex-start;
   margin: 0;
   font-size: 0.58rem;
@@ -897,21 +712,14 @@ input:focus-visible {
   text-decoration-color: rgba(255, 36, 66, 0.45);
   text-underline-offset: 2px;
   opacity: 0.92;
-}
-
-.project-details__link:hover {
+}#proj-bottle-anomaly-detection .project-details__link:hover{
   opacity: 1;
   text-decoration-color: rgba(255, 36, 66, 0.85);
-}
-
-.project-details__link:focus-visible {
+}#proj-bottle-anomaly-detection .project-details__link:focus-visible{
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: 2px;
-}
-
-/* Quadrado máximo: largura total do workspace até ao teto --gg-preview-cap */
-.workspace-main > .result-shell {
+}/* Quadrado máximo: largura total do workspace até ao teto --gg-preview-cap */#proj-bottle-anomaly-detection .workspace-main > .result-shell{
   align-self: center;
   flex: 0 0 auto;
   width: min(100%, var(--gg-preview-cap));
@@ -919,15 +727,9 @@ input:focus-visible {
   aspect-ratio: 1;
   height: auto;
   box-sizing: border-box;
-}
-
-@supports (width: 1cqw) {
-  .workspace-main > .result-shell {
+}@supports (width: 1cqw) {#proj-bottle-anomaly-detection .workspace-main > .result-shell{
     width: min(100cqw, var(--gg-preview-cap));
-  }
-}
-
-.result-shell {
+  }}#proj-bottle-anomaly-detection .result-shell{
   position: relative;
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -949,10 +751,7 @@ input:focus-visible {
     inset 0 0 0 1px rgba(0,0,0,0.5),
     0 3px 0 rgba(0,0,0,0.7),
     0 12px 32px rgba(0,0,0,0.5);
-}
-
-/* Heavy rivets + corner crosshair in inspection viewport */
-.result-shell::before {
+}/* Heavy rivets + corner crosshair in inspection viewport */#proj-bottle-anomaly-detection .result-shell::before{
   content: "";
   position: absolute;
   inset: 0;
@@ -972,35 +771,24 @@ input:focus-visible {
     radial-gradient(circle at 12px calc(100% - 12px), #5a6370 0 3px, #1e2228 3px 5px, transparent 5px),
     radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), #5a6370 0 3px, #1e2228 3px 5px, transparent 5px);
   opacity: 0.8;
-}
-
-.result-shell > .preview-stage,
-.result-shell > .result-placeholder {
+}#proj-bottle-anomaly-detection .result-shell > .preview-stage, #proj-bottle-anomaly-detection .result-shell > .result-placeholder{
   grid-column: 1;
   grid-row: 1;
   min-width: 0;
   min-height: 0;
   width: 100%;
   height: 100%;
-}
-
-.result-shell.boxed {
+}#proj-bottle-anomaly-detection .result-shell.boxed{
   border-color: rgba(255, 44, 70, 0.16);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 44, 70, 0.12);
-}
-
-.result-shell.ready .preview-stage {
+}#proj-bottle-anomaly-detection .result-shell.ready .preview-stage{
   display: block;
   position: relative;
   z-index: 1;
-}
-
-.preview-stage {
+}#proj-bottle-anomaly-detection .preview-stage{
   position: relative;
   display: none;
-}
-
-.preview-stage img {
+}#proj-bottle-anomaly-detection .preview-stage img{
   display: none;
   position: absolute;
   inset: 0;
@@ -1010,13 +798,9 @@ input:focus-visible {
   min-height: 100%;
   object-fit: cover;
   object-position: center;
-}
-
-.result-shell.ready .preview-stage img {
+}#proj-bottle-anomaly-detection .result-shell.ready .preview-stage img{
   display: block;
-}
-
-.preview-stage canvas {
+}#proj-bottle-anomaly-detection .preview-stage canvas{
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1025,14 +809,9 @@ input:focus-visible {
   display: block;
   opacity: 0;
   transition: opacity 0.25s ease;
-}
-
-.preview-stage canvas[data-empty="false"] {
+}#proj-bottle-anomaly-detection .preview-stage canvas[data-empty="false"]{
   opacity: 1;
-}
-
-/* Veredicto sobre a imagem — estilo etiqueta industrial */
-.preview-verdict {
+}/* Veredicto sobre a imagem — estilo etiqueta industrial */#proj-bottle-anomaly-detection .preview-verdict{
   position: absolute;
   z-index: 2;
   top: 10px;
@@ -1055,9 +834,7 @@ input:focus-visible {
     0 2px 0 rgba(0,0,0,0.6),
     0 6px 18px rgba(0,0,0,0.5);
   pointer-events: none;
-}
-
-.preview-verdict__text {
+}#proj-bottle-anomaly-detection .preview-verdict__text{
   margin: 0;
   font-size: clamp(0.6rem, 1.5vw, 0.72rem);
   font-weight: 600;
@@ -1068,22 +845,14 @@ input:focus-visible {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.preview-verdict.is-anomaly {
+}#proj-bottle-anomaly-detection .preview-verdict.is-anomaly{
   border-color: rgba(255, 36, 66, 0.45);
   background: rgba(18, 6, 10, 0.92);
-}
-
-.preview-verdict.is-anomaly .preview-verdict__text {
+}#proj-bottle-anomaly-detection .preview-verdict.is-anomaly .preview-verdict__text{
   color: #ffb3c0;
-}
-
-.result-shell.ready .result-placeholder {
+}#proj-bottle-anomaly-detection .result-shell.ready .result-placeholder{
   display: none;
-}
-
-.result-placeholder {
+}#proj-bottle-anomaly-detection .result-placeholder{
   position: relative;
   z-index: 1;
   display: grid;
@@ -1092,15 +861,11 @@ input:focus-visible {
   color: var(--text-tertiary);
   font-size: clamp(0.64rem, 0.9vw, 0.82rem);
   padding: clamp(10px, 1.5vh, 20px);
-}
-
-.result-placeholder svg {
+}#proj-bottle-anomaly-detection .result-placeholder svg{
   width: clamp(48px, 6vw, 80px);
   height: clamp(48px, 6vw, 80px);
   fill: var(--accent);
-}
-
-.progress-bar {
+}#proj-bottle-anomaly-detection .progress-bar{
   position: absolute;
   top: 0;
   left: 0;
@@ -1109,36 +874,27 @@ input:focus-visible {
   height: 2px;
   background: rgba(255, 36, 66, 0.18);
   overflow: hidden;
-}
-
-.progress-bar::after {
+}#proj-bottle-anomaly-detection .progress-bar::after{
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg, rgba(255, 36, 66, 0), var(--accent), rgba(255, 36, 66, 0));
   animation: progress 1.05s linear infinite;
-}
-
-@keyframes progress {
+}@keyframes progress {
   0% {
     transform: translateX(-100%);
   }
   100% {
     transform: translateX(100%);
   }
-}
-
-/* Título reutilizado no rodapé (Project details) */
-.inspection-details__title {
+}/* Título reutilizado no rodapé (Project details) */#proj-bottle-anomaly-detection .inspection-details__title{
   margin: 0;
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-tertiary);
-}
-
-.inspection-details {
+}#proj-bottle-anomaly-detection .inspection-details{
   background:
     var(--metal-scratch),
     rgba(8, 9, 11, 0.95);
@@ -1151,17 +907,13 @@ input:focus-visible {
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.04),
     0 2px 0 rgba(0,0,0,0.4);
-}
-
-.inspection-chips {
+}#proj-bottle-anomaly-detection .inspection-chips{
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
   justify-content: center;
   gap: 4px 5px;
-}
-
-.inspection-chip {
+}#proj-bottle-anomaly-detection .inspection-chip{
   flex: 1 1 auto;
   min-width: min(100%, 4.75rem);
   max-width: 100%;
@@ -1177,17 +929,13 @@ input:focus-visible {
   border-bottom: 1px solid rgba(0,0,0,0.4);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.04), 0 1px 0 rgba(0,0,0,0.4);
   text-align: center;
-}
-
-.inspection-chip__label {
+}#proj-bottle-anomaly-detection .inspection-chip__label{
   font-size: 0.48rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-tertiary);
   line-height: 1.1;
-}
-
-.inspection-chip__value {
+}#proj-bottle-anomaly-detection .inspection-chip__value{
   margin: 0;
   font-family: var(--font-mono);
   font-size: clamp(0.52rem, 1.3vw, 0.64rem);
@@ -1198,36 +946,26 @@ input:focus-visible {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.verdict-indicator {
+}#proj-bottle-anomaly-detection .verdict-indicator{
   display: none;
   align-items: center;
   gap: 3px;
   flex-shrink: 0;
   color: var(--accent);
-}
-
-.preview-verdict.is-anomaly .verdict-indicator {
+}#proj-bottle-anomaly-detection .preview-verdict.is-anomaly .verdict-indicator{
   display: inline-flex;
-}
-
-.verdict-indicator__icon {
+}#proj-bottle-anomaly-detection .verdict-indicator__icon{
   display: block;
   flex-shrink: 0;
   opacity: 0.95;
-}
-
-.verdict-indicator__dot {
+}#proj-bottle-anomaly-detection .verdict-indicator__dot{
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 8px rgba(255, 36, 66, 0.65);
   flex-shrink: 0;
-}
-
-.gg-footer {
+}#proj-bottle-anomaly-detection .gg-footer{
   position: relative;
   display: flex;
   flex-direction: column;
@@ -1239,9 +977,7 @@ input:focus-visible {
   /* Sem margin-top:auto: o rodapé fica no fim do conteúdo; o scroll é na página, não “preso” à viewport */
   flex-shrink: 0;
   border-top: none;
-}
-
-.gg-footer::before {
+}#proj-bottle-anomaly-detection .gg-footer::before{
   content: "";
   position: absolute;
   left: 0;
@@ -1252,17 +988,13 @@ input:focus-visible {
   opacity: 0.5;
   pointer-events: none;
   border-radius: 2px;
-}
-
-.gg-footer__meta {
+}#proj-bottle-anomaly-detection .gg-footer__meta{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 10px 16px;
-}
-
-.toast-stack {
+}#proj-bottle-anomaly-detection .toast-stack{
   position: fixed;
   top: 18px;
   right: 18px;
@@ -1270,9 +1002,7 @@ input:focus-visible {
   gap: 8px;
   z-index: 30;
   pointer-events: none;
-}
-
-.toast {
+}#proj-bottle-anomaly-detection .toast{
   padding: 9px 14px;
   border-radius: 3px;
   background:
@@ -1290,123 +1020,72 @@ input:focus-visible {
   transform: translateY(-10px);
   opacity: 0;
   animation: toastIn 180ms ease forwards;
-}
-
-.toast[data-variant="error"] {
+}#proj-bottle-anomaly-detection .toast[data-variant="error"]{
   border-color: rgba(255, 95, 125, 0.42);
   background: rgba(255, 95, 125, 0.26);
-}
-
-.toast[data-variant="success"] {
+}#proj-bottle-anomaly-detection .toast[data-variant="success"]{
   border-color: rgba(255, 36, 66, 0.44);
   background: rgba(255, 36, 66, 0.24);
-}
-
-@keyframes toastIn {
+}@keyframes toastIn {
   to {
     transform: translateY(0);
     opacity: 1;
   }
-}
-
-@media (min-width: 1920px) {
-  .glassguard {
+}@media (min-width: 1920px) {#proj-bottle-anomaly-detection .glassguard{
     width: min(1800px, 92vw);
-  }
-  
-  .gg-main {
+  }#proj-bottle-anomaly-detection .gg-main{
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-  }
-}
-
-@media (min-width: 2560px) {
-  .glassguard {
+  }}@media (min-width: 2560px) {#proj-bottle-anomaly-detection .glassguard{
     width: min(2000px, 90vw);
-  }
-}
-
-@media (max-width: 1200px) {
-  .gg-main {
+  }}@media (max-width: 1200px) {#proj-bottle-anomaly-detection .gg-main{
     grid-template-columns: 1fr;
     grid-template-rows: minmax(0, 1fr) minmax(0, 1.2fr);
     height: min(var(--gg-main-max-height), 88vh);
     max-height: min(var(--gg-main-max-height), 88vh);
-  }
-}
-
-@media (max-width: 860px) {
-  .gg-header {
+  }}@media (max-width: 860px) {#proj-bottle-anomaly-detection .gg-header{
     grid-template-columns: 1fr;
     text-align: center;
     gap: 16px;
-  }
-
-  .gg-brand::after {
+  }#proj-bottle-anomaly-detection .gg-brand::after{
     display: none;
-  }
-
-  .gg-main {
+  }#proj-bottle-anomaly-detection .gg-main{
     grid-template-columns: 1fr;
     grid-template-rows: auto;
     height: auto;
     max-height: none;
     overflow: visible;
-  }
-
-  .workspace-top {
+  }#proj-bottle-anomaly-detection .workspace-top{
     flex-direction: column;
     align-items: stretch;
-  }
-
-  .primary-btn {
+  }#proj-bottle-anomaly-detection .primary-btn{
     width: 100%;
-  }
-
-  .production-line-toolbar .primary-btn {
+  }#proj-bottle-anomaly-detection .production-line-toolbar .primary-btn{
     width: auto;
-  }
-}
-
-@media (max-width: 600px) {
-  .glassguard {
+  }}@media (max-width: 600px) {#proj-bottle-anomaly-detection .glassguard{
     margin: 24px auto;
-  }
-
-  .panel {
+  }#proj-bottle-anomaly-detection .panel{
     padding: 18px;
-  }
-
-  .gg-footer__meta {
+  }#proj-bottle-anomaly-detection .gg-footer__meta{
     flex-direction: column;
     text-align: center;
     justify-content: center;
-  }
-}
-
-@keyframes shimmer {
+  }}@keyframes shimmer {
   0% {
     transform: translateX(-100%);
   }
   100% {
     transform: translateX(100%);
   }
-}
-
-@keyframes rotate {
+}@keyframes rotate {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
   }
-}
-
-.result-shell.loading img,
-.result-shell.loading .result-placeholder {
+}#proj-bottle-anomaly-detection .result-shell.loading img, #proj-bottle-anomaly-detection .result-shell.loading .result-placeholder{
   opacity: 0.22;
-}
-
-.loading-overlay {
+}#proj-bottle-anomaly-detection .loading-overlay{
   position: fixed;
   inset: 0;
   display: grid;
@@ -1418,15 +1097,11 @@ input:focus-visible {
   visibility: hidden;
   pointer-events: none;
   transition: opacity var(--transition), visibility var(--transition);
-}
-
-.loading-overlay.visible {
+}#proj-bottle-anomaly-detection .loading-overlay.visible{
   opacity: 1;
   visibility: visible;
   pointer-events: all;
-}
-
-.loading-card {
+}#proj-bottle-anomaly-detection .loading-card{
   position: relative;
   background:
     var(--metal-sheen),
@@ -1445,9 +1120,7 @@ input:focus-visible {
     0 32px 60px rgba(0, 0, 0, 0.7),
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
     0 3px 0 rgba(0,0,0,0.7);
-}
-
-.loading-icon {
+}#proj-bottle-anomaly-detection .loading-icon{
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -1455,131 +1128,80 @@ input:focus-visible {
   display: grid;
   place-items: center;
   position: relative;
-}
-
-.loading-icon::after {
+}#proj-bottle-anomaly-detection .loading-icon::after{
   content: "";
   position: absolute;
   inset: -6px;
   border-radius: 50%;
   border: 1px solid rgba(255, 36, 66, 0.35);
   animation: rotate 1.6s linear infinite;
-}
-
-.loading-outline {
+}#proj-bottle-anomaly-detection .loading-outline{
   fill: none;
   stroke: rgba(255, 255, 255, 0.85);
   stroke-width: 1.6;
-}
-
-.loading-liquid {
+}#proj-bottle-anomaly-detection .loading-liquid{
   fill: rgba(255, 36, 66, 0.32);
-}
-
-.loading-spark {
+}#proj-bottle-anomaly-detection .loading-spark{
   fill: rgba(255, 36, 66, 0.72);
-}
-
-.loading-copy {
+}#proj-bottle-anomaly-detection .loading-copy{
   display: grid;
   gap: 4px;
-}
-
-.loading-copy strong {
+}#proj-bottle-anomaly-detection .loading-copy strong{
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-}
-
-.loading-copy span {
+}#proj-bottle-anomaly-detection .loading-copy span{
   font-size: 0.68rem;
   color: var(--text-secondary);
-}
-
-.inspection-details.is-loading .inspection-chip {
+}#proj-bottle-anomaly-detection .inspection-details.is-loading .inspection-chip{
   position: relative;
   color: transparent;
-}
-
-.inspection-details.is-loading .inspection-chip > * {
+}#proj-bottle-anomaly-detection .inspection-details.is-loading .inspection-chip > *{
   visibility: hidden;
-}
-
-.inspection-details.is-loading .inspection-chip::after {
+}#proj-bottle-anomaly-detection .inspection-details.is-loading .inspection-chip::after{
   content: "";
   position: absolute;
   inset: 0;
   border-radius: 5px;
   background: linear-gradient(90deg, rgba(12, 12, 12, 0.7), rgba(255, 36, 66, 0.2), rgba(12, 12, 12, 0.7));
   animation: shimmer 1.1s linear infinite;
-}
-
-.preview-verdict.is-loading {
+}#proj-bottle-anomaly-detection .preview-verdict.is-loading{
   position: relative;
   color: transparent;
-}
-
-.preview-verdict.is-loading .preview-verdict__text,
-.preview-verdict.is-loading .verdict-indicator {
+}#proj-bottle-anomaly-detection .preview-verdict.is-loading .preview-verdict__text, #proj-bottle-anomaly-detection .preview-verdict.is-loading .verdict-indicator{
   visibility: hidden;
-}
-
-.preview-verdict.is-loading::after {
+}#proj-bottle-anomaly-detection .preview-verdict.is-loading::after{
   content: "";
   position: absolute;
   inset: 0;
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(12, 12, 12, 0.7), rgba(255, 36, 66, 0.2), rgba(12, 12, 12, 0.7));
   animation: shimmer 1.1s linear infinite;
-}
-
-/* ============================================================================
+}/* ============================================================================
    Global Native UI Overrides
-   ============================================================================ */
-
-/* Scrollbars - Webkit */
-::-webkit-scrollbar {
+   ============================================================================ *//* Scrollbars - Webkit */#proj-bottle-anomaly-detection ::-webkit-scrollbar{
   width: 8px;
   height: 8px;
-}
-
-::-webkit-scrollbar-track {
+}#proj-bottle-anomaly-detection ::-webkit-scrollbar-track{
   background: var(--bg-page);
-}
-
-::-webkit-scrollbar-thumb {
+}#proj-bottle-anomaly-detection ::-webkit-scrollbar-thumb{
   background: rgba(255, 36, 66, 0.4);
   border-radius: 4px;
   transition: background 0.2s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
+}#proj-bottle-anomaly-detection ::-webkit-scrollbar-thumb:hover{
   background: rgba(255, 36, 66, 0.6);
-}
-
-/* Scrollbars - Firefox */
-* {
+}/* Scrollbars - Firefox */#proj-bottle-anomaly-detection *{
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 36, 66, 0.4) var(--bg-page);
-}
-
-/* Text Selection */
-::selection {
+}/* Text Selection */#proj-bottle-anomaly-detection ::selection{
   background: rgba(255, 36, 66, 0.3);
   color: var(--text-primary);
-}
-
-::-moz-selection {
+}#proj-bottle-anomaly-detection ::-moz-selection{
   background: rgba(255, 36, 66, 0.3);
   color: var(--text-primary);
-}
-
-/* Inputs & Dropdowns */
-input,
-textarea,
-select {
+}/* Inputs & Dropdowns */#proj-bottle-anomaly-detection input, #proj-bottle-anomaly-detection textarea, #proj-bottle-anomaly-detection select{
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1589,30 +1211,18 @@ select {
   color: var(--text-primary);
   padding: 8px 12px;
   font: inherit;
-}
-
-select {
+}#proj-bottle-anomaly-detection select{
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ff2442' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   padding-right: 32px;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
+}#proj-bottle-anomaly-detection input:focus, #proj-bottle-anomaly-detection textarea:focus, #proj-bottle-anomaly-detection select:focus{
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-color: var(--accent);
-}
-
-input::placeholder,
-textarea::placeholder {
+}#proj-bottle-anomaly-detection input::placeholder, #proj-bottle-anomaly-detection textarea::placeholder{
   color: var(--text-tertiary);
-}
-
-/* Dataset: altura por conteúdo + mínimos explícitos na zona da tabela (pai já não tem teto flex à viewport) */
-.panel.overview.production-dataset-panel {
+}/* Dataset: altura por conteúdo + mínimos explícitos na zona da tabela (pai já não tem teto flex à viewport) */#proj-bottle-anomaly-detection .panel.overview.production-dataset-panel{
   display: block;
   align-self: stretch;
   min-width: 0;
@@ -1620,9 +1230,7 @@ textarea::placeholder {
   width: 100%;
   overflow-x: hidden;
   overflow-y: visible;
-}
-
-.production-dataset-panel__header {
+}#proj-bottle-anomaly-detection .production-dataset-panel__header{
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
@@ -1634,28 +1242,20 @@ textarea::placeholder {
   margin-bottom: clamp(10px, 1.2vw, 14px);
   border-bottom: 2px solid rgba(255, 180, 0, 0.12);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.4);
-}
-
-.production-dataset-panel__header > div:first-child {
+}#proj-bottle-anomaly-detection .production-dataset-panel__header > div:first-child{
   flex: 1 1 min(100%, 22rem);
   min-width: 0;
-}
-
-.production-dataset-panel__header h2 {
+}#proj-bottle-anomaly-detection .production-dataset-panel__header h2{
   font-family: var(--font-mono);
   font-weight: 500;
   letter-spacing: 0.2em;
-}
-
-.production-dataset-panel__header > div:first-child p {
+}#proj-bottle-anomaly-detection .production-dataset-panel__header > div:first-child p{
   margin: 0.35rem 0 0;
   max-width: 52ch;
   color: var(--text-tertiary);
   font-size: 0.88rem;
   line-height: 1.45;
-}
-
-.production-line-toolbar {
+}#proj-bottle-anomaly-detection .production-line-toolbar{
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
@@ -1663,30 +1263,20 @@ textarea::placeholder {
   gap: 10px;
   flex-shrink: 0;
   margin-inline-start: auto;
-}
-
-.production-line-toolbar .primary-btn {
+}#proj-bottle-anomaly-detection .production-line-toolbar .primary-btn{
   min-width: 6.5rem;
-}
-
-.production-line-toolbar .production-line-stop-btn {
+}#proj-bottle-anomaly-detection .production-line-toolbar .production-line-stop-btn{
   border-radius: var(--radius-md);
   letter-spacing: 0.14em;
-}
-
-.production-line-toolbar .production-line-stop-btn:disabled {
+}#proj-bottle-anomaly-detection .production-line-toolbar .production-line-stop-btn:disabled{
   opacity: 0.4;
   cursor: not-allowed;
   transform: none;
-}
-
-.production-line-toolbar .production-line-stop-btn:disabled:hover {
+}#proj-bottle-anomaly-detection .production-line-toolbar .production-line-stop-btn:disabled:hover{
   background: rgba(12, 12, 12, 0.6);
   border-color: rgba(255, 255, 255, 0.08);
   transform: none;
-}
-
-.production-table-scroll {
+}#proj-bottle-anomaly-detection .production-table-scroll{
   position: relative;
   display: block;
   min-width: 0;
@@ -1706,18 +1296,14 @@ textarea::placeholder {
   box-shadow:
     inset 0 2px 10px rgba(0,0,0,0.5),
     0 2px 0 rgba(0,0,0,0.4);
-}
-
-.production-table {
+}#proj-bottle-anomaly-detection .production-table{
   width: 100%;
   border-collapse: collapse;
   font-family: var(--font-mono);
   font-size: 0.74rem;
   font-weight: 400;
   font-variant-numeric: tabular-nums;
-}
-
-.production-table thead th {
+}#proj-bottle-anomaly-detection .production-table thead th{
   position: static;
   padding: 0.55rem 0.65rem;
   text-align: left;
@@ -1733,60 +1319,36 @@ textarea::placeholder {
     inset 0 1px 0 rgba(255,255,255,0.07),
     0 2px 6px rgba(0,0,0,0.4);
   white-space: nowrap;
-}
-
-.production-table tbody td {
+}#proj-bottle-anomaly-detection .production-table tbody td{
   padding: 0.45rem 0.65rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   color: var(--text-primary);
   vertical-align: middle;
-}
-
-.production-table tbody tr:last-child td {
+}#proj-bottle-anomaly-detection .production-table tbody tr:last-child td{
   border-bottom: none;
-}
-
-.production-table tbody tr:hover td {
+}#proj-bottle-anomaly-detection .production-table tbody tr:hover td{
   background: rgba(255,255,255,0.025);
-}
-
-.production-table tbody tr:nth-child(even) td {
+}#proj-bottle-anomaly-detection .production-table tbody tr:nth-child(even) td{
   background: rgba(255, 255, 255, 0.018);
-}
-
-.production-verdict {
+}#proj-bottle-anomaly-detection .production-verdict{
   font-weight: 600;
   letter-spacing: 0.04em;
-}
-
-.production-verdict--normal {
+}#proj-bottle-anomaly-detection .production-verdict--normal{
   color: #7dffb0;
-}
-
-.production-verdict--anomaly {
+}#proj-bottle-anomaly-detection .production-verdict--anomaly{
   color: #ff8a9a;
-}
-
-.production-verdict--error {
+}#proj-bottle-anomaly-detection .production-verdict--error{
   color: var(--text-tertiary);
-}
-
-.production-table-empty {
+}#proj-bottle-anomaly-detection .production-table-empty{
   display: none;
   margin: 0;
   padding: 1.25rem 1rem;
   text-align: center;
   font-size: 0.85rem;
   color: var(--text-tertiary);
-}
-
-/* Estado vazio: cabeçalho da tabela + mensagem visíveis (tbody vazio) */
-.production-table-scroll:not(.has-rows) .production-table-empty {
+}/* Estado vazio: cabeçalho da tabela + mensagem visíveis (tbody vazio) */#proj-bottle-anomaly-detection .production-table-scroll:not(.has-rows) .production-table-empty{
   display: block;
-}
-
-/* Focus Ring */
-*:focus-visible {
+}/* Focus Ring */#proj-bottle-anomaly-detection *:focus-visible{
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: var(--radius-sm);

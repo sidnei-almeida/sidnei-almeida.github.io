@@ -1,8 +1,6 @@
 /* ================================================================
    PlatePulse — Premium Traffic Intelligence UI
-   ================================================================ */
-
-:root {
+   ================================================================ */:root{
   color-scheme: dark;
 
   /* ── Dark asphalt surfaces ── */
@@ -52,12 +50,7 @@
   --mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
 
   --gap: clamp(16px, 2vw, 24px);
-}
-
-*, *::before, *::after { box-sizing: border-box; }
-html, body { height: 100%; }
-
-body {
+}#proj-license-plate-detection *, #proj-license-plate-detection *::before, #proj-license-plate-detection *::after{ box-sizing: border-box; }#proj-license-plate-detection html, #proj-license-plate-detection body{ height: 100%; }#proj-license-plate-detection body{
   margin: 0;
   font-family: var(--font);
   background-color: var(--bg-0);
@@ -72,18 +65,10 @@ body {
   display: flex;
   flex-direction: column;
   font-size: 15px;
-}
-
-button, input { font: inherit; color: inherit; }
-button { border: none; background: none; cursor: pointer; }
-
-button:focus-visible, input:focus-visible {
+}#proj-license-plate-detection button, #proj-license-plate-detection input{ font: inherit; color: inherit; }#proj-license-plate-detection button{ border: none; background: none; cursor: pointer; }#proj-license-plate-detection button:focus-visible, #proj-license-plate-detection input:focus-visible{
   outline: 2px solid var(--amber);
   outline-offset: 3px;
-}
-
-/* ── Noscript ── */
-.noscript-banner {
+}/* ── Noscript ── */#proj-license-plate-detection .noscript-banner{
   width: 100%;
   padding: 10px 16px;
   text-align: center;
@@ -92,18 +77,12 @@ button:focus-visible, input:focus-visible {
   font-size: 0.875rem;
   font-family: var(--mono);
   letter-spacing: 0.04em;
-}
-
-/* ── Container ── */
-.container {
+}/* ── Container ── */#proj-license-plate-detection .container{
   width: min(1800px, 92vw);
   margin: 0 auto;
-}
-
-/* ================================================================
+}/* ================================================================
    HEADER
-   ================================================================ */
-.app-header {
+   ================================================================ */#proj-license-plate-detection .app-header{
   position: sticky;
   top: 0;
   z-index: 20;
@@ -111,10 +90,7 @@ button:focus-visible, input:focus-visible {
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
   border-bottom: 1px solid var(--border);
-}
-
-/* Amber scan line at bottom of header */
-.app-header::after {
+}/* Amber scan line at bottom of header */#proj-license-plate-detection .app-header::after{
   content: '';
   position: absolute;
   bottom: -1px; left: 0; right: 0;
@@ -128,30 +104,21 @@ button:focus-visible, input:focus-visible {
   );
   animation: headerScan 4s ease-in-out infinite;
   opacity: 0.6;
-}
-
-@keyframes headerScan {
+}@keyframes headerScan {
   0%, 100% { opacity: 0.25; transform: scaleX(0.7); }
   50%       { opacity: 0.7;  transform: scaleX(1); }
-}
-
-.app-header .container {
+}#proj-license-plate-detection .app-header .container{
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 28px;
   padding: 14px 0;
-}
-
-/* ── Brand ── */
-.brand {
+}/* ── Brand ── */#proj-license-plate-detection .brand{
   display: flex;
   align-items: center;
   gap: 14px;
   text-decoration: none;
-}
-
-.brand-icon {
+}#proj-license-plate-detection .brand-icon{
   width: 48px;
   height: 32px;
   border-radius: var(--r-sm);
@@ -163,58 +130,37 @@ button:focus-visible, input:focus-visible {
   overflow: hidden;
   transition: transform var(--t), box-shadow var(--t);
   flex-shrink: 0;
-}
-
-.brand-icon::before {
+}#proj-license-plate-detection .brand-icon::before{
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, var(--amber-soft), transparent);
   opacity: 0;
   transition: opacity var(--t);
-}
-
-.brand:hover .brand-icon {
+}#proj-license-plate-detection .brand:hover .brand-icon{
   transform: scale(1.04);
   box-shadow: 0 0 16px var(--amber-glow), 0 4px 12px rgba(0,0,0,0.4);
-}
-
-.brand:hover .brand-icon::before { opacity: 1; }
-
-.brand-icon svg {
+}#proj-license-plate-detection .brand:hover .brand-icon::before{ opacity: 1; }#proj-license-plate-detection .brand-icon svg{
   width: 34px;
   height: 22px;
   position: relative;
   z-index: 1;
-}
-
-/* New logo SVG parts */
-.lp-outer {
+}/* New logo SVG parts */#proj-license-plate-detection .lp-outer{
   fill: none;
   stroke: var(--amber);
   stroke-width: 1.2;
-}
-
-.lp-band {
+}#proj-license-plate-detection .lp-band{
   fill: rgba(245, 158, 11, 0.15);
   stroke: none;
-}
-
-.lp-band-fill {
+}#proj-license-plate-detection .lp-band-fill{
   fill: rgba(245, 158, 11, 0.2);
-}
-
-.lp-char {
+}#proj-license-plate-detection .lp-char{
   fill: rgba(245, 158, 11, 0.55);
-}
-
-.lp-corner {
+}#proj-license-plate-detection .lp-corner{
   stroke: var(--amber);
   stroke-width: 1.8;
   fill: none;
-}
-
-.brand-copy h1 {
+}#proj-license-plate-detection .brand-copy h1{
   margin: 0;
   font-size: 0.9375rem;
   font-weight: 700;
@@ -224,25 +170,18 @@ button:focus-visible, input:focus-visible {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-.brand-copy p {
+}#proj-license-plate-detection .brand-copy p{
   margin: 2px 0 0;
   font-size: 0.6rem;
   color: var(--text-3);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-family: var(--mono);
-}
-
-/* ── Header metrics ── */
-.header-meta {
+}/* ── Header metrics ── */#proj-license-plate-detection .header-meta{
   display: flex;
   justify-content: center;
   gap: 8px;
-}
-
-.metric {
+}#proj-license-plate-detection .metric{
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -253,37 +192,26 @@ button:focus-visible, input:focus-visible {
   min-width: 108px;
   transition: border-color var(--t), background var(--t);
   cursor: default;
-}
-
-.metric:hover {
+}#proj-license-plate-detection .metric:hover{
   border-color: var(--border-amber);
   background: var(--bg-3);
-}
-
-.metric .label {
+}#proj-license-plate-detection .metric .label{
   font-size: 0.57rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-3);
   font-family: var(--mono);
-}
-
-.metric strong {
+}#proj-license-plate-detection .metric strong{
   font-size: 0.875rem;
   font-weight: 600;
   font-family: var(--mono);
   color: var(--text-1);
   letter-spacing: 0.03em;
-}
-
-/* ── Header actions ── */
-.header-actions {
+}/* ── Header actions ── */#proj-license-plate-detection .header-actions{
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.api-indicator {
+}#proj-license-plate-detection .api-indicator{
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -292,45 +220,30 @@ button:focus-visible, input:focus-visible {
   border: 1px solid var(--border);
   background: var(--bg-2);
   transition: border-color var(--t);
-}
-
-.api-indicator.live  { border-color: rgba(16, 185, 129, 0.3); }
-.api-indicator.error { border-color: rgba(239, 68, 68, 0.3); }
-
-.api-indicator .dot {
+}#proj-license-plate-detection .api-indicator.live{ border-color: rgba(16, 185, 129, 0.3); }#proj-license-plate-detection .api-indicator.error{ border-color: rgba(239, 68, 68, 0.3); }#proj-license-plate-detection .api-indicator .dot{
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--text-3);
   transition: background var(--t), box-shadow var(--t);
   flex-shrink: 0;
-}
-
-.api-indicator.live .dot {
+}#proj-license-plate-detection .api-indicator.live .dot{
   background: var(--green);
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
   animation: livePulse 2s ease-in-out infinite;
-}
-
-.api-indicator.error .dot {
+}#proj-license-plate-detection .api-indicator.error .dot{
   background: var(--red);
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
-}
-
-@keyframes livePulse {
+}@keyframes livePulse {
   0%, 100% { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
   50%       { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.05); }
-}
-
-.api-indicator .text {
+}#proj-license-plate-detection .api-indicator .text{
   font-size: 0.65rem;
   letter-spacing: 0.14em;
   color: var(--text-2);
   font-family: var(--mono);
   text-transform: uppercase;
-}
-
-.link-btn {
+}#proj-license-plate-detection .link-btn{
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -344,44 +257,27 @@ button:focus-visible, input:focus-visible {
   color: var(--text-2);
   font-family: var(--mono);
   transition: background var(--t), border-color var(--t), color var(--t);
-}
-
-.link-btn:hover {
+}#proj-license-plate-detection .link-btn:hover{
   background: var(--amber-soft);
   border-color: var(--border-amber);
   color: var(--amber);
-}
-
-.link-btn svg {
+}#proj-license-plate-detection .link-btn svg{
   width: 14px; height: 14px;
   fill: none; stroke: currentColor; stroke-width: 1.5;
   transition: transform var(--t);
-}
-
-.link-btn:hover svg { transform: translateX(-2px); }
-
-/* ================================================================
+}#proj-license-plate-detection .link-btn:hover svg{ transform: translateX(-2px); }/* ================================================================
    MAIN
-   ================================================================ */
-.app-main {
+   ================================================================ */#proj-license-plate-detection .app-main{
   padding: clamp(28px, 3.5vw, 52px) 0 clamp(40px, 5vw, 72px);
   flex: 1;
-}
-
-.layout {
+}#proj-license-plate-detection .layout{
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
   gap: var(--gap);
   align-items: start;
-}
-
-/* Evita coluna esquerda a encolher a zero em grelha minmax(0, 1fr) */
-.input-panel {
+}/* Evita coluna esquerda a encolher a zero em grelha minmax(0, 1fr) */#proj-license-plate-detection .input-panel{
   min-width: 0;
-}
-
-/* ── Panel ── */
-.panel {
+}/* ── Panel ── */#proj-license-plate-detection .panel{
   background: var(--bg-1);
   border-radius: var(--r-xl);
   border: 1px solid var(--border);
@@ -392,10 +288,7 @@ button:focus-visible, input:focus-visible {
   position: relative;
   overflow: hidden;
   transition: border-color var(--ts);
-}
-
-/* Ambient amber top line on hover */
-.panel::before {
+}/* Ambient amber top line on hover */#proj-license-plate-detection .panel::before{
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -403,21 +296,13 @@ button:focus-visible, input:focus-visible {
   background: linear-gradient(90deg, transparent, var(--amber-ring), transparent);
   opacity: 0;
   transition: opacity var(--ts);
-}
-
-.panel:hover::before { opacity: 1; }
-.panel:hover { border-color: rgba(255,255,255,0.09); }
-
-/* ── Panel head ── */
-.panel-head {
+}#proj-license-plate-detection .panel:hover::before{ opacity: 1; }#proj-license-plate-detection .panel:hover{ border-color: rgba(255,255,255,0.09); }/* ── Panel head ── */#proj-license-plate-detection .panel-head{
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 16px;
   flex-wrap: wrap;
-}
-
-.panel-head h2 {
+}#proj-license-plate-detection .panel-head h2{
   margin: 0;
   font-size: 0.65rem;
   font-weight: 600;
@@ -425,34 +310,25 @@ button:focus-visible, input:focus-visible {
   text-transform: uppercase;
   color: var(--text-3);
   font-family: var(--mono);
-}
-
-.subhead {
+}#proj-license-plate-detection .subhead{
   margin: 4px 0 0;
   color: var(--text-3);
   font-size: 0.78rem;
   line-height: 1.5;
-}
-
-.panel-content {
+}#proj-license-plate-detection .panel-content{
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 14px;
-}
-
-/* ── Input tabs ── */
-.input-tabs {
+}/* ── Input tabs ── */#proj-license-plate-detection .input-tabs{
   display: flex;
   gap: 3px;
   background: var(--bg-0);
   border: 1px solid var(--border);
   border-radius: var(--r-md);
   padding: 3px;
-}
-
-.input-tabs .tab {
+}#proj-license-plate-detection .input-tabs .tab{
   flex: 1;
   padding: 8px 12px;
   border-radius: calc(var(--r-md) - 1px);
@@ -464,38 +340,23 @@ button:focus-visible, input:focus-visible {
   font-family: var(--mono);
   transition: all var(--t);
   position: relative;
-}
-
-.input-tabs .tab:hover {
+}#proj-license-plate-detection .input-tabs .tab:hover{
   color: var(--text-2);
   background: var(--bg-2);
-}
-
-.input-tabs .tab.active {
+}#proj-license-plate-detection .input-tabs .tab.active{
   background: var(--bg-3);
   border-color: var(--border-amber);
   color: var(--amber);
-}
-
-/* ── Tab panels ── */
-.tab-panels {
+}/* ── Tab panels ── */#proj-license-plate-detection .tab-panels{
   flex: 1;
   min-height: 0;
   min-width: 0;
-}
-
-.tab-panel { display: none; opacity: 0; transition: opacity var(--t); }
-.tab-panel.active { opacity: 1; }
-.tab-panel.samples.active {
+}#proj-license-plate-detection .tab-panel{ display: none; opacity: 0; transition: opacity var(--t); }#proj-license-plate-detection .tab-panel.active{ opacity: 1; }#proj-license-plate-detection .tab-panel.samples.active{
   display: flex;
   flex-direction: column;
-}
-.tab-panel.upload.active, .tab-panel.camera.active { display: block; }
-
-/* ── Sample grid ──
+}#proj-license-plate-detection .tab-panel.upload.active, #proj-license-plate-detection .tab-panel.camera.active{ display: block; }/* ── Sample grid ──
    Flex-wrap em vez de grid: evita que linhas implícitas sejam “partilhadas” em altura
-   e achatem as miniaturas. O scroll fica só neste bloco (max-height + overflow-y). */
-.sample-grid {
+   e achatem as miniaturas. O scroll fica só neste bloco (max-height + overflow-y). */#proj-license-plate-detection .sample-grid{
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -511,16 +372,10 @@ button:focus-visible, input:focus-visible {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: rgba(245, 158, 11, 0.25) transparent;
-}
-
-.sample-grid::-webkit-scrollbar { width: 4px; }
-.sample-grid::-webkit-scrollbar-thumb {
+}#proj-license-plate-detection .sample-grid::-webkit-scrollbar{ width: 4px; }#proj-license-plate-detection .sample-grid::-webkit-scrollbar-thumb{
   background: rgba(245, 158, 11, 0.3);
   border-radius: 4px;
-}
-
-/* ── Sample card ── */
-.sample-card {
+}/* ── Sample card ── */#proj-license-plate-detection .sample-card{
   flex: 0 0 auto;
   width: clamp(120px, 13vw, 160px);
   max-width: 100%;
@@ -539,28 +394,18 @@ button:focus-visible, input:focus-visible {
   position: relative;
   overflow: hidden;
   animation: cardReveal 0.4s ease both;
-}
-
-/* Avoid animating opacity on the card — it hides nested images in some browsers. */
-@keyframes cardReveal {
+}/* Avoid animating opacity on the card — it hides nested images in some browsers. */@keyframes cardReveal {
   from { transform: translateY(6px) scale(0.97); }
   to   { transform: translateY(0) scale(1); }
-}
-
-.sample-card:hover {
+}#proj-license-plate-detection .sample-card:hover{
   border-color: var(--border-amber);
   transform: translateY(-3px);
   box-shadow: 0 10px 28px rgba(0,0,0,0.45), 0 0 0 1px var(--border-amber);
-}
-
-.sample-card.active {
+}#proj-license-plate-detection .sample-card.active{
   border-color: var(--amber);
   background: linear-gradient(160deg, rgba(245,158,11,0.07), var(--bg-2));
   box-shadow: 0 0 0 1px rgba(245,158,11,0.35), 0 8px 24px rgba(0,0,0,0.4);
-}
-
-/* Active checkmark */
-.sample-card.active::after {
+}/* Active checkmark */#proj-license-plate-detection .sample-card.active::after{
   content: '';
   position: absolute;
   top: 7px; right: 7px;
@@ -568,10 +413,7 @@ button:focus-visible, input:focus-visible {
   border-radius: 50%;
   background: var(--amber);
   box-shadow: 0 0 8px var(--amber-glow);
-}
-
-/* Proporção 4:3 — largura vem do card (fixa em clamp); altura segue o ratio. */
-.sample-card .thumb {
+}/* Proporção 4:3 — largura vem do card (fixa em clamp); altura segue o ratio. */#proj-license-plate-detection .sample-card .thumb{
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
@@ -581,9 +423,7 @@ button:focus-visible, input:focus-visible {
   overflow: hidden;
   background: var(--bg-0);
   isolation: isolate;
-}
-
-.sample-card .thumb img {
+}#proj-license-plate-detection .sample-card .thumb img{
   position: absolute;
   inset: 0;
   width: 100%;
@@ -592,21 +432,14 @@ button:focus-visible, input:focus-visible {
   display: block;
   z-index: 1;
   transition: transform var(--ts);
-}
-
-.sample-card:hover .thumb img { transform: scale(1.06); }
-
-/* Subtle tint on active — keep below overlays, do not cover pixels fully */
-.sample-card.active .thumb::after {
+}#proj-license-plate-detection .sample-card:hover .thumb img{ transform: scale(1.06); }/* Subtle tint on active — keep below overlays, do not cover pixels fully */#proj-license-plate-detection .sample-card.active .thumb::after{
   content: '';
   position: absolute;
   inset: 0;
   z-index: 2;
   background: linear-gradient(135deg, transparent 55%, rgba(245, 158, 11, 0.06));
   pointer-events: none;
-}
-
-.sample-card .label {
+}#proj-license-plate-detection .sample-card .label{
   font-size: 0.62rem;
   letter-spacing: 0.07em;
   color: var(--text-2);
@@ -615,12 +448,7 @@ button:focus-visible, input:focus-visible {
   overflow: hidden;
   white-space: nowrap;
   padding: 0 2px 2px;
-}
-
-.sample-card.active .label { color: rgba(245,158,11,0.7); }
-
-/* ── Upload dropzone ── */
-.upload-dropzone {
+}#proj-license-plate-detection .sample-card.active .label{ color: rgba(245,158,11,0.7); }/* ── Upload dropzone ── */#proj-license-plate-detection .upload-dropzone{
   position: relative;
   border-radius: var(--r-lg);
   border: 1px dashed rgba(245, 158, 11, 0.18);
@@ -633,63 +461,44 @@ button:focus-visible, input:focus-visible {
   padding: 32px 20px;
   transition: border-color var(--t), background var(--t), transform var(--t);
   cursor: pointer;
-}
-
-.upload-dropzone:hover {
+}#proj-license-plate-detection .upload-dropzone:hover{
   border-color: var(--amber-ring);
   background: rgba(245, 158, 11, 0.03);
   transform: translateY(-1px);
-}
-
-.upload-dropzone.dragover {
+}#proj-license-plate-detection .upload-dropzone.dragover{
   border-color: var(--amber);
   background: var(--amber-soft);
   border-style: solid;
   transform: translateY(-2px);
-}
-
-.upload-dropzone input {
+}#proj-license-plate-detection .upload-dropzone input{
   position: absolute;
   inset: 0;
   opacity: 0;
   cursor: pointer;
-}
-
-.upload-dropzone .icon svg {
+}#proj-license-plate-detection .upload-dropzone .icon svg{
   width: 38px; height: 38px;
   fill: rgba(245, 158, 11, 0.45);
   transition: fill var(--t), transform var(--t);
-}
-
-.upload-dropzone:hover .icon svg {
+}#proj-license-plate-detection .upload-dropzone:hover .icon svg{
   fill: rgba(245, 158, 11, 0.65);
   transform: translateY(-3px);
-}
-
-.upload-dropzone p {
+}#proj-license-plate-detection .upload-dropzone p{
   margin: 0;
   font-size: 0.875rem;
   color: var(--text-2);
-}
-
-.upload-dropzone small {
+}#proj-license-plate-detection .upload-dropzone small{
   color: var(--text-3);
   font-size: 0.72rem;
   font-family: var(--mono);
   letter-spacing: 0.06em;
-}
-
-/* ── Camera ── */
-.camera-stage {
+}/* ── Camera ── */#proj-license-plate-detection .camera-stage{
   border-radius: var(--r-lg);
   background: var(--bg-2);
   border: 1px solid var(--border);
   padding: 14px;
   display: grid;
   gap: 12px;
-}
-
-#cameraFeed {
+}#proj-license-plate-detection #cameraFeed{
   width: 100%;
   aspect-ratio: 16 / 9;
   max-height: 360px;
@@ -698,15 +507,7 @@ button:focus-visible, input:focus-visible {
   object-fit: contain;
   border: 1px solid var(--border);
   display: block;
-}
-
-.camera-actions { display: flex; gap: 10px; }
-.camera-actions button { flex: 1; }
-
-/* ── Shared action buttons ── */
-.url-field button,
-.predict-btn,
-.camera-actions button {
+}#proj-license-plate-detection .camera-actions{ display: flex; gap: 10px; }#proj-license-plate-detection .camera-actions button{ flex: 1; }/* ── Shared action buttons ── */#proj-license-plate-detection .url-field button, #proj-license-plate-detection .predict-btn, #proj-license-plate-detection .camera-actions button{
   padding: 10px 20px;
   border-radius: var(--r-sm);
   background: var(--amber-soft);
@@ -720,60 +521,32 @@ button:focus-visible, input:focus-visible {
               transform var(--t), box-shadow var(--t);
   position: relative;
   overflow: hidden;
-}
-
-/* Shimmer sweep on hover */
-.url-field button::before,
-.predict-btn::before,
-.camera-actions button::before {
+}/* Shimmer sweep on hover */#proj-license-plate-detection .url-field button::before, #proj-license-plate-detection .predict-btn::before, #proj-license-plate-detection .camera-actions button::before{
   content: '';
   position: absolute;
   top: 0; left: -100%;
   width: 100%; height: 100%;
   background: linear-gradient(90deg, transparent, rgba(245,158,11,0.12), transparent);
   transition: left 0.5s ease;
-}
-
-.url-field button:hover::before,
-.predict-btn:hover::before,
-.camera-actions button:not(:disabled):hover::before { left: 100%; }
-
-.url-field button:hover,
-.predict-btn:hover,
-.camera-actions button:not(:disabled):hover {
+}#proj-license-plate-detection .url-field button:hover::before, #proj-license-plate-detection .predict-btn:hover::before, #proj-license-plate-detection .camera-actions button:not(:disabled):hover::before{ left: 100%; }#proj-license-plate-detection .url-field button:hover, #proj-license-plate-detection .predict-btn:hover, #proj-license-plate-detection .camera-actions button:not(:disabled):hover{
   background: rgba(245, 158, 11, 0.16);
   border-color: rgba(245, 158, 11, 0.45);
   color: var(--text-1);
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(245, 158, 11, 0.12);
-}
-
-.url-field button:active,
-.predict-btn:active,
-.camera-actions button:not(:disabled):active {
+}#proj-license-plate-detection .url-field button:active, #proj-license-plate-detection .predict-btn:active, #proj-license-plate-detection .camera-actions button:not(:disabled):active{
   transform: translateY(0);
   box-shadow: none;
-}
-
-.camera-actions button:disabled { opacity: 0.3; cursor: not-allowed; }
-
-.predict-btn {
+}#proj-license-plate-detection .camera-actions button:disabled{ opacity: 0.3; cursor: not-allowed; }#proj-license-plate-detection .predict-btn{
   padding: 0 24px;
   height: 38px;
   white-space: nowrap;
-}
-
-.predict-btn[aria-busy="true"] { opacity: 0.55; cursor: progress; }
-
-/* ── Result controls ── */
-.result-controls {
+}#proj-license-plate-detection .predict-btn[aria-busy="true"]{ opacity: 0.55; cursor: progress; }/* ── Result controls ── */#proj-license-plate-detection .result-controls{
   display: inline-flex;
   align-items: center;
   gap: 8px;
   flex-wrap: nowrap;
-}
-
-.runtime-chip {
+}#proj-license-plate-detection .runtime-chip{
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -786,32 +559,23 @@ button:focus-visible, input:focus-visible {
   color: var(--text-3);
   transition: border-color var(--t);
   white-space: nowrap;
-}
-
-.runtime-chip span {
+}#proj-license-plate-detection .runtime-chip span{
   font-size: 0.58rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-}
-
-.runtime-chip::before {
+}#proj-license-plate-detection .runtime-chip::before{
   content: '';
   width: 1px;
   height: 16px;
   background: var(--border);
   flex-shrink: 0;
   display: none;
-}
-
-.runtime-chip strong {
+}#proj-license-plate-detection .runtime-chip strong{
   font-size: 0.82rem;
   color: var(--text-1);
   font-weight: 500;
   letter-spacing: 0.04em;
-}
-
-/* ── Result stage ── */
-.result-stage {
+}/* ── Result stage ── */#proj-license-plate-detection .result-stage{
   position: relative;
   flex: 1;
   min-height: 0;
@@ -822,10 +586,7 @@ button:focus-visible, input:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Scanning beam — only visible when loading */
-.result-stage.is-loading::after {
+}/* Scanning beam — only visible when loading */#proj-license-plate-detection .result-stage.is-loading::after{
   content: '';
   position: absolute;
   left: 0; right: 0;
@@ -835,42 +596,28 @@ button:focus-visible, input:focus-visible {
   z-index: 4;
   pointer-events: none;
   filter: drop-shadow(0 0 6px var(--amber));
-}
-
-@keyframes scanBeam {
+}@keyframes scanBeam {
   0%   { top: 0%;   opacity: 0; }
   5%   { opacity: 1; }
   92%  { opacity: 1; }
   100% { top: 100%; opacity: 0; }
-}
-
-/* Progress bar — thin loader stripe at top */
-.progress-bar {
+}/* Progress bar — thin loader stripe at top */#proj-license-plate-detection .progress-bar{
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
   background: rgba(245, 158, 11, 0.1);
   overflow: hidden;
   z-index: 5;
-}
-
-.progress-bar::after {
+}#proj-license-plate-detection .progress-bar::after{
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(90deg, transparent, var(--amber), transparent);
   animation: progressSlide 0.9s linear infinite;
-}
-
-@keyframes progressSlide {
+}@keyframes progressSlide {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
-}
-
-.result-stage.is-loading .result-figure { opacity: 0.25; }
-
-/* ── Result figure ── */
-.result-figure {
+}#proj-license-plate-detection .result-stage.is-loading .result-figure{ opacity: 0.25; }/* ── Result figure ── */#proj-license-plate-detection .result-figure{
   position: relative;
   width: 100%;
   min-height: clamp(260px, 38vh, 500px);
@@ -880,11 +627,7 @@ button:focus-visible, input:focus-visible {
   overflow: hidden;
   margin: 0;
   transition: opacity var(--ts);
-}
-
-/* Corner brackets — targeting frame effect */
-/* Top-left */
-.result-figure::before {
+}/* Corner brackets — targeting frame effect *//* Top-left */#proj-license-plate-detection .result-figure::before{
   content: '';
   position: absolute;
   top: 12px; left: 12px;
@@ -895,10 +638,7 @@ button:focus-visible, input:focus-visible {
   z-index: 3;
   opacity: 0.5;
   transition: opacity var(--ts), transform var(--ts);
-}
-
-/* Bottom-right */
-.result-figure::after {
+}/* Bottom-right */#proj-license-plate-detection .result-figure::after{
   content: '';
   position: absolute;
   bottom: 12px; right: 12px;
@@ -909,17 +649,12 @@ button:focus-visible, input:focus-visible {
   z-index: 3;
   opacity: 0.5;
   transition: opacity var(--ts), transform var(--ts);
-}
-
-/* Top-right via scan-frame */
-.scan-frame {
+}/* Top-right via scan-frame */#proj-license-plate-detection .scan-frame{
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 3;
-}
-
-.scan-frame::before {
+}#proj-license-plate-detection .scan-frame::before{
   content: '';
   position: absolute;
   top: 12px; right: 12px;
@@ -928,9 +663,7 @@ button:focus-visible, input:focus-visible {
   border-right: 2px solid var(--amber);
   opacity: 0.5;
   transition: opacity var(--ts);
-}
-
-.scan-frame::after {
+}#proj-license-plate-detection .scan-frame::after{
   content: '';
   position: absolute;
   bottom: 12px; left: 12px;
@@ -939,36 +672,20 @@ button:focus-visible, input:focus-visible {
   border-left: 2px solid var(--amber);
   opacity: 0.5;
   transition: opacity var(--ts);
-}
-
-/* Corner brackets brighten when image is loaded */
-.result-stage:has(#resultImage[src]:not([src=""])) .result-figure::before,
-.result-stage:has(#resultImage[src]:not([src=""])) .result-figure::after,
-.result-stage:has(#resultImage[src]:not([src=""])) .scan-frame::before,
-.result-stage:has(#resultImage[src]:not([src=""])) .scan-frame::after {
+}/* Corner brackets brighten when image is loaded */#proj-license-plate-detection .result-stage:has(#resultImage[src]:not([src=""])) .result-figure::before, #proj-license-plate-detection .result-stage:has(#resultImage[src]:not([src=""])) .result-figure::after, #proj-license-plate-detection .result-stage:has(#resultImage[src]:not([src=""])) .scan-frame::before, #proj-license-plate-detection .result-stage:has(#resultImage[src]:not([src=""])) .scan-frame::after{
   opacity: 0.8;
-}
-
-/* Animate brackets when scanning */
-.result-stage.is-loading .result-figure::before {
+}/* Animate brackets when scanning */#proj-license-plate-detection .result-stage.is-loading .result-figure::before{
   animation: bracketPulse 0.8s ease-in-out infinite alternate;
-}
-.result-stage.is-loading .result-figure::after {
+}#proj-license-plate-detection .result-stage.is-loading .result-figure::after{
   animation: bracketPulse 0.8s ease-in-out infinite alternate 0.2s;
-}
-.result-stage.is-loading .scan-frame::before {
+}#proj-license-plate-detection .result-stage.is-loading .scan-frame::before{
   animation: bracketPulse 0.8s ease-in-out infinite alternate 0.1s;
-}
-.result-stage.is-loading .scan-frame::after {
+}#proj-license-plate-detection .result-stage.is-loading .scan-frame::after{
   animation: bracketPulse 0.8s ease-in-out infinite alternate 0.3s;
-}
-
-@keyframes bracketPulse {
+}@keyframes bracketPulse {
   from { opacity: 0.5; }
   to   { opacity: 1;   box-shadow: 0 0 8px var(--amber-glow); }
-}
-
-#resultImage {
+}#proj-license-plate-detection #resultImage{
   width: 100%;
   height: auto;
   max-height: clamp(260px, 55vh, 620px);
@@ -976,10 +693,7 @@ button:focus-visible, input:focus-visible {
   display: block;
   position: relative;
   z-index: 1;
-}
-
-/* Empty state illustration */
-.result-empty-state {
+}/* Empty state illustration */#proj-license-plate-detection .result-empty-state{
   position: absolute;
   inset: 0;
   display: flex;
@@ -990,26 +704,13 @@ button:focus-visible, input:focus-visible {
   pointer-events: none;
   z-index: 2;
   transition: opacity var(--ts);
-}
-
-/* Hide empty state when image is loaded */
-.result-stage:has(#resultImage[src]:not([src=""])) .result-empty-state {
+}/* Hide empty state when image is loaded */#proj-license-plate-detection .result-stage:has(#resultImage[src]:not([src=""])) .result-empty-state{
   opacity: 0;
-}
-
-.result-empty-state svg {
+}#proj-license-plate-detection .result-empty-state svg{
   width: 80px;
   height: 56px;
   opacity: 0.18;
-}
-
-.es-plate  { fill: none; stroke: var(--text-2); stroke-width: 1.5; }
-.es-band   { fill: rgba(255,255,255,0.05); }
-.es-band-fill { fill: rgba(255,255,255,0.07); }
-.es-char   { fill: rgba(255,255,255,0.15); }
-.es-corner { fill: none; stroke: var(--amber); stroke-width: 2; opacity: 0.7; }
-
-.result-empty-state p {
+}#proj-license-plate-detection .es-plate{ fill: none; stroke: var(--text-2); stroke-width: 1.5; }#proj-license-plate-detection .es-band{ fill: rgba(255,255,255,0.05); }#proj-license-plate-detection .es-band-fill{ fill: rgba(255,255,255,0.07); }#proj-license-plate-detection .es-char{ fill: rgba(255,255,255,0.15); }#proj-license-plate-detection .es-corner{ fill: none; stroke: var(--amber); stroke-width: 2; opacity: 0.7; }#proj-license-plate-detection .result-empty-state p{
   margin: 0;
   font-size: 0.78rem;
   color: var(--text-3);
@@ -1018,12 +719,7 @@ button:focus-visible, input:focus-visible {
   font-family: var(--mono);
   letter-spacing: 0.04em;
   line-height: 1.6;
-}
-
-/* ── URL field ── */
-.url-field { display: flex; gap: 10px; }
-
-.url-field input {
+}/* ── URL field ── */#proj-license-plate-detection .url-field{ display: flex; gap: 10px; }#proj-license-plate-detection .url-field input{
   flex: 1;
   padding: 10px 14px;
   border-radius: var(--r-sm);
@@ -1031,25 +727,18 @@ button:focus-visible, input:focus-visible {
   background: var(--bg-2);
   color: var(--text-1);
   transition: border-color var(--t);
-}
-
-.url-field input:focus-visible {
+}#proj-license-plate-detection .url-field input:focus-visible{
   border-color: var(--border-amber);
   outline: none;
   box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.1);
-}
-
-/* ================================================================
+}/* ================================================================
    INSIGHTS
-   ================================================================ */
-.insights {
+   ================================================================ */#proj-license-plate-detection .insights{
   margin-top: clamp(28px, 3.5vw, 48px);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 12px;
-}
-
-.insight-card {
+}#proj-license-plate-detection .insight-card{
   border-radius: var(--r-lg);
   background: var(--bg-1);
   border: 1px solid var(--border);
@@ -1061,9 +750,7 @@ button:focus-visible, input:focus-visible {
   transition: border-color var(--ts), transform var(--ts), box-shadow var(--ts);
   position: relative;
   overflow: hidden;
-}
-
-.insight-card::before {
+}#proj-license-plate-detection .insight-card::before{
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -1072,17 +759,11 @@ button:focus-visible, input:focus-visible {
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--ts);
-}
-
-.insight-card:hover {
+}#proj-license-plate-detection .insight-card:hover{
   border-color: var(--border-amber);
   transform: translateY(-3px);
   box-shadow: 0 12px 32px rgba(0,0,0,0.4);
-}
-
-.insight-card:hover::before { transform: scaleX(1); }
-
-.insight-card .icon {
+}#proj-license-plate-detection .insight-card:hover::before{ transform: scaleX(1); }#proj-license-plate-detection .insight-card .icon{
   width: 38px; height: 38px;
   border-radius: var(--r-md);
   background: var(--amber-soft);
@@ -1090,42 +771,31 @@ button:focus-visible, input:focus-visible {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-}
-
-.insight-card .icon svg {
+}#proj-license-plate-detection .insight-card .icon svg{
   width: 18px; height: 18px;
   fill: none;
   stroke: var(--amber);
   stroke-width: 1.8;
-}
-
-.insight-card h3 {
+}#proj-license-plate-detection .insight-card h3{
   margin: 0;
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-1);
   letter-spacing: 0.03em;
-}
-
-.insight-card p {
+}#proj-license-plate-detection .insight-card p{
   margin: 5px 0 0;
   color: var(--text-2);
   font-size: 0.78rem;
   line-height: 1.55;
-}
-
-/* ================================================================
+}/* ================================================================
    PROJECT OVERVIEW
-   ================================================================ */
-.project-overview {
+   ================================================================ */#proj-license-plate-detection .project-overview{
   margin-top: clamp(28px, 3.5vw, 48px);
   padding: clamp(20px, 2.5vw, 28px);
   border-radius: var(--r-xl);
   background: var(--bg-1);
   border: 1px solid var(--border);
-}
-
-.overview-header {
+}#proj-license-plate-detection .overview-header{
   margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border);
@@ -1133,25 +803,19 @@ button:focus-visible, input:focus-visible {
   align-items: baseline;
   gap: 16px;
   flex-wrap: wrap;
-}
-
-.overview-header h2 {
+}#proj-license-plate-detection .overview-header h2{
   margin: 0;
   font-size: 0.62rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-3);
   font-family: var(--mono);
-}
-
-.overview-header p {
+}#proj-license-plate-detection .overview-header p{
   margin: 0;
   color: var(--text-3);
   font-size: 0.78rem;
   line-height: 1.5;
-}
-
-.overview-subheading {
+}#proj-license-plate-detection .overview-subheading{
   margin: 1.25rem 0 0.5rem;
   font-size: 0.62rem;
   font-weight: 600;
@@ -1159,25 +823,17 @@ button:focus-visible, input:focus-visible {
   text-transform: uppercase;
   color: var(--amber-dim);
   font-family: var(--mono);
-}
-
-.overview-subheading:first-of-type { margin-top: 0; }
-
-.overview-about {
+}#proj-license-plate-detection .overview-subheading:first-of-type{ margin-top: 0; }#proj-license-plate-detection .overview-about{
   margin: 0;
   max-width: 64ch;
   line-height: 1.65;
   color: var(--text-2);
   font-size: 0.875rem;
-}
-
-.overview-bv-grid {
+}#proj-license-plate-detection .overview-bv-grid{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
-}
-
-.overview-bv-card {
+}#proj-license-plate-detection .overview-bv-card{
   padding: 16px;
   border-radius: var(--r-lg);
   border: 1px solid var(--border);
@@ -1185,9 +841,7 @@ button:focus-visible, input:focus-visible {
   transition: border-color var(--t);
   position: relative;
   overflow: hidden;
-}
-
-.overview-bv-card::before {
+}#proj-license-plate-detection .overview-bv-card::before{
   content: '';
   position: absolute;
   top: 0; left: 0;
@@ -1195,59 +849,41 @@ button:focus-visible, input:focus-visible {
   background: linear-gradient(180deg, var(--amber), transparent);
   opacity: 0;
   transition: opacity var(--ts);
-}
-
-.overview-bv-card:hover { border-color: var(--border-amber); }
-.overview-bv-card:hover::before { opacity: 1; }
-
-.overview-bv-card h4 {
+}#proj-license-plate-detection .overview-bv-card:hover{ border-color: var(--border-amber); }#proj-license-plate-detection .overview-bv-card:hover::before{ opacity: 1; }#proj-license-plate-detection .overview-bv-card h4{
   margin: 0 0 6px;
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--text-1);
   line-height: 1.3;
-}
-
-.overview-bv-card p {
+}#proj-license-plate-detection .overview-bv-card p{
   margin: 0;
   font-size: 0.8rem;
   line-height: 1.55;
   color: var(--text-2);
-}
-
-/* ================================================================
+}/* ================================================================
    FOOTER
-   ================================================================ */
-.app-footer {
+   ================================================================ */#proj-license-plate-detection .app-footer{
   border-top: 1px solid var(--border);
   background: var(--bg-1);
   padding: 16px 0;
   font-size: 0.68rem;
   color: var(--text-3);
-}
-
-.app-footer .container {
+}#proj-license-plate-detection .app-footer .container{
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 14px;
   flex-wrap: wrap;
-}
-
-.footer-note {
+}#proj-license-plate-detection .footer-note{
   margin: 0;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   font-family: var(--mono);
-}
-
-.footer-nav {
+}#proj-license-plate-detection .footer-nav{
   display: inline-flex;
   gap: 8px;
   align-items: center;
-}
-
-.footer-link {
+}#proj-license-plate-detection .footer-link{
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -1261,20 +897,13 @@ button:focus-visible, input:focus-visible {
   letter-spacing: 0.08em;
   font-family: var(--mono);
   transition: all var(--t);
-}
-
-.footer-link svg { width: 14px; height: 14px; fill: currentColor; }
-
-.footer-link:hover {
+}#proj-license-plate-detection .footer-link svg{ width: 14px; height: 14px; fill: currentColor; }#proj-license-plate-detection .footer-link:hover{
   border-color: var(--border-amber);
   background: var(--amber-soft);
   color: var(--amber);
-}
-
-/* ================================================================
+}/* ================================================================
    PRELOADER — minimal
-   ================================================================ */
-.preloader {
+   ================================================================ */#proj-license-plate-detection .preloader{
   position: fixed;
   inset: 0;
   display: grid;
@@ -1282,34 +911,24 @@ button:focus-visible, input:focus-visible {
   background: var(--bg-0);
   z-index: 40;
   transition: opacity 0.4s ease, visibility 0.4s ease;
-}
-
-.preloader.hidden {
+}#proj-license-plate-detection .preloader.hidden{
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-}
-
-.preloader-inner {
+}#proj-license-plate-detection .preloader-inner{
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
   animation: preloaderFadeIn 0.5s ease both;
-}
-
-@keyframes preloaderFadeIn {
+}@keyframes preloaderFadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
-}
-
-.preloader-logo svg {
+}#proj-license-plate-detection .preloader-logo svg{
   width: 64px;
   height: 42px;
   display: block;
-}
-
-.preloader-name {
+}#proj-license-plate-detection .preloader-name{
   margin: 0;
   font-size: 0.8rem;
   font-weight: 700;
@@ -1319,42 +938,31 @@ button:focus-visible, input:focus-visible {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-}
-
-.preloader-bar {
+}#proj-license-plate-detection .preloader-bar{
   width: 120px;
   height: 2px;
   border-radius: 2px;
   background: var(--bg-3);
   overflow: hidden;
-}
-
-.preloader-bar-fill {
+}#proj-license-plate-detection .preloader-bar-fill{
   height: 100%;
   width: 40%;
   border-radius: 2px;
   background: var(--amber);
   animation: barSlide 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-@keyframes barSlide {
+}@keyframes barSlide {
   0%   { transform: translateX(-150%); opacity: 0.6; }
   50%  { opacity: 1; }
   100% { transform: translateX(350%); opacity: 0.6; }
-}
-
-.preloader-label {
+}#proj-license-plate-detection .preloader-label{
   font-family: var(--mono);
   font-size: 0.6rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-3);
-}
-
-/* ================================================================
+}/* ================================================================
    TOAST NOTIFICATIONS — Premium slide-in
-   ================================================================ */
-.toast-stack {
+   ================================================================ */#proj-license-plate-detection .toast-stack{
   position: fixed;
   top: 20px;
   right: 20px;
@@ -1363,9 +971,7 @@ button:focus-visible, input:focus-visible {
   z-index: 50;
   pointer-events: none;
   width: 320px;
-}
-
-.toast {
+}#proj-license-plate-detection .toast{
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1384,20 +990,14 @@ button:focus-visible, input:focus-visible {
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(12px);
-}
-
-/* Colored left accent bar */
-.toast::before {
+}/* Colored left accent bar */#proj-license-plate-detection .toast::before{
   content: '';
   position: absolute;
   top: 0; left: 0; bottom: 0;
   width: 3px;
   border-radius: 3px 0 0 3px;
   background: var(--amber);
-}
-
-/* Icon dot */
-.toast::after {
+}/* Icon dot */#proj-license-plate-detection .toast::after{
   content: '';
   width: 8px;
   height: 8px;
@@ -1405,45 +1005,27 @@ button:focus-visible, input:focus-visible {
   background: var(--amber);
   flex-shrink: 0;
   box-shadow: 0 0 8px var(--amber-glow);
-}
-
-.toast[data-variant="error"]::before  { background: var(--red); }
-.toast[data-variant="error"]::after   { background: var(--red); box-shadow: 0 0 8px rgba(239,68,68,0.4); }
-.toast[data-variant="success"]::before { background: var(--green); }
-.toast[data-variant="success"]::after  { background: var(--green); box-shadow: 0 0 8px rgba(16,185,129,0.4); }
-
-.toast.is-visible {
+}#proj-license-plate-detection .toast[data-variant="error"]::before{ background: var(--red); }#proj-license-plate-detection .toast[data-variant="error"]::after{ background: var(--red); box-shadow: 0 0 8px rgba(239,68,68,0.4); }#proj-license-plate-detection .toast[data-variant="success"]::before{ background: var(--green); }#proj-license-plate-detection .toast[data-variant="success"]::after{ background: var(--green); box-shadow: 0 0 8px rgba(16,185,129,0.4); }#proj-license-plate-detection .toast.is-visible{
   opacity: 1;
   transform: translateX(0);
-}
-
-/* ================================================================
+}/* ================================================================
    LIGHTBOX
-   ================================================================ */
-.lightbox {
+   ================================================================ */#proj-license-plate-detection .lightbox{
   position: fixed;
   inset: 0;
   display: grid;
   place-items: center;
   z-index: 60;
   animation: fadeIn 0.25s ease;
-}
-
-.lightbox[hidden] { display: none; }
-
-@keyframes fadeIn {
+}#proj-license-plate-detection .lightbox[hidden]{ display: none; }@keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
-}
-
-.lightbox-backdrop {
+}#proj-license-plate-detection .lightbox-backdrop{
   position: absolute;
   inset: 0;
   background: rgba(3, 4, 6, 0.93);
   backdrop-filter: blur(20px);
-}
-
-.lightbox-modal {
+}#proj-license-plate-detection .lightbox-modal{
   position: relative;
   background: #0D1117;
   border-radius: var(--r-xl);
@@ -1458,10 +1040,7 @@ button:focus-visible, input:focus-visible {
     0 40px 80px rgba(0,0,0,0.85);
   animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   overflow: hidden;
-}
-
-/* Corner brackets on lightbox */
-.lightbox-modal::before {
+}/* Corner brackets on lightbox */#proj-license-plate-detection .lightbox-modal::before{
   content: '';
   position: absolute;
   top: 10px; left: 10px;
@@ -1471,9 +1050,7 @@ button:focus-visible, input:focus-visible {
   pointer-events: none;
   z-index: 1;
   opacity: 0.6;
-}
-
-.lightbox-modal::after {
+}#proj-license-plate-detection .lightbox-modal::after{
   content: '';
   position: absolute;
   bottom: 10px; right: 10px;
@@ -1483,14 +1060,10 @@ button:focus-visible, input:focus-visible {
   pointer-events: none;
   z-index: 1;
   opacity: 0.6;
-}
-
-@keyframes modalIn {
+}@keyframes modalIn {
   from { opacity: 0; transform: scale(0.92) translateY(10px); }
   to   { opacity: 1; transform: scale(1)    translateY(0); }
-}
-
-.lightbox-modal img {
+}#proj-license-plate-detection .lightbox-modal img{
   width: 100%;
   height: auto;
   max-height: 580px;
@@ -1498,18 +1071,14 @@ button:focus-visible, input:focus-visible {
   border-radius: var(--r-lg);
   background: #000;
   display: block;
-}
-
-.lightbox-modal figcaption {
+}#proj-license-plate-detection .lightbox-modal figcaption{
   font-size: 0.65rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-3);
   font-family: var(--mono);
   text-align: center;
-}
-
-.lightbox-close {
+}#proj-license-plate-detection .lightbox-close{
   position: absolute;
   top: 14px; right: 14px;
   width: 32px; height: 32px;
@@ -1521,38 +1090,21 @@ button:focus-visible, input:focus-visible {
   cursor: pointer;
   transition: border-color var(--t), background var(--t);
   z-index: 2;
-}
-
-.lightbox-close svg path {
+}#proj-license-plate-detection .lightbox-close svg path{
   stroke: var(--text-2);
   stroke-width: 1.6;
   stroke-linecap: round;
-}
-
-.lightbox-close:hover {
+}#proj-license-plate-detection .lightbox-close:hover{
   border-color: var(--border-amber);
   background: var(--amber-soft);
-}
-
-/* ================================================================
+}/* ================================================================
    SCROLLBARS
-   ================================================================ */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
+   ================================================================ */#proj-license-plate-detection ::-webkit-scrollbar{ width: 5px; height: 5px; }#proj-license-plate-detection ::-webkit-scrollbar-track{ background: transparent; }#proj-license-plate-detection ::-webkit-scrollbar-thumb{
   background: rgba(245, 158, 11, 0.2);
   border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover { background: rgba(245, 158, 11, 0.35); }
-
-* { scrollbar-width: thin; scrollbar-color: rgba(245,158,11,0.2) transparent; }
-
-::selection { background: rgba(245, 158, 11, 0.22); color: var(--text-1); }
-
-/* ================================================================
+}#proj-license-plate-detection ::-webkit-scrollbar-thumb:hover{ background: rgba(245, 158, 11, 0.35); }#proj-license-plate-detection *{ scrollbar-width: thin; scrollbar-color: rgba(245,158,11,0.2) transparent; }#proj-license-plate-detection ::selection{ background: rgba(245, 158, 11, 0.22); color: var(--text-1); }/* ================================================================
    FORM ELEMENTS
-   ================================================================ */
-input, textarea, select {
+   ================================================================ */#proj-license-plate-detection input, #proj-license-plate-detection textarea, #proj-license-plate-detection select{
   appearance: none;
   -webkit-appearance: none;
   background: var(--bg-2);
@@ -1561,51 +1113,19 @@ input, textarea, select {
   color: var(--text-1);
   padding: 8px 12px;
   font: inherit;
-}
-
-input:focus, textarea:focus, select:focus {
+}#proj-license-plate-detection input:focus, #proj-license-plate-detection textarea:focus, #proj-license-plate-detection select:focus{
   outline: 2px solid var(--amber);
   outline-offset: 2px;
   border-color: var(--amber);
-}
-
-input::placeholder, textarea::placeholder { color: var(--text-3); }
-
-*:focus-visible {
+}#proj-license-plate-detection input::placeholder, #proj-license-plate-detection textarea::placeholder{ color: var(--text-3); }#proj-license-plate-detection *:focus-visible{
   outline: 2px solid var(--amber);
   outline-offset: 2px;
   border-radius: var(--r-sm);
-}
-
-/* ================================================================
+}/* ================================================================
    RESPONSIVE
-   ================================================================ */
-@media (max-width: 1200px) {
-  .layout { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 900px) {
-  .overview-bv-grid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 980px) {
-  .app-header .container {
+   ================================================================ */@media (max-width: 1200px) {#proj-license-plate-detection .layout{ grid-template-columns: 1fr; }}@media (max-width: 900px) {#proj-license-plate-detection .overview-bv-grid{ grid-template-columns: 1fr; }}@media (max-width: 980px) {#proj-license-plate-detection .app-header .container{
     grid-template-columns: 1fr;
     gap: 14px;
     text-align: center;
     padding: 16px 0;
-  }
-  .header-meta { justify-content: center; }
-  .header-actions { justify-content: center; }
-  .brand { justify-content: center; }
-  .layout { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 680px) {
-  .app-main { padding: 24px 0 40px; }
-  .panel { padding: 16px; border-radius: var(--r-lg); }
-  .camera-actions { flex-direction: column; }
-  .app-footer .container { flex-direction: column; text-align: center; }
-  .footer-nav { justify-content: center; }
-  .toast-stack { width: calc(100vw - 32px); right: 16px; }
-}
+  }#proj-license-plate-detection .header-meta{ justify-content: center; }#proj-license-plate-detection .header-actions{ justify-content: center; }#proj-license-plate-detection .brand{ justify-content: center; }#proj-license-plate-detection .layout{ grid-template-columns: 1fr; }}@media (max-width: 680px) {#proj-license-plate-detection .app-main{ padding: 24px 0 40px; }#proj-license-plate-detection .panel{ padding: 16px; border-radius: var(--r-lg); }#proj-license-plate-detection .camera-actions{ flex-direction: column; }#proj-license-plate-detection .app-footer .container{ flex-direction: column; text-align: center; }#proj-license-plate-detection .footer-nav{ justify-content: center; }#proj-license-plate-detection .toast-stack{ width: calc(100vw - 32px); right: 16px; }}
