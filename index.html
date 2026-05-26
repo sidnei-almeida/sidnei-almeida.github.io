@@ -372,13 +372,13 @@
         <!-- Projeto: Real-Time Industrial Anomaly Monitor -->
         <div class="project-card featured-top-2" data-category="machine-learning analytics web-app">
           <div class="project-image">
-            <img src="./images/dash_secom.webp" alt="Real-Time Industrial Anomaly Monitor — SECOM IoT dashboard" loading="lazy" />
+            <img src="./images/dash_secom.webp" alt="Real-Time Industrial Anomaly Monitor dashboard displayed on a ThinkPad laptop" loading="lazy" />
           </div>
           <div class="project-content">
             <div class="project-header">
               <h3 class="project-title project-title--stacked">
                 <span class="project-title-line" data-pt="Real-Time Industrial Anomaly Monitor" data-en="Real-Time Industrial Anomaly Monitor" data-es="Real-Time Industrial Anomaly Monitor">Real-Time Industrial Anomaly Monitor</span>
-                <span class="project-title-line" data-pt="Dashboard IoT SECOM" data-en="SECOM IoT Dashboard" data-es="Dashboard IoT SECOM">SECOM IoT Dashboard</span>
+                <span class="project-title-line" data-pt="Monitoramento industrial SECOM" data-en="SECOM Manufacturing Monitor" data-es="Monitor industrial SECOM">SECOM Manufacturing Monitor</span>
               </h3>
               <div class="project-status">
                 <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
@@ -388,57 +388,64 @@
             </div>
             <div class="project-body">
               <p class="project-description">
-                <span class="description-short" data-pt="Dashboard industrial que reproduz o dataset SECOM como stream IoT em tempo real, com scoring de anomalias via autoencoder FastAPI e visualização operacional." data-en="Industrial dashboard that replays the SECOM dataset as a live IoT stream, with anomaly scoring via a FastAPI autoencoder and operational visualization." data-es="Dashboard industrial que reproduce el dataset SECOM como stream IoT en tiempo real, con scoring de anomalías vía autoencoder FastAPI y visualización operacional.">Industrial dashboard that replays the SECOM dataset as a live IoT stream, with anomaly scoring via a FastAPI autoencoder and operational visualization.</span>
-                <span class="description-full" style="display: none;" data-pt="Real-Time Industrial Anomaly Monitor é uma dashboard Next.js para detecção de anomalias em fabricação de semicondutores. Reproduz o SECOM como stream de sensores (1 Hz), adapta features 590→558, acorda a API no Hugging Face antes do dashboard e oferece KPIs, telemetria, log de eventos, injeção de anomalias e scoring local quando a API está offline." data-en="Real-Time Industrial Anomaly Monitor is a Next.js dashboard for semiconductor manufacturing anomaly detection. It replays SECOM as a sensor stream (1 Hz), adapts features 590→558, wakes the Hugging Face API before entering the dashboard, and provides KPIs, telemetry, event logs, anomaly injection, and local scoring when the API is offline." data-es="Real-Time Industrial Anomaly Monitor es un dashboard Next.js para detección de anomalías en fabricación de semiconductores. Reproduce SECOM como stream de sensores (1 Hz), adapta features 590→558, despierta la API en Hugging Face antes del dashboard y ofrece KPIs, telemetría, log de eventos, inyección de anomalías y scoring local cuando la API está offline.">Real-Time Industrial Anomaly Monitor is a Next.js dashboard for semiconductor manufacturing anomaly detection. It replays SECOM as a sensor stream (1 Hz), adapts features 590→558, wakes the Hugging Face API before entering the dashboard, and provides KPIs, telemetry, event logs, anomaly injection, and local scoring when the API is offline.</span>
+                <span class="description-short" data-pt="Dashboard industrial em tempo real que reproduz amostras limpas do SECOM como fluxo de sensores, calcula risco de anomalia e visualiza a saúde do processo." data-en="Real-time industrial monitoring dashboard that replays cleaned SECOM manufacturing samples as a sensor stream, scores anomaly risk, and visualizes live process health." data-es="Dashboard industrial en tiempo real que reproduce muestras limpias de SECOM como flujo de sensores, calcula riesgo de anomalía y visualiza la salud del proceso.">Real-time industrial monitoring dashboard that replays cleaned SECOM manufacturing samples as a sensor stream, scores anomaly risk, and visualizes live process health.</span>
+                <span class="description-full" style="display: none;" data-pt="Real-Time Industrial Anomaly Monitor é uma dashboard profissional para simular monitoramento industrial de anomalias com o dataset SECOM de semicondutores. Reproduz amostras de fabricação limpas como fluxo simulado de sensores em tempo real, calcula risco de anomalia, destaca cruzamentos de limiar e apresenta saídas do modelo numa interface operacional minimalista. Desenvolvida em Next.js, integra-se a um serviço FastAPI de autoencoder (Hugging Face) e inclui tela de boot para cold starts. Demonstra engenharia de IA aplicada: frontend, simulação em tempo real, scoring local, integração com API e produto de monitoramento." data-en="Real-Time Industrial Anomaly Monitor is a professional dashboard for simulating industrial anomaly monitoring with the SECOM semiconductor dataset. It replays cleaned manufacturing samples as a simulated real-time sensor stream, computes anomaly risk, highlights threshold crossings, and presents model outputs through a minimalist operations UI. Built with Next.js and designed for a FastAPI autoencoder on Hugging Face, it includes an API wake-up screen for clean cold starts. Shows practical AI engineering across frontend design, real-time simulation, inference integration, and production-style monitoring—not a notebook demo." data-es="Real-Time Industrial Anomaly Monitor es un dashboard profesional para simular monitoreo industrial de anomalías con el dataset SECOM de semiconductores. Reproduce muestras de fabricación limpias como flujo simulado de sensores en tiempo real, calcula riesgo de anomalía, resalta cruces de umbral y presenta salidas del modelo en una interfaz operacional minimalista. Desarrollado en Next.js, se integra con un autoencoder FastAPI en Hugging Face e incluye pantalla de boot para cold starts. Demuestra ingeniería de IA aplicada: frontend, simulación en tiempo real, scoring local e integración con API.">Real-Time Industrial Anomaly Monitor is a professional dashboard for simulating industrial anomaly monitoring with the SECOM semiconductor dataset. It replays cleaned manufacturing samples as a simulated real-time sensor stream, computes anomaly risk, highlights threshold crossings, and presents model outputs through a minimalist operations UI. Built with Next.js and designed for a FastAPI autoencoder on Hugging Face, it includes an API wake-up screen for clean cold starts. Shows practical AI engineering across frontend design, real-time simulation, inference integration, and production-style monitoring—not a notebook demo.</span>
               </p>
               <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="View more project details">
                 <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
               </button>
               <div class="project-metrics">
                 <div class="metric">
-                  <i class="fas fa-industry"></i>
-                  <span data-pt="Replay SECOM · 1 Hz" data-en="SECOM replay · 1 Hz" data-es="Replay SECOM · 1 Hz">SECOM replay · 1 Hz</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-microchip"></i>
-                  <span data-pt="Features: 590 → 558" data-en="Features: 590 → 558" data-es="Features: 590 → 558">Features: 590 → 558</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-bolt"></i>
-                  <span data-pt="Boot screen · API wake-up" data-en="Boot screen · API wake-up" data-es="Boot screen · API wake-up">Boot screen · API wake-up</span>
-                </div>
-                <div class="metric">
                   <i class="fas fa-database"></i>
-                  <span data-pt="Dataset SECOM industrial" data-en="Industrial SECOM dataset" data-es="Dataset SECOM industrial">Industrial SECOM dataset</span>
+                  <span data-pt="Amostras SECOM: 1.567" data-en="SECOM samples: 1,567" data-es="Muestras SECOM: 1.567">SECOM samples: 1,567</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-triangle-exclamation"></i>
+                  <span data-pt="Amostras de falha: 104" data-en="Failure samples: 104" data-es="Muestras de falla: 104">Failure samples: 104</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-play-circle"></i>
+                  <span data-pt="Modo: replay do dataset" data-en="Stream mode: Dataset replay" data-es="Modo: replay del dataset">Stream mode: Dataset replay</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-brain"></i>
+                  <span data-pt="Inferência: local / FastAPI-ready" data-en="Inference: Local scoring / FastAPI-ready" data-es="Inferencia: local / FastAPI-ready">Inference: Local scoring / FastAPI-ready</span>
                 </div>
               </div>
               <div class="project-tech">
                 <span class="tech-tag">Next.js</span>
-                <span class="tech-tag">Autoencoder</span>
                 <span class="tech-tag">FastAPI</span>
+                <span class="tech-tag">Keras</span>
                 <span class="tech-tag">Recharts</span>
               </div>
             </div>
             <div class="project-value-benefits" style="display: none;">
               <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-shield-alt"></i></div>
+                <div class="value-benefit-icon"><i class="fas fa-play-circle"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Detecção precoce de anomalias" data-en="Early Anomaly Detection" data-es="Detección temprana de anomalías">Early Anomaly Detection</h4>
-                  <p class="value-benefit-description" data-pt="Scores de risco em tempo real sobre o replay SECOM ajudam a sinalizar desvios de processo antes de falhas de produção." data-en="Real-time risk scores on SECOM replay help flag process deviations before production failures." data-es="Scores de riesgo en tiempo real sobre el replay SECOM ayudan a señalar desviaciones de proceso antes de fallas de producción.">Real-time risk scores on SECOM replay help flag process deviations before production failures.</p>
+                  <h4 class="value-benefit-title" data-pt="Replay de Dados Industriais" data-en="Real-Time Dataset Replay" data-es="Replay de Datos Industriales">Real-Time Dataset Replay</h4>
+                  <p class="value-benefit-description" data-pt="Reproduz amostras limpas do dataset SECOM como um fluxo simulado de sensores industriais, criando uma experiência de monitoramento em tempo real sem afirmar conexão com hardware real." data-en="Replays cleaned SECOM semiconductor manufacturing samples as a simulated sensor stream, behaving like a live industrial monitoring system without claiming real hardware connectivity." data-es="Reproduce muestras limpias del dataset SECOM como un flujo simulado de sensores industriales, creando una experiencia de monitoreo en tiempo real sin afirmar conexión con hardware real.">Replays cleaned SECOM semiconductor manufacturing samples as a simulated sensor stream, behaving like a live industrial monitoring system without claiming real hardware connectivity.</p>
                 </div>
               </div>
               <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-eye"></i></div>
+                <div class="value-benefit-icon"><i class="fas fa-chart-line"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Monitoramento operacional em tempo real" data-en="Real-Time Operational Monitoring" data-es="Monitoreo operacional en tiempo real">Real-Time Operational Monitoring</h4>
-                  <p class="value-benefit-description" data-pt="KPIs, telemetria de sensores, saída do modelo e log de eventos numa única shell de monitoramento industrial." data-en="KPIs, sensor telemetry, model output, and event logs in a single industrial monitoring shell." data-es="KPIs, telemetría de sensores, salida del modelo y log de eventos en un único shell de monitoreo industrial.">KPIs, sensor telemetry, model output, and event logs in a single industrial monitoring shell.</p>
+                  <h4 class="value-benefit-title" data-pt="Scoring de Anomalias" data-en="Anomaly Scoring &amp; Model Readiness" data-es="Scoring de Anomalías">Anomaly Scoring &amp; Model Readiness</h4>
+                  <p class="value-benefit-description" data-pt="Usa scoring local para o replay do dataset e foi estruturado para integração com uma API FastAPI de autoencoder baseada em erro de reconstrução." data-en="Uses local scoring for dataset replay and is designed to integrate with a FastAPI autoencoder inference service that returns reconstruction error and anomaly decisions." data-es="Usa scoring local para el replay del dataset y está diseñado para integrarse con un servicio FastAPI de autoencoder basado en error de reconstrucción.">Uses local scoring for dataset replay and is designed to integrate with a FastAPI autoencoder inference service that returns reconstruction error and anomaly decisions.</p>
                 </div>
               </div>
               <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-plug"></i></div>
+                <div class="value-benefit-icon"><i class="fas fa-gauge-high"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Experiência pronta para deploy" data-en="Deploy-ready experience" data-es="Experiencia lista para deploy">Deploy-ready experience</h4>
-                  <p class="value-benefit-description" data-pt="Boot screen aguarda a API no Hugging Face e evita dashboard quebrado em cold start; fallback local quando a inferência está offline." data-en="Boot screen waits for the Hugging Face API and avoids a broken dashboard on cold start; local fallback when inference is offline." data-es="Boot screen espera la API en Hugging Face y evita un dashboard roto en cold start; fallback local cuando la inferencia está offline.">Boot screen waits for the Hugging Face API and avoids a broken dashboard on cold start; local fallback when inference is offline.</p>
+                  <h4 class="value-benefit-title" data-pt="Interface Operacional" data-en="Operational Monitoring Interface" data-es="Interfaz Operacional">Operational Monitoring Interface</h4>
+                  <p class="value-benefit-description" data-pt="Apresenta score de anomalia, telemetria de sensores, status do processo, saída do modelo e log de eventos em uma dashboard minimalista e profissional." data-en="Visualizes live process health through anomaly scores, sensor telemetry, model output, threshold markers, and a structured event log for engineering-style review." data-es="Presenta score de anomalía, telemetría de sensores, estado del proceso, salida del modelo y log de eventos en un dashboard minimalista y profesional.">Visualizes live process health through anomaly scores, sensor telemetry, model output, threshold markers, and a structured event log for engineering-style review.</p>
+                </div>
+              </div>
+              <div class="value-benefit-item">
+                <div class="value-benefit-icon"><i class="fas fa-bolt"></i></div>
+                <div class="value-benefit-content">
+                  <h4 class="value-benefit-title" data-pt="Inicialização da API" data-en="API Wake-Up Experience" data-es="Inicialización de la API">API Wake-Up Experience</h4>
+                  <p class="value-benefit-description" data-pt="Inclui uma tela de boot que aguarda a resposta da API de inferência antes de exibir a dashboard, evitando que a demonstração pareça quebrada durante cold starts." data-en="Includes a minimalist boot screen that waits for the inference API health check before showing the dashboard, preventing a broken demo during cold starts." data-es="Incluye una pantalla de boot que espera la respuesta de la API de inferencia antes de mostrar el dashboard, evitando que la demo parezca rota durante cold starts.">Includes a minimalist boot screen that waits for the inference API health check before showing the dashboard, preventing a broken demo during cold starts.</p>
                 </div>
               </div>
             </div>

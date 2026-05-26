@@ -56,7 +56,7 @@ The site is intentionally a pure static frontend — no build toolchain, no depe
 | [DogBreed Vision](./projects/canine-detection/) | Object detection | YOLOv8 fine-tune | Hugging Face |
 | [Gray Matter](./projects/research-agent/) | LLM · Agents | LangChain + LangGraph | Hugging Face |
 | [DocMind](./projects/docmind-chat/) | RAG · NLP | Embeddings + LLM | Hugging Face |
-| [Industrial Anomaly Monitor](https://industrial-iot-anomaly-monitor.vercel.app/) | Industrial ML | SECOM replay + autoencoder | Vercel + Hugging Face |
+| [Real-Time Industrial Anomaly Monitor](https://industrial-iot-anomaly-monitor.vercel.app/) | Industrial ML | SECOM dataset replay + autoencoder | Vercel + Hugging Face |
 | [PulseBridge](./projects/predictive-maintenance/) | Predictive ML | LSTM classification | Hugging Face |
 | [Corporate Signal Intelligence](https://corporate-signal-intelligence-dashb.vercel.app/) | Financial analytics | Isolation Forest + Groq briefings | Vercel + Render |
 | [Cinescope](./projects/tmdb-cinema/) | Recommender | BERT semantics + TMDb | Render |
