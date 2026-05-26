@@ -16,7 +16,7 @@
     { base: 'https://salmeida-my-rag-chatbot.hf.space', path: '/' },
     { base: 'https://salmeida-langchain-agent.hf.space', path: '/health' },
     { base: 'https://growth-potential.onrender.com', path: '/health' },
-    { base: 'https://virtual-flow-forecasting.onrender.com', path: '/health' },
+    { base: 'https://corporate-signal-intelligence.onrender.com', path: '/health' },
     { base: 'https://brazilian-license-plate-recognition.onrender.com', path: '/health' },
     { base: 'https://groq-finance-inference.onrender.com', path: '/api/health' },
     { base: 'https://tmdb-semantic-recommender.onrender.com', path: '/docs' },

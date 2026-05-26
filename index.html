@@ -166,7 +166,7 @@
   <!-- Preload project images for better performance -->
   <link rel="preload" href="./images/road.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/project-1.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/project-2.webp" as="image" type="image/webp">
+  <link rel="preload" href="./images/corporate-dash-anomaly.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/project-3.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/project-legislativo.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/odinx.webp" as="image" type="image/webp">
@@ -176,7 +176,7 @@
   <link rel="preload" href="./images/manut1.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/partanom.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/woof.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/secom.webp" as="image" type="image/webp">
+  <link rel="preload" href="./images/dash_secom.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/licenseplate.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/emotions.webp" as="image" type="image/webp">
 </head>
@@ -369,88 +369,86 @@
             </div>
           </div>
         </div>
-        <!-- Projeto: SECOM Failure Prediction -->
+        <!-- Projeto: Real-Time Industrial Anomaly Monitor -->
         <div class="project-card featured-top-2" data-category="machine-learning analytics web-app">
           <div class="project-image">
-            <img src="./images/secom.webp" alt="AI System for Industrial Anomaly Detection" loading="lazy" />
+            <img src="./images/dash_secom.webp" alt="Real-Time Industrial Anomaly Monitor — SECOM IoT dashboard" loading="lazy" />
           </div>
           <div class="project-content">
             <div class="project-header">
-            <h3 class="project-title" data-pt="Sistema de IA para detecção de anomalias industriais" data-en="AI System for Industrial Anomaly Detection" data-es="Sistema de IA para detección de anomalías industriales">AI System for Industrial Anomaly Detection</h3>
-            <div class="project-status">
-              <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
-              <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recent</span>
-              <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
-            </div>
+              <h3 class="project-title project-title--stacked">
+                <span class="project-title-line" data-pt="Real-Time Industrial Anomaly Monitor" data-en="Real-Time Industrial Anomaly Monitor" data-es="Real-Time Industrial Anomaly Monitor">Real-Time Industrial Anomaly Monitor</span>
+                <span class="project-title-line" data-pt="Dashboard IoT SECOM" data-en="SECOM IoT Dashboard" data-es="Dashboard IoT SECOM">SECOM IoT Dashboard</span>
+              </h3>
+              <div class="project-status">
+                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
+                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Recent">Recent</span>
+                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
+              </div>
             </div>
             <div class="project-body">
-            <p class="project-description">
-                <span class="description-short" data-pt="Detecte anomalias em dados de fabricação de semicondutores e monitore a saúde do sistema em tempo real, acelerando a detecção de problemas e a estabilidade do processo." data-en="Detect anomalies in semiconductor manufacturing data and monitor system health in real time, enabling faster issue detection and process stability." data-es="Detecta anomalías en datos de fabricación de semiconductores y monitoriza la salud del sistema en tiempo real, acelerando la detección de incidencias y la estabilidad del proceso.">Detect anomalies in semiconductor manufacturing data and monitor system health in real time, enabling faster issue detection and process stability.</span>
-                <span class="description-full" style="display: none;" data-pt="Detecte anomalias em dados de fabricação de semicondutores e monitore a saúde do sistema em tempo real, acelerando a detecção de problemas e a estabilidade do processo." data-en="Detect anomalies in semiconductor manufacturing data and monitor system health in real time, enabling faster issue detection and process stability." data-es="Detecta anomalías en datos de fabricación de semiconductores y monitoriza la salud del sistema en tiempo real, acelerando la detección de incidencias y la estabilidad del proceso.">Detect anomalies in semiconductor manufacturing data and monitor system health in real time, enabling faster issue detection and process stability.</span>
-            </p>
+              <p class="project-description">
+                <span class="description-short" data-pt="Dashboard industrial que reproduz o dataset SECOM como stream IoT em tempo real, com scoring de anomalias via autoencoder FastAPI e visualização operacional." data-en="Industrial dashboard that replays the SECOM dataset as a live IoT stream, with anomaly scoring via a FastAPI autoencoder and operational visualization." data-es="Dashboard industrial que reproduce el dataset SECOM como stream IoT en tiempo real, con scoring de anomalías vía autoencoder FastAPI y visualización operacional.">Industrial dashboard that replays the SECOM dataset as a live IoT stream, with anomaly scoring via a FastAPI autoencoder and operational visualization.</span>
+                <span class="description-full" style="display: none;" data-pt="Real-Time Industrial Anomaly Monitor é uma dashboard Next.js para detecção de anomalias em fabricação de semicondutores. Reproduz o SECOM como stream de sensores (1 Hz), adapta features 590→558, acorda a API no Hugging Face antes do dashboard e oferece KPIs, telemetria, log de eventos, injeção de anomalias e scoring local quando a API está offline." data-en="Real-Time Industrial Anomaly Monitor is a Next.js dashboard for semiconductor manufacturing anomaly detection. It replays SECOM as a sensor stream (1 Hz), adapts features 590→558, wakes the Hugging Face API before entering the dashboard, and provides KPIs, telemetry, event logs, anomaly injection, and local scoring when the API is offline." data-es="Real-Time Industrial Anomaly Monitor es un dashboard Next.js para detección de anomalías en fabricación de semiconductores. Reproduce SECOM como stream de sensores (1 Hz), adapta features 590→558, despierta la API en Hugging Face antes del dashboard y ofrece KPIs, telemetría, log de eventos, inyección de anomalías y scoring local cuando la API está offline.">Real-Time Industrial Anomaly Monitor is a Next.js dashboard for semiconductor manufacturing anomaly detection. It replays SECOM as a sensor stream (1 Hz), adapts features 590→558, wakes the Hugging Face API before entering the dashboard, and provides KPIs, telemetry, event logs, anomaly injection, and local scoring when the API is offline.</span>
+              </p>
               <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="View more project details">
                 <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
               </button>
-            <div class="project-metrics">
-              <div class="metric">
-                <i class="fas fa-microchip"></i>
-                <span data-pt="Features monitoradas: 558" data-en="Features monitored: 558" data-es="Features monitorizadas: 558">Features monitored: 558</span>
+              <div class="project-metrics">
+                <div class="metric">
+                  <i class="fas fa-industry"></i>
+                  <span data-pt="Replay SECOM · 1 Hz" data-en="SECOM replay · 1 Hz" data-es="Replay SECOM · 1 Hz">SECOM replay · 1 Hz</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-microchip"></i>
+                  <span data-pt="Features: 590 → 558" data-en="Features: 590 → 558" data-es="Features: 590 → 558">Features: 590 → 558</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-bolt"></i>
+                  <span data-pt="Boot screen · API wake-up" data-en="Boot screen · API wake-up" data-es="Boot screen · API wake-up">Boot screen · API wake-up</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-database"></i>
+                  <span data-pt="Dataset SECOM industrial" data-en="Industrial SECOM dataset" data-es="Dataset SECOM industrial">Industrial SECOM dataset</span>
+                </div>
               </div>
-              <div class="metric">
-                <i class="fas fa-wave-square"></i>
-                <span data-pt="Threshold padrão: 0.45" data-en="Default threshold: 0.45" data-es="Umbral predeterminado: 0.45">Default threshold: 0.45</span>
+              <div class="project-tech">
+                <span class="tech-tag">Next.js</span>
+                <span class="tech-tag">Autoencoder</span>
+                <span class="tech-tag">FastAPI</span>
+                <span class="tech-tag">Recharts</span>
               </div>
-              <div class="metric">
-                <i class="fas fa-sync"></i>
-                <span data-pt="Loop automático: 9s" data-en="Auto loop cadence: 9s" data-es="Cadencia de loop: 9s">Auto loop cadence: 9s</span>
-              </div>
-              <div class="metric">
-                <i class="fas fa-database"></i>
-                <span data-pt="Dataset: 1.567 amostras" data-en="Dataset: 1,567 samples" data-es="Dataset: 1.567 muestras">Dataset: 1,567 samples</span>
-              </div>
-            </div>
-            <div class="project-tech">
-              <span class="tech-tag">TensorFlow</span>
-              <span class="tech-tag">Autoencoder</span>
-              <span class="tech-tag">FastAPI</span>
-            </div>
             </div>
             <div class="project-value-benefits" style="display: none;">
               <div class="value-benefit-item">
-                <div class="value-benefit-icon">
-                  <i class="fas fa-shield-alt"></i>
-                </div>
+                <div class="value-benefit-icon"><i class="fas fa-shield-alt"></i></div>
                 <div class="value-benefit-content">
                   <h4 class="value-benefit-title" data-pt="Detecção precoce de anomalias" data-en="Early Anomaly Detection" data-es="Detección temprana de anomalías">Early Anomaly Detection</h4>
-                  <p class="value-benefit-description" data-pt="Identificar padrões anormais nos dados de produção antes das falhas, permitindo que os engenheiros intervenham cedo e reduzam paragens não planeadas." data-en="Identify abnormal patterns in production data before failures occur, allowing engineers to intervene early and reduce unplanned downtime." data-es="Identificar patrones anómalos en los datos de producción antes de que ocurran fallas, permitiendo a los ingenieros intervenir a tiempo y reducir el tiempo de inactividad no planificado.">Identify abnormal patterns in production data before failures occur, allowing engineers to intervene early and reduce unplanned downtime.</p>
+                  <p class="value-benefit-description" data-pt="Scores de risco em tempo real sobre o replay SECOM ajudam a sinalizar desvios de processo antes de falhas de produção." data-en="Real-time risk scores on SECOM replay help flag process deviations before production failures." data-es="Scores de riesgo en tiempo real sobre el replay SECOM ayudan a señalar desviaciones de proceso antes de fallas de producción.">Real-time risk scores on SECOM replay help flag process deviations before production failures.</p>
                 </div>
               </div>
               <div class="value-benefit-item">
-                <div class="value-benefit-icon">
-                  <i class="fas fa-eye"></i>
-                </div>
+                <div class="value-benefit-icon"><i class="fas fa-eye"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Monitoramento do sistema em tempo real" data-en="Real-Time System Monitoring" data-es="Monitoreo del sistema en tiempo real">Real-Time System Monitoring</h4>
-                  <p class="value-benefit-description" data-pt="Monitorizar continuamente os sinais de fabrico para detetar problemas à medida que ocorrem, permitindo resposta mais rápida e processos de produção mais estáveis." data-en="Continuously monitor manufacturing signals to detect issues as they happen, enabling faster response and more stable production processes." data-es="Monitorear continuamente las señales de manufactura para detectar problemas a medida que ocurren, permitiendo una respuesta más rápida y procesos de producción más estables.">Continuously monitor manufacturing signals to detect issues as they happen, enabling faster response and more stable production processes.</p>
+                  <h4 class="value-benefit-title" data-pt="Monitoramento operacional em tempo real" data-en="Real-Time Operational Monitoring" data-es="Monitoreo operacional en tiempo real">Real-Time Operational Monitoring</h4>
+                  <p class="value-benefit-description" data-pt="KPIs, telemetria de sensores, saída do modelo e log de eventos numa única shell de monitoramento industrial." data-en="KPIs, sensor telemetry, model output, and event logs in a single industrial monitoring shell." data-es="KPIs, telemetría de sensores, salida del modelo y log de eventos en un único shell de monitoreo industrial.">KPIs, sensor telemetry, model output, and event logs in a single industrial monitoring shell.</p>
                 </div>
               </div>
               <div class="value-benefit-item">
-                <div class="value-benefit-icon">
-                  <i class="fas fa-chart-bar"></i>
-                </div>
+                <div class="value-benefit-icon"><i class="fas fa-plug"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Apoio à análise de causa raiz" data-en="Root Cause Analysis Support" data-es="Apoyo al análisis de causa raíz">Root Cause Analysis Support</h4>
-                  <p class="value-benefit-description" data-pt="Destacar as variáveis mais influentes na deteção de anomalias, ajudando os engenheiros a perceber os fatores de falha e a priorizar ações corretivas." data-en="Highlight the most influential variables in anomaly detection, helping engineers understand failure drivers and prioritize corrective actions." data-es="Resaltar las variables más influyentes en la detección de anomalías, ayudando a los ingenieros a entender las causas de fallo y a priorizar acciones correctivas.">Highlight the most influential variables in anomaly detection, helping engineers understand failure drivers and prioritize corrective actions.</p>
+                  <h4 class="value-benefit-title" data-pt="Experiência pronta para deploy" data-en="Deploy-ready experience" data-es="Experiencia lista para deploy">Deploy-ready experience</h4>
+                  <p class="value-benefit-description" data-pt="Boot screen aguarda a API no Hugging Face e evita dashboard quebrado em cold start; fallback local quando a inferência está offline." data-en="Boot screen waits for the Hugging Face API and avoids a broken dashboard on cold start; local fallback when inference is offline." data-es="Boot screen espera la API en Hugging Face y evita un dashboard roto en cold start; fallback local cuando la inferencia está offline.">Boot screen waits for the Hugging Face API and avoids a broken dashboard on cold start; local fallback when inference is offline.</p>
                 </div>
               </div>
             </div>
             <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/secom_failure_prediction" class="project-link project-link-primary" target="_blank">
+              <a href="https://github.com/sidnei-almeida/industrial-iot-anomaly-monitor" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
                 <i class="fab fa-github"></i>
                 <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
               </a>
-              <a href="./projects/secom-anomaly/secom-anomaly.html" class="project-link project-link-secondary" target="_blank">
-                <i class="fas fa-external-link-alt"></i>
+              <a href="https://industrial-iot-anomaly-monitor.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
+                <i class="fas fa-desktop"></i>
                 <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
               </a>
             </div>
@@ -785,81 +783,86 @@
           </div>
         </div>
 
-        <!-- Projeto: FluxForecast — LSTM Liquid Flow Rate Prediction -->
-        <div class="project-card" data-category="machine-learning analytics web-app">
+        <!-- Projeto: Corporate Signal Intelligence -->
+        <div class="project-card" data-category="analytics machine-learning web-app ai">
           <div class="project-image">
-            <img src="./images/project-2.webp" alt="FluxForecast — LSTM real-time liquid flow rate prediction for offshore risers" loading="lazy" />
+            <img src="./images/corporate-dash-anomaly.webp" alt="Corporate Signal Intelligence — AI anomaly detection dashboard" loading="lazy" />
           </div>
           <div class="project-content">
             <div class="project-header">
               <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="FluxForecast · Previsão de Vazão" data-en="FluxForecast · Liquid Flow Prediction" data-es="FluxForecast · Predicción de Caudal">FluxForecast · Liquid Flow Prediction</span>
-                <span class="project-title-line" data-pt="em tempo real com LSTM" data-en="in Real Time with LSTM" data-es="en tiempo real con LSTM">in Real Time with LSTM</span>
+                <span class="project-title-line" data-pt="Corporate Signal Intelligence" data-en="Corporate Signal Intelligence" data-es="Corporate Signal Intelligence">Corporate Signal Intelligence</span>
+                <span class="project-title-line" data-pt="Dashboard de Anomalias com IA" data-en="AI Anomaly Detection Dashboard" data-es="Dashboard de Anomalías con IA">AI Anomaly Detection Dashboard</span>
               </h3>
               <div class="project-status">
                 <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
-                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recent</span>
+                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Recent">Recent</span>
                 <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
               </div>
             </div>
             <div class="project-body">
               <p class="project-description">
-                <span class="description-short" data-pt="Monitore e preveja a vazão de líquidos em risers offshore com um modelo LSTM, simulando um stream de telemetria em tempo real com detecção de anomalias por limiares P05/P95." data-en="Monitor and predict liquid flow rates in offshore risers using an LSTM model, simulating a live telemetry stream with P05/P95 threshold-based anomaly detection." data-es="Monitorea y predice caudales de líquido en risers offshore con un modelo LSTM, simulando un stream de telemetría en tiempo real con detección de anomalías por umbrales P05/P95.">Monitor and predict liquid flow rates in offshore risers using an LSTM model, simulating a live telemetry stream with P05/P95 threshold-based anomaly detection.</span>
-                <span class="description-full" style="display: none;" data-pt="Monitore e preveja a vazão de líquidos em risers offshore com um modelo LSTM, simulando um stream de telemetria em tempo real com detecção de anomalias por limiares P05/P95." data-en="Monitor and predict liquid flow rates in offshore risers using an LSTM model, simulating a live telemetry stream with P05/P95 threshold-based anomaly detection." data-es="Monitorea y predice caudales de líquido en risers offshore con un modelo LSTM, simulando un stream de telemetría en tiempo real con detección de anomalías por umbrales P05/P95.">Monitor and predict liquid flow rates in offshore risers using an LSTM model, simulating a live telemetry stream with P05/P95 threshold-based anomaly detection.</span>
+                <span class="description-short" data-pt="Dashboard executiva para monitoramento de empresas públicas, detecção de anomalias em sinais financeiros e geração de AI Briefings a partir de eventos críticos." data-en="Executive dashboard for public company monitoring, financial signal anomaly detection, and AI Briefings generated from critical events." data-es="Dashboard ejecutiva para monitoreo de empresas públicas, detección de anomalías en señales financieras y generación de AI Briefings a partir de eventos críticos.">Executive dashboard for public company monitoring, financial signal anomaly detection, and AI Briefings generated from critical events.</span>
+                <span class="description-full" style="display: none;" data-pt="Corporate Signal Intelligence é uma plataforma analítica para monitorar empresas públicas e identificar eventos anômalos em séries financeiras, métricas operacionais e sinais regulatórios. Combina API FastAPI, Isolation Forest, PostgreSQL/Neon e interface Next.js com Overview, investigação de anomalias, inteligência por empresa e AI Executive Briefings via Groq (Llama 3.3 70B)." data-en="Corporate Signal Intelligence is an analytics platform for monitoring public companies and identifying anomalous events across financial series, operational metrics, and regulatory signals. It combines a FastAPI backend, Isolation Forest, PostgreSQL/Neon, and a Next.js interface with Overview, anomaly investigation, company intelligence, and AI Executive Briefings via Groq (Llama 3.3 70B)." data-es="Corporate Signal Intelligence es una plataforma analítica para monitorear empresas públicas e identificar eventos anómalos en series financieras, métricas operacionales y señales regulatorias. Combina API FastAPI, Isolation Forest, PostgreSQL/Neon e interfaz Next.js con Overview, investigación de anomalías, inteligencia por empresa y AI Executive Briefings vía Groq (Llama 3.3 70B).">Corporate Signal Intelligence is an analytics platform for monitoring public companies and identifying anomalous events across financial series, operational metrics, and regulatory signals. It combines a FastAPI backend, Isolation Forest, PostgreSQL/Neon, and a Next.js interface with Overview, anomaly investigation, company intelligence, and AI Executive Briefings via Groq (Llama 3.3 70B).</span>
               </p>
               <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
                 <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
               </button>
               <div class="project-metrics">
                 <div class="metric">
-                  <i class="fas fa-wave-square"></i>
-                  <span data-pt="7 canais de pressão normalizados" data-en="7 normalised pressure channels" data-es="7 canales de presión normalizados">7 normalised pressure channels</span>
+                  <i class="fas fa-building"></i>
+                  <span data-pt="Monitoramento de empresas públicas" data-en="Public company monitoring" data-es="Monitoreo de empresas públicas">Public company monitoring</span>
                 </div>
                 <div class="metric">
                   <i class="fas fa-chart-line"></i>
-                  <span data-pt="Stream ao vivo com P05/P95 fixos" data-en="Live stream with fixed P05/P95 thresholds" data-es="Stream en vivo con umbrales P05/P95 fijos">Live stream with fixed P05/P95 thresholds</span>
+                  <span data-pt="Isolation Forest · anomalias" data-en="Isolation Forest · anomalies" data-es="Isolation Forest · anomalías">Isolation Forest · anomalies</span>
                 </div>
                 <div class="metric">
-                  <i class="fas fa-database"></i>
-                  <span data-pt="Dataset: 7.074 amostras escalonadas" data-en="Dataset: 7,074 pre-scaled samples" data-es="Dataset: 7.074 muestras escaladas">Dataset: 7,074 pre-scaled samples</span>
+                  <i class="fas fa-robot"></i>
+                  <span data-pt="AI Briefings · Groq" data-en="AI Briefings · Groq" data-es="AI Briefings · Groq">AI Briefings · Groq</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-cloud"></i>
+                  <span data-pt="Next.js · Vercel · Render" data-en="Next.js · Vercel · Render" data-es="Next.js · Vercel · Render">Next.js · Vercel · Render</span>
                 </div>
               </div>
               <div class="project-tech">
-                <span class="tech-tag">LSTM</span>
+                <span class="tech-tag">Next.js</span>
                 <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">Render</span>
-                <span class="tech-tag">Time Series</span>
+                <span class="tech-tag">Scikit-learn</span>
+                <span class="tech-tag">PostgreSQL</span>
+                <span class="tech-tag">Groq</span>
               </div>
             </div>
             <div class="project-value-benefits" style="display: none;">
               <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-gauge-high"></i></div>
+                <div class="value-benefit-icon"><i class="fas fa-ranking-star"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Monitoramento de produção em tempo real" data-en="Real-Time Production Monitoring" data-es="Monitoreo de producción en tiempo real">Real-Time Production Monitoring</h4>
-                  <p class="value-benefit-description" data-pt="Visualize previsões de vazão de líquido ao vivo comparadas aos valores reais, com alertas automáticos quando a operação sai da faixa normal." data-en="Visualise live liquid flow rate predictions against actual values, with automatic alerts when operation drifts outside normal range." data-es="Visualiza predicciones de caudal en vivo frente a valores reales, con alertas automáticas cuando la operación sale del rango normal.">Visualise live liquid flow rate predictions against actual values, with automatic alerts when operation drifts outside normal range.</p>
+                  <h4 class="value-benefit-title" data-pt="Priorização por risco" data-en="Risk-based prioritization" data-es="Priorización por riesgo">Risk-based prioritization</h4>
+                  <p class="value-benefit-description" data-pt="Ranking de empresas por taxa de anomalia, distribuição de tipos de sinal e visão executiva em um único Overview para focar investigações." data-en="Company ranking by anomaly rate, signal type distribution, and executive overview in one place to focus investigations." data-es="Ranking de empresas por tasa de anomalía, distribución de tipos de señal y visión ejecutiva en un solo Overview para enfocar investigaciones.">Company ranking by anomaly rate, signal type distribution, and executive overview in one place to focus investigations.</p>
                 </div>
               </div>
               <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                <div class="value-benefit-icon"><i class="fas fa-magnifying-glass-chart"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Detecção de anomalias por limiares estatísticos" data-en="Statistical Threshold Anomaly Detection" data-es="Detección de anomalías por umbrales estadísticos">Statistical Threshold Anomaly Detection</h4>
-                  <p class="value-benefit-description" data-pt="Zonas P05/P95 fixas com coloração dinâmica identificam regimes de baixo/alto fluxo sem configuração manual, acelerando a identificação de eventos operacionais." data-en="Fixed P05/P95 zones with dynamic colouring identify low/high-flow regimes without manual configuration, accelerating identification of operational events." data-es="Zonas P05/P95 fijas con coloración dinámica identifican regímenes de bajo/alto caudal sin configuración manual, acelerando la identificación de eventos operativos.">Fixed P05/P95 zones with dynamic colouring identify low/high-flow regimes without manual configuration, accelerating identification of operational events.</p>
+                  <h4 class="value-benefit-title" data-pt="Investigação por ticker e severidade" data-en="Investigation by ticker and severity" data-es="Investigación por ticker y severidad">Investigation by ticker and severity</h4>
+                  <p class="value-benefit-description" data-pt="Módulos de anomalias e Company Intelligence com timeline, breakdown de sinais e tabelas filtráveis por tipo de evento e severidade." data-en="Anomaly and Company Intelligence modules with timeline, signal breakdown, and filterable tables by event type and severity." data-es="Módulos de anomalías y Company Intelligence con timeline, desglose de señales y tablas filtrables por tipo de evento y severidad.">Anomaly and Company Intelligence modules with timeline, signal breakdown, and filterable tables by event type and severity.</p>
                 </div>
               </div>
               <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-oil-well"></i></div>
+                <div class="value-benefit-icon"><i class="fas fa-file-lines"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Aplicação em operações subsea e de riser" data-en="Subsea and Riser Operations Application" data-es="Aplicación en operaciones subsea y de riser">Subsea and Riser Operations Application</h4>
-                  <p class="value-benefit-description" data-pt="Modelo LSTM treinado em dados reais de riser offshore demonstra aplicabilidade em ambientes de produção de petróleo e gás com sensores de pressão distribuídos." data-en="LSTM model trained on real offshore riser data demonstrates applicability in oil and gas production environments with distributed pressure sensors." data-es="Modelo LSTM entrenado con datos reales de riser offshore demuestra aplicabilidad en entornos de producción de petróleo y gas con sensores de presión distribuidos.">LSTM model trained on real offshore riser data demonstrates applicability in oil and gas production environments with distributed pressure sensors.</p>
+                  <h4 class="value-benefit-title" data-pt="Briefings executivos com IA" data-en="AI executive briefings" data-es="Briefings ejecutivos con IA">AI executive briefings</h4>
+                  <p class="value-benefit-description" data-pt="Selecione um evento anômalo e gere uma narrativa executiva com Groq, transformando scores técnicos em contexto analítico para decisão." data-en="Select an anomalous event and generate an executive narrative with Groq, turning technical scores into analytical context for decision-making." data-es="Seleccione un evento anómalo y genere una narrativa ejecutiva con Groq, transformando scores técnicos en contexto analítico para la decisión.">Select an anomalous event and generate an executive narrative with Groq, turning technical scores into analytical context for decision-making.</p>
                 </div>
               </div>
             </div>
             <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/virtual_flow_forecasting" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/sidnei-almeida/corporate-signal-intelligence-dashboard" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
                 <i class="fab fa-github"></i>
                 <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
               </a>
-              <a href="./projects/fluxforecast/fluxforecast.html" class="project-link project-link-secondary">
+              <a href="https://corporate-signal-intelligence-dashb.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
                 <i class="fas fa-desktop"></i>
                 <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
               </a>
