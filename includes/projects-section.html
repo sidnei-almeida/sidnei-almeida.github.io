@@ -1353,82 +1353,102 @@
           </div>
         </div>
 
-        <!-- Projeto 13: Sistema de Manutenção Preditiva com LSTM -->
-        <div class="project-card" data-category="deep-learning machine-learning web-app">
+        <!-- Projeto: PM Monitor · Real-Time Predictive Maintenance Dashboard -->
+        <div class="project-card" data-category="machine-learning analytics web-app">
           <div class="project-image">
-            <img src="./images/manut1.webp" alt="Sistema de Manutenção Preditiva com LSTM" loading="lazy" />
+            <img src="./images/dash_pm_monitor.webp" alt="PM Monitor real-time predictive maintenance dashboard displayed on a laptop" loading="lazy" />
           </div>
           <div class="project-content">
             <div class="project-header">
-            <h3 class="project-title" data-pt="Sistema de Manutenção Preditiva LSTM" data-en="Predictive Maintenance System LSTM" data-es="Sistema de Mantenimiento Predictivo LSTM">Sistema de Manutenção Preditiva LSTM</h3>
-            <div class="project-status">
-              <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Ativo</span>
-              <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recente</span>
-              <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Destaque</span>
-            </div>
+              <h3 class="project-title project-title--stacked">
+                <span class="project-title-line" data-pt="PM Monitor · Dashboard de Manutenção Preditiva" data-en="PM Monitor · Real-Time Predictive Maintenance" data-es="PM Monitor · Mantenimiento Predictivo en Tiempo Real">PM Monitor · Real-Time Predictive Maintenance</span>
+                <span class="project-title-line" data-pt="em Tempo Real" data-en="Dashboard" data-es="Dashboard">Dashboard</span>
+              </h3>
+              <div class="project-status">
+                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Ativo</span>
+                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recente</span>
+                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Destaque</span>
+              </div>
             </div>
             <div class="project-body">
-            <p class="project-description">
-                <span class="description-short" data-pt="Prever falhas em equipamentos com dados de séries temporais de sensores e modelos LSTM, permitindo manutenção proativa e operações industriais mais fiáveis." data-en="Predict equipment failures using time series sensor data and LSTM models, enabling proactive maintenance and more reliable industrial operations." data-es="Predecir fallas en equipos con datos de series temporales de sensores y modelos LSTM, permitiendo mantenimiento proactivo y operaciones industriales más fiables.">Prever falhas em equipamentos com dados de séries temporais de sensores e modelos LSTM, permitindo manutenção proativa e operações industriais mais fiáveis.</span>
-                <span class="description-full" style="display: none;" data-pt="Interface web com visualizações Plotly e API FastAPI para explorar predições LSTM em dados de sensores industriais (séries temporais). Inclui simulação de linha, consola de sensores e histórico de inferência." data-en="Web interface with Plotly visualizations and a FastAPI backend to explore LSTM predictions on industrial sensor time-series data. Includes line simulation, a sensor console, and inference history." data-es="Interfaz web con visualizaciones Plotly y backend FastAPI para explorar predicciones LSTM sobre series temporales de sensores industriales. Incluye simulación de línea, consola de sensores e historial de inferencia.">Interface web com visualizações Plotly e API FastAPI para explorar predições LSTM em dados de sensores industriais (séries temporais). Inclui simulação de linha, consola de sensores e histórico de inferência.</span>
-            </p>
+              <p class="project-description">
+                <span class="description-short" data-pt="Dashboard de manutenção preditiva em tempo real que reproduz telemetria industrial como fluxo simulado de máquina, executa inferência LSTM e visualiza saúde do ativo, risco e decisões de manutenção." data-en="Real-time predictive maintenance dashboard that replays industrial telemetry as a simulated machine stream, runs LSTM sequence inference, and visualizes equipment health, failure risk, and maintenance decisions." data-es="Dashboard de mantenimiento predictivo en tiempo real que reproduce telemetría industrial como flujo simulado de máquina, ejecuta inferencia LSTM y visualiza salud del activo, riesgo y decisiones de mantenimiento.">Dashboard de manutenção preditiva em tempo real que reproduz telemetria industrial como fluxo simulado de máquina, executa inferência LSTM e visualiza saúde do ativo, risco e decisões de manutenção.</span>
+                <span class="description-full" style="display: none;" data-pt="PM Monitor é uma dashboard cinematográfica de manutenção preditiva em tempo real para equipamentos industriais. Simula um fluxo ao vivo de telemetria a partir de CSV histórico, mantém uma janela sequencial para inferência LSTM e exibe saúde da máquina, probabilidade de falha, drivers de risco e decisões operacionais numa interface estilo centro de comando — sem conectar a hardware de fábrica real." data-en="PM Monitor is a cinematic real-time predictive maintenance dashboard for industrial equipment monitoring. It simulates a live telemetry stream from historical CSV data, maintains a rolling sequence window for LSTM inference, and displays model outputs through an operational control-room interface. Tracks machine condition, failure probability, asset health, threshold status, sequence readiness, event logs, and risk drivers such as tool wear, temperature gap, torque load, and rotational stress." data-es="PM Monitor es un dashboard cinematográfico de mantenimiento predictivo en tiempo real para monitoreo de equipos industriales. Simula un flujo en vivo de telemetría desde CSV histórico, mantiene una ventana secuencial para inferencia LSTM y muestra salud de la máquina, probabilidad de falla, factores de riesgo y decisiones operacionales en una interfaz tipo centro de comando.">PM Monitor é uma dashboard cinematográfica de manutenção preditiva em tempo real para equipamentos industriais. Simula um fluxo ao vivo de telemetria a partir de CSV histórico, mantém uma janela sequencial para inferência LSTM e exibe saúde da máquina, probabilidade de falha, drivers de risco e decisões operacionais numa interface estilo centro de comando — sem conectar a hardware de fábrica real.</span>
+              </p>
               <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
                 <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">Ver mais</span>
               </button>
-            <div class="project-metrics">
-              <div class="metric">
-                <i class="fas fa-bullseye"></i>
-                <span data-pt="Precisão do modelo (teste): 95.2%" data-en="Model Accuracy (Test Set): 95.2%" data-es="Precisión del modelo (conjunto de prueba): 95.2%">Precisão do modelo (teste): 95.2%</span>
+              <div class="project-metrics">
+                <div class="metric">
+                  <i class="fas fa-play-circle"></i>
+                  <span data-pt="Replay de telemetria ao vivo" data-en="Live telemetry replay" data-es="Replay de telemetría en vivo">Replay de telemetria ao vivo</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-layer-group"></i>
+                  <span data-pt="Janela LSTM: 50 / 50" data-en="LSTM sequence window: 50 / 50" data-es="Ventana LSTM: 50 / 50">Janela LSTM: 50 / 50</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-percent"></i>
+                  <span data-pt="Threshold de falha: 50%" data-en="Failure threshold: 50%" data-es="Umbral de falla: 50%">Threshold de falha: 50%</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-industry"></i>
+                  <span data-pt="Dashboard estilo operações" data-en="Operations-style dashboard" data-es="Dashboard estilo operaciones">Dashboard estilo operações</span>
+                </div>
               </div>
-              <div class="metric">
-                <i class="fas fa-cogs"></i>
-                <span data-pt="Entradas de sensor: 7 sinais industriais" data-en="Sensor Inputs: 7 industrial signals" data-es="Entradas de sensor: 7 señales industriales">Entradas de sensor: 7 sinais industriais</span>
-              </div>
-            </div>
-            <div class="project-tech">
-              <span class="tech-tag">TensorFlow</span>
-              <span class="tech-tag">LSTM</span>
-              <span class="tech-tag">Python</span>
-              <span class="tech-tag">Plotly</span>
+              <div class="project-tech">
+                <span class="tech-tag">LSTM</span>
+                <span class="tech-tag">TensorFlow</span>
+                <span class="tech-tag">FastAPI</span>
+                <span class="tech-tag">React</span>
               </div>
             </div>
             <div class="project-value-benefits" style="display: none;">
               <div class="value-benefit-item">
                 <div class="value-benefit-icon">
-                  <i class="fas fa-triangle-exclamation"></i>
+                  <i class="fas fa-satellite-dish"></i>
                 </div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Previsão de falhas em sistemas industriais" data-en="Failure Prediction in Industrial Systems" data-es="Predicción de fallas en sistemas industriales">Previsão de falhas em sistemas industriais</h4>
-                  <p class="value-benefit-description" data-pt="Prever falhas de equipamento com base em padrões de dados de sensores, permitindo que as equipas de manutenção ajam antes de ocorrerem avarias." data-en="Predict equipment failures based on sensor data patterns, allowing maintenance teams to act before breakdowns occur." data-es="Predecir fallas de equipos a partir de patrones de datos de sensores, permitiendo que los equipos de mantenimiento actúen antes de que ocurran averías.">Prever falhas de equipamento com base em padrões de dados de sensores, permitindo que as equipas de manutenção ajam antes de ocorrerem avarias.</p>
+                  <h4 class="value-benefit-title" data-pt="Monitoramento Preditivo em Tempo Real" data-en="Real-Time Predictive Monitoring" data-es="Monitoreo Predictivo en Tiempo Real">Monitoramento Preditivo em Tempo Real</h4>
+                  <p class="value-benefit-description" data-pt="Reproduz telemetria industrial histórica como um fluxo operacional ao vivo, permitindo acompanhar saúde do ativo, condição da máquina e status de manutenção." data-en="Continuously replays historical industrial telemetry as a simulated live machine stream, allowing users to monitor asset health, operating conditions, and maintenance status in real time." data-es="Reproduce telemetría industrial histórica como un flujo operacional en vivo, permitiendo monitorear salud del activo, condición de la máquina y estado de mantenimiento.">Reproduz telemetria industrial histórica como um fluxo operacional ao vivo, permitindo acompanhar saúde do ativo, condição da máquina e status de manutenção.</p>
                 </div>
               </div>
               <div class="value-benefit-item">
                 <div class="value-benefit-icon">
-                  <i class="fas fa-calendar-check"></i>
+                  <i class="fas fa-brain"></i>
                 </div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Planeamento de manutenção otimizado" data-en="Optimized Maintenance Scheduling" data-es="Planificación de mantenimiento optimizada">Planeamento de manutenção otimizado</h4>
-                  <p class="value-benefit-description" data-pt="Permitir planeamento de manutenção orientado por dados, reduzindo intervenções desnecessárias e minimizando paragens não planeadas." data-en="Enable data-driven maintenance planning, reducing unnecessary interventions and minimizing unplanned downtime." data-es="Permitir la planificación de mantenimiento basada en datos, reduciendo intervenciones innecesarias y minimizando el tiempo de inactividad no planificado.">Permitir planeamento de manutenção orientado por dados, reduzindo intervenções desnecessárias e minimizando paragens não planeadas.</p>
+                  <h4 class="value-benefit-title" data-pt="Inferência Sequencial com LSTM" data-en="LSTM Sequence Inference" data-es="Inferencia Secuencial con LSTM">Inferência Sequencial com LSTM</h4>
+                  <p class="value-benefit-description" data-pt="Usa janelas temporais deslizantes para apoiar predição de falhas com LSTM, exibindo prontidão da sequência, probabilidade de falha, threshold e estado previsto." data-en="Uses rolling time-series windows to support LSTM-based failure prediction, showing sequence readiness, failure probability, threshold comparison, and predicted maintenance state." data-es="Usa ventanas temporales deslizantes para soportar predicción de fallas con LSTM, mostrando preparación de la secuencia, probabilidad de falla, umbral y estado previsto.">Usa janelas temporais deslizantes para apoiar predição de falhas com LSTM, exibindo prontidão da sequência, probabilidade de falha, threshold e estado previsto.</p>
                 </div>
               </div>
               <div class="value-benefit-item">
                 <div class="value-benefit-icon">
-                  <i class="fas fa-chart-line"></i>
+                  <i class="fas fa-wrench"></i>
                 </div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Monitorização operacional baseada em sensores" data-en="Sensor-Based Operational Monitoring" data-es="Monitoreo operacional basado en sensores">Monitorização operacional baseada em sensores</h4>
-                  <p class="value-benefit-description" data-pt="Aproveitar entradas multi-sensor para avaliar continuamente a saúde do equipamento e detetar sinais precoces de degradação." data-en="Leverage multi-sensor inputs to continuously assess equipment health and detect early signs of degradation." data-es="Aprovechar entradas multisensor para evaluar continuamente el estado del equipo y detectar signos tempranos de degradación.">Aproveitar entradas multi-sensor para avaliar continuamente a saúde do equipamento e detetar sinais precoces de degradação.</p>
+                  <h4 class="value-benefit-title" data-pt="Interface de Decisão de Manutenção" data-en="Maintenance Decision Interface" data-es="Interfaz de Decisión de Mantenimiento">Interface de Decisão de Manutenção</h4>
+                  <p class="value-benefit-description" data-pt="Transforma a saída do modelo em sinais operacionais como estado de saúde, nível de risco, ação recomendada, logs de eventos e fatores de risco." data-en="Transforms model output into operational signals such as health state, risk level, recommended action, event logs, and risk drivers, making the system feel like a real industrial monitoring tool instead of a notebook demo." data-es="Convierte la salida del modelo en señales operacionales como estado de salud, nivel de riesgo, acción recomendada, logs de eventos y factores de riesgo.">Transforma a saída do modelo em sinais operacionais como estado de saúde, nível de risco, ação recomendada, logs de eventos e fatores de risco.</p>
+                </div>
+              </div>
+              <div class="value-benefit-item">
+                <div class="value-benefit-icon">
+                  <i class="fas fa-display"></i>
+                </div>
+                <div class="value-benefit-content">
+                  <h4 class="value-benefit-title" data-pt="UX Industrial Cinematográfica" data-en="Cinematic Industrial Dashboard UX" data-es="UX Industrial Cinematográfica">UX Industrial Cinematográfica</h4>
+                  <p class="value-benefit-description" data-pt="Apresenta o pipeline de manutenção preditiva em uma interface estilo centro de comando, com indicadores ao vivo, painéis de telemetria, barras de risco e visual premium." data-en="Presents the predictive maintenance pipeline through a high-contrast command-center interface with live indicators, telemetry panels, risk bars, and a Countach-inspired visual identity for a polished portfolio-grade demo." data-es="Presenta el pipeline de mantenimiento predictivo en una interfaz tipo centro de comando, con indicadores en vivo, paneles de telemetría, barras de riesgo y visual premium.">Apresenta o pipeline de manutenção preditiva em uma interface estilo centro de comando, com indicadores ao vivo, painéis de telemetria, barras de risco e visual premium.</p>
                 </div>
               </div>
             </div>
             <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/manutencao_preditiva_lstm" class="project-link project-link-primary" target="_blank">
+              <a href="https://github.com/sidnei-almeida/lstm-predictive-maintenance-dashboard" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
                 <i class="fab fa-github"></i>
                 <span data-pt="Código" data-en="Code" data-es="Código">Código</span>
               </a>
-              <a href="./projects/predictive-maintenance/predictive-maintenance.html" class="project-link project-link-secondary" target="_blank">
+              <a href="https://lstm-predictive-maintenance-dashboa.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
                 <i class="fas fa-external-link-alt"></i>
-                <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
+                <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Demo ao vivo</span>
               </a>
             </div>
           </div>
