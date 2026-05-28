@@ -171,7 +171,7 @@
   <link rel="preload" href="./images/project-legislativo.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/odinx.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/tbdm-bert.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/finsight.webp" as="image" type="image/webp">
+  <link rel="preload" href="./images/ai_rl.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/scientific-research-agent.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/dash_pm_monitor.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/partanom.webp" as="image" type="image/webp">
@@ -967,16 +967,16 @@
           </div>
         </div>
 
-        <!-- Projeto: Deep Reinforcement Learning Trading System -->
+        <!-- Projeto: RL Portfolio Allocation Dashboard -->
         <div class="project-card" data-category="analytics machine-learning web-app">
           <div class="project-image">
-            <img src="./images/finsight.webp" alt="Deep Reinforcement Learning Trading System" loading="lazy" />
+            <img src="./images/ai_rl.webp" alt="RL Portfolio Allocation Dashboard preview" loading="lazy" />
           </div>
           <div class="project-content">
             <div class="project-header">
               <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="Deep Reinforcement Learning" data-en="Deep Reinforcement Learning" data-es="Deep Reinforcement Learning">Deep Reinforcement Learning</span>
-                <span class="project-title-line" data-pt="Trading System" data-en="Trading System" data-es="Trading System">Trading System</span>
+                <span class="project-title-line" data-pt="RL Portfolio Allocation" data-en="RL Portfolio Allocation" data-es="RL Portfolio Allocation">RL Portfolio Allocation</span>
+                <span class="project-title-line" data-pt="Dashboard" data-en="Dashboard" data-es="Dashboard">Dashboard</span>
               </h3>
               <div class="project-status">
                 <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
@@ -986,67 +986,68 @@
             </div>
             <div class="project-body">
               <p class="project-description">
-                <span class="description-short" data-pt="Sistema de trading quantitativo alimentado por modelos de deep reinforcement learning para simular, otimizar e executar decisões de estratégia com controlo de risco." data-en="Quantitative trading system powered by deep reinforcement learning models to simulate, optimize, and execute strategy decisions with risk control." data-es="Sistema de trading cuantitativo impulsado por modelos de deep reinforcement learning para simular, optimizar y ejecutar decisiones de estrategia con control de riesgo.">Quantitative trading system powered by deep reinforcement learning models to simulate, optimize, and execute strategy decisions with risk control.</span>
-                <span class="description-full" style="display: none;" data-pt="Quantitative trading system powered by deep reinforcement learning models to simulate and optimize trading strategies. Includes real-time monitoring dashboard for performance tracking, position management, and risk analysis." data-en="Quantitative trading system powered by deep reinforcement learning models to simulate and optimize trading strategies. Includes real-time monitoring dashboard for performance tracking, position management, and risk analysis." data-es="Sistema de trading cuantitativo impulsado por modelos de deep reinforcement learning para simular y optimizar estrategias de trading. Incluye un dashboard de monitorización en tiempo real para seguimiento de performance, gestión de posiciones y análisis de riesgo.">Quantitative trading system powered by deep reinforcement learning models to simulate and optimize trading strategies. Includes real-time monitoring dashboard for performance tracking, position management, and risk analysis.</span>
+                <span class="description-short" data-pt="Dashboard de alocação de portfólio com PPO, replay histórico de mercado, simulação paper-trading e inferência de política em tempo real." data-en="PPO-based portfolio allocation dashboard with historical market replay, paper-trading simulation, and real-time policy inference." data-es="Dashboard de asignación de portafolio con PPO, replay histórico de mercado, simulación paper-trading e inferencia de política en tiempo real.">PPO-based portfolio allocation dashboard with historical market replay, paper-trading simulation, and real-time policy inference.</span>
+                <span class="description-full" style="display: none;" data-pt="Dashboard profissional para alocação de portfólio com PPO, combinando replay histórico de mercado com dados Stooq CSV locais, paper-trading simulado, guard-rails de risco, comparação com benchmark Buy &amp; Hold e inferência de política de reinforcement learning em tempo real. Modos Conservative, Balanced e Aggressive, exposição do portfólio, market watch e feed de execução simulada — sem execução em corretora real." data-en="A professional dashboard for PPO-based portfolio allocation, combining historical market replay using local Stooq CSV data, simulated paper trading, risk guardrails, benchmark comparison, and real-time reinforcement learning policy inference. Includes Conservative, Balanced, and Aggressive allocation modes, portfolio exposure, market watch, and a simulated execution feed—no live broker execution." data-es="Dashboard profesional para asignación de portafolio con PPO, combinando replay histórico de mercado con datos Stooq CSV locales, paper-trading simulado, límites de riesgo, comparación con benchmark Buy &amp; Hold e inferencia de política de reinforcement learning en tiempo real. Modos Conservative, Balanced y Aggressive, exposición del portafolio, market watch y feed de ejecución simulada—sin ejecución en bróker real.">A professional dashboard for PPO-based portfolio allocation, combining historical market replay using local Stooq CSV data, simulated paper trading, risk guardrails, benchmark comparison, and real-time reinforcement learning policy inference. Includes Conservative, Balanced, and Aggressive allocation modes, portfolio exposure, market watch, and a simulated execution feed—no live broker execution.</span>
               </p>
               <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
                 <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
               </button>
               <div class="project-metrics">
                 <div class="metric">
-                  <i class="fas fa-chart-line"></i>
-                  <span data-pt="Saldo &amp; P&amp;L em tempo real" data-en="Live balance &amp; P&amp;L" data-es="Saldo y P&amp;L en vivo">Live balance &amp; P&amp;L</span>
+                  <i class="fas fa-history"></i>
+                  <span data-pt="Replay histórico · Stooq CSV" data-en="Historical replay · Stooq CSV" data-es="Replay histórico · Stooq CSV">Historical replay · Stooq CSV</span>
                 </div>
                 <div class="metric">
-                  <i class="fas fa-layer-group"></i>
-                  <span data-pt="Posições abertas" data-en="Open positions" data-es="Posiciones abiertas">Open positions</span>
+                  <i class="fas fa-robot"></i>
+                  <span data-pt="Inferência PPO · ONNX Runtime" data-en="PPO inference · ONNX Runtime" data-es="Inferencia PPO · ONNX Runtime">PPO inference · ONNX Runtime</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-balance-scale"></i>
+                  <span data-pt="Agente vs Buy &amp; Hold" data-en="Agent vs Buy &amp; Hold" data-es="Agente vs Buy &amp; Hold">Agent vs Buy &amp; Hold</span>
                 </div>
                 <div class="metric">
                   <i class="fas fa-shield-alt"></i>
-                  <span data-pt="Guard-rails de risco" data-en="Risk guard-rails" data-es="Límites de riesgo">Risk guard-rails</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-exchange-alt"></i>
-                  <span data-pt="FastAPI · Render" data-en="FastAPI · Render" data-es="FastAPI · Render">FastAPI · Render</span>
+                  <span data-pt="Paper-trading simulado" data-en="Simulated paper trading" data-es="Paper-trading simulado">Simulated paper trading</span>
                 </div>
               </div>
               <div class="project-tech">
-                <span class="tech-tag">Deep RL</span>
-                <span class="tech-tag">Trading</span>
+                <span class="tech-tag">Next.js</span>
+                <span class="tech-tag">TypeScript</span>
                 <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">JavaScript</span>
+                <span class="tech-tag">PPO</span>
+                <span class="tech-tag">Recharts</span>
               </div>
             </div>
             <div class="project-value-benefits" style="display: none;">
               <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-desktop"></i></div>
+                <div class="value-benefit-icon"><i class="fas fa-chart-area"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Contexto de mercado num só ecrã" data-en="Single-screen market context" data-es="Contexto de mercado en una sola pantalla">Single-screen market context</h4>
-                  <p class="value-benefit-description" data-pt="Saldo, posições e terminal de logs no mesmo layout para revisões de rotina — não substitui compliance nem execução de ordens fora do teu sistema." data-en="Balance, positions and log terminal in one layout for routine reviews—not compliance sign-off or order execution outside your stack." data-es="Saldo, posiciones y terminal de logs en un mismo layout para revisiones rutinarias: no sustituye cumplimiento ni ejecución fuera de tu stack.">Balance, positions and log terminal in one layout for routine reviews—not compliance sign-off or order execution outside your stack.</p>
+                  <h4 class="value-benefit-title" data-pt="Replay histórico de mercado" data-en="Historical market replay" data-es="Replay histórico de mercado">Historical market replay</h4>
+                  <p class="value-benefit-description" data-pt="Reproduz séries locais Stooq CSV como fluxo de mercado para testar políticas PPO sem afirmar dados ao vivo nem execução real." data-en="Replays local Stooq CSV series as a market stream to evaluate PPO policies without claiming live market feeds or real execution." data-es="Reproduce series locales Stooq CSV como flujo de mercado para evaluar políticas PPO sin afirmar datos en vivo ni ejecución real.">Replays local Stooq CSV series as a market stream to evaluate PPO policies without claiming live market feeds or real execution.</p>
                 </div>
               </div>
               <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-plug"></i></div>
+                <div class="value-benefit-icon"><i class="fas fa-trophy"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Multi-exchange (Binance, Alpaca, Bybit)" data-en="Multi-exchange (Binance, Alpaca, Bybit)" data-es="Multi-exchange (Binance, Alpaca, Bybit)">Multi-exchange (Binance, Alpaca, Bybit)</h4>
-                  <p class="value-benefit-description" data-pt="Ligação a corretoras via API com estado de credenciais e controlos de agente (start/stop) a partir do painel." data-en="Connect to brokers via API with credential status and agent controls (start/stop) from the dashboard." data-es="Conexión a brókers vía API con estado de credenciales y controles del agente (start/stop) desde el panel.">Connect to brokers via API with credential status and agent controls (start/stop) from the dashboard.</p>
+                  <h4 class="value-benefit-title" data-pt="Comparação com benchmark" data-en="Benchmark comparison" data-es="Comparación con benchmark">Benchmark comparison</h4>
+                  <p class="value-benefit-description" data-pt="Curvas do agente PPO e Buy &amp; Hold no mesmo painel para revisar alocação, drawdown e experimentos de modo (Conservative, Balanced, Aggressive)." data-en="PPO agent and Buy &amp; Hold curves on one screen to review allocation, drawdown, and mode experiments (Conservative, Balanced, Aggressive)." data-es="Curvas del agente PPO y Buy &amp; Hold en un mismo panel para revisar asignación, drawdown y experimentos de modo (Conservative, Balanced, Aggressive).">PPO agent and Buy &amp; Hold curves on one screen to review allocation, drawdown, and mode experiments (Conservative, Balanced, Aggressive).</p>
                 </div>
               </div>
               <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-hand-paper"></i></div>
+                <div class="value-benefit-icon"><i class="fas fa-shield-alt"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Paragem de emergência e limites diários" data-en="Emergency stop and daily limits" data-es="Parada de emergencia y límites diarios">Emergency stop and daily limits</h4>
-                  <p class="value-benefit-description" data-pt="Guard-rails configuráveis (stop diário, alavancagem máxima, símbolos) e botão de paragem com confirmação para reduzir risco operacional." data-en="Configurable guard-rails (daily stop, max leverage, symbols) and a confirmation-gated stop button to reduce operational risk." data-es="Límites configurables (stop diario, apalancamiento máximo, símbolos) y botón de parada con confirmación para reducir riesgo operativo.">Configurable guard-rails (daily stop, max leverage, symbols) and a confirmation-gated stop button to reduce operational risk.</p>
+                  <h4 class="value-benefit-title" data-pt="Guard-rails e rebalanceamento simulado" data-en="Risk guardrails and simulated rebalancing" data-es="Límites de riesgo y rebalanceo simulado">Risk guardrails and simulated rebalancing</h4>
+                  <p class="value-benefit-description" data-pt="Revisão de exposição, market watch e feed de execução simulada com limites operacionais — pesquisa e demonstração, não aconselhamento financeiro." data-en="Portfolio exposure, market watch, and simulated execution feed with operational guardrails—for research demos, not financial advice." data-es="Exposición del portafolio, market watch y feed de ejecución simulada con límites operacionales—demostración de investigación, no asesoramiento financiero.">Portfolio exposure, market watch, and simulated execution feed with operational guardrails—for research demos, not financial advice.</p>
                 </div>
               </div>
             </div>
             <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/sidnei-almeida.github.io/tree/main/projects/quant-core" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/sidnei-almeida/ai-trading-signals-dashboard" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
                 <i class="fab fa-github"></i>
                 <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
               </a>
-              <a href="./projects/quant-core/quant-core.html" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-external-link-alt"></i>
+              <a href="https://ai-trading-signals-dashboard.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
+                <i class="fas fa-desktop"></i>
                 <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
               </a>
             </div>

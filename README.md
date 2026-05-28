@@ -60,8 +60,7 @@ The site is intentionally a pure static frontend — no build toolchain, no depe
 | [PM Monitor](https://lstm-predictive-maintenance-dashboa.vercel.app/) | Predictive ML | LSTM sequence inference | Vercel + Hugging Face |
 | [Corporate Signal Intelligence](https://corporate-signal-intelligence-dashb.vercel.app/) | Financial analytics | Isolation Forest + Groq briefings | Vercel + Render |
 | [Cinescope](./projects/tmdb-cinema/) | Recommender | BERT semantics + TMDb | Render |
-| [FinSight](./projects/quant-core/) | Quant finance | Deep RL (PPO) + FastAPI | Render |
-| [RL Trading Agent](./projects/rl_trading_dashboard/) | Quant finance | Deep RL · PPO/ONNX | YFinance |
+| [RL Portfolio Allocation Dashboard](https://ai-trading-signals-dashboard.vercel.app/) | Quant finance | PPO · ONNX · paper trading | Vercel + FastAPI |
 | [Economic Monitor SA](./projects/economic_monitoring_sa/) | Macro analytics | World Bank API | Public API |
 | [CS2 Valuation](./projects/cs2-valuation/) | Gaming / Finance | Steam API + pricing | Render |
 | [Business Growth](./projects/business_growth_potential/) | Corporate ML | Random Forest | Render |
@@ -86,8 +85,8 @@ sidnei-almeida.github.io/
     ├── research-agent/
     ├── docmind-chat/
     ├── tmdb-cinema/
-    ├── quant-core/
-    ├── rl_trading_dashboard/
+    ├── quant-core/               # legacy static demo (archived)
+    ├── rl_trading_dashboard/     # legacy static demo (archived)
     ├── economic_monitoring_sa/
     ├── monitoramento-sulamericano/
     ├── cs2-valuation/
