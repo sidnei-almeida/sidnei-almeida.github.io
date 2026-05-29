@@ -54,7 +54,7 @@ The site is intentionally a pure static frontend — no build toolchain, no depe
 | [PlatePulse Vehicle Intelligence](https://platepulse-vehicle-intelligence.vercel.app/) | Traffic CV | YOLOv8 + OCR/ALPR | Vercel |
 | [RoadSight](./projects/roadsign-detection/) | ADAS CV | YOLOv8 detector | Hugging Face |
 | [DogBreed Vision](./projects/canine-detection/) | Object detection | YOLOv8 fine-tune | Hugging Face |
-| [Gray Matter](./projects/research-agent/) | LLM · Agents | LangChain + LangGraph | Hugging Face |
+| [Gray Matter LABS](https://gray-matter-research-agent.vercel.app/) | LLM · Agents | Groq · arXiv · research tools | Vercel |
 | [DocMind](./projects/docmind-chat/) | RAG · NLP | Embeddings + LLM | Hugging Face |
 | [Real-Time Industrial Anomaly Monitor](https://industrial-iot-anomaly-monitor.vercel.app/) | Industrial ML | SECOM dataset replay + autoencoder | Vercel + Hugging Face |
 | [PM Monitor](https://lstm-predictive-maintenance-dashboa.vercel.app/) | Predictive ML | LSTM sequence inference | Vercel + Hugging Face |
@@ -82,7 +82,7 @@ sidnei-almeida.github.io/
     ├── license-plate-detection/  # legacy static demo (archived)
     ├── roadsign-detection/
     ├── canine-detection/
-    ├── research-agent/
+    ├── research-agent/           # legacy static demo (archived)
     ├── docmind-chat/
     ├── tmdb-cinema/              # legacy static demo (archived)
     ├── quant-core/               # legacy static demo (archived)
