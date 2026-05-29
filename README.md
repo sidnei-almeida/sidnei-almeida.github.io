@@ -50,8 +50,8 @@ The site is intentionally a pure static frontend — no build toolchain, no depe
 
 | Project | Domain | Model / Stack | Live API |
 |---------|--------|---------------|----------|
-| [GlassGuard](./projects/bottle-anomaly-detection/) | Industrial CV | UNet anomaly segmentation | Hugging Face |
-| [PlatePulse](./projects/license-plate-detection/) | Traffic CV | YOLOv8 + OCR | Render |
+| [Visual Anomaly Comparison Lab](https://visual-anomaly-comparison-lab.vercel.app/) | Industrial CV | Denoising autoencoder · MVTec AD | Vercel + Hugging Face |
+| [PlatePulse Vehicle Intelligence](https://platepulse-vehicle-intelligence.vercel.app/) | Traffic CV | YOLOv8 + OCR/ALPR | Vercel |
 | [RoadSight](./projects/roadsign-detection/) | ADAS CV | YOLOv8 detector | Hugging Face |
 | [DogBreed Vision](./projects/canine-detection/) | Object detection | YOLOv8 fine-tune | Hugging Face |
 | [Gray Matter](./projects/research-agent/) | LLM · Agents | LangChain + LangGraph | Hugging Face |
@@ -59,7 +59,7 @@ The site is intentionally a pure static frontend — no build toolchain, no depe
 | [Real-Time Industrial Anomaly Monitor](https://industrial-iot-anomaly-monitor.vercel.app/) | Industrial ML | SECOM dataset replay + autoencoder | Vercel + Hugging Face |
 | [PM Monitor](https://lstm-predictive-maintenance-dashboa.vercel.app/) | Predictive ML | LSTM sequence inference | Vercel + Hugging Face |
 | [Corporate Signal Intelligence](https://corporate-signal-intelligence-dashb.vercel.app/) | Financial analytics | Isolation Forest + Groq briefings | Vercel + Render |
-| [Cinescope](./projects/tmdb-cinema/) | Recommender | BERT semantics + TMDb | Render |
+| [CineScope Intelligence](https://cinescope-semantic-discovery.vercel.app/) | Recommender | BERT · ONNX · TMDb | Vercel + Render |
 | [RL Portfolio Allocation Dashboard](https://ai-trading-signals-dashboard.vercel.app/) | Quant finance | PPO · ONNX · paper trading | Vercel + FastAPI |
 | [Economic Monitor SA](./projects/economic_monitoring_sa/) | Macro analytics | World Bank API | Public API |
 | [CS2 Valuation](./projects/cs2-valuation/) | Gaming / Finance | Steam API + pricing | Render |
@@ -78,13 +78,13 @@ sidnei-almeida.github.io/
 ├── includes/
 │   └── projects-section.html   # Injected project cards
 └── projects/
-    ├── bottle-anomaly-detection/
-    ├── license-plate-detection/
+    ├── bottle-anomaly-detection/  # legacy static demo (archived)
+    ├── license-plate-detection/  # legacy static demo (archived)
     ├── roadsign-detection/
     ├── canine-detection/
     ├── research-agent/
     ├── docmind-chat/
-    ├── tmdb-cinema/
+    ├── tmdb-cinema/              # legacy static demo (archived)
     ├── quant-core/               # legacy static demo (archived)
     ├── rl_trading_dashboard/     # legacy static demo (archived)
     ├── economic_monitoring_sa/
