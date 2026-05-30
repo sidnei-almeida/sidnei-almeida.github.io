@@ -624,6 +624,8 @@ body::-webkit-scrollbar-thumb:hover {
 .featured-projects-footer {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
   margin-top: 3.5rem;
   padding-bottom: 0.75rem;
 }
