@@ -1,0 +1,233 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "experience": "Experiencia",
+    "projects": "Proyectos",
+    "skills": "Skills",
+    "resume": "Currículum",
+    "contact": "Contacto",
+    "letsConnect": "Conectemos"
+  },
+  "hero": {
+    "label": "Ingeniero de IA y Desarrollador Full-Stack",
+    "headline1": "Construyendo sistemas inteligentes en la",
+    "headline2": "intersección de",
+    "highlight1": "IA, datos,",
+    "headline3": "y",
+    "highlight2": "full-stack",
+    "headline4": "ingeniería.",
+    "body": "Diseño y desarrollo aplicaciones escalables y soluciones de IA que convierten datos complejos en impacto real.",
+    "ctaPrimary": "Ver Mi Trabajo",
+    "ctaSecondary": "Descargar Currículum",
+    "metaBasedIn": "Ubicado en",
+    "metaBasedInValue": "Brasil",
+    "metaAvailableFor": "Disponible para",
+    "metaAvailableValue": "Nuevos proyectos",
+    "metaOpenTo": "Abierto a",
+    "metaOpenToValue": "Roles remotos",
+    "portraitAlt": "Sidnei Almeida — retrato profesional"
+  },
+  "about": {
+    "label": "Acerca de Mí",
+    "body": "Ingeniero de IA y Desarrollador Full-Stack con experiencia en la entrega de productos basados en datos y sistemas inteligentes. Combino fundamentos sólidos de ingeniería con un enfoque práctico de IA para construir soluciones escalables, confiables e impactantes.",
+    "readMore": "Leer Más"
+  },
+  "experience": {
+    "label": "Experiencia e Impacto",
+    "featuredProducts": "Productos de IA Destacados",
+    "projectsDelivered": "Proyectos Entregados",
+    "technologies": "Tecnologías",
+    "liveDemosCoverage": "Cobertura de Demos en Vivo"
+  },
+  "whatIDo": {
+    "label": "Qué Hago",
+    "items": [
+      "Estrategia de IA y Diseño de Soluciones",
+      "Machine Learning y Data Science",
+      "Desarrollo Web Full-Stack",
+      "Arquitectura Cloud y DevOps",
+      "Data Engineering y Analytics"
+    ]
+  },
+  "projects": {
+    "label": "Trabajo Seleccionado",
+    "title": "Proyectos Destacados",
+    "subtitle": "Una selección curada de proyectos de IA inspirados en producción, abarcando RAG, visión por computador, sistemas de recomendación y analytics.",
+    "viewMore": "Ver Más",
+    "pageLabel": "Todo el Trabajo",
+    "pageTitle": "Proyectos",
+    "pageSubtitle": "Los {count} proyectos — desde sistemas de IA en producción hasta aplicaciones full-stack.",
+    "projectsCount": "Proyectos",
+    "filterAll": "Todos",
+    "filters": {
+      "all": "Todos",
+      "ml": "Machine Learning",
+      "recommender": "Recommender",
+      "cv": "Visión por Computador",
+      "rag": "RAG / LLM",
+      "frontend": "Front-End",
+      "anomaly": "Detección de Anomalías",
+      "financial": "Analytics Financiero",
+      "dashboards": "Dashboards"
+    },
+    "noResults": "No se encontraron proyectos para este filtro.",
+    "liveDemo": "Demo en Vivo",
+    "source": "Código",
+    "liveDemoAria": "Demo en vivo — {title}",
+    "sourceAria": "Código — {title}",
+    "openProjectAria": "Abrir {title}",
+    "screenshotAlt": "Captura de {title}"
+  },
+  "resume": {
+    "label": "Currículum",
+    "downloadBtn": "Descargar PDF",
+    "sections": {
+      "summary": "Resumen Profesional",
+      "experience": "Experiencia Profesional",
+      "projects": "Proyectos Técnicos Clave",
+      "education": "Educación",
+      "skills": "Skills y Herramientas",
+      "certifications": "Certificaciones"
+    },
+    "present": "Actual",
+    "stack": "Stack",
+    "pageTitle": "Sidnei Almeida — Currículum",
+    "clientPrefix": "Cliente",
+    "rolePrefix": "Rol",
+    "projectPrefix": "Proyecto"
+  },
+  "resumePrint": {
+    "savePdf": "Descargar PDF",
+    "generatingPdf": "Generando PDF…",
+    "generatedFrom": "Generado desde sidnei-almeida.github.io/resume",
+    "sections": {
+      "summary": "Resumen Profesional",
+      "experience": "Experiencia",
+      "projects": "Proyectos Técnicos Clave",
+      "education": "Educación",
+      "skills": "Skills",
+      "certifications": "Certificaciones"
+    }
+  },
+  "skills": {
+    "label": "Skills",
+    "title": "Skills Técnicas",
+    "groups": {
+      "dataScienceAI": "Data Science e IA",
+      "dataEngineering": "Data Engineering",
+      "fullStack": "Desarrollo Full-Stack",
+      "visualization": "Visualización y Negocios"
+    }
+  },
+  "techStack": {
+    "label": "Tech Stack",
+    "ariaLabel": "Stack tecnológico",
+    "technologiesAria": "Tecnologías"
+  },
+  "contact": {
+    "label": "Contacto",
+    "title": "Construyamos algo inteligente juntos.",
+    "subtitle": "Abierto a roles de Ingeniería de IA, proyectos freelance y colaboraciones. Si estás construyendo algo con machine learning, visión por computador o LLM, me encantaría conectar.",
+    "btnPrimary": "Ponerse en Contacto",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "sendMessage": "Enviar Mensaje"
+  },
+  "contactPage": {
+    "back": "Volver al portafolio",
+    "title": "Hablemos",
+    "subtitle": "Abierto a roles de Ingeniería de IA, proyectos freelance y colaboraciones. Si estás construyendo algo con machine learning, visión por computador o LLM, me encantaría conectar y contribuir.",
+    "basedIn": "Ubicado en",
+    "sendMessageLabel": "Enviar Mensaje",
+    "formIntro": "Comparte un resumen de tu proyecto, oportunidad o pregunta. Normalmente respondo en 1–2 días hábiles.",
+    "availabilityLabel": "Disponibilidad",
+    "availabilityValue": "Abierto a AI Engineering, Full-stack, Data Science y proyectos freelance.",
+    "responseLabel": "Respuesta",
+    "responseValue": "Generalmente en 1–2 días hábiles.",
+    "workModeLabel": "Modalidad de trabajo",
+    "workModeValue": "Remoto / Híbrido"
+  },
+  "contactForm": {
+    "name": "Nombre",
+    "email": "Correo",
+    "message": "Mensaje",
+    "namePlaceholder": "Tu nombre",
+    "emailPlaceholder": "tu@correo.com",
+    "messagePlaceholder": "Cuéntame sobre tu proyecto, rol o idea de colaboración…",
+    "sending": "Enviando…",
+    "submit": "Enviar Mensaje",
+    "success": "Mensaje enviado correctamente.",
+    "error": "Error al enviar. Inténtalo de nuevo."
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados.",
+    "ariaLabel": "Pie de página",
+    "githubAria": "GitHub",
+    "linkedinAria": "LinkedIn",
+    "emailAria": "Correo"
+  },
+  "aria": {
+    "mainNav": "Principal",
+    "mobileNav": "Móvil",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
+  },
+  "meta": {
+    "title": "Sidnei Almeida | Ingeniero de IA",
+    "description": "Sidnei Almeida — Ingeniero de IA que construye sistemas inteligentes en machine learning, visión por computador y aplicaciones con LLM."
+  },
+  "resumeData": {
+    "summary": "Desarrollador hands-on especializado en la intersección de Data Engineering, Machine Learning y Desarrollo Web. Experiencia construyendo agregadores de datos de alta frecuencia para mercados de activos digitales y creando arquitecturas de datos robustas para plataformas HealthTech. Competente en todo el ciclo de vida de los datos: desde scraping y pipelines ETL complejos hasta el entrenamiento de modelos de Deep Learning (LSTM, GANs, YOLOv8) y su despliegue con Docker y FastAPI. Apasionado por el código limpio, la automatización y las interfaces intuitivas que hacen accesibles los datos complejos.",
+    "experience": [
+      {
+        "company": "Profesional independiente",
+        "period": "2021 - Actual",
+        "engagements": [
+          {
+            "project": "Apoyo al entrenamiento de modelos de IA mediante la evaluación, anotación y mejora de respuestas en razonamiento, factualidad y seguimiento de instrucciones.",
+            "achievements": [
+              "Evalué respuestas de IA en precisión, claridad, seguridad y seguimiento de instrucciones",
+              "Comparé salidas de modelos e identifiqué alucinaciones, errores de razonamiento e inconsistencias",
+              "Proporcioné anotaciones estructuradas y feedback para mejorar la calidad de los datos de entrenamiento de LLM",
+              "Reescribí y refiné respuestas según las directrices del proyecto"
+            ]
+          },
+          {
+            "project": "Arquitecturé la infraestructura de datos completa para una aplicación de seguimiento nutricional (Mobile/Web).",
+            "achievements": [
+              "Contribuí al desarrollo de un modelo de visión por computador para segmentación de alimentos y estimación calórica",
+              "Diseñé e implementé el esquema de base de datos relacional (SQL) desde cero, asegurando normalización 3NF para logs de usuario, tablas nutricionales y datos biométricos",
+              "Construí pipelines ETL para scraping, limpieza e ingestión de datasets nutricionales",
+              "Establecí estándares de limpieza de datos para soportar el motor de recomendación calórica"
+            ]
+          }
+        ]
+      }
+    ],
+    "education": [
+      {
+        "degree": "MBA, Data Science, Artificial Intelligence & Analytics",
+        "period": "2025 - 2027"
+      },
+      {
+        "degree": "Tecnología en Procesos Gerenciales",
+        "period": "2020 - 2025"
+      }
+    ],
+    "projects": [
+      {
+        "description": "Desarrollé un sistema RAG (Retrieval-Augmented Generation) que permite consultar documentos PDF en lenguaje natural."
+      },
+      {
+        "description": "Construí un sistema de detección de anomalías \"Black Piano\" para manufactura de semiconductores (SECOM) y un modelo de detección de defectos para embotellado industrial (MVTec AD)."
+      },
+      {
+        "description": "Creé un sistema de pronóstico de series temporales para predecir el flujo de líquidos en tuberías, visualizando la salida en un dashboard en tiempo real."
+      },
+      {
+        "description": "Desplegué modelos de visión de alta precisión, incluyendo reconocimiento de placas (99,69% de precisión) y análisis de emociones en tiempo real."
+      }
+    ]
+  }
+}

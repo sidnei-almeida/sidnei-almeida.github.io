@@ -1,0 +1,420 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    cursor: none !important;
+  }
+
+  html {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3C/svg%3E"), none !important;
+  }
+
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  label,
+  summary,
+  [role='button'],
+  [tabindex]:not([tabindex='-1']) {
+    cursor: none !important;
+  }
+
+  a:active,
+  a:focus,
+  button:active,
+  button:focus,
+  input:active,
+  input:focus,
+  textarea:active,
+  textarea:focus,
+  select:active,
+  select:focus,
+  label:active,
+  summary:active,
+  [role='button']:active,
+  [role='button']:focus {
+    cursor: none !important;
+  }
+
+  :root {
+    --color-canvas: #050505;
+    --color-panel: #0e1011;
+    --color-line: #242628;
+    --color-ink: #e6e3dd;
+    --color-body: #a19d94;
+    --color-label: #8c8982;
+    --color-muted: #66645f;
+    --color-accent: #e3342f;
+    --color-accent-text: #e02e2a;
+
+    --font-sans: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply w-full overflow-x-hidden bg-canvas text-ink-body antialiased;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.75;
+    letter-spacing: 0.1px;
+    text-rendering: optimizeLegibility;
+  }
+
+  h2 {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    letter-spacing: -0.3px;
+    text-transform: none;
+  }
+
+  #root {
+    @apply w-full min-w-0;
+  }
+
+  ::selection {
+    background: rgba(227, 52, 47, 0.22);
+    color: #f2efe8;
+  }
+}
+
+@layer components {
+  .page-container {
+    @apply mx-auto w-full max-w-page px-5 sm:px-6 lg:px-8 xl:px-8 2xl:px-10;
+  }
+
+  .wide-container {
+    @apply mx-auto w-full max-w-page px-5 sm:px-6 lg:px-8 xl:px-8 2xl:px-10;
+  }
+
+  .section-border {
+    @apply border-t border-line;
+  }
+
+  .section-pad {
+    @apply py-12 lg:py-16;
+  }
+
+  .contact-page {
+    @apply flex w-full flex-1 flex-col bg-canvas;
+  }
+
+  .contact-page__inner {
+    @apply page-container flex w-full flex-1 flex-col justify-center;
+    padding-top: 2.75rem;
+    padding-bottom: 2.75rem;
+  }
+
+  .contact-page__grid {
+    @apply grid w-full grid-cols-1 gap-8;
+  }
+
+  .contact-info-meta-label {
+    @apply text-[9px] font-medium uppercase tracking-[0.22em] text-ink-muted;
+  }
+
+  .contact-info-meta-value {
+    @apply mt-1.5 text-sm leading-relaxed text-ink-body;
+  }
+
+  @media (min-width: 1024px) {
+    .contact-page__inner {
+      padding-top: 3.25rem;
+      padding-bottom: 3.25rem;
+    }
+
+    .contact-page__grid {
+      @apply grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] items-stretch gap-14;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .contact-page__grid {
+      @apply gap-16;
+    }
+  }
+
+  .type-hero-headline {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-style: normal;
+    letter-spacing: -0.5px;
+    text-transform: none;
+  }
+
+  .type-section-heading {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    letter-spacing: -0.3px;
+    text-transform: none;
+  }
+
+  .type-nav-link {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+  }
+
+  .type-section-label {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .type-body {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.75;
+    letter-spacing: 0.1px;
+  }
+
+  .type-card-title {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.1px;
+  }
+
+  .type-tech-tag {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+
+  .type-metric-value {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    letter-spacing: -1px;
+  }
+
+  .type-metric-label {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .type-button {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .type-footer {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .type-mono-link {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .section-heading {
+    @apply type-section-heading text-[28px] text-ink-primary sm:text-[32px] lg:text-[36px] lg:leading-[1.12];
+  }
+
+  .section-body {
+    @apply type-body max-w-[640px] text-ink-body;
+  }
+
+  .carbon-texture {
+    background-color: var(--color-canvas);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgba(255, 255, 255, 0.028) 0,
+      rgba(255, 255, 255, 0.028) 1px,
+      transparent 1px,
+      transparent 5px
+    );
+  }
+
+  .tech-stack-marquee {
+    animation: tech-stack-scroll 55s linear infinite;
+  }
+
+  @keyframes tech-stack-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tech-stack-marquee-wrap {
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tech-stack-marquee-wrap::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tech-stack-marquee {
+      animation: none;
+    }
+  }
+
+  .lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lang-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    color: #555;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    transition: color 0.2s;
+  }
+
+  .lang-btn:hover {
+    color: #fff;
+  }
+
+  .lang-btn--active {
+    color: #c8102e;
+    pointer-events: none;
+  }
+
+  .lang-divider {
+    font-size: 10px;
+    color: #333;
+    user-select: none;
+  }
+
+  .x1-mark {
+    display: block;
+    width: 40px;
+    height: auto;
+    border: 0;
+    outline: none;
+    opacity: 0.2;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .x1-mark--br {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    line-height: 0;
+  }
+
+  .x1-stamp-card .x1-mark {
+    opacity: 0.18;
+  }
+
+  @media (max-width: 639px) {
+    .x1-mark {
+      width: 32px;
+    }
+
+    .x1-mark--br {
+      bottom: 6px;
+      right: 8px;
+    }
+  }
+
+  .hero-divider {
+    width: 100%;
+    height: 1px;
+    background: #1a1a1a;
+    margin: 0;
+  }
+
+  .tech-stack-bar {
+    margin-top: 64px;
+    margin-bottom: 64px;
+  }
+
+  #trackpoint {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 24px;
+    background: no-repeat center / contain
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='24' viewBox='0 0 20 24' fill='none'%3E%3Cpath d='M2.5 1.5V18.8L7.4 14.2L10.1 21.8L12.4 20.6L10.2 13.2H16.8L2.5 1.5Z' fill='%23c8102e' stroke='%231a1a1a' stroke-width='0.65' stroke-linejoin='round'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 99999;
+    transform-origin: 2px 2px;
+    transition:
+      transform 0.1s ease,
+      opacity 0.15s ease,
+      filter 0.15s ease;
+    will-change: transform;
+  }
+
+  #trackpoint.is-hovering {
+    transform: scale(1.12);
+    filter: brightness(1.2);
+  }
+
+  #trackpoint.is-clicking {
+    transform: scale(0.86);
+    filter: brightness(0.95);
+  }
+
+  @media (pointer: coarse), (hover: none) {
+    *,
+    *::before,
+    *::after,
+    html {
+      cursor: auto !important;
+    }
+
+    #trackpoint {
+      display: none !important;
+    }
+  }
+
+  @media print {
+    *,
+    *::before,
+    *::after,
+    html {
+      cursor: auto !important;
+    }
+
+    #trackpoint {
+      display: none !important;
+    }
+  }
+}
