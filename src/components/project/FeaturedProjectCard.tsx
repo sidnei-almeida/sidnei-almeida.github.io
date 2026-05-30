@@ -19,7 +19,7 @@ export function FeaturedProjectCard({ project, animated = false }: FeaturedProje
 
   const content = (
     <>
-      <div className="relative z-10 flex min-h-0 min-w-0 flex-col justify-between p-4 md:p-5">
+      <div className="carbon-fiber-surface relative z-10 flex min-h-0 min-w-0 flex-col justify-between p-4 md:p-5">
         <div className="min-h-0">
           <div className="mb-2 flex items-center justify-between gap-2 text-[9px] uppercase tracking-[0.22em] text-ink-label md:text-[10px]">
             <span className="flex shrink-0 items-center gap-1.5">

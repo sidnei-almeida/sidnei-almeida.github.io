@@ -8,7 +8,7 @@ export function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="section-border w-full bg-canvas-raised" aria-label={t.footer.ariaLabel}>
+    <footer className="carbon-fiber-surface section-border w-full bg-canvas-raised" aria-label={t.footer.ariaLabel}>
       <div className="page-container py-12 lg:py-14">
         <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div>

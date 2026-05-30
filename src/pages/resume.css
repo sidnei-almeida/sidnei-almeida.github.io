@@ -231,6 +231,12 @@
   padding: 24px;
 }
 
+/* Texture sits above bg via ::before; keep surfaces unchanged */
+.resume-page-inner.carbon-fiber-surface,
+.project-card.carbon-fiber-surface {
+  isolation: isolate;
+}
+
 .project-card-header {
   display: flex;
   flex-wrap: wrap;

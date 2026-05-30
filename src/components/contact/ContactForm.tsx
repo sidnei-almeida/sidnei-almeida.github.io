@@ -2,12 +2,8 @@ import { Send } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { profile } from '../../data/profile';
 import { useTranslation } from '../../i18n/useTranslation';
-import { Button } from '../ui/Button';
 
 type FormStatus = 'idle' | 'sending' | 'success' | 'error';
-
-const inputClassName =
-  'w-full border border-line bg-canvas-surface px-4 py-3 text-sm text-ink-primary placeholder:text-ink-muted transition-colors focus:border-accent/45 focus:outline-none';
 
 export function ContactForm() {
   const { t } = useTranslation();
@@ -41,9 +37,9 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <form onSubmit={handleSubmit} className="contact-x1-form flex flex-col gap-5">
       <div>
-        <label htmlFor="contact-name" className="mb-2 block text-[10px] uppercase tracking-[0.2em] text-ink-label">
+        <label htmlFor="contact-name" className="contact-x1-form__label">
           {t.contactForm.name}
         </label>
         <input
@@ -53,13 +49,13 @@ export function ContactForm() {
           required
           autoComplete="name"
           placeholder={t.contactForm.namePlaceholder}
-          className={inputClassName}
+          className="contact-x1-form__field"
           disabled={status === 'sending'}
         />
       </div>
 
       <div>
-        <label htmlFor="contact-email" className="mb-2 block text-[10px] uppercase tracking-[0.2em] text-ink-label">
+        <label htmlFor="contact-email" className="contact-x1-form__label">
           {t.contactForm.email}
         </label>
         <input
@@ -69,13 +65,13 @@ export function ContactForm() {
           required
           autoComplete="email"
           placeholder={t.contactForm.emailPlaceholder}
-          className={inputClassName}
+          className="contact-x1-form__field"
           disabled={status === 'sending'}
         />
       </div>
 
       <div>
-        <label htmlFor="contact-message" className="mb-2 block text-[10px] uppercase tracking-[0.2em] text-ink-label">
+        <label htmlFor="contact-message" className="contact-x1-form__label">
           {t.contactForm.message}
         </label>
         <textarea
@@ -84,27 +80,21 @@ export function ContactForm() {
           required
           rows={6}
           placeholder={t.contactForm.messagePlaceholder}
-          className={`${inputClassName} resize-y min-h-[140px] leading-relaxed`}
+          className="contact-x1-form__field contact-x1-form__field--textarea"
           disabled={status === 'sending'}
         />
       </div>
 
       <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
-        <Button
+        <button
           type="submit"
-          variant="outline"
-          className="h-[44px] w-full justify-center sm:w-auto"
+          className="contact-x1-form__submit h-[44px] w-full sm:w-auto"
           disabled={status === 'sending'}
         >
-          {status === 'sending' ? (
-            t.contactForm.sending
-          ) : (
-            <>
-              <Send className="h-3.5 w-3.5" strokeWidth={1.5} />
-              {t.contactForm.submit}
-            </>
-          )}
-        </Button>
+          <span className="contact-x1-form__submit-dash" aria-hidden />
+          <Send className="h-3.5 w-3.5" strokeWidth={1.5} />
+          {status === 'sending' ? t.contactForm.sending : t.contactForm.submit}
+        </button>
 
         {status === 'success' && (
           <p className="text-[11px] uppercase tracking-label text-accent" role="status">

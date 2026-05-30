@@ -24,7 +24,9 @@ export function ContactSection() {
             {t.contact.subtitle}
           </motion.p>
           <motion.div variants={fadeUpItem} className="mt-9 flex flex-wrap items-center justify-center gap-5">
-            <Button href="/contact">{t.contact.btnPrimary}</Button>
+            <Button href="/contact" className="carbon-fiber-surface">
+              {t.contact.btnPrimary}
+            </Button>
             <a
               href={profile.github}
               target="_blank"

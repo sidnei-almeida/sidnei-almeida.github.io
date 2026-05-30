@@ -30,7 +30,17 @@
   },
   "about": {
     "label": "About Me",
-    "body": "AI Engineer and Full-Stack Developer with experience delivering data-driven products and intelligent systems. I combine strong engineering fundamentals with a practical approach to AI to build solutions that are scalable, reliable, and impactful.",
+    "modelTag": "X1 CARBON · GEN 01",
+    "roleTitle": "AI Engineer & Full-Stack Developer",
+    "roleSubtitle": "// Data-driven · Scalable · Impactful",
+    "statusAria": "Availability and focus areas",
+    "statusAvailable": "Available for work",
+    "statusFullStack": "Full-Stack",
+    "statusAiMl": "AI / ML",
+    "bodyBeforeStrong1": "Experience delivering ",
+    "bodyStrong1": "data-driven products",
+    "bodyBetween": " and intelligent systems. Combining strong engineering fundamentals with a practical approach to AI — building solutions that are ",
+    "bodyStrong2": "scalable, reliable, and impactful.",
     "readMore": "Read More"
   },
   "experience": {
