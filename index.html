@@ -165,6 +165,7 @@
   
   <!-- Preload project images for better performance -->
   <link rel="preload" href="./images/road.webp" as="image" type="image/webp">
+  <link rel="preload" href="./images/dash_docmind.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/project-1.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/corporate-dash-anomaly.webp" as="image" type="image/webp">
   <link rel="preload" href="./images/project-3.webp" as="image" type="image/webp">
@@ -192,7 +193,7 @@
           </div>
         </div>
         <ul class="nav-links">
-          <li><a href="./projects/" class="nav-link" data-pt="Projetos" data-en="Projects" data-es="Proyectos">Projetos</a></li>
+          <li><a href="#projetos" class="nav-link" data-pt="Projetos" data-en="Projects" data-es="Proyectos">Projetos</a></li>
           <li><a href="#habilidades" class="nav-link" data-pt="Habilidades" data-en="Skills" data-es="Habilidades">Habilidades</a></li>
           <li><a href="#sobre" class="nav-link" data-pt="Sobre" data-en="About" data-es="Acerca de">Sobre</a></li>
           <li><a href="#contato" class="nav-link" data-pt="Contato" data-en="Contact" data-es="Contacto">Contato</a></li>
@@ -255,7 +256,7 @@
           <div class="hero-actions">
             <a href="#projetos" class="btn btn-primary">
               <i class="fas fa-rocket"></i>
-              <span data-pt="Explorar projetos" data-en="Explore Projects" data-es="Explorar proyectos">Explore Projects</span>
+              <span data-pt="Ver projetos em destaque" data-en="View Featured Work" data-es="Ver trabajo destacado">View Featured Work</span>
             </a>
             <a href="https://github.com/sidnei-almeida" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
               <i class="fab fa-github" aria-hidden="true"></i>
@@ -274,8 +275,8 @@
   <section class="section" id="projetos">
     <div class="container">
       <h2 class="section-title" data-pt="Projetos em destaque" data-en="Featured Projects" data-es="Proyectos destacados">Projetos em destaque</h2>
-      <p class="section-subtitle" data-pt="Sistemas de IA ponta a ponta com demos ao vivo." data-en="End-to-end AI systems with live demos." data-es="Sistemas de IA de extremo a extremo con demos en vivo.">
-        End-to-end AI systems with live demos.
+      <p class="section-subtitle" data-pt="Seleção curada de projetos de IA em RAG, visão computacional, sistemas de recomendação e analytics." data-en="A curated selection of production-inspired AI projects across RAG, computer vision, recommendation systems and analytics." data-es="Selección curada de proyectos de IA en RAG, visión por computador, sistemas de recomendación y analytics.">
+        A curated selection of production-inspired AI projects across RAG, computer vision, recommendation systems and analytics.
       </p>
       
       <div class="project-filters" role="group" aria-label="Filtros de projetos">
@@ -286,83 +287,86 @@
       </div>
 
       <div class="projects-grid">
-        <!-- Projeto Destaque: DocMind Document Chatbot -->
+        <!-- Projeto: DocMind — RAG Document QA Assistant -->
         <div class="project-card" data-category="ai llm web-app">
           <div class="project-image">
-            <img src="./images/docmind-chat.webp" alt="RAG AI document chatbot for PDF analysis and summarization" loading="lazy" />
+            <img src="./images/dash_docmind.webp" alt="DocMind RAG document intelligence workspace interface" loading="lazy" />
           </div>
           <div class="project-content">
             <div class="project-header">
               <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="Chatbot de documentos RAG com IA para PDF" data-en="RAG AI Document Chatbot for PDF" data-es="Chatbot RAG de documentos con IA para PDF">RAG AI Document Chatbot for PDF</span>
-                <span class="project-title-line" data-pt="Análise e sumarização" data-en="Analysis and Summarization" data-es="Análisis y sumarización">Analysis and Summarization</span>
+                <span class="project-title-line" data-pt="DocMind — Assistente RAG para Documentos" data-en="DocMind — RAG Document QA Assistant" data-es="DocMind — Asistente RAG para Documentos">DocMind — RAG Document QA Assistant</span>
+                <span class="project-title-line" data-pt="IA • RAG • Inteligência Documental" data-en="AI • RAG • Document Intelligence" data-es="IA • RAG • Inteligencia Documental">AI • RAG • Document Intelligence</span>
               </h3>
               <div class="project-status">
-                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Ativo</span>
-                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recente</span>
-                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Destaque</span>
+                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
+                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recent</span>
+                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
               </div>
             </div>
             <div class="project-body">
               <p class="project-description">
-                <span class="description-short" data-pt="Faça perguntas aos documentos e extraia insights de PDFs sem leitura manual, acelerando pesquisa e decisões." data-en="Ask questions directly to documents and extract insights from PDFs without manual reading, enabling faster research and decision-making." data-es="Haz preguntas a documentos y obtén ideas de los PDF sin leerlos a mano, acelerando la investigación y las decisiones.">Ask questions directly to documents and extract insights from PDFs without manual reading, enabling faster research and decision-making.</span>
-                <span class="description-full" style="display: none;" data-pt="Faça perguntas aos documentos e extraia insights de PDFs sem leitura manual, acelerando pesquisa e decisões." data-en="Ask questions directly to documents and extract insights from PDFs without manual reading, enabling faster research and decision-making." data-es="Haz preguntas a documentos y obtén ideas de los PDF sin leerlos a mano, acelerando la investigación y las decisiones.">Ask questions directly to documents and extract insights from PDFs without manual reading, enabling faster research and decision-making.</span>
+                <span class="description-short" data-pt="Assistente documental com RAG para upload de PDFs, recuperação semântica, respostas com fontes e painel de inteligência do workspace." data-en="Cloud-hosted RAG document assistant with PDF ingestion, semantic retrieval, source-grounded answers and a premium document intelligence workspace." data-es="Asistente documental con RAG para subir PDFs, recuperación semántica, respuestas con fuentes y panel de inteligencia del workspace.">Cloud-hosted RAG document assistant with PDF ingestion, semantic retrieval, source-grounded answers and a premium document intelligence workspace.</span>
+                <span class="description-full" style="display: none;" data-pt="DocMind é um assistente de inteligência documental com RAG hospedado na nuvem, projetado para Q&amp;A interativo em PDFs. O sistema processa documentos enviados, divide-os em chunks semânticos, gera embeddings, recupera evidências relevantes com busca vetorial e produz respostas fundamentadas em fontes via LLM. Focado em um fluxo completo de inteligência documental: status do workspace, evidências recuperadas, metadados de confiança, métricas do documento, demo com documento de exemplo e front-end premium." data-en="DocMind is a cloud-hosted RAG document intelligence assistant designed for interactive PDF question answering. The system processes uploaded documents, splits them into semantic chunks, generates embeddings, retrieves relevant evidence with a vector search pipeline, and produces source-grounded answers through an LLM. Built as a portfolio-ready AI product focused on a complete document intelligence workflow: workspace status, retrieved evidence, confidence metadata, document metrics, sample document support and a polished frontend experience." data-es="DocMind es un asistente de inteligencia documental con RAG alojado en la nube, diseñado para preguntas y respuestas interactivas en PDFs. Procesa documentos subidos, los divide en fragmentos semánticos, genera embeddings, recupera evidencias con búsqueda vectorial y produce respuestas fundamentadas en fuentes mediante un LLM. Incluye flujo completo de inteligencia documental: estado del workspace, evidencias recuperadas, metadatos de confianza, métricas y front-end premium.">DocMind is a cloud-hosted RAG document intelligence assistant designed for interactive PDF question answering. The system processes uploaded documents, splits them into semantic chunks, generates embeddings, retrieves relevant evidence with a vector search pipeline, and produces source-grounded answers through an LLM. Built as a portfolio-ready AI product focused on a complete document intelligence workflow: workspace status, retrieved evidence, confidence metadata, document metrics, sample document support and a polished frontend experience.</span>
               </p>
-              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
-                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">Ver mais</span>
+              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="View DocMind project">
+                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
               </button>
               <div class="project-metrics">
                 <div class="metric">
-                  <i class="fas fa-brain"></i>
-                  <span data-pt="Pipeline RAG" data-en="RAG Pipeline" data-es="Pipeline RAG">Pipeline RAG</span>
+                  <i class="fas fa-file-upload"></i>
+                  <span data-pt="Upload de PDF e chunking semântico" data-en="PDF upload and semantic chunking" data-es="Subida de PDF y chunking semántico">PDF upload and semantic chunking</span>
                 </div>
                 <div class="metric">
-                  <i class="fas fa-file-pdf"></i>
-                  <span data-pt="Suporte a PDFs" data-en="PDF Support" data-es="Soporte PDF">Suporte a PDFs</span>
+                  <i class="fas fa-search"></i>
+                  <span data-pt="Recuperação vetorial com FAISS" data-en="FAISS vector retrieval" data-es="Recuperación vectorial con FAISS">FAISS vector retrieval</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-quote-right"></i>
+                  <span data-pt="Respostas LLM com fontes citadas" data-en="Source-grounded LLM answers" data-es="Respuestas LLM con fuentes citadas">Source-grounded LLM answers</span>
+                </div>
+                <div class="metric">
+                  <i class="fas fa-chart-bar"></i>
+                  <span data-pt="Painel de inteligência do workspace" data-en="Workspace intelligence panel" data-es="Panel de inteligencia del workspace">Workspace intelligence panel</span>
                 </div>
               </div>
               <div class="project-tech">
-                <span class="tech-tag">LangChain</span>
+                <span class="tech-tag">RAG</span>
+                <span class="tech-tag">React</span>
                 <span class="tech-tag">FAISS</span>
                 <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">OpenAI</span>
+                <span class="tech-tag">Groq</span>
               </div>
             </div>
             <div class="project-value-benefits" style="display: none;">
               <div class="value-benefit-item">
-                <div class="value-benefit-icon">
-                  <i class="fas fa-comments"></i>
-                </div>
+                <div class="value-benefit-icon"><i class="fas fa-file-pdf"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Perguntas e respostas sobre documentos" data-en="Document-Based Question Answering" data-es="Preguntas y respuestas basadas en documentos">Document-Based Question Answering</h4>
-                  <p class="value-benefit-description" data-pt="Faça perguntas diretamente aos PDFs e obtenha respostas precisas alinhadas ao conteúdo, sem folhear páginas manualmente." data-en="Ask questions directly to PDF documents and receive precise, context-aware answers without manually searching through pages." data-es="Haz preguntas directamente a los PDF y recibe respuestas precisas alineadas con el contenido, sin buscar página por página a mano.">Ask questions directly to PDF documents and receive precise, context-aware answers without manually searching through pages.</p>
+                  <h4 class="value-benefit-title" data-pt="Ingestão e recuperação semântica" data-en="PDF ingestion and semantic retrieval" data-es="Ingestión y recuperación semántica">PDF ingestion and semantic retrieval</h4>
+                  <p class="value-benefit-description" data-pt="Upload de PDFs, divisão em chunks semânticos, embeddings Hugging Face e busca vetorial FAISS para Q&amp;A documental preciso." data-en="PDF uploads, semantic chunking, Hugging Face embeddings and FAISS vector search for precise document question answering." data-es="Subida de PDFs, fragmentación semántica, embeddings Hugging Face y búsqueda vectorial FAISS para Q&amp;A documental preciso.">PDF uploads, semantic chunking, Hugging Face embeddings and FAISS vector search for precise document question answering.</p>
                 </div>
               </div>
               <div class="value-benefit-item">
-                <div class="value-benefit-icon">
-                  <i class="fas fa-book-open"></i>
-                </div>
+                <div class="value-benefit-icon"><i class="fas fa-shield-alt"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Pesquisa e análise mais rápidas" data-en="Faster Research and Analysis" data-es="Investigación y análisis más rápidos">Faster Research and Analysis</h4>
-                  <p class="value-benefit-description" data-pt="Reduza o tempo de leitura de documentos extensos ao extrair ideias-chave de imediato, melhorando o fluxo de pesquisa e de decisão." data-en="Reduce time spent reading large documents by extracting key insights instantly, improving productivity in research and decision-making workflows." data-es="Reduce el tiempo leyendo documentos largos extrayendo ideas clave al instante, mejorando la productividad en investigación y toma de decisiones.">Reduce time spent reading large documents by extracting key insights instantly, improving productivity in research and decision-making workflows.</p>
+                  <h4 class="value-benefit-title" data-pt="Respostas fundamentadas em evidências" data-en="Evidence-backed grounded answers" data-es="Respuestas fundamentadas en evidencias">Evidence-backed grounded answers</h4>
+                  <p class="value-benefit-description" data-pt="Respostas LLM com painel de evidências recuperadas, metadados de confiança e citação de fontes — indo além do simples chat with PDF." data-en="LLM responses with retrieved evidence panel, confidence metadata and source citations — going beyond basic chat-with-PDF." data-es="Respuestas LLM con panel de evidencias recuperadas, metadatos de confianza y citas de fuentes — más allá del chat básico con PDF.">LLM responses with retrieved evidence panel, confidence metadata and source citations — going beyond basic chat-with-PDF.</p>
                 </div>
               </div>
               <div class="value-benefit-item">
-                <div class="value-benefit-icon">
-                  <i class="fas fa-magnifying-glass"></i>
-                </div>
+                <div class="value-benefit-icon"><i class="fas fa-layer-group"></i></div>
                 <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Recuperação de informação sensível ao contexto" data-en="Context-Aware Information Retrieval" data-es="Recuperación de información consciente del contexto">Context-Aware Information Retrieval</h4>
-                  <p class="value-benefit-description" data-pt="Recupere trechos pelo significado em vez de palavras-chave fixas, com melhores resultados em documentos longos ou pouco estruturados." data-en="Retrieve relevant information based on meaning rather than keywords, enabling more accurate results across complex or unstructured documents." data-es="Recupera fragmentos por significado en lugar de palabras clave fijas, con mejores resultados en documentos largos o poco estructurados.">Retrieve relevant information based on meaning rather than keywords, enabling more accurate results across complex or unstructured documents.</p>
+                  <h4 class="value-benefit-title" data-pt="Workspace de inteligência documental" data-en="Document intelligence workspace" data-es="Workspace de inteligencia documental">Document intelligence workspace</h4>
+                  <p class="value-benefit-description" data-pt="Métricas do documento, status do workspace, fluxo demo com documento de exemplo e UI dark premium pronta para recrutadores." data-en="Document metrics, workspace status, sample document demo flow and premium dark UI ready for recruiters." data-es="Métricas del documento, estado del workspace, flujo demo con documento de ejemplo y UI dark premium lista para reclutadores.">Document metrics, workspace status, sample document demo flow and premium dark UI ready for recruiters.</p>
                 </div>
               </div>
             </div>
             <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/rag-document-chatbot" class="project-link project-link-primary" target="_blank">
+              <a href="https://github.com/sidnei-almeida/rag-document-qa-assistant" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
                 <i class="fab fa-github"></i>
-                <span data-pt="Código" data-en="Code" data-es="Código">Código</span>
+                <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
               </a>
-              <a href="./projects/docmind-chat/docmind-chat.html" class="project-link project-link-secondary">
+              <a href="https://rag-document-qa-assistant.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
                 <i class="fas fa-desktop"></i>
                 <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
               </a>
@@ -1075,7 +1079,8 @@
       </div>
 
       <div class="featured-projects-footer">
-        <a href="./projects/" class="featured-projects-archive-link" data-pt="Explorar o arquivo completo de projetos →" data-en="Explore the full project archive →" data-es="Explorar el archivo completo de proyectos →">Explore the full project archive →</a>
+        <a href="https://github.com/sidnei-almeida" class="featured-projects-archive-link" target="_blank" rel="noopener noreferrer" data-pt="Ver GitHub →" data-en="View GitHub →" data-es="Ver GitHub →">View GitHub →</a>
+        <a href="#contato" class="featured-projects-archive-link" data-pt="Entrar em contato →" data-en="Contact Me →" data-es="Contactar →">Contact Me →</a>
       </div>
     </div>
   </section>

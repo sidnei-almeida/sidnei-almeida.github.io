@@ -12,8 +12,8 @@ Crawl-delay: 1
 # Disallow: *.doc$
 # Disallow: *.docx$
 
-# Allow all images
-Allow: /images/
+# Disallow legacy all-projects archive (kept for migration reference only)
+Disallow: /projects/
 
 # Allow all CSS and JS files
 Allow: /style.css

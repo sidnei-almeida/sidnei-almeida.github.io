@@ -9,6 +9,7 @@ section = section.replace('href="./projects/', 'href="')
 section = section.replace('href="projects/', 'href="')
 
 HEADER = r"""<!DOCTYPE html>
+<!-- Legacy all-projects page kept only for migration reference. Not linked in the current portfolio. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -17,9 +18,9 @@ HEADER = r"""<!DOCTYPE html>
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" />
   <title>All Projects | Sidnei Almeida</title>
-  <meta name="description" content="Complete project archive: machine learning, analytics, dashboards, and web apps by Sidnei Almeida." />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://sidnei-almeida.github.io/projects/" />
+  <meta name="description" content="Legacy project archive (not linked publicly). See featured projects on the homepage." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="https://sidnei-almeida.github.io/" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://sidnei-almeida.github.io/projects/" />
   <meta property="og:title" content="All Projects | Sidnei Almeida" />
@@ -46,7 +47,7 @@ HEADER = r"""<!DOCTYPE html>
         </div>
         <ul class="nav-links">
           <li><a href="../index.html" class="nav-link" data-pt="Início" data-en="Home" data-es="Inicio">Home</a></li>
-          <li><a href="#projetos" class="nav-link" data-pt="Projetos" data-en="Projects" data-es="Proyectos">Projects</a></li>
+          <li><a href="../index.html#projetos" class="nav-link" data-pt="Projetos" data-en="Projects" data-es="Proyectos">Projects</a></li>
           <li><a href="../index.html#habilidades" class="nav-link" data-pt="Habilidades" data-en="Skills" data-es="Habilidades">Skills</a></li>
           <li><a href="../index.html#sobre" class="nav-link" data-pt="Sobre" data-en="About" data-es="Acerca de">About</a></li>
           <li><a href="../index.html#contato" class="nav-link" data-pt="Contato" data-en="Contact" data-es="Contacto">Contact</a></li>

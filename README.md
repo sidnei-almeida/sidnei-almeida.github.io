@@ -55,7 +55,7 @@ The site is intentionally a pure static frontend — no build toolchain, no depe
 | [RoadSight](./projects/roadsign-detection/) | ADAS CV | YOLOv8 detector | Hugging Face |
 | [DogBreed Vision](./projects/canine-detection/) | Object detection | YOLOv8 fine-tune | Hugging Face |
 | [Gray Matter LABS](https://gray-matter-research-agent.vercel.app/) | LLM · Agents | Groq · arXiv · research tools | Vercel |
-| [DocMind](./projects/docmind-chat/) | RAG · NLP | Embeddings + LLM | Hugging Face |
+| [DocMind](https://rag-document-qa-assistant.vercel.app/) | RAG · Document AI | React + FastAPI + FAISS | Vercel |
 | [Real-Time Industrial Anomaly Monitor](https://industrial-iot-anomaly-monitor.vercel.app/) | Industrial ML | SECOM dataset replay + autoencoder | Vercel + Hugging Face |
 | [PM Monitor](https://lstm-predictive-maintenance-dashboa.vercel.app/) | Predictive ML | LSTM sequence inference | Vercel + Hugging Face |
 | [Corporate Signal Intelligence](https://corporate-signal-intelligence-dashb.vercel.app/) | Financial analytics | Isolation Forest + Groq briefings | Vercel + Render |
@@ -71,19 +71,20 @@ The site is intentionally a pure static frontend — no build toolchain, no depe
 
 ```
 sidnei-almeida.github.io/
-├── index.html                  # Portfolio landing page
+├── index.html                  # Portfolio landing page (featured projects only)
 ├── style.css                   # Global design system
 ├── script.js                   # Interactions, filters, i18n
 ├── images/                     # Project thumbnails and assets
 ├── includes/
-│   └── projects-section.html   # Injected project cards
+│   └── projects-section.html   # Full project cards (migration reference; not linked publicly)
 └── projects/
+    ├── index.html              # Legacy all-projects archive (not linked publicly)
     ├── bottle-anomaly-detection/  # legacy static demo (archived)
     ├── license-plate-detection/  # legacy static demo (archived)
     ├── roadsign-detection/
     ├── canine-detection/
     ├── research-agent/           # legacy static demo (archived)
-    ├── docmind-chat/
+    ├── docmind-chat/              # legacy static demo (archived)
     ├── tmdb-cinema/              # legacy static demo (archived)
     ├── quant-core/               # legacy static demo (archived)
     ├── rl_trading_dashboard/     # legacy static demo (archived)
