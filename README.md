@@ -4,7 +4,7 @@
 </p>
 
 <p align="center">
-  <a href="https://sidnei-almeida.github.io"><strong>sidnei-almeida.github.io</strong></a>
+  <a href="https://sidnei-almeida.github.io/"><strong>sidnei-almeida.github.io</strong></a>
 </p>
 
 <p align="center">
@@ -18,7 +18,7 @@
 <p align="center">
   <img alt="Status" src="https://img.shields.io/badge/Status-Active-brightgreen?style=flat" />
   <img alt="License" src="https://img.shields.io/badge/License-GPL--3.0-blue?style=flat" />
-  <img alt="HTML5" src="https://img.shields.io/badge/Frontend-HTML5_·_CSS3_·_JS-E34F26?style=flat&logo=html5&logoColor=white" />
+  <img alt="React" src="https://img.shields.io/badge/React_·_Vite_·_TypeScript-61DAFB?style=flat&logo=react&logoColor=black" />
   <img alt="Python" src="https://img.shields.io/badge/Backend-Python_·_FastAPI-3776AB?style=flat&logo=python&logoColor=white" />
   <img alt="ML" src="https://img.shields.io/badge/ML-PyTorch_·_YOLO_·_LangChain-EE4C2C?style=flat" />
 </p>
@@ -27,9 +27,7 @@
 
 ## Executive summary
 
-This repository is the source for a professional engineering portfolio that showcases end-to-end AI systems spanning computer vision, natural language processing, time-series forecasting, and quantitative finance. Each project is backed by a live API (hosted on Hugging Face Spaces or Render) and presented through a custom-built, premium web interface with real-time inference capabilities.
-
-The site is intentionally a pure static frontend — no build toolchain, no dependencies — deployable from any CDN or GitHub Pages with zero configuration.
+Personal portfolio built with React, Vite, and TypeScript. Showcases end-to-end AI systems spanning computer vision, NLP, time-series forecasting, and quantitative finance — with live demos on Vercel, Hugging Face Spaces, and Render.
 
 ---
 
@@ -37,33 +35,27 @@ The site is intentionally a pure static frontend — no build toolchain, no depe
 
 | Layer | Detail |
 |-------|--------|
-| **Hosting** | GitHub Pages (static, `main` branch) |
-| **Frontend** | Vanilla HTML5 + CSS3 + JavaScript — no frameworks |
-| **Design system** | Custom dark-mode design system; glassmorphism effects; CSS variables; responsive grid |
-| **Internationalisation** | PT / EN / ES via `data-pt`, `data-en`, `data-es` attributes + JS swapper |
-| **Animations** | IntersectionObserver-driven scroll reveals; CSS keyframe transitions |
-| **SEO** | Structured data (JSON-LD), Open Graph, Twitter Card meta tags |
+| **Hosting** | GitHub Pages (static deploy from Vite `dist/`) |
+| **Frontend** | React 19 · Vite 6 · TypeScript · Tailwind CSS · Framer Motion |
+| **Design** | ThinkPad/X1 Carbon inspired — dark matte, red micro-accents |
 
 ---
 
 ## Featured projects
 
-| Project | Domain | Model / Stack | Live API |
-|---------|--------|---------------|----------|
-| [Visual Anomaly Comparison Lab](https://visual-anomaly-comparison-lab.vercel.app/) | Industrial CV | Denoising autoencoder · MVTec AD | Vercel + Hugging Face |
-| [PlatePulse Vehicle Intelligence](https://platepulse-vehicle-intelligence.vercel.app/) | Traffic CV | YOLOv8 + OCR/ALPR | Vercel |
-| [RoadSight](./projects/roadsign-detection/) | ADAS CV | YOLOv8 detector | Hugging Face |
-| [DogBreed Vision](./projects/canine-detection/) | Object detection | YOLOv8 fine-tune | Hugging Face |
-| [Gray Matter LABS](https://gray-matter-research-agent.vercel.app/) | LLM · Agents | Groq · arXiv · research tools | Vercel |
+| Project | Domain | Model / Stack | Live |
+|---------|--------|---------------|------|
 | [DocMind](https://rag-document-qa-assistant.vercel.app/) | RAG · Document AI | React + FastAPI + FAISS | Vercel |
-| [Real-Time Industrial Anomaly Monitor](https://industrial-iot-anomaly-monitor.vercel.app/) | Industrial ML | SECOM dataset replay + autoencoder | Vercel + Hugging Face |
-| [PM Monitor](https://lstm-predictive-maintenance-dashboa.vercel.app/) | Predictive ML | LSTM sequence inference | Vercel + Hugging Face |
-| [Corporate Signal Intelligence](https://corporate-signal-intelligence-dashb.vercel.app/) | Financial analytics | Isolation Forest + Groq briefings | Vercel + Render |
-| [CineScope Intelligence](https://cinescope-semantic-discovery.vercel.app/) | Recommender | BERT · ONNX · TMDb | Vercel + Render |
-| [RL Portfolio Allocation Dashboard](https://ai-trading-signals-dashboard.vercel.app/) | Quant finance | PPO · ONNX · paper trading | Vercel + FastAPI |
-| [Economic Monitor SA](./projects/economic_monitoring_sa/) | Macro analytics | World Bank API | Public API |
-| [CS2 Valuation](./projects/cs2-valuation/) | Gaming / Finance | Steam API + pricing | Render |
-| [Business Growth](./projects/business_growth_potential/) | Corporate ML | Random Forest | Render |
+| [Real-Time Industrial Anomaly Monitor](https://industrial-iot-anomaly-monitor.vercel.app/) | Industrial ML | SECOM replay + autoencoder | Vercel |
+| [CineScope Intelligence](https://cinescope-semantic-discovery.vercel.app/) | Recommender | BERT · TMDb | Vercel |
+| [Visual Anomaly Comparison Lab](https://visual-anomaly-comparison-lab.vercel.app/) | Industrial CV | Denoising autoencoder | Vercel |
+| [PlatePulse Vehicle Intelligence](https://platepulse-vehicle-intelligence.vercel.app/) | Traffic CV | YOLOv8 + OCR/ALPR | Vercel |
+| [Gray Matter LABS](https://gray-matter-research-agent.vercel.app/) | LLM · Agents | Groq · arXiv tools | Vercel |
+| [PM Monitor](https://lstm-predictive-maintenance-dashboa.vercel.app/) | Predictive ML | LSTM inference | Vercel |
+| [Corporate Signal Intelligence](https://corporate-signal-intelligence-dashb.vercel.app/) | Financial analytics | Isolation Forest + Groq | Vercel |
+| [RL Portfolio Allocation Dashboard](https://ai-trading-signals-dashboard.vercel.app/) | Quant finance | PPO · paper trading | Vercel |
+
+Full list with filters: [/projects](https://sidnei-almeida.github.io/projects) on the live site.
 
 ---
 
@@ -71,43 +63,38 @@ The site is intentionally a pure static frontend — no build toolchain, no depe
 
 ```
 sidnei-almeida.github.io/
-├── index.html                  # Portfolio landing page (featured projects only)
-├── style.css                   # Global design system
-├── script.js                   # Interactions, filters, i18n
-├── images/                     # Project thumbnails and assets
-├── includes/
-│   └── projects-section.html   # Full project cards (migration reference; not linked publicly)
-└── projects/
-    ├── index.html              # Legacy all-projects archive (not linked publicly)
-    ├── bottle-anomaly-detection/  # legacy static demo (archived)
-    ├── license-plate-detection/  # legacy static demo (archived)
-    ├── roadsign-detection/
-    ├── canine-detection/
-    ├── research-agent/           # legacy static demo (archived)
-    ├── docmind-chat/              # legacy static demo (archived)
-    ├── tmdb-cinema/              # legacy static demo (archived)
-    ├── quant-core/               # legacy static demo (archived)
-    ├── rl_trading_dashboard/     # legacy static demo (archived)
-    ├── economic_monitoring_sa/
-    ├── monitoramento-sulamericano/
-    ├── cs2-valuation/
-    ├── business_growth_potential/
-    ├── elite-skins-2025/
-    └── emotion-classifier/
+├── src/                 # React app
+├── public/assets/       # Profile photos, project WebP thumbnails, favicons
+├── scripts/             # favicon + image optimization helpers
+├── index.html           # Vite entry + project image preloads
+├── package.json
+├── vite.config.ts
+└── .github/workflows/   # GitHub Pages deploy
 ```
 
 ---
 
-## Running locally
+## Development
 
 ```bash
-git clone https://github.com/sidnei-almeida/sidnei-almeida.github.io.git
-cd sidnei-almeida.github.io
-python -m http.server 8080
-# open http://localhost:8080
+npm install
+npm run dev                 # http://localhost:5173
+npm run build               # output → dist/
+npm run preview             # preview production build
+npm run optimize:projects   # PNG in repo root → WebP in public/assets/projects/
+npm run generate:favicons   # regenerate favicon set
 ```
 
-> Camera-based demos and API calls require HTTPS or `localhost`. Serving via `file://` will trigger CORS and camera-permission blocks.
+Drop raw project screenshots in the repo root, run `npm run optimize:projects`, then update paths in `src/data/projects.ts` and preload links in `index.html`.
+
+---
+
+## Deployment
+
+Static SPA built with Vite. GitHub Actions runs `npm run build` and publishes `dist/` to GitHub Pages on push to `main`.
+
+- `vite.config.ts` uses `base: "/"` for the user site `sidnei-almeida.github.io`
+- `public/.nojekyll` disables Jekyll processing on GitHub Pages
 
 ---
 
@@ -115,7 +102,7 @@ python -m http.server 8080
 
 | Channel | Link |
 |---------|------|
-| Portfolio | [sidnei-almeida.github.io](https://sidnei-almeida.github.io) |
+| Portfolio | [sidnei-almeida.github.io](https://sidnei-almeida.github.io/) |
 | GitHub | [github.com/sidnei-almeida](https://github.com/sidnei-almeida) |
 | LinkedIn | [linkedin.com/in/saaelmeida93](https://www.linkedin.com/in/saaelmeida93/) |
 | Email | [sidnei.almeida1806@gmail.com](mailto:sidnei.almeida1806@gmail.com) |
@@ -128,4 +115,3 @@ This project is licensed under the **GNU General Public License v3.0**.
 
 - License file: [`LICENSE.md`](./LICENSE.md)
 - SPDX identifier: `GPL-3.0-only`
-- Reference: [gnu.org/licenses/gpl-3.0](https://www.gnu.org/licenses/gpl-3.0)

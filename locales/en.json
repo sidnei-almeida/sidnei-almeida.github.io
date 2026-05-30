@@ -1,0 +1,232 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "experience": "Experience",
+    "projects": "Projects",
+    "skills": "Skills",
+    "resume": "Résumé",
+    "contact": "Contact",
+    "letsConnect": "Let's Connect"
+  },
+  "hero": {
+    "label": "AI Engineer & Full-Stack Developer",
+    "headline1": "Building intelligent systems at the",
+    "headline2": "intersection of",
+    "highlight1": "AI, data,",
+    "headline3": "and",
+    "highlight2": "full-stack",
+    "headline4": "engineering.",
+    "body": "I design and build scalable applications and AI solutions that turn complex data into real-world impact.",
+    "ctaPrimary": "View My Work",
+    "ctaSecondary": "Download Resume",
+    "metaBasedIn": "Based in",
+    "metaBasedInValue": "Brazil",
+    "metaAvailableFor": "Available for",
+    "metaAvailableValue": "New projects",
+    "metaOpenTo": "Open to",
+    "metaOpenToValue": "Remote roles",
+    "portraitAlt": "Sidnei Almeida — professional portrait"
+  },
+  "about": {
+    "label": "About Me",
+    "body": "AI Engineer and Full-Stack Developer with experience delivering data-driven products and intelligent systems. I combine strong engineering fundamentals with a practical approach to AI to build solutions that are scalable, reliable, and impactful.",
+    "readMore": "Read More"
+  },
+  "experience": {
+    "label": "Experience & Impact",
+    "featuredProducts": "Featured AI Products",
+    "projectsDelivered": "Projects Delivered",
+    "technologies": "Technologies",
+    "liveDemosCoverage": "Live Demo Coverage"
+  },
+  "whatIDo": {
+    "label": "What I Do",
+    "items": [
+      "AI Strategy & Solution Design",
+      "Machine Learning & Data Science",
+      "Full-Stack Web Development",
+      "Cloud Architecture & DevOps",
+      "Data Engineering & Analytics"
+    ]
+  },
+  "projects": {
+    "label": "Selected Work",
+    "title": "Featured Projects",
+    "subtitle": "A curated selection of production-inspired AI projects across RAG, computer vision, recommendation systems and analytics.",
+    "viewMore": "View More",
+    "pageLabel": "All Work",
+    "pageTitle": "Projects",
+    "pageSubtitle": "All {count} projects — from production AI systems to full-stack applications.",
+    "projectsCount": "Projects",
+    "filterAll": "All",
+    "filters": {
+      "all": "All",
+      "ml": "Machine Learning",
+      "recommender": "Recommender",
+      "cv": "Computer Vision",
+      "rag": "RAG / LLM",
+      "frontend": "Front-End",
+      "anomaly": "Anomaly Detection",
+      "financial": "Financial Analytics",
+      "dashboards": "Dashboards"
+    },
+    "noResults": "No projects found for this filter.",
+    "liveDemo": "Live Demo",
+    "source": "Source",
+    "liveDemoAria": "Live demo — {title}",
+    "sourceAria": "Source — {title}",
+    "openProjectAria": "Open {title}",
+    "screenshotAlt": "{title} screenshot"
+  },
+  "resume": {
+    "label": "Résumé",
+    "downloadBtn": "Download PDF",
+    "sections": {
+      "summary": "Professional Summary",
+      "experience": "Professional Experience",
+      "projects": "Key Technical Projects",
+      "education": "Education",
+      "skills": "Skills & Tools",
+      "certifications": "Certifications"
+    },
+    "present": "Present",
+    "stack": "Stack",
+    "pageTitle": "Sidnei Almeida — Resume",
+    "clientPrefix": "Client",
+    "rolePrefix": "Role",
+    "projectPrefix": "Project"
+  },
+  "resumePrint": {
+    "savePdf": "Download PDF",
+    "generatingPdf": "Generating PDF…",
+    "generatedFrom": "Generated from sidnei-almeida.github.io/resume",
+    "sections": {
+      "summary": "Professional Summary",
+      "experience": "Experience",
+      "projects": "Key Technical Projects",
+      "education": "Education",
+      "skills": "Skills",
+      "certifications": "Certifications"
+    }
+  },
+  "skills": {
+    "label": "Skills",
+    "title": "Technical Skills",
+    "groups": {
+      "dataScienceAI": "Data Science & AI",
+      "dataEngineering": "Data Engineering",
+      "fullStack": "Full-Stack Development",
+      "visualization": "Visualization & Business"
+    }
+  },
+  "techStack": {
+    "label": "Tech Stack",
+    "ariaLabel": "Tech stack",
+    "technologiesAria": "Technologies"
+  },
+  "contact": {
+    "label": "Contact",
+    "title": "Let's build something intelligent together.",
+    "subtitle": "Open to AI Engineering roles, freelance projects, and collaborations. If you're building something with machine learning, computer vision, or LLMs, I'd be glad to connect.",
+    "btnPrimary": "Get in Touch",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "sendMessage": "Send a Message"
+  },
+  "contactPage": {
+    "back": "Back to portfolio",
+    "title": "Let's Talk",
+    "subtitle": "Open to AI Engineering roles, freelance projects, and collaborations. If you're building something with machine learning, computer vision, or LLMs, I'd be glad to connect and contribute.",
+    "basedIn": "Based in",
+    "sendMessageLabel": "Send a Message",
+    "formIntro": "Share a brief about your project, opportunity, or question. I typically respond within 1–2 business days.",
+    "availabilityLabel": "Availability",
+    "availabilityValue": "Open to AI Engineering, Full-stack, Data Science and freelance projects.",
+    "responseLabel": "Response",
+    "responseValue": "Usually within 1–2 business days.",
+    "workModeLabel": "Work mode",
+    "workModeValue": "Remote / Hybrid"
+  },
+  "contactForm": {
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "your@email.com",
+    "messagePlaceholder": "Tell me about your project, role, or collaboration idea…",
+    "sending": "Sending…",
+    "submit": "Send Message",
+    "success": "Message sent successfully.",
+    "error": "Error sending. Please try again."
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "ariaLabel": "Footer",
+    "githubAria": "GitHub",
+    "linkedinAria": "LinkedIn",
+    "emailAria": "Email"
+  },
+  "aria": {
+    "mainNav": "Main",
+    "mobileNav": "Mobile",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "meta": {
+    "title": "Sidnei Almeida | AI Engineer",
+    "description": "Sidnei Almeida — AI Engineer building intelligent systems across machine learning, computer vision, and LLM applications."
+  },
+  "resumeData": {
+    "summary": "Hands-on Developer specializing in the intersection of Data Engineering, Machine Learning, and Web Development. Experience building high-frequency data aggregators for Digital Asset markets and creating robust data architectures for HealthTech platforms. Proficient in the full data lifecycle: from scraping and complex ETL workflows to training Deep Learning models (LSTM, GANs, YOLOv8) and deploying them via Docker and FastAPI. Passionate about clean code, automation, and building intuitive interfaces that make complex data accessible.",
+    "experience": [
+      {
+        "company": "Independent Contractor",
+        "period": "2021 - Present",
+        "engagements": [
+          {
+            "project": "Supported AI model training by evaluating, annotating, and improving model responses across reasoning, factuality, and instruction-following tasks.",
+            "achievements": [
+              "Evaluated AI responses for accuracy, clarity, safety, and instruction-following",
+              "Compared model outputs and identified hallucinations, reasoning errors, and inconsistencies",
+              "Provided structured annotations and feedback to improve LLM training data quality",
+              "Rewrote and refined responses based on project guidelines"
+            ]
+          },
+          {
+            "project": "Architected the complete data infrastructure for a nutritional tracking application (Mobile/Web).",
+            "achievements": [
+              "Contributed to the development of a computer vision model for food segmentation and calorie estimation",
+              "Designed and deployed the relational database (SQL) schema from scratch, ensuring 3NF normalization for user logs, nutritional tables, and biometric data",
+              "Built ETL pipelines to scrape, clean, and ingest nutritional datasets",
+              "Established data cleaning standards to support the calorie recommendation engine"
+            ]
+          }
+        ]
+      }
+    ],
+    "education": [
+      {
+        "degree": "MBA, Data Science, Artificial Intelligence & Analytics",
+        "period": "2025 - 2027"
+      },
+      {
+        "period": "2020 - 2025"
+      }
+    ],
+    "projects": [
+      {
+        "description": "Developed a Retrieval-Augmented Generation (RAG) system allowing users to query PDF documents using natural language."
+      },
+      {
+        "description": "Built a \"Black Piano\" anomaly detection system for semiconductor manufacturing (SECOM) and a defect detection model for industrial bottling (MVTec AD)."
+      },
+      {
+        "description": "Created a time-series forecasting system to predict liquid flow in pipeline systems, visualizing output via a real-time dashboard."
+      },
+      {
+        "description": "Deployed high-precision vision models including a License Plate Recognition system (99.69% precision) and Real-Time Emotion Analysis."
+      }
+    ]
+  }
+}

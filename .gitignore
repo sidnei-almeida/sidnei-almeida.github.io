@@ -1,8 +1,47 @@
-tmdb-config.js
-projects/tmdb-cinema/tmdb-config.js
+# Dependencies
+node_modules/
 
+# Build output
+dist/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.local
+tmdb-config.js
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS & editors
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.code-workspace
+
+# TypeScript / Vite
+*.tsbuildinfo
+
+# Raw media dropped in repo root (run npm run optimize:projects)
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp
+/*.gif
+
+# Scratch / internal notes
 FRONTEND_UPDATES.txt
 endpoints.txt
 API_ENDPOINTS.txt
 FRONTEND_UPGRADE_GUIDE.txt
-projects/quant-core/assets/character-placeholder.png

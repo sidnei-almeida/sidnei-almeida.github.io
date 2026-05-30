@@ -1,1380 +1,162 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/x-icon" href="./favicon.ico" />
-  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-  <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
-  <link rel="manifest" href="./manifest.json" />
-  <meta name="theme-color" content="#6366f1" />
-  <title>Sidnei Almeida | AI Engineer</title>
-  <meta name="description" content="AI Engineer focused on real-world machine learning systems. End-to-end applications across computer vision and LLMs, with APIs, inference pipelines, interactive frontends, and live demos." />
-  <meta name="keywords" content="AI Engineer, Machine Learning, Computer Vision, LLM, RAG, MLOps, Production ML, APIs, Inference" />
-  <meta name="author" content="Sidnei Almeida" />
-  <meta name="robots" content="index, follow" />
-  <meta name="language" content="en" />
-  <meta name="revisit-after" content="7 days" />
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://sidnei-almeida.github.io/" />
-  <meta property="og:title" content="Sidnei Almeida | AI Engineer" />
-  <meta property="og:description" content="AI Engineer building production-oriented ML systems: computer vision, LLM-based apps, APIs, and live demos." />
-  <meta property="og:image" content="https://sidnei-almeida.github.io/images/photo1.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:site_name" content="Sidnei Almeida - Portfolio" />
-  <meta property="og:locale" content="pt_BR" />
-  
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://sidnei-almeida.github.io/" />
-  <meta property="twitter:title" content="Sidnei Almeida | AI Engineer" />
-  <meta property="twitter:description" content="AI Engineer building production-oriented ML systems: computer vision, LLM-based apps, APIs, and live demos." />
-  <meta property="twitter:image" content="https://sidnei-almeida.github.io/images/photo1.png" />
-  <meta property="twitter:creator" content="@sidneialmeida" />
-  
-  <!-- Canonical URL -->
-  <link rel="canonical" href="https://sidnei-almeida.github.io/" />
-  
-  <!-- Preload Critical Images -->
-  <link rel="preload" as="image" href="./images/photo1.png" fetchpriority="high" />
-  <link rel="preload" as="image" href="./images/photo3.png" fetchpriority="high" />
-  
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Sidnei Almeida",
-    "jobTitle": "AI Engineer",
-    "description": "AI Engineer focused on building and deploying real-world machine learning systems. Designs end-to-end AI applications in computer vision and LLM-based systems, including APIs, real-time inference, and interactive frontends.",
-    "url": "https://sidnei-almeida.github.io/",
-    "image": "https://sidnei-almeida.github.io/images/photo1.png",
-    "sameAs": [
-      "https://www.linkedin.com/in/saaelmeida93/",
-      "https://github.com/sidnei-almeida",
-      "https://huggingface.co/salmeida"
-    ],
-    "worksFor": {
-      "@type": "Organization",
-      "name": "Self Employed"
-    },
-    "alumniOf": [
-      {
-        "@type": "EducationalOrganization",
-        "name": "Universidade Federal de Santa Catarina (UFSC)"
-      },
-      {
-        "@type": "EducationalOrganization", 
-        "name": "Universidade de Caxias do Sul (UCS)"
-      },
-      {
-        "@type": "EducationalOrganization",
-        "name": "Universidade Federal do Rio Grande do Sul (UFRGS)"
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="/favicon-180x180.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sidnei Almeida — AI Engineer building intelligent systems across machine learning, computer vision, and LLM applications." />
+    <!-- Project screenshots (WebP) — sync paths with src/data/projects.ts -->
+    <link rel="preload" as="image" type="image/webp" href="/assets/projects/docmind_image.webp" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/webp" href="/assets/projects/real-time-industrialk-anomaly.webp" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/webp" href="/assets/projects/mocie-recommender.webp" fetchpriority="high" />
+    <link rel="preload" as="image" type="image/webp" href="/assets/projects/pm-monitor.webp" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/assets/projects/visual_anomaly.webp" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/assets/projects/license_plate.webp" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/assets/projects/corporate_anomaly.webp" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/assets/projects/gray_matter.webp" fetchpriority="low" />
+    <link rel="preload" as="image" type="image/webp" href="/assets/projects/rl_portfolio.webp" fetchpriority="low" />
+    <title>Sidnei Almeida | AI Engineer</title>
+    <style id="cursor-critical">
+      html,
+      body,
+      *,
+      *::before,
+      *::after {
+        cursor: none !important;
       }
-    ],
-    "knowsAbout": [
-      "Machine Learning",
-      "Deep Learning",
-      "Computer Vision",
-      "Natural Language Processing",
-      "Large Language Models",
-      "Retrieval-Augmented Generation",
-      "Model Deployment",
-      "FastAPI",
-      "Docker",
-      "MLOps",
-      "Time Series Forecasting",
-      "LSTM",
-      "AWS",
-      "CI/CD"
-    ],
-    "email": "sidnei.almeida1806@gmail.com",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "BR"
-    }
-  }
-  </script>
-  
-  <!-- Website Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Sidnei Almeida - Portfolio",
-    "description": "Portfólio profissional de Sidnei Almeida. AI Engineer, LLMs, visão computacional e MLOps.",
-    "url": "https://sidnei-almeida.github.io/",
-    "author": {
-      "@type": "Person",
-      "name": "Sidnei Almeida"
-    },
-    "inLanguage": "pt-BR"
-  }
-  </script>
-  
-  <!-- Professional Service Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "name": "Sidnei Almeida - AI Engineering & MLOps",
-    "description": "AI engineering services: LLM systems, RAG, computer vision, model deployment, APIs, and production MLOps.",
-    "provider": {
-      "@type": "Person",
-      "name": "Sidnei Almeida"
-    },
-    "serviceType": [
-      "Machine Learning",
-      "Large Language Models",
-      "Model Deployment",
-      "MLOps",
-      "Computer Vision",
-      "Natural Language Processing"
-    ],
-    "areaServed": {
-      "@type": "Country",
-      "name": "Brazil"
-    }
-  }
-  </script>
-  
-  <!-- DNS Prefetch for external resources -->
-  <link rel="dns-prefetch" href="//fonts.googleapis.com">
-  <link rel="dns-prefetch" href="//fonts.gstatic.com">
-  <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
-  
-  <!-- Fonts with display=swap for better performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Playfair+Display:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  
-  <!-- Critical CSS inline or Styles -->
-  <link rel="stylesheet" href="assets/css/style.css" />
-  
-  <!-- Resource hints for images -->
-  <link rel="preload" href="./images/photo1.png" as="image" type="image/png">
-  <link rel="preload" href="./images/photo2.png" as="image" type="image/png">
-  <link rel="preload" href="./images/photo3.png" as="image" type="image/png">
-  <link rel="preload" href="./images/hero_background.jpg" as="image" type="image/jpeg">
-  
-  <!-- Preload project images for better performance -->
-  <link rel="preload" href="./images/road.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/dash_docmind.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/project-1.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/corporate-dash-anomaly.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/project-3.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/project-legislativo.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/odinx.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/dash_cinescope.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/ai_rl.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/dash_gray_matter_labs.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/dash_pm_monitor.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/dash_visual_anomaly_lab.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/woof.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/dash_secom.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/dash_platepulse.webp" as="image" type="image/webp">
-  <link rel="preload" href="./images/emotions.webp" as="image" type="image/webp">
-</head>
 
-<body>
-  <!-- Header -->
-  <header class="header">
-    <nav class="container">
-      <div class="nav">
-        <div class="nav-brand">
-          <div class="nav-avatar">
-            <img src="./images/photo3.png" alt="Sidnei Almeida" />
-          </div>
-        </div>
-        <ul class="nav-links">
-          <li><a href="#projetos" class="nav-link" data-pt="Projetos" data-en="Projects" data-es="Proyectos">Projetos</a></li>
-          <li><a href="#habilidades" class="nav-link" data-pt="Habilidades" data-en="Skills" data-es="Habilidades">Habilidades</a></li>
-          <li><a href="#sobre" class="nav-link" data-pt="Sobre" data-en="About" data-es="Acerca de">Sobre</a></li>
-          <li><a href="#contato" class="nav-link" data-pt="Contato" data-en="Contact" data-es="Contacto">Contato</a></li>
-        </ul>
-        <div class="nav-controls">
-          <div class="language-selector">
-            <button class="language-toggle" onclick="toggleLanguage()" title="Trocar idioma / Change language / Cambiar idioma">
-              <span class="language-text" id="currentLangText">EN</span>
-            </button>
-            <div class="language-options">
-              <button class="language-option" data-lang="pt" onclick="applyLanguage('pt')">PT</button>
-              <button class="language-option" data-lang="en" onclick="applyLanguage('en')">EN</button>
-              <button class="language-option" data-lang="es" onclick="applyLanguage('es')">ESP</button>
-            </div>
-          </div>
-          <div class="color-palette">
-            <div class="color-palette-toggle" onclick="toggleColorPalette()" title="Escolher cor do tema">
-              <i class="fas fa-palette"></i>
-            </div>
-            <div class="color-options">
-              <!-- Monochromatic Options -->
-              <button class="color-option" data-color="white" style="background: #ffffff;" title="Branco Puro"></button>
-              <button class="color-option" data-color="gray" style="background: #a3a3a3;" title="Cinza Profissional"></button>
-              <button class="color-option" data-color="charcoal" style="background: #404040;" title="Carvão Sofisticado"></button>
-              
-              <!-- Premium Color Options -->
-              <button class="color-option" data-color="gold" style="background: #d4af37;" title="Dourado Elegante"></button>
-              <button class="color-option" data-color="blue" style="background: #4a90e2;" title="Azul Profissional"></button>
-              <button class="color-option" data-color="purple" style="background: #8b5cf6;" title="Roxo Sofisticado"></button>
-              <button class="color-option" data-color="emerald" style="background: #10b981;" title="Verde Esmeralda"></button>
-              <button class="color-option" data-color="rose" style="background: #f43f5e;" title="Rosa Elegante"></button>
-              
-              <!-- Premium Mix Theme -->
-              <button class="color-option color-option-mix" data-color="premium-mix" style="background: linear-gradient(135deg, #d4af37 0%, #4a90e2 25%, #8b5cf6 50%, #10b981 75%, #f43f5e 100%);" title="Mix Premium Elegante"></button>
-            </div>
-          </div>
-        </div>
-        <button class="menu-toggle" aria-label="Abrir menu de navegação" aria-expanded="false">
-          <i class="fas fa-bars" aria-hidden="true"></i>
-        </button>
-      </div>
-    </nav>
-  </header>
+      html {
+        cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3C/svg%3E"), none !important;
+      }
 
+      #trackpoint {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 20px;
+        height: 24px;
+        opacity: 1;
+        background: no-repeat center / contain
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='24' viewBox='0 0 20 24' fill='none'%3E%3Cpath d='M2.5 1.5V18.8L7.4 14.2L10.1 21.8L12.4 20.6L10.2 13.2H16.8L2.5 1.5Z' fill='%23c8102e' stroke='%231a1a1a' stroke-width='0.65' stroke-linejoin='round'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 99999;
+        transform-origin: 2px 2px;
+        will-change: transform;
+      }
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-content hero-parallax-content">
-        <div class="hero-text">
-          <h1>
-            <span class="highlight" data-pt="Engenheiro de IA" data-en="AI Engineer" data-es="Ingeniero de IA">AI Engineer</span><br class="hero-headline-break" aria-hidden="true" /><span class="hero-headline-line2"><span class="hero-headline-l2a" data-pt="construindo sistemas de " data-en="building real-world " data-es="construyendo sistemas de ">building real-world </span><br class="hero-headline-br-mid" aria-hidden="true" /><span class="hero-headline-l2b" data-pt="ML no mundo real" data-en="ML systems" data-es="ML en el mundo real">ML systems</span></span>
-          </h1>
-          <p class="subtitle" data-pt="Projeto e entrego aplicações de IA ponta a ponta: visão computacional, LLMs, APIs em produção e web apps interativas." data-en="I design and deliver end-to-end AI applications, from computer vision and LLM systems to production-ready APIs and interactive web apps." data-es="Diseño y entrego aplicaciones de IA de extremo a extremo: visión por computador, LLMs, APIs en producción y web apps interactivas.">
-            I design and deliver end-to-end AI applications, from computer vision and LLM systems to production-ready APIs and interactive web apps.
-          </p>
-          <p class="hero-proof" data-pt="Demonstrações ao vivo em todo o portfólio. Não só amostras de código." data-en="Live demos included across the portfolio. Not just code samples." data-es="Demos en vivo en todo el portafolio. No solo muestras de código.">
-            Live demos included across the portfolio. Not just code samples.
-          </p>
-          <div class="hero-actions">
-            <a href="#projetos" class="btn btn-primary">
-              <i class="fas fa-rocket"></i>
-              <span data-pt="Ver projetos em destaque" data-en="View Featured Work" data-es="Ver trabajo destacado">View Featured Work</span>
-            </a>
-            <a href="https://github.com/sidnei-almeida" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
-              <i class="fab fa-github" aria-hidden="true"></i>
-              <span data-pt="Ver GitHub" data-en="View GitHub" data-es="Ver GitHub">View GitHub</span>
-            </a>
-          </div>
-        </div>
-        <div class="hero-image">
-          <img src="./images/photo1.png" alt="Sidnei Almeida" loading="eager" />
-        </div>
-      </div>
-    </div>
-  </section>
+      #trackpoint.is-hovering {
+        transform: scale(1.12);
+        filter: brightness(1.2);
+      }
 
-  <!-- Projetos Section -->
-  <section class="section" id="projetos">
-    <div class="container">
-      <h2 class="section-title" data-pt="Projetos em destaque" data-en="Featured Projects" data-es="Proyectos destacados">Projetos em destaque</h2>
-      <p class="section-subtitle" data-pt="Seleção curada de projetos de IA em RAG, visão computacional, sistemas de recomendação e analytics." data-en="A curated selection of production-inspired AI projects across RAG, computer vision, recommendation systems and analytics." data-es="Selección curada de proyectos de IA en RAG, visión por computador, sistemas de recomendación y analytics.">
-        A curated selection of production-inspired AI projects across RAG, computer vision, recommendation systems and analytics.
-      </p>
-      
-      <div class="project-filters" role="group" aria-label="Filtros de projetos">
-        <button class="filter-btn active" data-filter="all" aria-pressed="true" data-pt="Todos" data-en="All" data-es="Todos">Todos</button>
-        <button class="filter-btn" data-filter="machine-learning" aria-pressed="false" data-pt="ML &amp; IA" data-en="ML &amp; AI" data-es="ML &amp; IA">ML &amp; IA</button>
-        <button class="filter-btn" data-filter="analytics" aria-pressed="false" data-pt="Analytics &amp; Dashboards" data-en="Analytics &amp; Dashboards" data-es="Analytics &amp; Dashboards">Analytics &amp; Dashboards</button>
-        <button class="filter-btn" data-filter="web-app" aria-pressed="false" data-pt="Web Apps &amp; Ferramentas" data-en="Web Apps &amp; Tools" data-es="Web Apps &amp; Herramientas">Web Apps &amp; Ferramentas</button>
-      </div>
+      #trackpoint.is-clicking {
+        transform: scale(0.86);
+        filter: brightness(0.95);
+      }
 
-      <div class="projects-grid">
-        <!-- Projeto: DocMind — RAG Document QA Assistant -->
-        <div class="project-card" data-category="ai llm web-app">
-          <div class="project-image">
-            <img src="./images/dash_docmind.webp" alt="DocMind RAG document intelligence workspace interface" loading="lazy" />
-          </div>
-          <div class="project-content">
-            <div class="project-header">
-              <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="DocMind — Assistente RAG para Documentos" data-en="DocMind — RAG Document QA Assistant" data-es="DocMind — Asistente RAG para Documentos">DocMind — RAG Document QA Assistant</span>
-                <span class="project-title-line" data-pt="IA • RAG • Inteligência Documental" data-en="AI • RAG • Document Intelligence" data-es="IA • RAG • Inteligencia Documental">AI • RAG • Document Intelligence</span>
-              </h3>
-              <div class="project-status">
-                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
-                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recent</span>
-                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
-              </div>
-            </div>
-            <div class="project-body">
-              <p class="project-description">
-                <span class="description-short" data-pt="Assistente documental com RAG para upload de PDFs, recuperação semântica, respostas com fontes e painel de inteligência do workspace." data-en="Cloud-hosted RAG document assistant with PDF ingestion, semantic retrieval, source-grounded answers and a premium document intelligence workspace." data-es="Asistente documental con RAG para subir PDFs, recuperación semántica, respuestas con fuentes y panel de inteligencia del workspace.">Cloud-hosted RAG document assistant with PDF ingestion, semantic retrieval, source-grounded answers and a premium document intelligence workspace.</span>
-                <span class="description-full" style="display: none;" data-pt="DocMind é um assistente de inteligência documental com RAG hospedado na nuvem, projetado para Q&amp;A interativo em PDFs. O sistema processa documentos enviados, divide-os em chunks semânticos, gera embeddings, recupera evidências relevantes com busca vetorial e produz respostas fundamentadas em fontes via LLM. Focado em um fluxo completo de inteligência documental: status do workspace, evidências recuperadas, metadados de confiança, métricas do documento, demo com documento de exemplo e front-end premium." data-en="DocMind is a cloud-hosted RAG document intelligence assistant designed for interactive PDF question answering. The system processes uploaded documents, splits them into semantic chunks, generates embeddings, retrieves relevant evidence with a vector search pipeline, and produces source-grounded answers through an LLM. Built as a portfolio-ready AI product focused on a complete document intelligence workflow: workspace status, retrieved evidence, confidence metadata, document metrics, sample document support and a polished frontend experience." data-es="DocMind es un asistente de inteligencia documental con RAG alojado en la nube, diseñado para preguntas y respuestas interactivas en PDFs. Procesa documentos subidos, los divide en fragmentos semánticos, genera embeddings, recupera evidencias con búsqueda vectorial y produce respuestas fundamentadas en fuentes mediante un LLM. Incluye flujo completo de inteligencia documental: estado del workspace, evidencias recuperadas, metadatos de confianza, métricas y front-end premium.">DocMind is a cloud-hosted RAG document intelligence assistant designed for interactive PDF question answering. The system processes uploaded documents, splits them into semantic chunks, generates embeddings, retrieves relevant evidence with a vector search pipeline, and produces source-grounded answers through an LLM. Built as a portfolio-ready AI product focused on a complete document intelligence workflow: workspace status, retrieved evidence, confidence metadata, document metrics, sample document support and a polished frontend experience.</span>
-              </p>
-              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="View DocMind project">
-                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
-              </button>
-              <div class="project-metrics">
-                <div class="metric">
-                  <i class="fas fa-file-upload"></i>
-                  <span data-pt="Upload de PDF e chunking semântico" data-en="PDF upload and semantic chunking" data-es="Subida de PDF y chunking semántico">PDF upload and semantic chunking</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-search"></i>
-                  <span data-pt="Recuperação vetorial com FAISS" data-en="FAISS vector retrieval" data-es="Recuperación vectorial con FAISS">FAISS vector retrieval</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-quote-right"></i>
-                  <span data-pt="Respostas LLM com fontes citadas" data-en="Source-grounded LLM answers" data-es="Respuestas LLM con fuentes citadas">Source-grounded LLM answers</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-chart-bar"></i>
-                  <span data-pt="Painel de inteligência do workspace" data-en="Workspace intelligence panel" data-es="Panel de inteligencia del workspace">Workspace intelligence panel</span>
-                </div>
-              </div>
-              <div class="project-tech">
-                <span class="tech-tag">RAG</span>
-                <span class="tech-tag">React</span>
-                <span class="tech-tag">FAISS</span>
-                <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">Groq</span>
-              </div>
-            </div>
-            <div class="project-value-benefits" style="display: none;">
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-file-pdf"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Ingestão e recuperação semântica" data-en="PDF ingestion and semantic retrieval" data-es="Ingestión y recuperación semántica">PDF ingestion and semantic retrieval</h4>
-                  <p class="value-benefit-description" data-pt="Upload de PDFs, divisão em chunks semânticos, embeddings Hugging Face e busca vetorial FAISS para Q&amp;A documental preciso." data-en="PDF uploads, semantic chunking, Hugging Face embeddings and FAISS vector search for precise document question answering." data-es="Subida de PDFs, fragmentación semántica, embeddings Hugging Face y búsqueda vectorial FAISS para Q&amp;A documental preciso.">PDF uploads, semantic chunking, Hugging Face embeddings and FAISS vector search for precise document question answering.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-shield-alt"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Respostas fundamentadas em evidências" data-en="Evidence-backed grounded answers" data-es="Respuestas fundamentadas en evidencias">Evidence-backed grounded answers</h4>
-                  <p class="value-benefit-description" data-pt="Respostas LLM com painel de evidências recuperadas, metadados de confiança e citação de fontes — indo além do simples chat with PDF." data-en="LLM responses with retrieved evidence panel, confidence metadata and source citations — going beyond basic chat-with-PDF." data-es="Respuestas LLM con panel de evidencias recuperadas, metadatos de confianza y citas de fuentes — más allá del chat básico con PDF.">LLM responses with retrieved evidence panel, confidence metadata and source citations — going beyond basic chat-with-PDF.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-layer-group"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Workspace de inteligência documental" data-en="Document intelligence workspace" data-es="Workspace de inteligencia documental">Document intelligence workspace</h4>
-                  <p class="value-benefit-description" data-pt="Métricas do documento, status do workspace, fluxo demo com documento de exemplo e UI dark premium pronta para recrutadores." data-en="Document metrics, workspace status, sample document demo flow and premium dark UI ready for recruiters." data-es="Métricas del documento, estado del workspace, flujo demo con documento de ejemplo y UI dark premium lista para reclutadores.">Document metrics, workspace status, sample document demo flow and premium dark UI ready for recruiters.</p>
-                </div>
-              </div>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/rag-document-qa-assistant" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-github"></i>
-                <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
-              </a>
-              <a href="https://rag-document-qa-assistant.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-desktop"></i>
-                <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <!-- Projeto: Real-Time Industrial Anomaly Monitor -->
-        <div class="project-card featured-top-2" data-category="machine-learning analytics web-app">
-          <div class="project-image">
-            <img src="./images/dash_secom.webp" alt="Real-Time Industrial Anomaly Monitor dashboard displayed on a ThinkPad laptop" loading="lazy" />
-          </div>
-          <div class="project-content">
-            <div class="project-header">
-              <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="Real-Time Industrial Anomaly Monitor" data-en="Real-Time Industrial Anomaly Monitor" data-es="Real-Time Industrial Anomaly Monitor">Real-Time Industrial Anomaly Monitor</span>
-                <span class="project-title-line" data-pt="Monitoramento industrial SECOM" data-en="SECOM Manufacturing Monitor" data-es="Monitor industrial SECOM">SECOM Manufacturing Monitor</span>
-              </h3>
-              <div class="project-status">
-                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
-                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Recent">Recent</span>
-                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
-              </div>
-            </div>
-            <div class="project-body">
-              <p class="project-description">
-                <span class="description-short" data-pt="Dashboard industrial em tempo real que reproduz amostras limpas do SECOM como fluxo de sensores, calcula risco de anomalia e visualiza a saúde do processo." data-en="Real-time industrial monitoring dashboard that replays cleaned SECOM manufacturing samples as a sensor stream, scores anomaly risk, and visualizes live process health." data-es="Dashboard industrial en tiempo real que reproduce muestras limpias de SECOM como flujo de sensores, calcula riesgo de anomalía y visualiza la salud del proceso.">Real-time industrial monitoring dashboard that replays cleaned SECOM manufacturing samples as a sensor stream, scores anomaly risk, and visualizes live process health.</span>
-                <span class="description-full" style="display: none;" data-pt="Real-Time Industrial Anomaly Monitor é uma dashboard profissional para simular monitoramento industrial de anomalias com o dataset SECOM de semicondutores. Reproduz amostras de fabricação limpas como fluxo simulado de sensores em tempo real, calcula risco de anomalia, destaca cruzamentos de limiar e apresenta saídas do modelo numa interface operacional minimalista. Desenvolvida em Next.js, integra-se a um serviço FastAPI de autoencoder (Hugging Face) e inclui tela de boot para cold starts. Demonstra engenharia de IA aplicada: frontend, simulação em tempo real, scoring local, integração com API e produto de monitoramento." data-en="Real-Time Industrial Anomaly Monitor is a professional dashboard for simulating industrial anomaly monitoring with the SECOM semiconductor dataset. It replays cleaned manufacturing samples as a simulated real-time sensor stream, computes anomaly risk, highlights threshold crossings, and presents model outputs through a minimalist operations UI. Built with Next.js and designed for a FastAPI autoencoder on Hugging Face, it includes an API wake-up screen for clean cold starts. Shows practical AI engineering across frontend design, real-time simulation, inference integration, and production-style monitoring—not a notebook demo." data-es="Real-Time Industrial Anomaly Monitor es un dashboard profesional para simular monitoreo industrial de anomalías con el dataset SECOM de semiconductores. Reproduce muestras de fabricación limpias como flujo simulado de sensores en tiempo real, calcula riesgo de anomalía, resalta cruces de umbral y presenta salidas del modelo en una interfaz operacional minimalista. Desarrollado en Next.js, se integra con un autoencoder FastAPI en Hugging Face e incluye pantalla de boot para cold starts. Demuestra ingeniería de IA aplicada: frontend, simulación en tiempo real, scoring local e integración con API.">Real-Time Industrial Anomaly Monitor is a professional dashboard for simulating industrial anomaly monitoring with the SECOM semiconductor dataset. It replays cleaned manufacturing samples as a simulated real-time sensor stream, computes anomaly risk, highlights threshold crossings, and presents model outputs through a minimalist operations UI. Built with Next.js and designed for a FastAPI autoencoder on Hugging Face, it includes an API wake-up screen for clean cold starts. Shows practical AI engineering across frontend design, real-time simulation, inference integration, and production-style monitoring—not a notebook demo.</span>
-              </p>
-              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="View more project details">
-                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
-              </button>
-              <div class="project-metrics">
-                <div class="metric">
-                  <i class="fas fa-database"></i>
-                  <span data-pt="Amostras SECOM: 1.567" data-en="SECOM samples: 1,567" data-es="Muestras SECOM: 1.567">SECOM samples: 1,567</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-triangle-exclamation"></i>
-                  <span data-pt="Amostras de falha: 104" data-en="Failure samples: 104" data-es="Muestras de falla: 104">Failure samples: 104</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-play-circle"></i>
-                  <span data-pt="Modo: replay do dataset" data-en="Stream mode: Dataset replay" data-es="Modo: replay del dataset">Stream mode: Dataset replay</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-brain"></i>
-                  <span data-pt="Inferência: local / FastAPI-ready" data-en="Inference: Local scoring / FastAPI-ready" data-es="Inferencia: local / FastAPI-ready">Inference: Local scoring / FastAPI-ready</span>
-                </div>
-              </div>
-              <div class="project-tech">
-                <span class="tech-tag">Next.js</span>
-                <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">Keras</span>
-                <span class="tech-tag">Recharts</span>
-              </div>
-            </div>
-            <div class="project-value-benefits" style="display: none;">
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-play-circle"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Replay de Dados Industriais" data-en="Real-Time Dataset Replay" data-es="Replay de Datos Industriales">Real-Time Dataset Replay</h4>
-                  <p class="value-benefit-description" data-pt="Reproduz amostras limpas do dataset SECOM como um fluxo simulado de sensores industriais, criando uma experiência de monitoramento em tempo real sem afirmar conexão com hardware real." data-en="Replays cleaned SECOM semiconductor manufacturing samples as a simulated sensor stream, behaving like a live industrial monitoring system without claiming real hardware connectivity." data-es="Reproduce muestras limpias del dataset SECOM como un flujo simulado de sensores industriales, creando una experiencia de monitoreo en tiempo real sin afirmar conexión con hardware real.">Replays cleaned SECOM semiconductor manufacturing samples as a simulated sensor stream, behaving like a live industrial monitoring system without claiming real hardware connectivity.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-chart-line"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Scoring de Anomalias" data-en="Anomaly Scoring &amp; Model Readiness" data-es="Scoring de Anomalías">Anomaly Scoring &amp; Model Readiness</h4>
-                  <p class="value-benefit-description" data-pt="Usa scoring local para o replay do dataset e foi estruturado para integração com uma API FastAPI de autoencoder baseada em erro de reconstrução." data-en="Uses local scoring for dataset replay and is designed to integrate with a FastAPI autoencoder inference service that returns reconstruction error and anomaly decisions." data-es="Usa scoring local para el replay del dataset y está diseñado para integrarse con un servicio FastAPI de autoencoder basado en error de reconstrucción.">Uses local scoring for dataset replay and is designed to integrate with a FastAPI autoencoder inference service that returns reconstruction error and anomaly decisions.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-gauge-high"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Interface Operacional" data-en="Operational Monitoring Interface" data-es="Interfaz Operacional">Operational Monitoring Interface</h4>
-                  <p class="value-benefit-description" data-pt="Apresenta score de anomalia, telemetria de sensores, status do processo, saída do modelo e log de eventos em uma dashboard minimalista e profissional." data-en="Visualizes live process health through anomaly scores, sensor telemetry, model output, threshold markers, and a structured event log for engineering-style review." data-es="Presenta score de anomalía, telemetría de sensores, estado del proceso, salida del modelo y log de eventos en un dashboard minimalista y profesional.">Visualizes live process health through anomaly scores, sensor telemetry, model output, threshold markers, and a structured event log for engineering-style review.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-bolt"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Inicialização da API" data-en="API Wake-Up Experience" data-es="Inicialización de la API">API Wake-Up Experience</h4>
-                  <p class="value-benefit-description" data-pt="Inclui uma tela de boot que aguarda a resposta da API de inferência antes de exibir a dashboard, evitando que a demonstração pareça quebrada durante cold starts." data-en="Includes a minimalist boot screen that waits for the inference API health check before showing the dashboard, preventing a broken demo during cold starts." data-es="Incluye una pantalla de boot que espera la respuesta de la API de inferencia antes de mostrar el dashboard, evitando que la demo parezca rota durante cold starts.">Includes a minimalist boot screen that waits for the inference API health check before showing the dashboard, preventing a broken demo during cold starts.</p>
-                </div>
-              </div>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/industrial-iot-anomaly-monitor" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-github"></i>
-                <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
-              </a>
-              <a href="https://industrial-iot-anomaly-monitor.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-desktop"></i>
-                <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <!-- Projeto: CineScope Intelligence -->
-        <div class="project-card" data-category="machine-learning nlp web-app analytics">
-          <div class="project-image">
-            <img src="./images/dash_cinescope.webp" alt="CineScope Intelligence semantic movie discovery app interface" loading="lazy" />
-          </div>
-          <div class="project-content">
-            <div class="project-header">
-              <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="CineScope Intelligence" data-en="CineScope Intelligence" data-es="CineScope Intelligence">CineScope Intelligence</span>
-                <span class="project-title-line" data-pt="Descoberta Semântica de Filmes" data-en="Semantic Movie Discovery" data-es="Descubrimiento Semántico de Películas">Semantic Movie Discovery</span>
-              </h3>
-              <div class="project-status">
-                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
-                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recent</span>
-                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
-              </div>
-            </div>
-            <div class="project-body">
-              <p class="project-description">
-                <span class="description-short" data-pt="Interface cinematográfica de descoberta de filmes que combina recomendações semânticas com metadados TMDb, posters, elenco, trailers e ranking para explorar filmes por humor, tema ou contexto." data-en="A cinematic movie discovery interface that combines semantic recommendations with TMDb metadata, posters, cast, trailers, and ranking logic to help users discover films by mood, theme, title, or story context." data-es="Interfaz cinematográfica de descubrimiento de películas que combina recomendaciones semánticas con metadatos TMDb, pósters, elenco, tráilers y ranking para explorar películas por humor, tema o contexto.">A cinematic movie discovery interface that combines semantic recommendations with TMDb metadata, posters, cast, trailers, and ranking logic to help users discover films by mood, theme, title, or story context.</span>
-                <span class="description-full" style="display: none;" data-pt="CineScope Intelligence transforma um recomendador de filmes num produto de descoberta cinematográfica. Pesquise por título, tema, humor, ator ou contexto de história enquanto a app combina recomendações semânticas BERT com enriquecimento TMDb. A interface destaca um filme em spotlight, exibe fotos do elenco, trailers, posters, fontes de recomendação, scores de match e uma grelha filtrável — demonstrando design de produto de IA, orquestração de APIs, ranking e apresentação front-end moderna." data-en="CineScope Intelligence transforms a movie recommender into a cinematic discovery product. Users can search by title, theme, mood, actor, or story context, while the app combines semantic recommendations from a BERT-based model with TMDb metadata enrichment. The interface highlights a featured movie, displays cast photos, trailers, posters, recommendation sources, match scores, and a filterable recommendation grid. The project demonstrates practical AI product design, API orchestration, recommendation ranking, data enrichment, and modern front-end presentation." data-es="CineScope Intelligence transforma un recomendador de películas en un producto de descubrimiento cinematográfico. Busque por título, tema, humor, actor o contexto mientras la app combina recomendaciones semánticas BERT con enriquecimiento TMDb. La interfaz destaca una película, muestra fotos del elenco, tráilers, pósters, fuentes de recomendación, scores de match y una cuadrícula filtrable.">CineScope Intelligence transforms a movie recommender into a cinematic discovery product. Users can search by title, theme, mood, actor, or story context, while the app combines semantic recommendations from a BERT-based model with TMDb metadata enrichment. The interface highlights a featured movie, displays cast photos, trailers, posters, recommendation sources, match scores, and a filterable recommendation grid. The project demonstrates practical AI product design, API orchestration, recommendation ranking, data enrichment, and modern front-end presentation.</span>
-              </p>
-              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="View CineScope Intelligence project">
-                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
-              </button>
-              <div class="project-metrics">
-                <div class="metric">
-                  <i class="fas fa-brain"></i>
-                  <span data-pt="Embeddings BERT semânticos" data-en="BERT semantic embeddings" data-es="Embeddings BERT semánticos">BERT semantic embeddings</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-film"></i>
-                  <span data-pt="Enriquecimento TMDb" data-en="TMDb metadata enrichment" data-es="Enriquecimiento TMDb">TMDb metadata enrichment</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-layer-group"></i>
-                  <span data-pt="Fluxo híbrido de recomendação" data-en="Hybrid recommendation flow" data-es="Flujo híbrido de recomendación">Hybrid recommendation flow</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-star"></i>
-                  <span data-pt="UI cinematográfica premium" data-en="Premium cinematic UI" data-es="UI cinematográfica premium">Premium cinematic UI</span>
-                </div>
-              </div>
-              <div class="project-tech">
-                <span class="tech-tag">React</span>
-                <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">BERT</span>
-                <span class="tech-tag">TMDb API</span>
-                <span class="tech-tag">Semantic Search</span>
-              </div>
-            </div>
-            <div class="project-value-benefits" style="display: none;">
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-search"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Recomendação semântica com BERT" data-en="Semantic recommendation workflow" data-es="Recomendación semántica con BERT">Semantic recommendation workflow</h4>
-                  <p class="value-benefit-description" data-pt="Recomenda filmes por significado de trama, tema, humor ou contexto usando embeddings BERT e busca vetorial — além de filtros só por género." data-en="Recommends films by plot meaning, theme, mood, or story context using BERT embeddings and vector search—not just genre filters." data-es="Recomienda películas por significado de trama, tema, humor o contexto usando embeddings BERT y búsqueda vectorial, no solo filtros por género.">Recommends films by plot meaning, theme, mood, or story context using BERT embeddings and vector search—not just genre filters.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-photo-film"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Enriquecimento TMDb" data-en="TMDb enrichment layer" data-es="Enriquecimiento TMDb">TMDb enrichment layer</h4>
-                  <p class="value-benefit-description" data-pt="Combina resultados do modelo com posters, backdrops, elenco, metadados e trailers TMDb para uma experiência de descoberta visual completa." data-en="Combines model results with TMDb posters, backdrops, cast, metadata, and trailers for a complete visual discovery experience." data-es="Combina resultados del modelo con pósters, backdrops, elenco, metadatos y tráilers TMDb para una experiencia visual completa.">Combines model results with TMDb posters, backdrops, cast, metadata, and trailers for a complete visual discovery experience.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-clapperboard"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Grelha híbrida e UI cinematográfica" data-en="Hybrid grid and cinematic UI" data-es="Cuadrícula híbrida y UI cinematográfica">Hybrid grid and cinematic UI</h4>
-                  <p class="value-benefit-description" data-pt="Estratégia híbrida com top results do modelo mais fallback TMDb, badges de fonte, scores de match e spotlight cards numa interface inspirada em plataformas premium de cinema." data-en="Hybrid strategy with model top results plus TMDb fallback, source badges, match scores, and spotlight cards in a cinema-inspired interface." data-es="Estrategia híbrida con top results del modelo más fallback TMDb, badges de fuente, scores de match y spotlight cards en una interfaz inspirada en cine premium.">Hybrid strategy with model top results plus TMDb fallback, source badges, match scores, and spotlight cards in a cinema-inspired interface.</p>
-                </div>
-              </div>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/tmdb-semantic-recommender" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-github"></i>
-                <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
-              </a>
-              <a href="https://cinescope-semantic-discovery.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-desktop"></i>
-                <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <!-- Projeto: PM Monitor · Real-Time Predictive Maintenance Dashboard -->
-        <div class="project-card" data-category="machine-learning analytics web-app">
-          <div class="project-image">
-            <img src="./images/dash_pm_monitor.webp" alt="PM Monitor real-time predictive maintenance dashboard displayed on a laptop" loading="lazy" />
-          </div>
-          <div class="project-content">
-            <div class="project-header">
-              <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="PM Monitor · Dashboard de Manutenção Preditiva" data-en="PM Monitor · Real-Time Predictive Maintenance" data-es="PM Monitor · Mantenimiento Predictivo en Tiempo Real">PM Monitor · Real-Time Predictive Maintenance</span>
-                <span class="project-title-line" data-pt="em Tempo Real" data-en="Dashboard" data-es="Dashboard">Dashboard</span>
-              </h3>
-              <div class="project-status">
-                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Ativo</span>
-                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recente</span>
-                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Destaque</span>
-              </div>
-            </div>
-            <div class="project-body">
-              <p class="project-description">
-                <span class="description-short" data-pt="Dashboard de manutenção preditiva em tempo real que reproduz telemetria industrial como fluxo simulado de máquina, executa inferência LSTM e visualiza saúde do ativo, risco e decisões de manutenção." data-en="Real-time predictive maintenance dashboard that replays industrial telemetry as a simulated machine stream, runs LSTM sequence inference, and visualizes equipment health, failure risk, and maintenance decisions." data-es="Dashboard de mantenimiento predictivo en tiempo real que reproduce telemetría industrial como flujo simulado de máquina, ejecuta inferencia LSTM y visualiza salud del activo, riesgo y decisiones de mantenimiento.">Real-time predictive maintenance dashboard that replays industrial telemetry as a simulated machine stream, runs LSTM sequence inference, and visualizes equipment health, failure risk, and maintenance decisions.</span>
-                <span class="description-full" style="display: none;" data-pt="PM Monitor é uma dashboard cinematográfica de manutenção preditiva em tempo real para equipamentos industriais. Simula um fluxo ao vivo de telemetria a partir de CSV histórico, mantém uma janela sequencial para inferência LSTM e exibe saúde da máquina, probabilidade de falha, drivers de risco e decisões operacionais numa interface estilo centro de comando — sem conectar a hardware de fábrica real." data-en="PM Monitor is a cinematic real-time predictive maintenance dashboard for industrial equipment monitoring. It simulates a live telemetry stream from historical CSV data, maintains a rolling sequence window for LSTM inference, and displays model outputs through an operational control-room interface. Tracks machine condition, failure probability, asset health, threshold status, sequence readiness, event logs, and risk drivers such as tool wear, temperature gap, torque load, and rotational stress." data-es="PM Monitor es un dashboard cinematográfico de mantenimiento predictivo en tiempo real para monitoreo de equipos industriales. Simula un flujo en vivo de telemetría desde CSV histórico, mantiene una ventana secuencial para inferencia LSTM y muestra salud de la máquina, probabilidad de falla, factores de riesgo y decisiones operacionales en una interfaz tipo centro de comando.">PM Monitor is a cinematic real-time predictive maintenance dashboard for industrial equipment monitoring. It simulates a live telemetry stream from historical CSV data, maintains a rolling sequence window for LSTM inference, and displays model outputs through an operational control-room interface. Tracks machine condition, failure probability, asset health, threshold status, sequence readiness, event logs, and risk drivers such as tool wear, temperature gap, torque load, and rotational stress.</span>
-              </p>
-              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
-                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">Ver mais</span>
-              </button>
-              <div class="project-metrics">
-                <div class="metric">
-                  <i class="fas fa-play-circle"></i>
-                  <span data-pt="Replay de telemetria ao vivo" data-en="Live telemetry replay" data-es="Replay de telemetría en vivo">Live telemetry replay</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-layer-group"></i>
-                  <span data-pt="Janela LSTM: 50 / 50" data-en="LSTM sequence window: 50 / 50" data-es="Ventana LSTM: 50 / 50">LSTM sequence window: 50 / 50</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-percent"></i>
-                  <span data-pt="Threshold de falha: 50%" data-en="Failure threshold: 50%" data-es="Umbral de falla: 50%">Failure threshold: 50%</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-industry"></i>
-                  <span data-pt="Dashboard estilo operações" data-en="Operations-style dashboard" data-es="Dashboard estilo operaciones">Operations-style dashboard</span>
-                </div>
-              </div>
-              <div class="project-tech">
-                <span class="tech-tag">LSTM</span>
-                <span class="tech-tag">TensorFlow</span>
-                <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">React</span>
-              </div>
-            </div>
-            <div class="project-value-benefits" style="display: none;">
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-satellite-dish"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Monitoramento Preditivo em Tempo Real" data-en="Real-Time Predictive Monitoring" data-es="Monitoreo Predictivo en Tiempo Real">Real-Time Predictive Monitoring</h4>
-                  <p class="value-benefit-description" data-pt="Reproduz telemetria industrial histórica como um fluxo operacional ao vivo, permitindo acompanhar saúde do ativo, condição da máquina e status de manutenção." data-en="Continuously replays historical industrial telemetry as a simulated live machine stream, allowing users to monitor asset health, operating conditions, and maintenance status in real time." data-es="Reproduce telemetría industrial histórica como un flujo operacional en vivo, permitiendo monitorear salud del activo, condición de la máquina y estado de mantenimiento.">Continuously replays historical industrial telemetry as a simulated live machine stream, allowing users to monitor asset health, operating conditions, and maintenance status in real time.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-brain"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Inferência Sequencial com LSTM" data-en="LSTM Sequence Inference" data-es="Inferencia Secuencial con LSTM">LSTM Sequence Inference</h4>
-                  <p class="value-benefit-description" data-pt="Usa janelas temporais deslizantes para apoiar predição de falhas com LSTM, exibindo prontidão da sequência, probabilidade de falha, threshold e estado previsto." data-en="Uses rolling time-series windows to support LSTM-based failure prediction, showing sequence readiness, failure probability, threshold comparison, and predicted maintenance state." data-es="Usa ventanas temporales deslizantes para soportar predicción de fallas con LSTM, mostrando preparación de la secuencia, probabilidad de falla, umbral y estado previsto.">Uses rolling time-series windows to support LSTM-based failure prediction, showing sequence readiness, failure probability, threshold comparison, and predicted maintenance state.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-wrench"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Interface de Decisão de Manutenção" data-en="Maintenance Decision Interface" data-es="Interfaz de Decisión de Mantenimiento">Maintenance Decision Interface</h4>
-                  <p class="value-benefit-description" data-pt="Transforma a saída do modelo em sinais operacionais como estado de saúde, nível de risco, ação recomendada, logs de eventos e fatores de risco." data-en="Transforms model output into operational signals such as health state, risk level, recommended action, event logs, and risk drivers, making the system feel like a real industrial monitoring tool instead of a notebook demo." data-es="Convierte la salida del modelo en señales operacionales como estado de salud, nivel de riesgo, acción recomendada, logs de eventos y factores de riesgo.">Transforms model output into operational signals such as health state, risk level, recommended action, event logs, and risk drivers, making the system feel like a real industrial monitoring tool instead of a notebook demo.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-display"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="UX Industrial Cinematográfica" data-en="Cinematic Industrial Dashboard UX" data-es="UX Industrial Cinematográfica">Cinematic Industrial Dashboard UX</h4>
-                  <p class="value-benefit-description" data-pt="Apresenta o pipeline de manutenção preditiva em uma interface estilo centro de comando, com indicadores ao vivo, painéis de telemetria, barras de risco e visual premium." data-en="Presents the predictive maintenance pipeline through a high-contrast command-center interface with live indicators, telemetry panels, risk bars, and a Countach-inspired visual identity for a polished portfolio-grade demo." data-es="Presenta el pipeline de mantenimiento predictivo en una interfaz tipo centro de comando, con indicadores en vivo, paneles de telemetría, barras de riesgo y visual premium.">Presents the predictive maintenance pipeline through a high-contrast command-center interface with live indicators, telemetry panels, risk bars, and a Countach-inspired visual identity for a polished portfolio-grade demo.</p>
-                </div>
-              </div>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/lstm-predictive-maintenance-dashboard" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-github"></i>
-                <span data-pt="Código" data-en="Code" data-es="Código">Código</span>
-              </a>
-              <a href="https://lstm-predictive-maintenance-dashboa.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-external-link-alt"></i>
-                <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <!-- Projeto: Visual Anomaly Comparison Lab -->
-        <div class="project-card" data-category="deep-learning computer-vision web-app">
-          <div class="project-image">
-            <img src="./images/dash_visual_anomaly_lab.webp" alt="Visual Anomaly Comparison Lab — inspection dashboard preview" loading="lazy" />
-          </div>
-          <div class="project-content">
-            <div class="project-header">
-              <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="Visual Anomaly Comparison" data-en="Visual Anomaly Comparison" data-es="Visual Anomaly Comparison">Visual Anomaly Comparison</span>
-                <span class="project-title-line" data-pt="Lab" data-en="Lab" data-es="Lab">Lab</span>
-              </h3>
-              <div class="project-status">
-                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
-                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recent</span>
-                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
-              </div>
-            </div>
-            <div class="project-body">
-              <p class="project-description">
-                <span class="description-short" data-pt="Dashboard de inspeção visual industrial com autoencoder denoising para comparar original e reconstrução, gerar heatmaps, máscaras, scores de anomalia e overlays aproximados de regiões suspeitas." data-en="Industrial-style anomaly inspection dashboard using a denoising autoencoder to compare original and reconstructed images, generate heatmaps, masks, anomaly scores, and approximate suspicious-region overlays." data-es="Dashboard de inspección visual industrial con autoencoder denoising para comparar original y reconstrucción, generar heatmaps, máscaras, scores de anomalía y overlays aproximados de regiones sospechosas.">Industrial-style anomaly inspection dashboard using a denoising autoencoder to compare original and reconstructed images, generate heatmaps, masks, anomaly scores, and approximate suspicious-region overlays.</span>
-                <span class="description-full" style="display: none;" data-pt="Visual Anomaly Comparison Lab é uma interface de inspeção visual para amostras de garrafas MVTec AD, combinando um autoencoder convolucional denoising em PyTorch com serviço FastAPI no Hugging Face Spaces e dashboard React na Vercel. Exibe imagem original, reconstrução, heatmaps de erro de reconstrução normalizado por categoria, máscaras, scores, thresholds e regiões suspeitas aproximadas derivadas dos mapas de erro — para inspeção interpretável, não detecção perfeita." data-en="Built a visual anomaly inspection lab for MVTec bottle samples, combining a PyTorch denoising convolutional autoencoder with a FastAPI inference service and a React dashboard. The interface displays original images, reconstructions, reconstruction-error heatmaps, masks, anomaly scores, thresholds, and approximate suspicious regions for interpretable quality inspection." data-es="Laboratorio de inspección visual de anomalías para muestras de botellas MVTec AD, combinando un autoencoder convolucional denoising en PyTorch con servicio FastAPI en Hugging Face Spaces y dashboard React en Vercel. Muestra imagen original, reconstrucción, heatmaps de error, máscaras, scores, umbrales y regiones sospechosas aproximadas derivadas de mapas de error.">Built a visual anomaly inspection lab for MVTec bottle samples, combining a PyTorch denoising convolutional autoencoder with a FastAPI inference service and a React dashboard. The interface displays original images, reconstructions, reconstruction-error heatmaps, masks, anomaly scores, thresholds, and approximate suspicious regions for interpretable quality inspection.</span>
-              </p>
-              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
-                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
-              </button>
-              <div class="project-metrics">
-                <div class="metric">
-                  <i class="fas fa-layer-group"></i>
-                  <span data-pt="Autoencoder convolucional denoising" data-en="Denoising convolutional autoencoder" data-es="Autoencoder convolucional denoising">Denoising convolutional autoencoder</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-wine-bottle"></i>
-                  <span data-pt="Inspeção MVTec AD · garrafas" data-en="MVTec AD bottle inspection" data-es="Inspección MVTec AD · botellas">MVTec AD bottle inspection</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-columns"></i>
-                  <span data-pt="Original vs reconstrução" data-en="Original vs reconstruction" data-es="Original vs reconstrucción">Original vs reconstruction</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-vector-square"></i>
-                  <span data-pt="Regiões suspeitas aproximadas" data-en="Approximate suspicious regions" data-es="Regiones sospechosas aproximadas">Approximate suspicious regions</span>
-                </div>
-              </div>
-              <div class="project-tech">
-                <span class="tech-tag">PyTorch</span>
-                <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">React</span>
-                <span class="tech-tag">Autoencoder</span>
-                <span class="tech-tag">MVTec AD</span>
-              </div>
-            </div>
-            <div class="project-value-benefits" style="display: none;">
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-fire"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Detecção por reconstrução" data-en="Reconstruction-based detection" data-es="Detección por reconstrucción">Reconstruction-based detection</h4>
-                  <p class="value-benefit-description" data-pt="Compara imagem original e reconstrução do autoencoder, com heatmaps e máscaras de erro de reconstrução normalizados por categoria para revisão visual de qualidade." data-en="Compares original and autoencoder reconstruction outputs with category-normalized reconstruction-error heatmaps and masks for visual quality review." data-es="Compara imagen original y reconstrucción del autoencoder, con heatmaps y máscaras de error de reconstrucción normalizados por categoría para revisión visual de calidad.">Compares original and autoencoder reconstruction outputs with category-normalized reconstruction-error heatmaps and masks for visual quality review.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-crosshairs"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Overlays aproximados de regiões suspeitas" data-en="Approximate suspicious-region overlays" data-es="Overlays aproximados de regiones sospechosas">Approximate suspicious-region overlays</h4>
-                  <p class="value-benefit-description" data-pt="Bounding boxes derivadas dos mapas de erro de reconstrução para orientar a inspeção — não são detecções perfeitas nem localização garantida de defeitos." data-en="Bounding boxes derived from reconstruction error maps to guide inspection—they are approximate suspicious regions, not guaranteed defect localization." data-es="Bounding boxes derivadas de mapas de error de reconstrucción para orientar la inspección: regiones sospechosas aproximadas, no localización garantizada de defectos.">Bounding boxes derived from reconstruction error maps to guide inspection—they are approximate suspicious regions, not guaranteed defect localization.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-desktop"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Dashboard de inspeção visual" data-en="Visual inspection dashboard" data-es="Dashboard de inspección visual">Visual inspection dashboard</h4>
-                  <p class="value-benefit-description" data-pt="Interface estilo laboratório com inferência FastAPI no Hugging Face Spaces e front-end React na Vercel, exibindo scores, thresholds e feed de comparação lado a lado." data-en="Lab-style interface with FastAPI inference on Hugging Face Spaces and a React front-end on Vercel, surfacing scores, thresholds, and side-by-side comparison views." data-es="Interfaz estilo laboratorio con inferencia FastAPI en Hugging Face Spaces y front-end React en Vercel, mostrando scores, umbrales y vistas de comparación lado a lado.">Lab-style interface with FastAPI inference on Hugging Face Spaces and a React front-end on Vercel, surfacing scores, thresholds, and side-by-side comparison views.</p>
-                </div>
-              </div>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/visual-anomaly-comparison-lab" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-github"></i>
-                <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
-              </a>
-              <a href="https://visual-anomaly-comparison-lab.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-desktop"></i>
-                <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <!-- Projeto: PlatePulse Vehicle Intelligence -->
-        <div class="project-card" data-category="machine-learning computer-vision web-app">
-          <div class="project-image">
-            <img src="./images/dash_platepulse.webp" alt="PlatePulse Vehicle Intelligence dashboard showing license plate detection, plate crop, OCR result, confidence metrics, and inference pipeline" loading="lazy" />
-          </div>
-          <div class="project-content">
-            <div class="project-header">
-              <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="PlatePulse Vehicle" data-en="PlatePulse Vehicle" data-es="PlatePulse Vehicle">PlatePulse Vehicle</span>
-                <span class="project-title-line" data-pt="Intelligence" data-en="Intelligence" data-es="Intelligence">Intelligence</span>
-              </h3>
-              <div class="project-status">
-                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
-                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recent</span>
-                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
-              </div>
-            </div>
-            <div class="project-body">
-              <p class="project-description">
-                <span class="description-short" data-pt="Dashboard de inteligência veicular com detecção YOLOv8, crop da placa no front-end, leitura OCR/ALPR, métricas de confiança e interface premium de inferência em tempo real." data-en="AI-powered vehicle plate intelligence dashboard that combines YOLOv8 plate detection, client-side plate cropping, OCR/ALPR reading, confidence metrics, and a premium real-time inference interface." data-es="Dashboard de inteligencia vehicular con detección YOLOv8, recorte de placa en el front-end, lectura OCR/ALPR, métricas de confianza e interfaz premium de inferencia en tiempo real.">AI-powered vehicle plate intelligence dashboard that combines YOLOv8 plate detection, client-side plate cropping, OCR/ALPR reading, confidence metrics, and a premium real-time inference interface.</span>
-                <span class="description-full" style="display: none;" data-pt="PlatePulse Vehicle Intelligence é um dashboard premium de visão computacional para detecção e reconhecimento de placas brasileiras. O front-end orquestra um pipeline em duas etapas: primeiro, uma API YOLOv8 localiza a placa na imagem do veículo; em seguida, o front-end recorta a região detectada e envia o crop a uma API OCR/ALPR dedicada. A interface exibe imagem original, bounding boxes, preview do crop, resultado OCR, scores de confiança, status do pipeline, métricas de runtime, eventos recentes e exportação num dashboard escuro estilo sala de controle de IA." data-en="PlatePulse Vehicle Intelligence is a premium computer vision dashboard for Brazilian license plate detection and recognition. The front-end orchestrates a two-stage inference pipeline: first, a YOLOv8 detection API localizes the license plate in the original vehicle image; then the front-end crops the detected plate region and sends it to a dedicated OCR/ALPR API for text recognition. The interface displays the original image, detection bounding boxes, plate crop preview, OCR result, confidence scores, pipeline status, runtime metrics, recent events, and export options in a dark AI-control-room dashboard." data-es="PlatePulse Vehicle Intelligence es un dashboard premium de visión por computador para detección y reconocimiento de placas brasileñas. El front-end orquesta un pipeline en dos etapas: primero, una API YOLOv8 localiza la placa en la imagen del vehículo; luego el front-end recorta la región detectada y la envía a una API OCR/ALPR dedicada. La interfaz muestra imagen original, bounding boxes, vista previa del crop, resultado OCR, scores de confianza, estado del pipeline, métricas de runtime, eventos recientes y opciones de exportación.">PlatePulse Vehicle Intelligence is a premium computer vision dashboard for Brazilian license plate detection and recognition. The front-end orchestrates a two-stage inference pipeline: first, a YOLOv8 detection API localizes the license plate in the original vehicle image; then the front-end crops the detected plate region and sends it to a dedicated OCR/ALPR API for text recognition. The interface displays the original image, detection bounding boxes, plate crop preview, OCR result, confidence scores, pipeline status, runtime metrics, recent events, and export options in a dark AI-control-room dashboard.</span>
-              </p>
-              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
-                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
-              </button>
-              <div class="project-metrics">
-                <div class="metric">
-                  <i class="fas fa-project-diagram"></i>
-                  <span data-pt="Pipeline CV em duas etapas" data-en="Two-stage CV pipeline" data-es="Pipeline CV en dos etapas">Two-stage CV pipeline</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-car"></i>
-                  <span data-pt="Detecção YOLOv8 da placa" data-en="YOLOv8 plate detection" data-es="Detección YOLOv8 de placa">YOLOv8 plate detection</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-crop-alt"></i>
-                  <span data-pt="Crop da placa no front-end" data-en="Client-side plate cropping" data-es="Recorte de placa en front-end">Client-side plate cropping</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-font"></i>
-                  <span data-pt="Leitura OCR / ALPR" data-en="OCR / ALPR reading API" data-es="Lectura OCR / ALPR">OCR / ALPR reading API</span>
-                </div>
-              </div>
-              <div class="project-tech">
-                <span class="tech-tag">React</span>
-                <span class="tech-tag">YOLOv8</span>
-                <span class="tech-tag">OCR / ALPR</span>
-                <span class="tech-tag">Computer Vision</span>
-                <span class="tech-tag">Vercel</span>
-              </div>
-            </div>
-            <div class="project-value-benefits" style="display: none;">
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-sitemap"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Pipeline em duas APIs" data-en="Two-model API orchestration" data-es="Orquestación en dos APIs">Two-model API orchestration</h4>
-                  <p class="value-benefit-description" data-pt="A API de detecção recebe a imagem completa do veículo e devolve bounding boxes; o front-end recorta localmente a placa e envia só o crop à API OCR/ALPR — mais próximo de um fluxo ALPR de produção do que um demo estático." data-en="Unlike a simple static demo, PlatePulse coordinates two model APIs in sequence. The detection API receives the full vehicle image and returns license plate bounding boxes. The front-end then crops the plate region locally and sends only the crop to the OCR/ALPR API—closer to a real production ALPR workflow." data-es="La API de detección recibe la imagen completa del vehículo y devuelve bounding boxes; el front-end recorta localmente la placa y envía solo el crop a la API OCR/ALPR: más cercano a un flujo ALPR de producción que a un demo estático.">Unlike a simple static demo, PlatePulse coordinates two model APIs in sequence. The detection API receives the full vehicle image and returns license plate bounding boxes. The front-end then crops the plate region locally and sends only the crop to the OCR/ALPR API—closer to a real production ALPR workflow.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-desktop"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Dashboard premium de inferência" data-en="Premium inference dashboard" data-es="Dashboard premium de inferencia">Premium inference dashboard</h4>
-                  <p class="value-benefit-description" data-pt="Exibe imagem original, boxes de detecção, preview do crop, resultado OCR, scores de confiança, status do pipeline, métricas de runtime, eventos recentes e exportação numa interface escura responsiva." data-en="Surfaces original imagery, detection boxes, plate crop preview, OCR output, confidence scores, pipeline status, runtime metrics, recent events, and export actions in a responsive dark AI dashboard." data-es="Muestra imagen original, cajas de detección, vista previa del crop, salida OCR, scores de confianza, estado del pipeline, métricas de runtime, eventos recientes y exportación en un dashboard oscuro responsivo.">Surfaces original imagery, detection boxes, plate crop preview, OCR output, confidence scores, pipeline status, runtime metrics, recent events, and export actions in a responsive dark AI dashboard.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-bolt"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Experiência de wake-up das APIs" data-en="API wake-up loading experience" data-es="Experiencia de wake-up de APIs">API wake-up loading experience</h4>
-                  <p class="value-benefit-description" data-pt="Inclui fluxo de carregamento enquanto as APIs de detecção e OCR aquecem — adequado para demos hospedadas em serviços com cold start, sem prometer latência de produção fixa." data-en="Includes a loading flow while detection and OCR APIs warm up—suited for hosted demos with cold starts, without claiming fixed production latency." data-es="Incluye flujo de carga mientras las APIs de detección y OCR se activan: adecuado para demos con cold start, sin prometer latencia de producción fija.">Includes a loading flow while detection and OCR APIs warm up—suited for hosted demos with cold starts, without claiming fixed production latency.</p>
-                </div>
-              </div>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/platepulse-vehicle-intelligence" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-github"></i>
-                <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
-              </a>
-              <a href="https://platepulse-vehicle-intelligence.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-desktop"></i>
-                <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
-              </a>
-            </div>
-          </div>
-        </div>
+      @media (pointer: coarse), (hover: none) {
+        html,
+        body,
+        *,
+        *::before,
+        *::after {
+          cursor: auto !important;
+        }
 
-        <!-- Projeto: Corporate Signal Intelligence -->
-        <div class="project-card" data-category="analytics machine-learning web-app ai">
-          <div class="project-image">
-            <img src="./images/corporate-dash-anomaly.webp" alt="Corporate Signal Intelligence — AI anomaly detection dashboard" loading="lazy" />
-          </div>
-          <div class="project-content">
-            <div class="project-header">
-              <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="Corporate Signal Intelligence" data-en="Corporate Signal Intelligence" data-es="Corporate Signal Intelligence">Corporate Signal Intelligence</span>
-                <span class="project-title-line" data-pt="Dashboard de Anomalias com IA" data-en="AI Anomaly Detection Dashboard" data-es="Dashboard de Anomalías con IA">AI Anomaly Detection Dashboard</span>
-              </h3>
-              <div class="project-status">
-                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
-                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Recent">Recent</span>
-                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
-              </div>
-            </div>
-            <div class="project-body">
-              <p class="project-description">
-                <span class="description-short" data-pt="Dashboard executiva para monitoramento de empresas públicas, detecção de anomalias em sinais financeiros e geração de AI Briefings a partir de eventos críticos." data-en="Executive dashboard for public company monitoring, financial signal anomaly detection, and AI Briefings generated from critical events." data-es="Dashboard ejecutiva para monitoreo de empresas públicas, detección de anomalías en señales financieras y generación de AI Briefings a partir de eventos críticos.">Executive dashboard for public company monitoring, financial signal anomaly detection, and AI Briefings generated from critical events.</span>
-                <span class="description-full" style="display: none;" data-pt="Corporate Signal Intelligence é uma plataforma analítica para monitorar empresas públicas e identificar eventos anômalos em séries financeiras, métricas operacionais e sinais regulatórios. Combina API FastAPI, Isolation Forest, PostgreSQL/Neon e interface Next.js com Overview, investigação de anomalias, inteligência por empresa e AI Executive Briefings via Groq (Llama 3.3 70B)." data-en="Corporate Signal Intelligence is an analytics platform for monitoring public companies and identifying anomalous events across financial series, operational metrics, and regulatory signals. It combines a FastAPI backend, Isolation Forest, PostgreSQL/Neon, and a Next.js interface with Overview, anomaly investigation, company intelligence, and AI Executive Briefings via Groq (Llama 3.3 70B)." data-es="Corporate Signal Intelligence es una plataforma analítica para monitorear empresas públicas e identificar eventos anómalos en series financieras, métricas operacionales y señales regulatorias. Combina API FastAPI, Isolation Forest, PostgreSQL/Neon e interfaz Next.js con Overview, investigación de anomalías, inteligencia por empresa y AI Executive Briefings vía Groq (Llama 3.3 70B).">Corporate Signal Intelligence is an analytics platform for monitoring public companies and identifying anomalous events across financial series, operational metrics, and regulatory signals. It combines a FastAPI backend, Isolation Forest, PostgreSQL/Neon, and a Next.js interface with Overview, anomaly investigation, company intelligence, and AI Executive Briefings via Groq (Llama 3.3 70B).</span>
-              </p>
-              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
-                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
-              </button>
-              <div class="project-metrics">
-                <div class="metric">
-                  <i class="fas fa-building"></i>
-                  <span data-pt="Monitoramento de empresas públicas" data-en="Public company monitoring" data-es="Monitoreo de empresas públicas">Public company monitoring</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-chart-line"></i>
-                  <span data-pt="Isolation Forest · anomalias" data-en="Isolation Forest · anomalies" data-es="Isolation Forest · anomalías">Isolation Forest · anomalies</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-robot"></i>
-                  <span data-pt="AI Briefings · Groq" data-en="AI Briefings · Groq" data-es="AI Briefings · Groq">AI Briefings · Groq</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-cloud"></i>
-                  <span data-pt="Next.js · Vercel · Render" data-en="Next.js · Vercel · Render" data-es="Next.js · Vercel · Render">Next.js · Vercel · Render</span>
-                </div>
-              </div>
-              <div class="project-tech">
-                <span class="tech-tag">Next.js</span>
-                <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">Scikit-learn</span>
-                <span class="tech-tag">PostgreSQL</span>
-                <span class="tech-tag">Groq</span>
-              </div>
-            </div>
-            <div class="project-value-benefits" style="display: none;">
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-ranking-star"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Priorização por risco" data-en="Risk-based prioritization" data-es="Priorización por riesgo">Risk-based prioritization</h4>
-                  <p class="value-benefit-description" data-pt="Ranking de empresas por taxa de anomalia, distribuição de tipos de sinal e visão executiva em um único Overview para focar investigações." data-en="Company ranking by anomaly rate, signal type distribution, and executive overview in one place to focus investigations." data-es="Ranking de empresas por tasa de anomalía, distribución de tipos de señal y visión ejecutiva en un solo Overview para enfocar investigaciones.">Company ranking by anomaly rate, signal type distribution, and executive overview in one place to focus investigations.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-magnifying-glass-chart"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Investigação por ticker e severidade" data-en="Investigation by ticker and severity" data-es="Investigación por ticker y severidad">Investigation by ticker and severity</h4>
-                  <p class="value-benefit-description" data-pt="Módulos de anomalias e Company Intelligence com timeline, breakdown de sinais e tabelas filtráveis por tipo de evento e severidade." data-en="Anomaly and Company Intelligence modules with timeline, signal breakdown, and filterable tables by event type and severity." data-es="Módulos de anomalías y Company Intelligence con timeline, desglose de señales y tablas filtrables por tipo de evento y severidad.">Anomaly and Company Intelligence modules with timeline, signal breakdown, and filterable tables by event type and severity.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-file-lines"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Briefings executivos com IA" data-en="AI executive briefings" data-es="Briefings ejecutivos con IA">AI executive briefings</h4>
-                  <p class="value-benefit-description" data-pt="Selecione um evento anômalo e gere uma narrativa executiva com Groq, transformando scores técnicos em contexto analítico para decisão." data-en="Select an anomalous event and generate an executive narrative with Groq, turning technical scores into analytical context for decision-making." data-es="Seleccione un evento anómalo y genere una narrativa ejecutiva con Groq, transformando scores técnicos en contexto analítico para la decisión.">Select an anomalous event and generate an executive narrative with Groq, turning technical scores into analytical context for decision-making.</p>
-                </div>
-              </div>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/corporate-signal-intelligence-dashboard" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-github"></i>
-                <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
-              </a>
-              <a href="https://corporate-signal-intelligence-dashb.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-desktop"></i>
-                <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
-              </a>
-            </div>
-          </div>
-        </div>
+        #trackpoint {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="trackpoint" aria-hidden="true"></div>
+    <script>
+      (function () {
+        var dot = document.getElementById('trackpoint');
+        if (!dot) return;
 
-        <!-- Projeto: Gray Matter LABS -->
-        <div class="project-card" data-category="ai llm web-app">
-          <div class="project-image">
-            <img src="./images/dash_gray_matter_labs.webp" alt="Gray Matter LABS AI research workspace interface" loading="lazy" />
-          </div>
-          <div class="project-content">
-            <div class="project-header">
-              <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="Gray Matter LABS" data-en="Gray Matter LABS" data-es="Gray Matter LABS">Gray Matter LABS</span>
-                <span class="project-title-line" data-pt="Workspace de Pesquisa com IA" data-en="AI Research Workspace" data-es="Workspace de Investigación con IA">AI Research Workspace</span>
-              </h3>
-              <div class="project-status">
-                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
-                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recent</span>
-                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
-              </div>
-            </div>
-            <div class="project-body">
-              <p class="project-description">
-                <span class="description-short" data-pt="Workspace de pesquisa com IA e interface de chat inspirada em laboratório para artigos científicos, pesquisa web, Wikipedia e raciocínio computacional." data-en="AI research workspace with a lab-inspired chat interface for scientific papers, web research, Wikipedia lookup, and computational reasoning." data-es="Workspace de investigación con IA e interfaz de chat inspirada en laboratorio para artículos científicos, investigación web, Wikipedia y razonamiento computacional.">AI research workspace with a lab-inspired chat interface for scientific papers, web research, Wikipedia lookup, and computational reasoning.</span>
-                <span class="description-full" style="display: none;" data-pt="Gray Matter LABS é um workspace de pesquisa com IA de estética dark lab que combina uma interface de conversa estilo ChatGPT com ferramentas científicas: descoberta de papers no arXiv, pesquisa web, Wikipedia e cálculo. Suporta múltiplas conversas, histórico local, respostas com ferramentas, assistência Groq e identidade visual de laboratório de química em torno de uma persona precisa de agente de pesquisa." data-en="Gray Matter LABS is a dark lab-inspired AI research workspace that combines a ChatGPT-style conversation interface with scientific tools for arXiv paper discovery, web research, Wikipedia lookup, and computational reasoning. The app features multi-conversation support, local chat history, tool-aware responses, Groq-powered research assistance, and a chemistry-lab visual identity designed around a precise research-agent persona." data-es="Gray Matter LABS es un workspace de investigación con IA de estética dark lab que combina una interfaz de conversación estilo ChatGPT con herramientas científicas: descubrimiento de papers en arXiv, investigación web, Wikipedia y cálculo. Incluye soporte multi-conversación, historial local, respuestas con herramientas, asistencia Groq e identidad visual de laboratorio de química.">Gray Matter LABS is a dark lab-inspired AI research workspace that combines a ChatGPT-style conversation interface with scientific tools for arXiv paper discovery, web research, Wikipedia lookup, and computational reasoning. The app features multi-conversation support, local chat history, tool-aware responses, Groq-powered research assistance, and a chemistry-lab visual identity designed around a precise research-agent persona.</span>
-              </p>
-              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="View Gray Matter LABS project">
-                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
-              </button>
-              <div class="project-metrics">
-                <div class="metric">
-                  <i class="fas fa-comments"></i>
-                  <span data-pt="Chat multi-conversa + histórico local" data-en="Multi-conversation chat + local history" data-es="Chat multi-conversación + historial local">Multi-conversation chat + local history</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-file-alt"></i>
-                  <span data-pt="Busca arXiv com filtro de relevância" data-en="arXiv search with relevance filtering" data-es="Búsqueda arXiv con filtro de relevancia">arXiv search with relevance filtering</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-flask"></i>
-                  <span data-pt="Wikipedia · Web · Calculadora científica" data-en="Wikipedia · Web · Scientific calculator" data-es="Wikipedia · Web · Calculadora científica">Wikipedia · Web · Scientific calculator</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-bolt"></i>
-                  <span data-pt="Agente Groq com persona de laboratório" data-en="Groq agent with lab-style persona" data-es="Agente Groq con persona de laboratorio">Groq agent with lab-style persona</span>
-                </div>
-              </div>
-              <div class="project-tech">
-                <span class="tech-tag">React</span>
-                <span class="tech-tag">Groq</span>
-                <span class="tech-tag">arXiv</span>
-                <span class="tech-tag">Wikipedia</span>
-                <span class="tech-tag">AI Agent</span>
-              </div>
-            </div>
-            <div class="project-value-benefits" style="display: none;">
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-history"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Workflow de pesquisa em chat" data-en="Chat-based research workflow" data-es="Flujo de investigación en chat">Chat-based research workflow</h4>
-                  <p class="value-benefit-description" data-pt="Múltiplas conversas de pesquisa com histórico persistente em localStorage, sidebar de sessões e workspace central estilo ChatGPT." data-en="Multiple research conversations with persistent localStorage history, session sidebar, and a central ChatGPT-style workspace." data-es="Múltiples conversaciones de investigación con historial persistente en localStorage, sidebar de sesiones y workspace central estilo ChatGPT.">Multiple research conversations with persistent localStorage history, session sidebar, and a central ChatGPT-style workspace.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-book-open"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Ferramentas científicas integradas" data-en="Integrated scientific tools" data-es="Herramientas científicas integradas">Integrated scientific tools</h4>
-                  <p class="value-benefit-description" data-pt="Busca arXiv com filtro de relevância, consulta Wikipedia, pesquisa web e calculadora científica — com respostas conscientes da fonte." data-en="arXiv search with relevance filtering, Wikipedia lookup, web research, and scientific calculation—with source-aware responses." data-es="Búsqueda arXiv con filtro de relevancia, consulta Wikipedia, investigación web y calculadora científica, con respuestas conscientes de la fuente.">arXiv search with relevance filtering, Wikipedia lookup, web research, and scientific calculation—with source-aware responses.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-vial"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="UI dark lab premium" data-en="Premium dark lab UI" data-es="UI dark lab premium">Premium dark lab UI</h4>
-                  <p class="value-benefit-description" data-pt="Identidade visual de laboratório de química com painel de ferramentas, microinterações e persona controlada de agente de pesquisa Groq." data-en="Chemistry-lab visual identity with tools panel, premium microinteractions, and a controlled Groq research-agent persona." data-es="Identidad visual de laboratorio de química con panel de herramientas, microinteracciones premium y persona controlada de agente de investigación Groq.">Chemistry-lab visual identity with tools panel, premium microinteractions, and a controlled Groq research-agent persona.</p>
-                </div>
-              </div>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/gray-matter-research-agent" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-github"></i>
-                <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
-              </a>
-              <a href="https://gray-matter-research-agent.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-desktop"></i>
-                <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
-              </a>
-            </div>
-          </div>
-        </div>
+        var prefersFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (!prefersFinePointer) {
+          dot.remove();
+          return;
+        }
 
-        <!-- Projeto: RL Portfolio Allocation Dashboard -->
-        <div class="project-card" data-category="analytics machine-learning web-app">
-          <div class="project-image">
-            <img src="./images/ai_rl.webp" alt="RL Portfolio Allocation Dashboard preview" loading="lazy" />
-          </div>
-          <div class="project-content">
-            <div class="project-header">
-              <h3 class="project-title project-title--stacked">
-                <span class="project-title-line" data-pt="RL Portfolio Allocation" data-en="RL Portfolio Allocation" data-es="RL Portfolio Allocation">RL Portfolio Allocation</span>
-                <span class="project-title-line" data-pt="Dashboard" data-en="Dashboard" data-es="Dashboard">Dashboard</span>
-              </h3>
-              <div class="project-status">
-                <span class="status-badge status-active" data-pt="Ativo" data-en="Active" data-es="Activo">Active</span>
-                <span class="status-badge status-recent" data-pt="Recente" data-en="Recent" data-es="Reciente">Recent</span>
-                <span class="status-badge status-featured" data-pt="Destaque" data-en="Featured" data-es="Destacado">Featured</span>
-              </div>
-            </div>
-            <div class="project-body">
-              <p class="project-description">
-                <span class="description-short" data-pt="Dashboard de alocação de portfólio com PPO, replay histórico de mercado, simulação paper-trading e inferência de política em tempo real." data-en="PPO-based portfolio allocation dashboard with historical market replay, paper-trading simulation, and real-time policy inference." data-es="Dashboard de asignación de portafolio con PPO, replay histórico de mercado, simulación paper-trading e inferencia de política en tiempo real.">PPO-based portfolio allocation dashboard with historical market replay, paper-trading simulation, and real-time policy inference.</span>
-                <span class="description-full" style="display: none;" data-pt="Dashboard profissional para alocação de portfólio com PPO, combinando replay histórico de mercado com dados Stooq CSV locais, paper-trading simulado, guard-rails de risco, comparação com benchmark Buy &amp; Hold e inferência de política de reinforcement learning em tempo real. Modos Conservative, Balanced e Aggressive, exposição do portfólio, market watch e feed de execução simulada — sem execução em corretora real." data-en="A professional dashboard for PPO-based portfolio allocation, combining historical market replay using local Stooq CSV data, simulated paper trading, risk guardrails, benchmark comparison, and real-time reinforcement learning policy inference. Includes Conservative, Balanced, and Aggressive allocation modes, portfolio exposure, market watch, and a simulated execution feed—no live broker execution." data-es="Dashboard profesional para asignación de portafolio con PPO, combinando replay histórico de mercado con datos Stooq CSV locales, paper-trading simulado, límites de riesgo, comparación con benchmark Buy &amp; Hold e inferencia de política de reinforcement learning en tiempo real. Modos Conservative, Balanced y Aggressive, exposición del portafolio, market watch y feed de ejecución simulada—sin ejecución en bróker real.">A professional dashboard for PPO-based portfolio allocation, combining historical market replay using local Stooq CSV data, simulated paper trading, risk guardrails, benchmark comparison, and real-time reinforcement learning policy inference. Includes Conservative, Balanced, and Aggressive allocation modes, portfolio exposure, market watch, and a simulated execution feed—no live broker execution.</span>
-              </p>
-              <button class="btn-see-more" onclick="openProjectModal(this.closest('.project-card'))" aria-label="Ver mais detalhes do projeto">
-                <span class="see-more-text" data-pt="Ver mais" data-en="See more" data-es="Ver más">See more</span>
-              </button>
-              <div class="project-metrics">
-                <div class="metric">
-                  <i class="fas fa-history"></i>
-                  <span data-pt="Replay histórico · Stooq CSV" data-en="Historical replay · Stooq CSV" data-es="Replay histórico · Stooq CSV">Historical replay · Stooq CSV</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-robot"></i>
-                  <span data-pt="Inferência PPO · ONNX Runtime" data-en="PPO inference · ONNX Runtime" data-es="Inferencia PPO · ONNX Runtime">PPO inference · ONNX Runtime</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-balance-scale"></i>
-                  <span data-pt="Agente vs Buy &amp; Hold" data-en="Agent vs Buy &amp; Hold" data-es="Agente vs Buy &amp; Hold">Agent vs Buy &amp; Hold</span>
-                </div>
-                <div class="metric">
-                  <i class="fas fa-shield-alt"></i>
-                  <span data-pt="Paper-trading simulado" data-en="Simulated paper trading" data-es="Paper-trading simulado">Simulated paper trading</span>
-                </div>
-              </div>
-              <div class="project-tech">
-                <span class="tech-tag">Next.js</span>
-                <span class="tech-tag">TypeScript</span>
-                <span class="tech-tag">FastAPI</span>
-                <span class="tech-tag">PPO</span>
-                <span class="tech-tag">Recharts</span>
-              </div>
-            </div>
-            <div class="project-value-benefits" style="display: none;">
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-chart-area"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Replay histórico de mercado" data-en="Historical market replay" data-es="Replay histórico de mercado">Historical market replay</h4>
-                  <p class="value-benefit-description" data-pt="Reproduz séries locais Stooq CSV como fluxo de mercado para testar políticas PPO sem afirmar dados ao vivo nem execução real." data-en="Replays local Stooq CSV series as a market stream to evaluate PPO policies without claiming live market feeds or real execution." data-es="Reproduce series locales Stooq CSV como flujo de mercado para evaluar políticas PPO sin afirmar datos en vivo ni ejecución real.">Replays local Stooq CSV series as a market stream to evaluate PPO policies without claiming live market feeds or real execution.</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-trophy"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Comparação com benchmark" data-en="Benchmark comparison" data-es="Comparación con benchmark">Benchmark comparison</h4>
-                  <p class="value-benefit-description" data-pt="Curvas do agente PPO e Buy &amp; Hold no mesmo painel para revisar alocação, drawdown e experimentos de modo (Conservative, Balanced, Aggressive)." data-en="PPO agent and Buy &amp; Hold curves on one screen to review allocation, drawdown, and mode experiments (Conservative, Balanced, Aggressive)." data-es="Curvas del agente PPO y Buy &amp; Hold en un mismo panel para revisar asignación, drawdown y experimentos de modo (Conservative, Balanced, Aggressive).">PPO agent and Buy &amp; Hold curves on one screen to review allocation, drawdown, and mode experiments (Conservative, Balanced, Aggressive).</p>
-                </div>
-              </div>
-              <div class="value-benefit-item">
-                <div class="value-benefit-icon"><i class="fas fa-shield-alt"></i></div>
-                <div class="value-benefit-content">
-                  <h4 class="value-benefit-title" data-pt="Guard-rails e rebalanceamento simulado" data-en="Risk guardrails and simulated rebalancing" data-es="Límites de riesgo y rebalanceo simulado">Risk guardrails and simulated rebalancing</h4>
-                  <p class="value-benefit-description" data-pt="Revisão de exposição, market watch e feed de execução simulada com limites operacionais — pesquisa e demonstração, não aconselhamento financeiro." data-en="Portfolio exposure, market watch, and simulated execution feed with operational guardrails—for research demos, not financial advice." data-es="Exposición del portafolio, market watch y feed de ejecución simulada con límites operacionales—demostración de investigación, no asesoramiento financiero.">Portfolio exposure, market watch, and simulated execution feed with operational guardrails—for research demos, not financial advice.</p>
-                </div>
-              </div>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/sidnei-almeida/ai-trading-signals-dashboard" class="project-link project-link-primary" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-github"></i>
-                <span data-pt="Código" data-en="Code" data-es="Código">Code</span>
-              </a>
-              <a href="https://ai-trading-signals-dashboard.vercel.app/" class="project-link project-link-secondary" target="_blank" rel="noopener noreferrer">
-                <i class="fas fa-desktop"></i>
-                <span data-pt="Demo ao vivo" data-en="Live Demo" data-es="Demo en vivo">Live Demo</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+        var interactiveSelector =
+          'a, button, [role="button"], input, textarea, select, label, summary, [tabindex]:not([tabindex="-1"])';
+        var posKey = 'cursor-pos';
+        var saved = null;
 
-      <div class="featured-projects-footer">
-        <a href="https://github.com/sidnei-almeida" class="featured-projects-archive-link" target="_blank" rel="noopener noreferrer" data-pt="Ver GitHub →" data-en="View GitHub →" data-es="Ver GitHub →">View GitHub →</a>
-        <a href="#contato" class="featured-projects-archive-link" data-pt="Entrar em contato →" data-en="Contact Me →" data-es="Contactar →">Contact Me →</a>
-      </div>
-    </div>
-  </section>
+        try {
+          saved = JSON.parse(sessionStorage.getItem(posKey) || 'null');
+        } catch (e) {
+          saved = null;
+        }
 
-  <!-- Habilidades Section -->
-  <section class="section skills-section" id="habilidades">
-    <div class="container">
-      <h2 class="section-title" data-pt="Habilidades" data-en="Skills" data-es="Habilidades">Habilidades</h2>
-      <p class="section-subtitle" data-pt="Sistemas de IA, LLMs e stack de implantação" data-en="AI systems, LLMs, and deployment stack" data-es="Sistemas de IA, LLM y stack de despliegue">
-        Sistemas de IA, LLMs e stack de implantação
-      </p>
-      
-      <div class="skills-carousel">
-        <div class="skills-track">
-          <div class="skill-item">
-            <i class="fas fa-brain"></i>
-            <span data-pt="Machine Learning" data-en="Machine Learning" data-es="Machine Learning">Machine Learning</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-eye"></i>
-            <span data-pt="Visão Computacional" data-en="Computer Vision" data-es="Visión por computador">Computer Vision</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-comments"></i>
-            <span data-pt="PLN e LLMs" data-en="NLP &amp; LLMs" data-es="PLN y LLM">PLN e LLMs</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-magnifying-glass"></i>
-            <span data-pt="RAG" data-en="RAG" data-es="RAG">RAG</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-bolt"></i>
-            <span>FastAPI</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-rocket"></i>
-            <span data-pt="Implantação de modelos" data-en="Model Deployment" data-es="Despliegue de modelos">Model Deployment</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-docker"></i>
-            <span>Docker</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-aws"></i>
-            <span>AWS</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-google"></i>
-            <span>Google Cloud</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-gears"></i>
-            <span data-pt="MLOps" data-en="MLOps" data-es="MLOps">MLOps</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-code-branch"></i>
-            <span>CI/CD</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-layer-group"></i>
-            <span data-pt="Deep Learning" data-en="Deep Learning" data-es="Deep Learning">Deep Learning</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-cube"></i>
-            <span>Kubernetes</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-chart-line"></i>
-            <span data-pt="Séries temporais" data-en="Time Series" data-es="Series temporales">Time Series</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-js-square"></i>
-            <span>JavaScript</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-react"></i>
-            <span>React</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-node-js"></i>
-            <span>Node.js</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-html5"></i>
-            <span>HTML5</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-css3-alt"></i>
-            <span>CSS3</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-robot"></i>
-            <span>TensorFlow</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-fire"></i>
-            <span>PyTorch</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-wave-square"></i>
-            <span>LSTM</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-chart-pie"></i>
-            <span>Plotly</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-diagram-project"></i>
-            <span>Scikit-Learn</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-python"></i>
-            <span>Python</span>
-          </div>
-          <div class="skill-item">
-            <i class="fas fa-database"></i>
-            <span>SQL</span>
-          </div>
-          <div class="skill-item">
-            <i class="fab fa-git-alt"></i>
-            <span>Git</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        if (saved && typeof saved.x === 'number' && typeof saved.y === 'number') {
+          dot.style.left = saved.x + 'px';
+          dot.style.top = saved.y + 'px';
+        }
 
-  <!-- Sobre Section -->
-  <section class="section" id="sobre">
-    <div class="container">
-      <h2 class="section-title" data-pt="Sobre Mim" data-en="About Me" data-es="Acerca de Mí">Sobre Mim</h2>
-      <div class="about-content">
-        <div class="about-text">
-          <p data-pt="Sou engenheiro de IA focado em construir e colocar em produção sistemas de machine learning no mundo real." data-en="AI Engineer focused on building and deploying real-world machine learning systems." data-es="Soy ingeniero de IA y me centro en construir y desplegar sistemas de machine learning en el mundo real.">AI Engineer focused on building and deploying real-world machine learning systems.</p>
-          <p data-pt="Desenho aplicações de IA de ponta a ponta em visão computacional e em sistemas com LLMs, com APIs, pipelines de inferência em tempo real e interfaces interativas." data-en="I design end-to-end AI applications across computer vision and LLM-based systems, including APIs, real-time inference pipelines and interactive frontends." data-es="Diseño aplicaciones de IA de extremo a extremo en visión por computador y sistemas basados en LLM, con APIs, pipelines de inferencia en tiempo real y interfaces interactivas.">I design end-to-end AI applications across computer vision and LLM-based systems, including APIs, real-time inference pipelines and interactive frontends.</p>
-          <p data-pt="O meu trabalho inclui sistemas como deteção industrial de anomalias, assistentes de IA baseados em documentos (RAG) e aplicações de visão computacional em tempo real, todos com demos ao vivo." data-en="My work includes systems like industrial anomaly detection, document-based AI assistants (RAG) and real-time computer vision applications, all available through live demos." data-es="Mi trabajo incluye sistemas como detección industrial de anomalías, asistentes de IA basados en documentos (RAG) y aplicaciones de visión por computador en tiempo real, todos con demos en vivo.">My work includes systems like industrial anomaly detection, document-based AI assistants (RAG) and real-time computer vision applications, all available through live demos.</p>
-          <p data-pt="Foco-me no impacto prático e construo sistemas de IA fiáveis, escaláveis e prontos para o mundo real." data-en="I focus on practical impact, building AI systems that are reliable, scalable and ready for real-world use." data-es="Me centro en el impacto práctico y construyo sistemas de IA fiables, escalables y listos para el mundo real.">I focus on practical impact, building AI systems that are reliable, scalable and ready for real-world use.</p>
-          <div style="margin-top: 2rem;">
-            <a href="https://www.linkedin.com/in/saaelmeida93/" class="btn btn-primary" target="_blank">
-              <i class="fab fa-linkedin"></i>
-              LinkedIn
-            </a>
-          </div>
-        </div>
-        <div class="about-image">
-          <img src="./images/photo2.png" alt="Sidnei Almeida" loading="lazy" />
-        </div>
-      </div>
-    </div>
-  </section>
+        function updatePosition(x, y) {
+          dot.style.left = x + 'px';
+          dot.style.top = y + 'px';
+          try {
+            sessionStorage.setItem(posKey, JSON.stringify({ x: x, y: y }));
+          } catch (e) {
+            // ignore blocked storage
+          }
+        }
 
-  <!-- Contato Section -->
-  <section class="section contact" id="contato">
-    <div class="container">
-      <div class="contact-content">
-        <h2 class="section-title" data-pt="Vamos Conversar" data-en="Let's Talk" data-es="Hablemos">Vamos Conversar</h2>
-        <p class="contact-info" data-pt="Aberto a vagas em Engenharia de IA, projetos freelance e colaborações. Se você está desenvolvendo algo com machine learning, visão computacional ou LLMs, será um prazer conversar e contribuir." data-en="Open to AI Engineering roles, freelance projects, and collaborations. If you're building something with machine learning, computer vision, or LLMs, I'd be glad to connect and contribute." data-es="Abierto a roles de Ingeniería de IA, proyectos freelance y colaboraciones. Si estás desarrollando algo con machine learning, visión por computador o LLMs, encantado de conectar y aportar.">Open to AI Engineering roles, freelance projects, and collaborations. If you're building something with machine learning, computer vision, or LLMs, I'd be glad to connect and contribute.</p>
-        
-        <button class="contact-toggle" id="contactToggle" aria-label="Mostrar formulário de contato">
-          <i class="fas fa-chevron-down"></i>
-        </button>
-        
-        <form class="contact-form" id="contactForm" action="https://formspree.io/f/xgvnlaow" method="POST">
-          <div class="form-group">
-            <input 
-              type="text" 
-              name="name" 
-              class="form-input" 
-              placeholder="Seu nome"
-              required
-              data-pt-placeholder="Seu nome"
-              data-en-placeholder="Your name"
-              data-es-placeholder="Tu nombre"
-            />
-          </div>
+        document.addEventListener(
+          'pointermove',
+          function (e) {
+            updatePosition(e.clientX, e.clientY);
+            dot.classList.toggle('is-hovering', !!e.target.closest(interactiveSelector));
+          },
+          { passive: true, capture: true },
+        );
 
-          <div class="form-group">
-            <input 
-              type="email" 
-              name="email" 
-              class="form-input" 
-              placeholder="Seu e-mail"
-              required
-              data-pt-placeholder="Seu e-mail"
-              data-en-placeholder="Your email"
-              data-es-placeholder="Tu correo"
-            />
-          </div>
+        document.addEventListener(
+          'mousemove',
+          function (e) {
+            updatePosition(e.clientX, e.clientY);
+            dot.classList.toggle('is-hovering', !!e.target.closest(interactiveSelector));
+          },
+          { passive: true, capture: true },
+        );
 
-          <div class="form-group">
-            <textarea 
-              name="message" 
-              class="form-input form-textarea" 
-              placeholder="Sua mensagem"
-              rows="5"
-              required
-              data-pt-placeholder="Sua mensagem"
-              data-en-placeholder="Your message"
-              data-es-placeholder="Tu mensaje"
-            ></textarea>
-          </div>
+        document.addEventListener('mousedown', function () {
+          dot.classList.add('is-clicking');
+        });
 
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-paper-plane"></i>
-            <span data-pt="Enviar mensagem" data-en="Send message" data-es="Enviar mensaje">Enviar mensagem</span>
-          </button>
-        </form>
-      </div>
-    </div>
-  </section>
+        document.addEventListener('mouseup', function () {
+          dot.classList.remove('is-clicking');
+        });
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-socials">
-        <a href="https://www.linkedin.com/in/saaelmeida93/" class="footer-social" target="_blank" title="LinkedIn">
-          <i class="fab fa-linkedin-in"></i>
-        </a>
-        <a href="https://github.com/sidnei-almeida" class="footer-social" target="_blank" title="GitHub">
-          <i class="fab fa-github"></i>
-        </a>
-        <a href="https://huggingface.co/salmeida" class="footer-social footer-social-hf" target="_blank" rel="noopener noreferrer" title="Hugging Face" aria-label="Hugging Face">
-          <svg class="footer-social-hf-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">  <path d="M1.4446 11.5059c0 1.1021.1673 2.1585.4847 3.1563-.0378-.0028-.0691-.0058-.1058-.0058-.4209 0-.8015.16-1.0704.4512-.3454.3737-.4984.8335-.4316 1.293a1.576 1.576 0 0 0 .2148.5978c-.2319.1864-.4018.4456-.4844.7578-.0646.2448-.131.7543.2149 1.2794a1.4552 1.4552 0 0 0-.0625.1055c-.208.3923-.2207.8372-.0371 1.25.2783.6258.9696 1.1175 2.3126 1.6467.8356.3292 1.5988.5411 1.6056.543 1.1046.2847 2.104.4277 2.969.4277 1.4173 0 2.4754-.3849 3.1525-1.1446 1.538.2651 2.791.1403 3.592.006.6773.7555 1.7332 1.1387 3.1467 1.1387.8649 0 1.8643-.143 2.969-.4278.0068-.0019.77-.2138 1.6056-.543 1.343-.5292 2.0343-1.0208 2.3126-1.6466.1836-.4129.171-.8577-.037-1.25a1.4685 1.4685 0 0 0-.0626-.1056c.346-.525.2795-1.0346.2149-1.2793-.0826-.3122-.2525-.5714-.4844-.7579.11-.1816.1831-.3788.2148-.5977.0669-.4595-.0862-.9193-.4316-1.293-.2688-.2913-.6495-.4513-1.0704-.4513-.0209 0-.0376.0008-.0588.0018.3162-.9966.4846-2.0518.4846-3.1523 0-5.807-4.7362-10.5144-10.5789-10.5144-5.8426 0-10.5788 4.7073-10.5788 10.5144Zm10.5788-9.4831c5.2727 0 9.5476 4.246 9.5476 9.483a9.4201 9.4201 0 0 1-.2696 2.2365c-.0039-.0047-.0079-.011-.0117-.0156-.274-.3255-.6679-.5059-1.1075-.5059-.352 0-.714.1155-1.0763.3438-.2403.1517-.5058.422-.7793.7598-.2534-.3492-.608-.5832-1.0137-.6465a1.5174 1.5174 0 0 0-.2344-.0176c-.9263 0-1.4828.7993-1.6935 1.5177-.1046.2426-.6065 1.3482-1.3614 2.0978-1.1681 1.1601-1.4458 2.3534-.8396 3.6382-.843.1029-1.5836.0927-2.365-.006.5906-1.212.3626-2.4388-.8426-3.6322-.755-.7496-1.2568-1.8552-1.3614-2.0978-.2107-.7184-.7673-1.5177-1.6935-1.5177-.078 0-.1568.0054-.2344.0176-.4057.0633-.7604.2973-1.0137.6465-.2735-.3379-.539-.6081-.7794-.7598-.3622-.2283-.7243-.3438-1.0762-.3438-.4266 0-.8094.171-1.0821.4786a9.4208 9.4208 0 0 1-.2598-2.1936c0-5.237 4.2749-9.483 9.5475-9.483zM8.6443 7.0036c-.4838.0043-.9503.2667-1.1934.7227-.3536.6633-.1006 1.4873.5645 1.84.351.1862.4883-.5261.836-.6485.3107-.1095.841.399 1.0078.086.3536-.6634.1025-1.4874-.5625-1.84a1.3659 1.3659 0 0 0-.6524-.1602Zm6.8403 0c-.2199-.002-.4426.05-.6504.1602-.665.3526-.9181 1.1766-.5645 1.84.1669.313.6971-.1955 1.0079-.086.3476.1224.4867.8347.838.6485.6649-.3527.916-1.1767.5624-1.84-.243-.456-.7096-.7184-1.1934-.7227Zm-9.7565 1.418a.8768.8768 0 0 0-.877.877c0 .4846.3925.877.877.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zm12.6434 0c-.4845 0-.879.3925-.879.877 0 .4846.3945.877.879.877a.8768.8768 0 0 0 .877-.877.8768.8768 0 0 0-.877-.877zM8.7927 11.459c-.179-.003-.2793.1107-.2793.416 0 .8097.3874 2.125 1.4279 2.924.207-.7123 1.3453-1.2832 1.5079-1.2012.2315.1167.2191.4417.6074.7266.3884-.285.374-.6098.6056-.7266.1627-.082 1.3009.4889 1.5079 1.2012 1.0404-.799 1.4278-2.1144 1.4278-2.924 0-1.2212-1.583.6402-3.5413.6485-1.4686-.0061-2.7266-1.0558-3.2639-1.0645zM4.312 14.4768c.5792.365 1.6964 2.2751 2.1056 3.0177.1371.2488.371.3536.582.3536.4188 0 .7465-.4138.0391-.9395-1.0636-.791-.6914-2.0846-.1836-2.1642a.4302.4302 0 0 1 .0664-.004c.4616 0 .666.7892.666.7892s.5959 1.4898 1.6213 2.508c.942.9356 1.062 1.703.4961 2.6661-.0164-.004-.0159.0236-.1484.2149-.1853.2673-.4322.4688-.7188.6152-.5062.2269-1.1397.2696-1.7833.2696-1.037 0-2.1017-.1824-2.6975-.336-.0293-.0075-3.6505-.9567-3.1916-1.8224.0771-.1454.2033-.2031.3633-.2031.6463 0 1.823.9551 2.3283.9551.113 0 .196-.0865.2285-.2031.2249-.8045-3.2787-1.0522-2.9846-2.1642.0519-.1967.193-.2757.3907-.2754.854 0 2.7704 1.4923 3.172 1.4923.0307 0 .0525-.0085.0645-.0274.2012-.3227.1096-.5865-1.3087-1.4395-1.4182-.8533-2.4315-1.329-1.8653-1.9416.0651-.0707.1574-.1015.2695-.1015.8611.0002 2.8948 1.84 2.8948 1.84s.5487.5683.8809.5683c.0762 0 .1416-.0315.1855-.1054.2355-.3946-2.1858-2.2183-2.3224-2.971-.0926-.51.0641-.7676.3555-.7676-.0006.008.1701-.0285.4942.1759zm16.2257.5918c-.1366.7526-2.5579 2.5764-2.3224 2.9709.044.074.1092.1055.1855.1055.3321 0 .881-.5684.881-.5684s2.0336-1.8397 2.8947-1.84c.1121 0 .2044.0308.2695.1016.5662.6125-.447 1.0882-1.8653 1.9415-1.4183.853-1.51 1.1168-1.3087 1.4396.012.0188.0337.0273.0644.0273.4016 0 2.3181-1.4923 3.1721-1.4923.1977-.0002.3388.0787.3907.2754.294 1.112-3.2095 1.3597-2.9846 2.1642.0325.1166.1156.2032.2285.2032.5054 0 1.682-.9552 2.3283-.9552.16 0 .2862.0577.3633.2032.459.8656-3.1623 1.8149-3.1916 1.8224-.5958.1535-1.6605.336-2.6975.336-.6351 0-1.261-.0409-1.7638-.2599-.2949-.1472-.5488-.3516-.7383-.625-.0411-.0682-.1026-.1476-.1426-.205-.5726-.9679-.455-1.7371.4903-2.676 1.0254-1.0182 1.6212-2.508 1.6212-2.508s.2044-.7891.666-.7891a.4318.4318 0 0 1 .0665.0039c.5078.0796.88 1.3732-.1836 2.1642-.7074.5257-.3797.9395.039.9395.211 0 .445-.1047.5821-.3535.4092-.7426 1.5264-2.6527 2.1056-3.0178.5588-.3524.99-.1816.8497.5918z"/></svg>
-        </a>
-        <a href="mailto:sidnei.almeida1806@gmail.com" class="footer-social" title="Email">
-          <i class="fas fa-envelope"></i>
-        </a>
-      </div>
-      <p class="footer-text" data-pt="© 2024 Sidnei Almeida. Criando soluções tecnológicas inovadoras." data-en="© 2024 Sidnei Almeida. Creating innovative technological solutions." data-es="© 2024 Sidnei Almeida. Creando soluciones tecnológicas innovadoras.">
-        © 2024 Sidnei Almeida. Criando soluções tecnológicas inovadoras.
-        <!-- Hidden link to business proposal - accessible via direct URL -->
-        <a href="./signature.html" style="display: none; visibility: hidden; position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;" aria-hidden="true">Proposta de Negócio</a>
-      </p>
-    </div>
-  </footer>
+        document.addEventListener('mouseleave', function () {
+          dot.style.opacity = '0';
+        });
 
-  <!-- Project Details Modal -->
-  <div id="projectModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-overlay" onclick="closeProjectModal()"></div>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modalTitle" class="modal-title"></h2>
-        <button class="modal-close" onclick="closeProjectModal()" aria-label="" data-pt-aria-label="Fechar modal" data-en-aria-label="Close modal" data-es-aria-label="Cerrar modal">
-          <i class="fas fa-times" aria-hidden="true"></i>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="modal-image">
-          <img id="modalImage" src="" alt="" />
-        </div>
-        
-        <div class="modal-content-section">
-          <h3 class="modal-section-title" data-pt="Sobre o Projeto" data-en="About the Project" data-es="Acerca del Proyecto">Sobre o Projeto</h3>
-        <div class="modal-description" id="modalDescription"></div>
-        </div>
-        
-        <div class="modal-content-section modal-value-section" id="modalValueSection" style="display: none;">
-          <h3 class="modal-section-title" data-pt="Valor de Negócio" data-en="Business Value" data-es="Valor de Negocio">Valor de Negócio</h3>
-          <div class="modal-value-benefits" id="modalValueBenefits"></div>
-        </div>
-        
-        <div class="modal-content-section">
-          <h3 class="modal-section-title" data-pt="Detalhes" data-en="Details" data-es="Detalles">Detalhes</h3>
-        <div class="modal-metrics" id="modalMetrics"></div>
-        </div>
-        
-        <div class="modal-content-section">
-          <h3 class="modal-section-title" data-pt="Tecnologias" data-en="Technologies" data-es="Tecnologías">Tecnologias</h3>
-        <div class="modal-tech" id="modalTech"></div>
-        </div>
-        
-        <div class="modal-content-section">
-          <h3 class="modal-section-title" data-pt="Links" data-en="Links" data-es="Enlaces">Links</h3>
-        <div class="modal-links" id="modalLinks"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Premium Scroll Progress Indicator -->
-  <div class="scroll-progress" id="scrollProgress">
-    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
-  </div>
-
-  <!-- Scripts -->
-  <!-- Back to Top Button -->
-  <button class="back-to-top" id="backToTop" aria-label="Voltar ao topo" title="Voltar ao topo">
-    <i class="fas fa-chevron-up"></i>
-  </button>
-
-  <script src="assets/js/api-wake.js"></script>
-  <script src="assets/js/script.js"></script>
-</body>
+        document.addEventListener('mouseenter', function () {
+          dot.style.opacity = '1';
+        });
+      })();
+    </script>
+    <script>
+      (function () {
+        var redirect = sessionStorage.getItem('redirect');
+        if (redirect) {
+          sessionStorage.removeItem('redirect');
+          history.replaceState(null, '', redirect);
+        }
+      })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
-
-
-
