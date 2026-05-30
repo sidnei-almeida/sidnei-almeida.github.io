@@ -26,7 +26,7 @@ export function ProjectsPage() {
       <div id="projects" className="section-border w-full bg-canvas">
         <div className="page-container w-full pt-8 pb-12 lg:pt-10 lg:pb-14">
           <SectionReveal variants={sectionStaggerContainer}>
-            <div className="border border-line bg-panel p-6 lg:p-8">
+            <div className="carbon-fiber-surface border border-line bg-panel p-6 lg:p-8">
               <div className="max-w-2xl">
                 <SectionLabel animated>{t.projects.pageLabel}</SectionLabel>
                 <motion.h1

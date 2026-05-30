@@ -30,7 +30,17 @@
   },
   "about": {
     "label": "Acerca de Mí",
-    "body": "Ingeniero de IA y Desarrollador Full-Stack con experiencia en la entrega de productos basados en datos y sistemas inteligentes. Combino fundamentos sólidos de ingeniería con un enfoque práctico de IA para construir soluciones escalables, confiables e impactantes.",
+    "modelTag": "X1 CARBON · GEN 01",
+    "roleTitle": "Ingeniero de IA y Desarrollador Full-Stack",
+    "roleSubtitle": "// Orientado a datos · Escalable · Impacto",
+    "statusAria": "Disponibilidad y áreas de enfoque",
+    "statusAvailable": "Disponible para proyectos",
+    "statusFullStack": "Full-Stack",
+    "statusAiMl": "IA / ML",
+    "bodyBeforeStrong1": "Experiencia entregando ",
+    "bodyStrong1": "productos orientados a datos",
+    "bodyBetween": " y sistemas inteligentes. Combino fundamentos sólidos de ingeniería con un enfoque práctico de IA — construyendo soluciones ",
+    "bodyStrong2": "escalables, confiables e impactantes.",
     "readMore": "Leer Más"
   },
   "experience": {

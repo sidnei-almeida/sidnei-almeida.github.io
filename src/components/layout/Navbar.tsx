@@ -98,9 +98,10 @@ export function Navbar() {
       initial={reduceMotion ? false : { opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={navEnter}
-      className="sticky top-0 z-50 w-full border-b border-line bg-canvas/95 backdrop-blur-sm"
+      className="sticky top-0 z-50 w-full border-b border-line"
     >
-      <div className="page-container grid h-[72px] grid-cols-[1fr_auto_1fr] items-center">
+      <div className="carbon-fiber-surface bg-canvas/95 backdrop-blur-sm">
+        <div className="page-container grid h-[72px] grid-cols-[1fr_auto_1fr] items-center">
         <Link
           to="/"
           className="flex items-center justify-self-start text-[13px] font-medium uppercase tracking-brand text-ink-primary"
@@ -156,9 +157,10 @@ export function Navbar() {
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
+      </div>
 
       {open && (
-        <nav className="border-t border-line bg-canvas lg:hidden" aria-label={t.aria.mobileNav}>
+        <nav className="carbon-fiber-surface border-t border-line bg-canvas lg:hidden" aria-label={t.aria.mobileNav}>
           <div className="page-container flex flex-col gap-1 py-4">
             {navItems.map((item) => {
               const isActive = isNavActive(item.href, item.isRoute);

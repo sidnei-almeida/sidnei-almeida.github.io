@@ -33,7 +33,7 @@ export function ResumePage() {
   return (
     <div className="resume-page section-border w-full bg-canvas">
       <div className="page-container section-pad w-full">
-        <div className="resume-page-inner border border-line bg-panel p-8 lg:p-10 xl:p-12">
+        <div className="resume-page-inner carbon-fiber-surface border border-line bg-panel p-8 lg:p-10 xl:p-12">
           <SectionReveal variants={sectionStaggerContainer}>
             <div className="resume-page-header">
               <div>
@@ -142,7 +142,7 @@ export function ResumePage() {
                 <motion.article
                   key={project.title}
                   variants={fadeUpItem}
-                  className="project-card"
+                  className="project-card carbon-fiber-surface"
                   aria-label={project.title}
                 >
                   <div className="project-card-header">
