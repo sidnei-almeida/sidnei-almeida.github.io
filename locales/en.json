@@ -20,8 +20,8 @@
     "body": "I design and build scalable applications and AI solutions that turn complex data into real-world impact.",
     "ctaPrimary": "View My Work",
     "ctaSecondary": "Download Resume",
-    "metaBasedIn": "Based in",
-    "metaBasedInValue": "Brazil",
+    "metaBasedIn": "Location",
+    "metaBasedInValue": "Caxias do Sul, RS",
     "metaAvailableFor": "Available for",
     "metaAvailableValue": "New projects",
     "metaOpenTo": "Open to",
@@ -39,7 +39,7 @@
     "statusAiMl": "AI / ML",
     "bodyBeforeStrong1": "Experience delivering ",
     "bodyStrong1": "data-driven products",
-    "bodyBetween": " and intelligent systems. Combining strong engineering fundamentals with a practical approach to AI — building solutions that are ",
+    "bodyBetween": " and intelligent systems. Combining strong engineering fundamentals with a practical approach to AI, building solutions that are ",
     "bodyStrong2": "scalable, reliable, and impactful.",
     "readMore": "Read More"
   },
@@ -67,7 +67,7 @@
     "viewMore": "View More",
     "pageLabel": "All Work",
     "pageTitle": "Projects",
-    "pageSubtitle": "All {count} projects — from production AI systems to full-stack applications.",
+    "pageSubtitle": "All {count} projects, from production AI systems to full-stack applications.",
     "projectsCount": "Projects",
     "filterAll": "All",
     "filters": {
@@ -102,7 +102,7 @@
     },
     "present": "Present",
     "stack": "Stack",
-    "pageTitle": "Sidnei Almeida — Resume",
+    "pageTitle": "Sidnei Almeida | Resume",
     "clientPrefix": "Client",
     "rolePrefix": "Role",
     "projectPrefix": "Project"
@@ -188,13 +188,19 @@
     "description": "Sidnei Almeida — AI Engineer building intelligent systems across machine learning, computer vision, and LLM applications."
   },
   "resumeData": {
-    "summary": "Hands-on Developer specializing in the intersection of Data Engineering, Machine Learning, and Web Development. Experience building high-frequency data aggregators for Digital Asset markets and creating robust data architectures for HealthTech platforms. Proficient in the full data lifecycle: from scraping and complex ETL workflows to training Deep Learning models (LSTM, GANs, YOLOv8) and deploying them via Docker and FastAPI. Passionate about clean code, automation, and building intuitive interfaces that make complex data accessible.",
+    "title": "AI Engineer & Full-Stack Developer",
+    "subtitle": "AI-Driven Solutions & Data Strategy",
+    "location": "Caxias do Sul, RS",
+    "summary": "Hands-on developer specializing in data engineering, machine learning, and web development. Experience building high-frequency data aggregators for digital asset markets and robust data architectures for HealthTech platforms. Proficient across the full data lifecycle: scraping, ETL, deep learning model training (LSTM, GANs, YOLOv8), and deployment with Docker and FastAPI. Focused on clean code, automation, and interfaces that make complex data accessible.",
     "experience": [
       {
-        "company": "Independent Contractor",
+        "title": "Data Solutions Engineer & Full-Stack Developer",
+        "company": "Freelance",
         "period": "2021 - Present",
         "engagements": [
           {
+            "client": "Outlier AI, AI training and model evaluation platform",
+            "role": "AI Trainer / LLM Evaluator",
             "project": "Supported AI model training by evaluating, annotating, and improving model responses across reasoning, factuality, and instruction-following tasks.",
             "achievements": [
               "Evaluated AI responses for accuracy, clarity, safety, and instruction-following",
@@ -204,7 +210,9 @@
             ]
           },
           {
-            "project": "Architected the complete data infrastructure for a nutritional tracking application (Mobile/Web).",
+            "client": "Slimo, HealthTech startup",
+            "role": "Data Engineer / Data Scientist",
+            "project": "Architected the complete data infrastructure for a nutritional tracking application (mobile and web).",
             "achievements": [
               "Contributed to the development of a computer vision model for food segmentation and calorie estimation",
               "Designed and deployed the relational database (SQL) schema from scratch, ensuring 3NF normalization for user logs, nutritional tables, and biometric data",
@@ -218,24 +226,35 @@
     "education": [
       {
         "degree": "MBA, Data Science, Artificial Intelligence & Analytics",
+        "institution": "São Paulo University (USP ESALQ)",
         "period": "2025 - 2027"
       },
       {
+        "degree": "Technology in Management Processes",
+        "institution": "Federal Institute of Rio Grande do Sul (IFRS)",
         "period": "2020 - 2025"
       }
     ],
     "projects": [
       {
+        "title": "DocMind: Intelligent Document Assistant",
+        "category": "RAG / NLP",
         "description": "Developed a Retrieval-Augmented Generation (RAG) system allowing users to query PDF documents using natural language."
       },
       {
+        "title": "Industrial Anomaly Detection: Computer Vision & IoT",
+        "category": "Computer Vision",
         "description": "Built a \"Black Piano\" anomaly detection system for semiconductor manufacturing (SECOM) and a defect detection model for industrial bottling (MVTec AD)."
       },
       {
+        "title": "FluxForecast: Industrial Predictive Modeling",
+        "category": "Time Series / Deep Learning",
         "description": "Created a time-series forecasting system to predict liquid flow in pipeline systems, visualizing output via a real-time dashboard."
       },
       {
-        "description": "Deployed high-precision vision models including a License Plate Recognition system (99.69% precision) and Real-Time Emotion Analysis."
+        "title": "Advanced Computer Vision Suites",
+        "category": "Computer Vision",
+        "description": "Deployed high-precision vision models including a License Plate Recognition system (99.69% precision) and real-time emotion analysis."
       }
     ]
   }

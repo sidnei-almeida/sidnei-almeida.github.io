@@ -25,10 +25,8 @@ export function ResumePage() {
   const { t } = useTranslation();
   const resume = useMemo(() => getLocalizedResume(t), [t]);
 
-  const contactLine = [baseResume.location, baseResume.email, baseResume.website, baseResume.phone].join(
-    ' · ',
-  );
-  const titleLine = `${baseResume.title} | ${baseResume.subtitle}`;
+  const contactLine = [resume.location, baseResume.email, baseResume.website, baseResume.phone].join(' · ');
+  const titleLine = `${resume.title} | ${resume.subtitle}`;
 
   return (
     <div className="resume-page section-border w-full bg-canvas">

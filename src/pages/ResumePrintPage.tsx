@@ -386,7 +386,7 @@ export function ResumePrintPage() {
   }, [shouldAutoPrint, handleDownloadPdf]);
 
   const contactRows = [
-    [baseResume.location, baseResume.email],
+    [resume.location, baseResume.email],
     [baseResume.website, baseResume.phone],
   ] as const;
 
@@ -405,8 +405,8 @@ export function ResumePrintPage() {
       <main ref={printRootRef} className="print-page" lang={currentLang}>
         <header className="print-header">
           <h1>{baseResume.name}</h1>
-          <p className="print-title">{baseResume.title}</p>
-          <p className="print-subtitle">{baseResume.subtitle}</p>
+          <p className="print-title">{resume.title}</p>
+          <p className="print-subtitle">{resume.subtitle}</p>
           <div className="print-contact">
             {contactRows.map((row) => (
               <div key={row.join('-')} className="print-contact-row">
