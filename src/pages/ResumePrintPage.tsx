@@ -351,9 +351,8 @@ export function ResumePrintPage() {
   const [isExporting, setIsExporting] = useState(false);
   const exportingRef = useRef(false);
 
-  const handleDownloadPdf = useCallback(async () => {
-    const root = printRootRef.current;
-    if (!root || exportingRef.current) {
+  const handleDownloadPdf = useCallback(() => {
+    if (exportingRef.current) {
       return;
     }
 
@@ -361,14 +360,35 @@ export function ResumePrintPage() {
     setIsExporting(true);
 
     try {
-      await exportResumePdf(root, {
-        filename: `Sidnei-Almeida-Resume-${currentLang}.pdf`,
-      });
+      exportResumePdf(
+        {
+          name: baseResume.name,
+          email: baseResume.email,
+          website: baseResume.website,
+          phone: baseResume.phone,
+          title: resume.title,
+          subtitle: resume.subtitle,
+          location: resume.location,
+          summary: resume.summary,
+          experience: resume.experience,
+          projects: resume.projects,
+          education: resume.education,
+          skills: baseResume.skills.map((group) => ({ items: group.items })),
+          certifications: [...resume.certifications],
+        },
+        {
+          sections: t.resumePrint.sections,
+          stack: t.resume.stack,
+          skillGroups: t.skills.groups,
+          skillGroupKeys: resumeSkillGroupKeys,
+        },
+        { filename: `Sidnei-Almeida-Resume-${currentLang}.pdf` },
+      );
     } finally {
       exportingRef.current = false;
       setIsExporting(false);
     }
-  }, [currentLang]);
+  }, [currentLang, resume, t]);
 
   useEffect(() => {
     document.body.classList.add('resume-print-active');
