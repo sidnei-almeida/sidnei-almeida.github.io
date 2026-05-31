@@ -26,7 +26,7 @@
     "metaAvailableValue": "New projects",
     "metaOpenTo": "Open to",
     "metaOpenToValue": "Remote roles",
-    "portraitAlt": "Sidnei Almeida — professional portrait"
+    "portraitAlt": "Professional portrait of Sidnei Almeida"
   },
   "about": {
     "label": "About Me",
@@ -84,8 +84,8 @@
     "noResults": "No projects found for this filter.",
     "liveDemo": "Live Demo",
     "source": "Source",
-    "liveDemoAria": "Live demo — {title}",
-    "sourceAria": "Source — {title}",
+    "liveDemoAria": "Live demo for {title}",
+    "sourceAria": "Source code for {title}",
     "openProjectAria": "Open {title}",
     "screenshotAlt": "{title} screenshot"
   },
