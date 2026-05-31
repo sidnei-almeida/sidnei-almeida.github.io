@@ -20,8 +20,8 @@
     "body": "Projeto e desenvolvo aplicações escaláveis e soluções de IA que transformam dados complexos em impacto real.",
     "ctaPrimary": "Ver Meus Projetos",
     "ctaSecondary": "Baixar Currículo",
-    "metaBasedIn": "Baseado em",
-    "metaBasedInValue": "Brasil",
+    "metaBasedIn": "Local",
+    "metaBasedInValue": "Caxias do Sul, RS",
     "metaAvailableFor": "Disponível para",
     "metaAvailableValue": "Novos projetos",
     "metaOpenTo": "Aberto a",
@@ -39,7 +39,7 @@
     "statusAiMl": "IA / ML",
     "bodyBeforeStrong1": "Experiência na entrega de ",
     "bodyStrong1": "produtos orientados a dados",
-    "bodyBetween": " e sistemas inteligentes. Combino fundamentos sólidos de engenharia com uma abordagem prática de IA — construindo soluções ",
+    "bodyBetween": " e sistemas inteligentes. Combino fundamentos sólidos de engenharia com uma abordagem prática de IA, construindo soluções ",
     "bodyStrong2": "escaláveis, confiáveis e impactantes.",
     "readMore": "Saiba mais"
   },
@@ -67,7 +67,7 @@
     "viewMore": "Ver Mais",
     "pageLabel": "Todos os Trabalhos",
     "pageTitle": "Projetos",
-    "pageSubtitle": "Todos os {count} projetos — de sistemas de IA em produção a aplicações full-stack.",
+    "pageSubtitle": "Todos os {count} projetos, de sistemas de IA em produção a aplicações full-stack.",
     "projectsCount": "Projetos",
     "filterAll": "Todos",
     "filters": {
@@ -102,7 +102,7 @@
     },
     "present": "Atual",
     "stack": "Stack",
-    "pageTitle": "Sidnei Almeida — Currículo",
+    "pageTitle": "Sidnei Almeida | Currículo",
     "clientPrefix": "Cliente",
     "rolePrefix": "Função",
     "projectPrefix": "Projeto"
@@ -188,13 +188,19 @@
     "description": "Sidnei Almeida — Engenheiro de IA construindo sistemas inteligentes em machine learning, visão computacional e aplicações com LLM."
   },
   "resumeData": {
-    "summary": "Desenvolvedor hands-on especializado na interseção de Data Engineering, Machine Learning e Desenvolvimento Web. Experiência na construção de agregadores de dados de alta frequência para mercados de ativos digitais e na criação de arquiteturas de dados robustas para plataformas HealthTech. Proficiente em todo o ciclo de vida dos dados: de scraping e pipelines ETL complexos ao treinamento de modelos de Deep Learning (LSTM, GANs, YOLOv8) e deploy via Docker e FastAPI. Apaixonado por código limpo, automação e interfaces intuitivas que tornam dados complexos acessíveis.",
+    "title": "Engenheiro de IA e Desenvolvedor Full-Stack",
+    "subtitle": "Soluções orientadas a IA e estratégia de dados",
+    "location": "Caxias do Sul, RS",
+    "summary": "Desenvolvedor com atuação prática em engenharia de dados, machine learning e desenvolvimento web. Experiência na construção de agregadores de alta frequência para mercados de ativos digitais e de arquiteturas de dados para plataformas de HealthTech. Atua em todo o ciclo de vida dos dados: scraping, ETL, treinamento de modelos de deep learning (LSTM, GANs, YOLOv8) e deploy com Docker e FastAPI. Foco em código limpo, automação e interfaces que tornam dados complexos mais acessíveis.",
     "experience": [
       {
-        "company": "Profissional autônomo",
+        "title": "Engenheiro de Soluções de Dados e Desenvolvedor Full-Stack",
+        "company": "Trabalho autônomo",
         "period": "2021 - Atual",
         "engagements": [
           {
+            "client": "Outlier AI, plataforma de treinamento e avaliação de modelos de IA",
+            "role": "Treinador de IA / Avaliador de LLM",
             "project": "Apoio ao treinamento de modelos de IA por meio da avaliação, anotação e melhoria de respostas em raciocínio, factualidade e seguimento de instruções.",
             "achievements": [
               "Avaliei respostas de IA quanto a precisão, clareza, segurança e seguimento de instruções",
@@ -204,12 +210,14 @@
             ]
           },
           {
-            "project": "Arquitetei a infraestrutura de dados completa para um aplicativo de rastreamento nutricional (Mobile/Web).",
+            "client": "Slimo, startup de HealthTech",
+            "role": "Engenheiro de Dados / Cientista de Dados",
+            "project": "Arquitetura da infraestrutura de dados completa para um aplicativo de rastreamento nutricional (mobile e web).",
             "achievements": [
               "Contribuí para o desenvolvimento de um modelo de visão computacional para segmentação de alimentos e estimativa calórica",
-              "Projetei e implantei o schema de banco relacional (SQL) do zero, garantindo normalização 3NF para logs de usuário, tabelas nutricionais e dados biométricos",
+              "Projetei e implantei o schema de banco relacional (SQL) do zero, com normalização 3NF para logs de usuário, tabelas nutricionais e dados biométricos",
               "Construí pipelines ETL para scraping, limpeza e ingestão de datasets nutricionais",
-              "Estabeleci padrões de limpeza de dados para suportar o motor de recomendação calórica"
+              "Estabeleci padrões de limpeza de dados para o motor de recomendação calórica"
             ]
           }
         ]
@@ -217,26 +225,36 @@
     ],
     "education": [
       {
-        "degree": "MBA, Data Science, Artificial Intelligence & Analytics",
+        "degree": "MBA em Data Science, Inteligência Artificial e Analytics",
+        "institution": "Universidade de São Paulo (USP ESALQ)",
         "period": "2025 - 2027"
       },
       {
         "degree": "Tecnologia em Processos Gerenciais",
+        "institution": "Instituto Federal do Rio Grande do Sul (IFRS)",
         "period": "2020 - 2025"
       }
     ],
     "projects": [
       {
-        "description": "Desenvolvi um sistema RAG (Retrieval-Augmented Generation) que permite consultar documentos PDF em linguagem natural."
+        "title": "DocMind: Assistente Inteligente de Documentos",
+        "category": "RAG / NLP",
+        "description": "Sistema RAG (Retrieval-Augmented Generation) para consultar documentos PDF em linguagem natural."
       },
       {
-        "description": "Construí um sistema de detecção de anomalias \"Black Piano\" para manufatura de semicondutores (SECOM) e um modelo de detecção de defeitos para engarrafamento industrial (MVTec AD)."
+        "title": "Detecção de Anomalias Industriais: Visão Computacional e IoT",
+        "category": "Visão Computacional",
+        "description": "Sistema de detecção de anomalias \"Black Piano\" para manufatura de semicondutores (SECOM) e modelo de detecção de defeitos para engarrafamento industrial (MVTec AD)."
       },
       {
-        "description": "Criei um sistema de previsão de séries temporais para fluxo de líquidos em tubulações, com visualização em dashboard em tempo real."
+        "title": "FluxForecast: Modelagem Preditiva Industrial",
+        "category": "Séries Temporais / Deep Learning",
+        "description": "Sistema de previsão de séries temporais para fluxo de líquidos em tubulações, com visualização em dashboard em tempo real."
       },
       {
-        "description": "Implantei modelos de visão de alta precisão, incluindo reconhecimento de placas (99,69% de precisão) e análise de emoções em tempo real."
+        "title": "Suítes Avançadas de Visão Computacional",
+        "category": "Visão Computacional",
+        "description": "Modelos de visão de alta precisão, incluindo reconhecimento de placas (99,69% de precisão) e análise de emoções em tempo real."
       }
     ]
   }

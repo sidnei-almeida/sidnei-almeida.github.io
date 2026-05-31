@@ -62,9 +62,7 @@ export function ContactPage() {
                 </li>
                 <li className="contact-x1-card__item">
                   <MapPin className="contact-x1-card__item-icon" strokeWidth={1.5} />
-                  <span className="contact-x1-card__item-text">
-                    {t.contactPage.basedIn} {t.hero.metaBasedInValue}
-                  </span>
+                  <span className="contact-x1-card__item-text">{t.hero.metaBasedInValue}</span>
                 </li>
                 <li className="contact-x1-card__item">
                   <span className="contact-x1-card__status-dot contact-x1-card__status-dot--live" aria-hidden />
