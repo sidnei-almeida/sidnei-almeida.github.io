@@ -1,4 +1,4 @@
-import { Download, Globe, MapPin } from 'lucide-react';
+import { Globe, MapPin } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { profile } from '../../data/profile';
 import {
@@ -12,6 +12,7 @@ import {
 } from '../../lib/motion';
 import { useTranslation } from '../../i18n/useTranslation';
 import { Button } from '../ui/Button';
+import { DownloadTextLink } from '../ui/DownloadTextLink';
 
 function Headline() {
   const { t } = useTranslation();
@@ -99,15 +100,9 @@ export function HeroSection({ compactFoot = false }: { compactFoot?: boolean }) 
             <Button href="#projects" variant="outline" className="h-[44px] px-6">
               {t.hero.ctaPrimary}
             </Button>
-            <a
-              href={profile.resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-[44px] items-center gap-2 text-[11px] uppercase tracking-label text-ink-label opacity-70 transition-opacity duration-150 hover:text-accent hover:opacity-100"
-            >
-              <Download className="h-3.5 w-3.5" strokeWidth={1.5} />
+            <DownloadTextLink href={profile.resumeUrl} target="_blank" rel="noopener noreferrer">
               {t.hero.ctaSecondary}
-            </a>
+            </DownloadTextLink>
           </motion.div>
         </motion.div>
 
