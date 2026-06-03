@@ -79,8 +79,10 @@
       "frontend": "Front-End",
       "anomaly": "Detecção de Anomalias",
       "financial": "Analytics Financeiro",
-      "dashboards": "Dashboards"
+      "dashboards": "Dashboards",
+      "fundamentals": "Fundamentos Python"
     },
+    "viewExercise": "Ver exercício",
     "noResults": "Nenhum projeto encontrado para este filtro.",
     "liveDemo": "Demo ao Vivo",
     "source": "Código",
@@ -175,7 +177,9 @@
     "ariaLabel": "Rodapé",
     "githubAria": "GitHub",
     "linkedinAria": "LinkedIn",
-    "emailAria": "E-mail"
+    "emailAria": "E-mail",
+    "uspEsalq": "USP ESALQ",
+    "uspEsalqAria": "Exercício USP ESALQ — Análise de Pedidos com Python Básico"
   },
   "aria": {
     "mainNav": "Principal",
@@ -257,5 +261,124 @@
         "description": "Modelos de visão de alta precisão, incluindo reconhecimento de placas (99,69% de precisão) e análise de emoções em tempo real."
       }
     ]
+  },
+  "pythonExercise": {
+    "card": {
+      "title": "Análise de Pedidos com Python Básico",
+      "shortDescription": "Exercício guiado em Python puro para gerar um relatório de pedidos de e-commerce usando listas, dicionários, loops e funções.",
+      "category": "Fundamentos / Dados",
+      "tags": ["Python", "Fundamentos", "Dados", "E-commerce", "Projeto Guiado"]
+    },
+    "back": "Voltar ao portfólio",
+    "hero": {
+      "label": "Exercício guiado",
+      "title": "Análise de Pedidos com Python Básico",
+      "subtitle": "Um exercício guiado para praticar Python puro antes de avançar para Pandas e análise de dados.",
+      "description": "Este projeto simula uma pequena base de pedidos de e-commerce. Cada pedido possui cliente, estado, status e uma lista de itens. O objetivo é completar funções em Python para gerar um relatório final no terminal.",
+      "ctaDownload": "Baixar exercício .py",
+      "ctaInstructions": "Ver instruções"
+    },
+    "simulation": {
+      "title": "O que este projeto simula?",
+      "intro": "O exercício simula uma análise simples de pedidos de e-commerce. A estrutura foi pensada para parecer um dado real, mas ainda usando apenas Python básico.",
+      "fields": [
+        "id do pedido",
+        "cliente",
+        "estado",
+        "status do pedido",
+        "lista de itens (produto, categoria, preço unitário, quantidade)"
+      ]
+    },
+    "concepts": {
+      "title": "Conceitos praticados",
+      "subtitle": "O exercício junta os conteúdos das aulas 01 a 09 em um único fluxo de análise.",
+      "items": [
+        "Variáveis",
+        "Operadores",
+        "Strings",
+        "Listas",
+        "Dicionários",
+        "Listas de dicionários",
+        "Condicionais",
+        "Loops com for",
+        "Funções",
+        "Parâmetros opcionais",
+        "Organização de código",
+        "Saída formatada no terminal"
+      ]
+    },
+    "dataStructure": {
+      "title": "Estrutura dos dados",
+      "explanation": [
+        "pedidos é uma lista.",
+        "Cada item da lista é um dicionário.",
+        "Cada pedido possui uma chave chamada itens.",
+        "itens também é uma lista de dicionários.",
+        "Por isso, o exercício treina acesso em mais de um nível:"
+      ],
+      "accessExample": "pedidos[0][\"itens\"][0][\"produto\"]"
+    },
+    "encouragement": {
+      "title": "Não precisa acertar tudo de primeira",
+      "body": "Se você travar em alguma função, não tem problema. O objetivo deste projeto não é terminar rápido, e sim praticar a leitura dos dados, testar soluções, errar, corrigir e continuar tentando. Esse processo faz parte de aprender programação."
+    },
+    "closingNote": "O importante não é resolver perfeito na primeira tentativa. O importante é continuar praticando até a lógica começar a fazer sentido.",
+    "implement": {
+      "title": "O que deve ser implementado",
+      "subtitle": "Complete as funções marcadas com TODO no arquivo .py:",
+      "functions": [
+        { "name": "calcular_total_item(item)", "desc": "Calcula preco_unitario × quantidade." },
+        { "name": "calcular_total_pedido(pedido)", "desc": "Percorre os itens do pedido e soma os totais." },
+        { "name": "calcular_faturamento_total(lista_pedidos)", "desc": "Soma apenas pedidos com status \"entregue\"." },
+        { "name": "contar_pedidos_por_status(lista_pedidos)", "desc": "Conta quantos pedidos existem em cada status." },
+        { "name": "calcular_ticket_medio(lista_pedidos)", "desc": "Faturamento total dividido pela quantidade de pedidos entregues." },
+        { "name": "calcular_faturamento_por_categoria(lista_pedidos)", "desc": "Agrupa faturamento por categoria de produto." },
+        { "name": "calcular_faturamento_por_estado(lista_pedidos)", "desc": "Agrupa faturamento por estado do cliente." },
+        { "name": "criar_ranking_clientes(lista_pedidos)", "desc": "Ordena clientes pelo total gasto em pedidos entregues." },
+        { "name": "listar_pedidos_acima_de(lista_pedidos, valor_minimo=500)", "desc": "Lista pedidos entregues com total acima do valor mínimo." },
+        { "name": "gerar_relatorio(lista_pedidos)", "desc": "Monta e imprime o relatório completo no terminal." }
+      ]
+    },
+    "run": {
+      "title": "Como executar",
+      "stepsIntro": "Sugestão de ambiente local:",
+      "steps": [
+        "Baixe ou copie o arquivo analise_pedidos_guiado.py.",
+        "Abra no VS Code, PyCharm, terminal ou outro ambiente.",
+        "Complete as funções com TODO.",
+        "Remova o comentário da linha gerar_relatorio(pedidos).",
+        "Execute o script no terminal."
+      ]
+    },
+    "output": {
+      "title": "Exemplo de saída esperada",
+      "subtitle": "Formato do relatório final no terminal (valores podem variar conforme a base de dados):"
+    },
+    "github": {
+      "title": "Entrega sugerida no GitHub",
+      "intro": "Crie um repositório com estrutura simples e documente sua solução:",
+      "repoName": "analise-pedidos-python",
+      "readmeItems": [
+        "Nome do projeto",
+        "Objetivo",
+        "Conceitos praticados",
+        "Como executar",
+        "Exemplo de saída",
+        "Aprendizados"
+      ]
+    },
+    "why": {
+      "title": "Por que este exercício é importante?",
+      "body": "Antes de usar Pandas, é importante entender como manipular dados com Python puro. Este projeto mostra manualmente operações que depois serão facilitadas por bibliotecas de dados.",
+      "quote": "Antes de automatizar com Pandas, é importante entender a lógica por trás dos dados."
+    },
+    "cta": {
+      "title": "Pronto para praticar?",
+      "body": "Baixe o arquivo, complete as funções e publique sua solução no GitHub.",
+      "download": "Baixar exercício .py",
+      "back": "Voltar ao portfólio",
+      "github": "Ver repositório no GitHub"
+    },
+    "nextStep": "A próxima etapa dos estudos será usar Pandas para simplificar esse tipo de análise — este exercício é a ponte entre Python básico e análise de dados."
   }
 }

@@ -1,4 +1,5 @@
 import type { NavLabelKey } from '../i18n/types';
+import { PYTHON_EXERCISE_PAGE_PATH } from './pythonExercise';
 
 export type NavItem = {
   labelKey: NavLabelKey;
@@ -21,4 +22,14 @@ export const footerNav: NavItem[] = [
   { labelKey: 'projects', href: '/#projects' },
   { labelKey: 'about', href: '/#about' },
   { labelKey: 'contact', href: '/contact', isRoute: true },
+];
+
+export type FooterProgramLink = {
+  href: string;
+  isRoute: true;
+  labelKey: 'uspEsalq';
+};
+
+export const footerProgramLinks: FooterProgramLink[] = [
+  { labelKey: 'uspEsalq', href: PYTHON_EXERCISE_PAGE_PATH, isRoute: true },
 ];
