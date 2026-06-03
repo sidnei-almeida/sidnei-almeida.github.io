@@ -61,11 +61,11 @@ export function PythonOrdersExercisePage() {
             <h1 className="type-section-heading mt-4 text-[clamp(2rem,4.5vw,3rem)]">{pe.hero.title}</h1>
             <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-body">{pe.hero.subtitle}</p>
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-secondary">{pe.hero.description}</p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ExerciseDownloadLink prominent>{pe.hero.ctaDownload}</ExerciseDownloadLink>
-              <Button variant="outline" href="#instrucoes" mono>
+            <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <Button variant="outline" href="#instrucoes" className="h-[44px] px-6">
                 {pe.hero.ctaInstructions}
               </Button>
+              <ExerciseDownloadLink>{pe.hero.ctaDownload}</ExerciseDownloadLink>
             </div>
           </motion.div>
         </SectionReveal>
@@ -237,12 +237,12 @@ export function PythonOrdersExercisePage() {
             <h2 className="type-subsection-heading text-ink-primary">{pe.cta.title}</h2>
             <p className="section-body mx-auto mt-3 max-w-lg">{pe.cta.body}</p>
             <p className="exercise-closing-note mx-auto mt-5 max-w-xl">{pe.closingNote}</p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <ExerciseDownloadLink prominent>{pe.cta.download}</ExerciseDownloadLink>
-              <Button variant="outline" href="/" mono>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
+              <ExerciseDownloadLink>{pe.cta.download}</ExerciseDownloadLink>
+              <Button variant="outline" href="/" className="h-[44px] px-6">
                 {pe.cta.back}
               </Button>
-              <Button variant="ghost" href={profile.github} mono>
+              <Button variant="ghost" href={profile.github}>
                 {pe.cta.github}
               </Button>
             </div>

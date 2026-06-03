@@ -1,30 +1,25 @@
+import { Download } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { PYTHON_EXERCISE_DOWNLOAD_URL } from '../../data/pythonExercise';
 
 type ExerciseDownloadLinkProps = {
   children: ReactNode;
   className?: string;
-  /** Destaque visual para hero e CTA final */
-  prominent?: boolean;
 };
 
-export function ExerciseDownloadLink({
-  children,
-  className = '',
-  prominent = false,
-}: ExerciseDownloadLinkProps) {
-  const base = prominent
-    ? 'inline-flex h-12 items-center gap-3 rounded-btn border border-[#c8102e] bg-[#c8102e] px-8 type-button text-white shadow-[0_4px_20px_rgba(200,16,46,0.25)] transition-colors duration-300 hover:border-[#a00d24] hover:bg-[#a00d24] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
-    : 'inline-flex h-11 items-center gap-3 rounded-btn border border-line bg-canvas-surface px-7 type-button text-ink-primary transition-colors duration-300 hover:border-accent/50 hover:text-ink-bright focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+/** Mesmo visual do link "Baixar currículo" no hero e na página de resume */
+const downloadLinkClass =
+  'inline-flex h-[44px] items-center gap-2 text-[11px] uppercase tracking-label text-ink-label opacity-70 transition-opacity duration-150 hover:text-accent hover:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
 
+export function ExerciseDownloadLink({ children, className = '' }: ExerciseDownloadLinkProps) {
   return (
     <a
       href={PYTHON_EXERCISE_DOWNLOAD_URL}
       download="analise_pedidos_guiado.py"
-      className={`${base} ${className}`}
+      className={`${downloadLinkClass} ${className}`.trim()}
       aria-label={typeof children === 'string' ? children : undefined}
     >
-      <span className="inline-block h-px w-4 bg-accent" aria-hidden />
+      <Download className="h-3.5 w-3.5 shrink-0" strokeWidth={1.5} aria-hidden />
       {children}
     </a>
   );
