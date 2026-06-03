@@ -37,45 +37,66 @@ Pedido 102 | Carlos Souza | R$ 1200.00
 Pedido 104 | João Pedro | R$ 3290.00
 Pedido 108 | Rafael Alves | R$ 1490.00`;
 
-export const GITHUB_TREE_SAMPLE = `analise-pedidos-python/
-├── analise_pedidos_guiado.py
-└── README.md`;
+export const MKDIR_CD = `mkdir analise-pedidos-python
+cd analise-pedidos-python`;
 
-/** Linux / macOS — terminal Bash */
-export const LINUX_VENV_COMMANDS = `# 1) Crie a pasta do projeto e entre nela
-mkdir analise-pedidos-python
-cd analise-pedidos-python
+export const VSCODE_OPEN = `code .`;
 
-# 2) Coloque analise_pedidos_guiado.py nesta pasta (download ou cópia)
+export const VENV_CREATE = `python -m venv .venv`;
 
-# 3) Crie o ambiente virtual dentro da pasta (pasta venv/)
-python3 -m venv venv
+export const VENV_CREATE_LINUX = `python3 -m venv .venv`;
 
-# 4) Ative o ambiente — o prompt deve mostrar (venv)
-source venv/bin/activate
+export const ACTIVATE_LINUX = `source .venv/bin/activate`;
 
-# 5) Rode o exercício
-python analise_pedidos_guiado.py`;
+export const ACTIVATE_WINDOWS_PS = `.venv\\Scripts\\Activate.ps1`;
 
-/** Windows — PowerShell */
-export const WINDOWS_POWERSHELL_COMMANDS = `# 1) Crie a pasta do projeto e entre nela
-mkdir analise-pedidos-python
-cd analise-pedidos-python
+export const ACTIVATE_WINDOWS_CMD = `.venv\\Scripts\\activate.bat`;
 
-# 2) Coloque analise_pedidos_guiado.py nesta pasta (download ou cópia)
+export const VENV_PROMPT_HINT = `(.venv)`;
 
-# 3) Crie o ambiente virtual dentro da pasta (pasta venv\\)
-python -m venv venv
+export const PROJECT_TREE = `analise-pedidos-python/
+├── .venv/
+└── analise_pedidos_guiado.py`;
 
-# 4) Ative o ambiente — o prompt deve mostrar (venv)
-.\\venv\\Scripts\\Activate.ps1
+export const RUN_SCRIPT = `python analise_pedidos_guiado.py`;
 
-# 5) Rode o exercício
-python analise_pedidos_guiado.py`;
+export const TEST_FUNCTION_SNIPPET = `print(calcular_total_item(pedidos[0]["itens"][0]))`;
 
-/** Windows — Prompt de Comando (cmd), alternativa */
-export const WINDOWS_CMD_COMMANDS = `mkdir analise-pedidos-python
-cd analise-pedidos-python
-python -m venv venv
-venv\\Scripts\\activate.bat
-python analise_pedidos_guiado.py`;
+export const REPORT_COMMENTED = `# gerar_relatorio(pedidos)`;
+
+export const REPORT_ACTIVE = `gerar_relatorio(pedidos)`;
+
+export const README_TEMPLATE = `# Análise de Pedidos com Python Básico
+
+Este projeto simula uma análise simples de pedidos de e-commerce usando Python puro.
+
+## Objetivo
+
+Praticar fundamentos de Python, como listas, dicionários, condicionais, loops e funções.
+
+## Conceitos praticados
+
+- variáveis
+- operadores
+- strings
+- listas
+- dicionários
+- listas de dicionários
+- for
+- if/else
+- funções
+- parâmetros opcionais
+
+## Como executar
+
+\`\`\`bash
+python analise_pedidos_guiado.py
+\`\`\`
+
+## Exemplo de saída
+
+Cole aqui um exemplo do relatório gerado no terminal.`;
+
+export const GIT_PUBLISH = `git init
+git add .
+git commit -m "Adiciona projeto de análise de pedidos"`;

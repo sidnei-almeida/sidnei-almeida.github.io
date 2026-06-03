@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ExerciseCodeBlock } from '../components/exercise/ExerciseCodeBlock';
 import { ExerciseDownloadLink } from '../components/exercise/ExerciseDownloadLink';
+import { ExerciseProjectGuide } from '../components/exercise/ExerciseProjectGuide';
 import { SectionReveal } from '../components/motion/SectionReveal';
 import { Button } from '../components/ui/Button';
 import { SectionLabel } from '../components/ui/SectionLabel';
 import { profile } from '../data/profile';
-import { GITHUB_TREE_SAMPLE, PEDIDOS_SAMPLE_CODE, TERMINAL_OUTPUT_SAMPLE } from '../data/pythonExerciseSamples';
-import { ExerciseRunGuide } from '../components/exercise/ExerciseRunGuide';
+import { PEDIDOS_SAMPLE_CODE, TERMINAL_OUTPUT_SAMPLE } from '../data/pythonExerciseSamples';
 import { useTranslation } from '../i18n/useTranslation';
 import { fadeUpItem, sectionStaggerContainer } from '../lib/motion';
 
@@ -57,13 +57,27 @@ export function PythonOrdersExercisePage() {
             <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink-body">{pe.hero.subtitle}</p>
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-secondary">{pe.hero.description}</p>
             <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-              <Button variant="outline" href="#instrucoes" className="h-[44px] px-6">
+              <ExerciseDownloadLink>{pe.hero.ctaDownload}</ExerciseDownloadLink>
+              <Button variant="outline" href="#guia-projeto" className="h-[44px] px-6">
                 {pe.hero.ctaInstructions}
               </Button>
-              <ExerciseDownloadLink>{pe.hero.ctaDownload}</ExerciseDownloadLink>
             </div>
           </motion.div>
         </SectionReveal>
+
+        <ExerciseSection id="guia-projeto">
+          <SectionReveal>
+            <motion.div
+              variants={fadeUpItem}
+              className="exercise-panel exercise-panel--guide border border-line bg-panel p-6 lg:p-8 xl:p-10"
+            >
+              <h2 className="type-section-heading text-[clamp(1.75rem,3.5vw,2.25rem)] text-ink-primary">
+                {pe.projectSetup.title}
+              </h2>
+              <ExerciseProjectGuide />
+            </motion.div>
+          </SectionReveal>
+        </ExerciseSection>
 
         <ExerciseSection id="simulacao">
           <SectionReveal>
@@ -113,10 +127,7 @@ export function PythonOrdersExercisePage() {
                 ))}
               </ul>
               <div className="mt-4">
-                <ExerciseCodeBlock
-                  code={pe.dataStructure.accessExample}
-                  language="python"
-                />
+                <ExerciseCodeBlock code={pe.dataStructure.accessExample} language="python" />
               </div>
             </motion.div>
           </SectionReveal>
@@ -159,41 +170,11 @@ export function PythonOrdersExercisePage() {
         <ExerciseSection>
           <SectionReveal>
             <motion.div variants={fadeUpItem} className="exercise-panel border border-line bg-panel p-6 lg:p-8">
-              <h2 className="type-subsection-heading text-ink-primary">{pe.run.title}</h2>
-              <ExerciseRunGuide />
-            </motion.div>
-          </SectionReveal>
-        </ExerciseSection>
-
-        <ExerciseSection>
-          <SectionReveal>
-            <motion.div variants={fadeUpItem} className="exercise-panel border border-line bg-panel p-6 lg:p-8">
               <h2 className="type-subsection-heading text-ink-primary">{pe.output.title}</h2>
               <p className="section-body mt-2">{pe.output.subtitle}</p>
               <div className="mt-5">
                 <ExerciseCodeBlock code={TERMINAL_OUTPUT_SAMPLE} language="text" />
               </div>
-            </motion.div>
-          </SectionReveal>
-        </ExerciseSection>
-
-        <ExerciseSection>
-          <SectionReveal>
-            <motion.div variants={fadeUpItem} className="exercise-panel border border-line bg-panel p-6 lg:p-8">
-              <h2 className="type-subsection-heading text-ink-primary">{pe.github.title}</h2>
-              <p className="section-body mt-2">{pe.github.intro}</p>
-              <p className="mt-4 font-mono text-sm text-accent">
-                {pe.github.repoName}
-              </p>
-              <div className="mt-4">
-                <ExerciseCodeBlock code={GITHUB_TREE_SAMPLE} language="text" />
-              </div>
-              <p className="mt-5 text-sm text-ink-secondary">README.md:</p>
-              <ul className="exercise-list mt-2">
-                {pe.github.readmeItems.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
             </motion.div>
           </SectionReveal>
         </ExerciseSection>
