@@ -41,7 +41,41 @@ export const GITHUB_TREE_SAMPLE = `analise-pedidos-python/
 ├── analise_pedidos_guiado.py
 └── README.md`;
 
-export const SETUP_SHELL = `mkdir analise-pedidos-python
-cd analise-pedidos-python`;
+/** Linux / macOS — terminal Bash */
+export const LINUX_VENV_COMMANDS = `# 1) Crie a pasta do projeto e entre nela
+mkdir analise-pedidos-python
+cd analise-pedidos-python
 
-export const RUN_SHELL = `python analise_pedidos_guiado.py`;
+# 2) Coloque analise_pedidos_guiado.py nesta pasta (download ou cópia)
+
+# 3) Crie o ambiente virtual dentro da pasta (pasta venv/)
+python3 -m venv venv
+
+# 4) Ative o ambiente — o prompt deve mostrar (venv)
+source venv/bin/activate
+
+# 5) Rode o exercício
+python analise_pedidos_guiado.py`;
+
+/** Windows — PowerShell */
+export const WINDOWS_POWERSHELL_COMMANDS = `# 1) Crie a pasta do projeto e entre nela
+mkdir analise-pedidos-python
+cd analise-pedidos-python
+
+# 2) Coloque analise_pedidos_guiado.py nesta pasta (download ou cópia)
+
+# 3) Crie o ambiente virtual dentro da pasta (pasta venv\\)
+python -m venv venv
+
+# 4) Ative o ambiente — o prompt deve mostrar (venv)
+.\\venv\\Scripts\\Activate.ps1
+
+# 5) Rode o exercício
+python analise_pedidos_guiado.py`;
+
+/** Windows — Prompt de Comando (cmd), alternativa */
+export const WINDOWS_CMD_COMMANDS = `mkdir analise-pedidos-python
+cd analise-pedidos-python
+python -m venv venv
+venv\\Scripts\\activate.bat
+python analise_pedidos_guiado.py`;

@@ -341,13 +341,42 @@
     },
     "run": {
       "title": "How to run",
-      "stepsIntro": "Suggested local setup:",
-      "steps": [
-        "Download or copy analise_pedidos_guiado.py.",
-        "Open it in VS Code, PyCharm, terminal, or your preferred editor.",
-        "Complete the TODO functions.",
-        "Uncomment the line gerar_relatorio(pedidos).",
-        "Run the script in the terminal."
+      "stepsIntro": "Set up a local environment on your machine. Pick your system below and follow the terminal commands.",
+      "venvIntro": "A venv (virtual environment) is an isolated folder just for this project. It keeps this exercise separate from other Python installs on your computer. Create it with python -m venv venv inside the project folder, then activate it before running the script.",
+      "platformTabsAria": "Operating system",
+      "platformLinux": "Linux / macOS",
+      "platformWindows": "Windows",
+      "linux": {
+        "intro": "Use the terminal (Bash). If python3 does not work, try python instead of python3 in the commands below.",
+        "pythonNote": "When active, your prompt usually shows (venv). To leave the environment later: deactivate.",
+        "steps": [
+          "Create the folder analise-pedidos-python and cd into it.",
+          "Save analise_pedidos_guiado.py inside that folder.",
+          "Create the venv with python3 -m venv venv — this creates the venv/ subfolder.",
+          "Activate with source venv/bin/activate.",
+          "With the venv active, run python analise_pedidos_guiado.py."
+        ]
+      },
+      "windows": {
+        "intro": "On Windows, PowerShell is the most common option today. If you prefer Command Prompt (cmd), use the alternative block below.",
+        "powershellLabel": "PowerShell (recommended)",
+        "powershellNote": "If activation fails due to policy, run once in PowerShell: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned. Then try activating the venv again. To exit: deactivate.",
+        "cmdLabel": "Command Prompt (cmd) — alternative",
+        "steps": [
+          "Create the folder analise-pedidos-python and cd into it.",
+          "Save analise_pedidos_guiado.py inside that folder.",
+          "Create the venv with python -m venv venv.",
+          "Activate the environment (PowerShell or cmd, per the block above).",
+          "With (venv) in the prompt, run python analise_pedidos_guiado.py."
+        ]
+      },
+      "commonTitle": "Before and after running (all systems)",
+      "commonSteps": [
+        "Download or copy analise_pedidos_guiado.py into the project folder.",
+        "Open the folder in VS Code, PyCharm, or your editor.",
+        "Complete the functions marked with TODO.",
+        "Uncomment gerar_relatorio(pedidos) when you are ready to test.",
+        "Only then run the script with the virtual environment active."
       ]
     },
     "output": {

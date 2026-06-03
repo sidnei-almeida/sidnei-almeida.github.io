@@ -341,13 +341,42 @@
     },
     "run": {
       "title": "Como executar",
-      "stepsIntro": "Sugestão de ambiente local:",
-      "steps": [
-        "Baixe ou copie o arquivo analise_pedidos_guiado.py.",
-        "Abra no VS Code, PyCharm, terminal ou outro ambiente.",
-        "Complete as funções com TODO.",
-        "Remova o comentário da linha gerar_relatorio(pedidos).",
-        "Execute o script no terminal."
+      "stepsIntro": "Monte um ambiente local na sua máquina. Escolha o sistema abaixo e siga os comandos no terminal.",
+      "venvIntro": "O venv (ambiente virtual) é uma pasta isolada só para este projeto. Assim o Python do exercício não mistura com outros programas instalados no computador. Você cria com python -m venv venv dentro da pasta do projeto e ativa antes de rodar o script.",
+      "platformTabsAria": "Sistema operacional",
+      "platformLinux": "Linux / macOS",
+      "platformWindows": "Windows",
+      "linux": {
+        "intro": "Use o terminal (Bash). Se python3 não funcionar, tente python no lugar de python3 nos comandos abaixo.",
+        "pythonNote": "Com o ambiente ativo, o início da linha do terminal costuma mostrar (venv). Para sair depois: deactivate.",
+        "steps": [
+          "Crie a pasta analise-pedidos-python e entre nela com cd.",
+          "Salve analise_pedidos_guiado.py dentro dessa pasta.",
+          "Crie o venv com python3 -m venv venv — isso cria a subpasta venv/.",
+          "Ative com source venv/bin/activate.",
+          "Com o venv ativo, execute python analise_pedidos_guiado.py."
+        ]
+      },
+      "windows": {
+        "intro": "No Windows, o mais comum hoje é o PowerShell. Se preferir o Prompt de Comando (cmd), use o bloco alternativo abaixo.",
+        "powershellLabel": "PowerShell (recomendado)",
+        "powershellNote": "Se aparecer erro de política ao ativar, abra o PowerShell e rode uma vez: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned. Depois tente ativar o venv de novo. Para sair do ambiente: deactivate.",
+        "cmdLabel": "Prompt de Comando (cmd) — alternativa",
+        "steps": [
+          "Crie a pasta analise-pedidos-python e entre nela.",
+          "Salve analise_pedidos_guiado.py dentro dessa pasta.",
+          "Crie o venv com python -m venv venv.",
+          "Ative o ambiente (PowerShell ou cmd, conforme o bloco acima).",
+          "Com (venv) no prompt, execute python analise_pedidos_guiado.py."
+        ]
+      },
+      "commonTitle": "Antes e depois de rodar (todos os sistemas)",
+      "commonSteps": [
+        "Baixe ou copie analise_pedidos_guiado.py para a pasta do projeto.",
+        "Abra a pasta no VS Code, PyCharm ou no editor que você usa.",
+        "Complete as funções marcadas com TODO no arquivo.",
+        "Remova o comentário da linha gerar_relatorio(pedidos) quando estiver pronto para testar.",
+        "Só então execute o script com o ambiente virtual ativo."
       ]
     },
     "output": {
