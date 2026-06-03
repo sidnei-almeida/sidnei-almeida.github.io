@@ -7,13 +7,8 @@ import { SectionReveal } from '../components/motion/SectionReveal';
 import { Button } from '../components/ui/Button';
 import { SectionLabel } from '../components/ui/SectionLabel';
 import { profile } from '../data/profile';
-import {
-  GITHUB_TREE_SAMPLE,
-  PEDIDOS_SAMPLE_CODE,
-  RUN_SHELL,
-  SETUP_SHELL,
-  TERMINAL_OUTPUT_SAMPLE,
-} from '../data/pythonExerciseSamples';
+import { GITHUB_TREE_SAMPLE, PEDIDOS_SAMPLE_CODE, TERMINAL_OUTPUT_SAMPLE } from '../data/pythonExerciseSamples';
+import { ExerciseRunGuide } from '../components/exercise/ExerciseRunGuide';
 import { useTranslation } from '../i18n/useTranslation';
 import { fadeUpItem, sectionStaggerContainer } from '../lib/motion';
 
@@ -165,19 +160,7 @@ export function PythonOrdersExercisePage() {
           <SectionReveal>
             <motion.div variants={fadeUpItem} className="exercise-panel border border-line bg-panel p-6 lg:p-8">
               <h2 className="type-subsection-heading text-ink-primary">{pe.run.title}</h2>
-              <p className="section-body mt-2">{pe.run.stepsIntro}</p>
-              <div className="mt-4 space-y-4">
-                <ExerciseCodeBlock code={SETUP_SHELL} language="bash" />
-                <ExerciseCodeBlock code={RUN_SHELL} language="bash" />
-              </div>
-              <ol className="exercise-steps mt-6">
-                {pe.run.steps.map((step, i) => (
-                  <li key={step}>
-                    <span className="exercise-steps__num">{i + 1}</span>
-                    {step}
-                  </li>
-                ))}
-              </ol>
+              <ExerciseRunGuide />
             </motion.div>
           </SectionReveal>
         </ExerciseSection>
