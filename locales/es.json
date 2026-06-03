@@ -276,7 +276,35 @@
       "subtitle": "Del Runestone a tu computadora: crea un mini-proyecto Python real con VS Code, entorno virtual, terminal y GitHub.",
       "description": "Esta guía explica paso a paso cómo crear la carpeta, abrir VS Code, crear y activar un venv, descargar el .py, ejecutar en terminal, completar funciones, escribir README y publicar en GitHub.",
       "ctaDownload": "Descargar analise_pedidos_guiado.py",
-      "ctaInstructions": "Empezar la guía"
+      "ctaInstructions": "Elegir sistema"
+    },
+    "osSetup": {
+      "title": "Elige tu sistema operativo",
+      "intro": "Antes de empezar el ejercicio, elige tu sistema operativo abajo. Los comandos cambian un poco entre Linux/macOS y Windows, sobre todo al activar el entorno virtual.",
+      "venvNote": "Aunque este proyecto no use librerías externas, crear un entorno virtual es una buena práctica. Aísla el Python del proyecto y te prepara para proyectos más grandes.",
+      "platformTabsAria": "Sistema operativo",
+      "platformLinux": "Linux / macOS",
+      "platformWindowsPs": "Windows PowerShell",
+      "platformWindowsCmd": "Windows CMD",
+      "commandsHint": "Copia y ejecuta los comandos abajo en orden en la terminal de tu sistema:",
+      "commandLegend": [
+        "mkdir crea la carpeta del proyecto.",
+        "cd entra en la carpeta.",
+        "code . abre la carpeta en VS Code.",
+        "python -m venv .venv crea el entorno virtual.",
+        "El comando de activación cambia según el sistema (ver la pestaña elegida).",
+        "python analise_pedidos_guiado.py ejecuta el proyecto."
+      ],
+      "vscodeNote": "Si code . no funciona, abre VS Code manualmente y usa File > Open Folder (Archivo > Abrir carpeta) para seleccionar analise-pedidos-python.",
+      "powershellNote": "Si PowerShell bloquea la activación, usa la pestaña Windows CMD con .venv\\Scripts\\activate.bat — o abre VS Code y usa la terminal integrada en CMD.",
+      "downloadTitle": "Descarga el archivo del ejercicio",
+      "downloadBody": "Después de crear la carpeta y el entorno virtual, descarga el archivo y colócalo en analise-pedidos-python:",
+      "downloadLabel": "Descargar analise_pedidos_guiado.py",
+      "treeIntro": "Estructura esperada del proyecto:",
+      "encouragement": "Si algún comando no funciona a la primera, no pasa nada. Copia el error, pide ayuda en el grupo e inténtalo de nuevo. Configurar el entorno también es parte del aprendizaje.",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "copyAria": "Copiar comandos al portapapeles"
     },
     "simulation": {
       "title": "¿Qué simula este proyecto?",
@@ -341,42 +369,9 @@
     },
     "projectSetup": {
       "title": "Cómo crear el proyecto en tu computadora",
-      "intro": "Sigue los pasos en orden. Pasarás del entorno del curso a un proyecto Python real en tu máquina — con carpeta, VS Code, entorno virtual, archivo .py, README y publicación en GitHub.",
-      "step1": {
-        "title": "Crear la carpeta del proyecto",
-        "body": "Abre la terminal y crea la carpeta principal. Ahí irán el entorno virtual, el .py y el README."
-      },
-      "step2": {
-        "title": "Abrir en VS Code",
-        "body": "Con la terminal dentro de analise-pedidos-python, abre el proyecto en VS Code:",
-        "note": "Si code . no funciona, abre VS Code manualmente y usa File > Open Folder para seleccionar analise-pedidos-python."
-      },
-      "step3": {
-        "title": "Crear el entorno virtual",
-        "body": "Un entorno virtual es una carpeta aislada para el Python de este proyecto. Aunque este ejercicio no use librerías externas, conviene aprender este flujo desde el principio. Dentro de la carpeta del proyecto, ejecuta:",
-        "linuxHint": "En Linux o macOS, si python no funciona, usa:"
-      },
-      "step4": {
-        "title": "Activar el entorno virtual",
-        "body": "Antes de ejecutar el script, activa el entorno. Elige el comando de tu sistema:",
-        "platformTabsAria": "Sistema operativo",
-        "platformLinux": "Linux / macOS",
-        "platformWindowsPs": "Windows — PowerShell",
-        "platformWindowsCmd": "Windows — CMD",
-        "powershellNote": "Si PowerShell bloquea la activación, ejecuta una vez: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned. Para salir después: deactivate.",
-        "activeHint": "Con el entorno activo, la terminal suele mostrar algo así antes de la ruta:"
-      },
-      "step5": {
-        "title": "Descargar el archivo del ejercicio",
-        "body": "Descarga el archivo base y colócalo dentro de analise-pedidos-python.",
-        "downloadLabel": "Descargar analise_pedidos_guiado.py",
-        "afterDownload": "Estructura esperada del proyecto:"
-      },
-      "step6": {
-        "title": "Ejecutar el archivo",
-        "body": "Con el entorno virtual activo y el archivo en la carpeta, ejecuta:",
-        "note": "Al principio el script puede no mostrar el informe completo porque las funciones aún tienen pass. Es normal — las completarás poco a poco."
-      },
+      "intro": "Esta guía te lleva del entorno del curso a un proyecto Python real en tu máquina — carpeta, VS Code, entorno virtual, .py, README y GitHub.",
+      "continuedTitle": "Después del setup en la terminal",
+      "continuedIntro": "Con el proyecto corriendo en tu computadora, continúa con los pasos para implementar, probar y publicar.",
       "step7": {
         "title": "Probar función por función",
         "body": "No hace falta terminar todo de una vez. Después de implementar una función, prueba solo esa, por ejemplo:",
