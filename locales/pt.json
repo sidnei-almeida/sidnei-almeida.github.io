@@ -79,10 +79,8 @@
       "frontend": "Front-End",
       "anomaly": "Detecção de Anomalias",
       "financial": "Analytics Financeiro",
-      "dashboards": "Dashboards",
-      "fundamentals": "Fundamentos Python"
+      "dashboards": "Dashboards"
     },
-    "viewExercise": "Ver exercício",
     "noResults": "Nenhum projeto encontrado para este filtro.",
     "liveDemo": "Demo ao Vivo",
     "source": "Código",
@@ -263,15 +261,9 @@
     ]
   },
   "pythonExercise": {
-    "card": {
-      "title": "Análise de Pedidos com Python Básico",
-      "shortDescription": "Exercício guiado em Python puro para gerar um relatório de pedidos de e-commerce usando listas, dicionários, loops e funções.",
-      "category": "Fundamentos / Dados",
-      "tags": ["Python", "Fundamentos", "Dados", "E-commerce", "Projeto Guiado"]
-    },
     "back": "Voltar ao portfólio",
     "hero": {
-      "label": "Guia de projeto",
+      "label": "Exercício — mentoria",
       "title": "Análise de Pedidos com Python Básico",
       "subtitle": "Do Runestone ao seu computador: crie um mini-projeto Python real com VS Code, ambiente virtual, terminal e GitHub.",
       "description": "Este guia ensina passo a passo como montar a pasta do projeto, abrir no VS Code, criar e ativar um venv, baixar o arquivo .py, rodar no terminal, completar as funções, escrever um README e publicar no GitHub.",
@@ -368,8 +360,8 @@
       ]
     },
     "projectSetup": {
-      "title": "Como criar o projeto no seu computador",
-      "intro": "Este guia leva você do ambiente do curso até um projeto Python real na sua máquina — com pasta, VS Code, ambiente virtual, arquivo .py, README e publicação no GitHub.",
+      "title": "Como montar o exercício no seu computador",
+      "intro": "Este guia leva você do ambiente do curso até rodar o exercício na sua máquina — com pasta de trabalho, VS Code, ambiente virtual, arquivo .py e, se quiser, README e GitHub para entrega.",
       "continuedTitle": "Depois do setup no terminal",
       "continuedIntro": "Com o projeto rodando no seu computador, continue com os passos abaixo para implementar, testar e publicar.",
       "step7": {

@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import type { Project } from '../../data/projects';
 import { interpolate } from '../../i18n/helpers';
 import { useTranslation } from '../../i18n/useTranslation';
-import { localizeProject } from '../../lib/projectLocalization';
 import { cardHoverTransition, fadeUpItem } from '../../lib/motion';
 import { TechBadge } from './TechBadge';
 
@@ -18,15 +17,10 @@ function isInternalPath(href: string) {
   return href.startsWith('/') && !href.startsWith('//');
 }
 
-export function FeaturedProjectCard({ project: rawProject, animated = false }: FeaturedProjectCardProps) {
+export function FeaturedProjectCard({ project, animated = false }: FeaturedProjectCardProps) {
   const { t } = useTranslation();
-  const project = localizeProject(rawProject, t);
 
-  const demoLabel =
-    project.liveDemoLabelKey === 'viewExercise'
-      ? t.projects.viewExercise
-      : t.projects.liveDemo;
-
+  const demoLabel = t.projects.liveDemo;
   const demoIsInternal = project.liveDemoInternal ?? (project.liveDemo ? isInternalPath(project.liveDemo) : false);
 
   const articleClassName = project.image
