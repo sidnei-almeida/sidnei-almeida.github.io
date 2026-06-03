@@ -271,12 +271,12 @@
     },
     "back": "Back to portfolio",
     "hero": {
-      "label": "Guided exercise",
+      "label": "Project guide",
       "title": "Order Analysis with Basic Python",
-      "subtitle": "A guided exercise to practice pure Python before moving on to Pandas and data analysis.",
-      "description": "This project simulates a small e-commerce order dataset. Each order has a customer, state, status, and a list of items. Your goal is to complete Python functions that generate a final report in the terminal.",
-      "ctaDownload": "Download exercise .py",
-      "ctaInstructions": "View instructions"
+      "subtitle": "From Runestone to your computer: build a real Python mini-project with VS Code, a virtual environment, terminal, and GitHub.",
+      "description": "This guide walks you through creating the project folder, opening VS Code, creating and activating a venv, downloading the .py file, running in the terminal, completing functions, writing a README, and publishing on GitHub.",
+      "ctaDownload": "Download analise_pedidos_guiado.py",
+      "ctaInstructions": "Start the guide"
     },
     "simulation": {
       "title": "What does this project simulate?",
@@ -339,62 +339,71 @@
         { "name": "gerar_relatorio(lista_pedidos)", "desc": "Builds and prints the full terminal report." }
       ]
     },
-    "run": {
-      "title": "How to run",
-      "stepsIntro": "Set up a local environment on your machine. Pick your system below and follow the terminal commands.",
-      "venvIntro": "A venv (virtual environment) is an isolated folder just for this project. It keeps this exercise separate from other Python installs on your computer. Create it with python -m venv venv inside the project folder, then activate it before running the script.",
-      "platformTabsAria": "Operating system",
-      "platformLinux": "Linux / macOS",
-      "platformWindows": "Windows",
-      "linux": {
-        "intro": "Use the terminal (Bash). If python3 does not work, try python instead of python3 in the commands below.",
-        "pythonNote": "When active, your prompt usually shows (venv). To leave the environment later: deactivate.",
-        "steps": [
-          "Create the folder analise-pedidos-python and cd into it.",
-          "Save analise_pedidos_guiado.py inside that folder.",
-          "Create the venv with python3 -m venv venv — this creates the venv/ subfolder.",
-          "Activate with source venv/bin/activate.",
-          "With the venv active, run python analise_pedidos_guiado.py."
-        ]
+    "projectSetup": {
+      "title": "How to create the project on your computer",
+      "intro": "Follow the steps below in order. You will move from the course environment to a real Python project on your machine — with a folder, VS Code, virtual environment, .py file, README, and GitHub publication.",
+      "step1": {
+        "title": "Create the project folder",
+        "body": "Open a terminal and create the main project folder. It will hold the virtual environment, .py file, and README."
       },
-      "windows": {
-        "intro": "On Windows, PowerShell is the most common option today. If you prefer Command Prompt (cmd), use the alternative block below.",
-        "powershellLabel": "PowerShell (recommended)",
-        "powershellNote": "If activation fails due to policy, run once in PowerShell: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned. Then try activating the venv again. To exit: deactivate.",
-        "cmdLabel": "Command Prompt (cmd) — alternative",
-        "steps": [
-          "Create the folder analise-pedidos-python and cd into it.",
-          "Save analise_pedidos_guiado.py inside that folder.",
-          "Create the venv with python -m venv venv.",
-          "Activate the environment (PowerShell or cmd, per the block above).",
-          "With (venv) in the prompt, run python analise_pedidos_guiado.py."
-        ]
+      "step2": {
+        "title": "Open in VS Code",
+        "body": "With the terminal inside analise-pedidos-python, open the project in VS Code:",
+        "note": "If code . does not work, open VS Code manually and use File > Open Folder to select analise-pedidos-python."
       },
-      "commonTitle": "Before and after running (all systems)",
-      "commonSteps": [
-        "Download or copy analise_pedidos_guiado.py into the project folder.",
-        "Open the folder in VS Code, PyCharm, or your editor.",
-        "Complete the functions marked with TODO.",
-        "Uncomment gerar_relatorio(pedidos) when you are ready to test.",
-        "Only then run the script with the virtual environment active."
-      ]
+      "step3": {
+        "title": "Create the virtual environment",
+        "body": "A virtual environment is an isolated folder for this project's Python. Even though this exercise does not use external libraries, it is good practice to learn this flow early. Inside the project folder, run:",
+        "linuxHint": "On Linux or macOS, if python does not work, use:"
+      },
+      "step4": {
+        "title": "Activate the virtual environment",
+        "body": "Before running the script, activate the environment. Choose the command for your system:",
+        "platformTabsAria": "Operating system",
+        "platformLinux": "Linux / macOS",
+        "platformWindowsPs": "Windows — PowerShell",
+        "platformWindowsCmd": "Windows — CMD",
+        "powershellNote": "If PowerShell blocks activation, run once: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned. To exit later: deactivate.",
+        "activeHint": "When active, the terminal usually shows something like this before the folder path:"
+      },
+      "step5": {
+        "title": "Download the exercise file",
+        "body": "Download the base file and place it inside analise-pedidos-python.",
+        "downloadLabel": "Download analise_pedidos_guiado.py",
+        "afterDownload": "Expected project structure:"
+      },
+      "step6": {
+        "title": "Run the file",
+        "body": "With the virtual environment active and the file in the folder, run:",
+        "note": "At first the script may not show the full report because functions still have pass. That is normal — you will complete them step by step."
+      },
+      "step7": {
+        "title": "Test one function at a time",
+        "body": "You do not need to finish everything at once. After implementing a function, test only that one, for example:",
+        "note": "Run the file, check the result, fix if needed, then move to the next function."
+      },
+      "step8": {
+        "title": "Enable the final report",
+        "body": "When the functions are ready, find the commented line at the end of the file and enable the report call:",
+        "beforeLabel": "Before",
+        "afterLabel": "After"
+      },
+      "step9": {
+        "title": "Creating README.md",
+        "body": "The README is your project's home page on GitHub. Create README.md in the project folder. You can start from this template:",
+        "note": "Replace the sample output with the report your script prints in the terminal."
+      },
+      "step10": {
+        "title": "Publishing on GitHub",
+        "body": "In the project folder, initialize Git and make the first commit:",
+        "repoHint": "Then create a GitHub repository named",
+        "repoName": "analise-pedidos-python",
+        "githubNote": "Follow the instructions GitHub shows to connect the remote and push your project. You do not need to master Git yet — the goal is to publish your solution."
+      }
     },
     "output": {
       "title": "Expected output example",
       "subtitle": "Format of the final terminal report (values may vary with the dataset):"
-    },
-    "github": {
-      "title": "Suggested GitHub delivery",
-      "intro": "Create a simple repository and document your solution:",
-      "repoName": "analise-pedidos-python",
-      "readmeItems": [
-        "Project name",
-        "Objective",
-        "Concepts practiced",
-        "How to run",
-        "Sample output",
-        "Learnings"
-      ]
     },
     "why": {
       "title": "Why this exercise matters",
@@ -404,7 +413,7 @@
     "cta": {
       "title": "Ready to practice?",
       "body": "Download the file, complete the functions, and publish your solution on GitHub.",
-      "download": "Download exercise .py",
+      "download": "Download analise_pedidos_guiado.py",
       "back": "Back to portfolio",
       "github": "View repository on GitHub"
     },

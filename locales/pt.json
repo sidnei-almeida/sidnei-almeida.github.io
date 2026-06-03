@@ -271,12 +271,12 @@
     },
     "back": "Voltar ao portfólio",
     "hero": {
-      "label": "Exercício guiado",
+      "label": "Guia de projeto",
       "title": "Análise de Pedidos com Python Básico",
-      "subtitle": "Um exercício guiado para praticar Python puro antes de avançar para Pandas e análise de dados.",
-      "description": "Este projeto simula uma pequena base de pedidos de e-commerce. Cada pedido possui cliente, estado, status e uma lista de itens. O objetivo é completar funções em Python para gerar um relatório final no terminal.",
-      "ctaDownload": "Baixar exercício .py",
-      "ctaInstructions": "Ver instruções"
+      "subtitle": "Do Runestone ao seu computador: crie um mini-projeto Python real com VS Code, ambiente virtual, terminal e GitHub.",
+      "description": "Este guia ensina passo a passo como montar a pasta do projeto, abrir no VS Code, criar e ativar um venv, baixar o arquivo .py, rodar no terminal, completar as funções, escrever um README e publicar no GitHub.",
+      "ctaDownload": "Baixar analise_pedidos_guiado.py",
+      "ctaInstructions": "Começar o guia"
     },
     "simulation": {
       "title": "O que este projeto simula?",
@@ -339,62 +339,71 @@
         { "name": "gerar_relatorio(lista_pedidos)", "desc": "Monta e imprime o relatório completo no terminal." }
       ]
     },
-    "run": {
-      "title": "Como executar",
-      "stepsIntro": "Monte um ambiente local na sua máquina. Escolha o sistema abaixo e siga os comandos no terminal.",
-      "venvIntro": "O venv (ambiente virtual) é uma pasta isolada só para este projeto. Assim o Python do exercício não mistura com outros programas instalados no computador. Você cria com python -m venv venv dentro da pasta do projeto e ativa antes de rodar o script.",
-      "platformTabsAria": "Sistema operacional",
-      "platformLinux": "Linux / macOS",
-      "platformWindows": "Windows",
-      "linux": {
-        "intro": "Use o terminal (Bash). Se python3 não funcionar, tente python no lugar de python3 nos comandos abaixo.",
-        "pythonNote": "Com o ambiente ativo, o início da linha do terminal costuma mostrar (venv). Para sair depois: deactivate.",
-        "steps": [
-          "Crie a pasta analise-pedidos-python e entre nela com cd.",
-          "Salve analise_pedidos_guiado.py dentro dessa pasta.",
-          "Crie o venv com python3 -m venv venv — isso cria a subpasta venv/.",
-          "Ative com source venv/bin/activate.",
-          "Com o venv ativo, execute python analise_pedidos_guiado.py."
-        ]
+    "projectSetup": {
+      "title": "Como criar o projeto no seu computador",
+      "intro": "Siga os passos abaixo na ordem. Você vai sair do ambiente do curso e montar um projeto Python de verdade na sua máquina — com pasta, VS Code, ambiente virtual, arquivo .py, README e publicação no GitHub.",
+      "step1": {
+        "title": "Criar a pasta do projeto",
+        "body": "Abra o terminal e crie a pasta principal do projeto. Ela vai concentrar o ambiente virtual, o arquivo .py e o README."
       },
-      "windows": {
-        "intro": "No Windows, o mais comum hoje é o PowerShell. Se preferir o Prompt de Comando (cmd), use o bloco alternativo abaixo.",
-        "powershellLabel": "PowerShell (recomendado)",
-        "powershellNote": "Se aparecer erro de política ao ativar, abra o PowerShell e rode uma vez: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned. Depois tente ativar o venv de novo. Para sair do ambiente: deactivate.",
-        "cmdLabel": "Prompt de Comando (cmd) — alternativa",
-        "steps": [
-          "Crie a pasta analise-pedidos-python e entre nela.",
-          "Salve analise_pedidos_guiado.py dentro dessa pasta.",
-          "Crie o venv com python -m venv venv.",
-          "Ative o ambiente (PowerShell ou cmd, conforme o bloco acima).",
-          "Com (venv) no prompt, execute python analise_pedidos_guiado.py."
-        ]
+      "step2": {
+        "title": "Abrir no VS Code",
+        "body": "Com o terminal dentro da pasta analise-pedidos-python, abra o projeto no VS Code:",
+        "note": "Se o comando code . não funcionar, abra o VS Code manualmente e use File > Open Folder (Arquivo > Abrir Pasta) para selecionar analise-pedidos-python."
       },
-      "commonTitle": "Antes e depois de rodar (todos os sistemas)",
-      "commonSteps": [
-        "Baixe ou copie analise_pedidos_guiado.py para a pasta do projeto.",
-        "Abra a pasta no VS Code, PyCharm ou no editor que você usa.",
-        "Complete as funções marcadas com TODO no arquivo.",
-        "Remova o comentário da linha gerar_relatorio(pedidos) quando estiver pronto para testar.",
-        "Só então execute o script com o ambiente virtual ativo."
-      ]
+      "step3": {
+        "title": "Criar o ambiente virtual",
+        "body": "Um ambiente virtual é uma pasta isolada para o Python daquele projeto. Mesmo que este exercício não use bibliotecas externas, é uma boa prática aprender esse fluxo desde cedo. Dentro da pasta do projeto, execute:",
+        "linuxHint": "No Linux ou macOS, se python não funcionar, use:"
+      },
+      "step4": {
+        "title": "Ativar o ambiente virtual",
+        "body": "Antes de rodar o script, ative o ambiente. Escolha o comando do seu sistema:",
+        "platformTabsAria": "Sistema operacional",
+        "platformLinux": "Linux / macOS",
+        "platformWindowsPs": "Windows — PowerShell",
+        "platformWindowsCmd": "Windows — CMD",
+        "powershellNote": "Se o PowerShell bloquear a ativação, execute uma vez: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned. Para sair do ambiente depois: deactivate.",
+        "activeHint": "Com o ambiente ativo, o terminal geralmente mostra algo como isto antes do caminho da pasta:"
+      },
+      "step5": {
+        "title": "Baixar o arquivo do exercício",
+        "body": "Baixe o arquivo base do exercício e coloque-o dentro da pasta analise-pedidos-python.",
+        "downloadLabel": "Baixar analise_pedidos_guiado.py",
+        "afterDownload": "A estrutura esperada do projeto:"
+      },
+      "step6": {
+        "title": "Rodar o arquivo",
+        "body": "Com o ambiente virtual ativo e o arquivo na pasta, execute:",
+        "note": "No começo o script pode não mostrar o relatório completo porque as funções ainda estão com pass. Isso é normal — você vai completá-las aos poucos."
+      },
+      "step7": {
+        "title": "Testar função por função",
+        "body": "Você não precisa terminar tudo de uma vez. Depois de implementar uma função, teste só ela no final do arquivo ou em um print temporário, por exemplo:",
+        "note": "Rode o arquivo, veja o resultado, corrija se precisar e só então passe para a próxima função."
+      },
+      "step8": {
+        "title": "Ativar o relatório final",
+        "body": "Quando as funções estiverem prontas, procure no final do arquivo a linha comentada e ative a chamada do relatório:",
+        "beforeLabel": "Antes",
+        "afterLabel": "Depois"
+      },
+      "step9": {
+        "title": "Criando o README.md",
+        "body": "O README é a página inicial do seu projeto no GitHub. Crie um arquivo README.md na pasta do projeto. Você pode começar com este modelo e adaptar:",
+        "note": "Substitua o exemplo de saída pelo relatório que o seu script gerar no terminal."
+      },
+      "step10": {
+        "title": "Publicando no GitHub",
+        "body": "Na pasta do projeto, inicialize o Git e faça o primeiro commit:",
+        "repoHint": "Depois crie um repositório no GitHub chamado",
+        "repoName": "analise-pedidos-python",
+        "githubNote": "Siga as instruções que o próprio GitHub mostra para conectar o repositório remoto e enviar o projeto (git remote add, git push). Não precisa dominar Git agora — o importante é publicar sua solução."
+      }
     },
     "output": {
       "title": "Exemplo de saída esperada",
       "subtitle": "Formato do relatório final no terminal (valores podem variar conforme a base de dados):"
-    },
-    "github": {
-      "title": "Entrega sugerida no GitHub",
-      "intro": "Crie um repositório com estrutura simples e documente sua solução:",
-      "repoName": "analise-pedidos-python",
-      "readmeItems": [
-        "Nome do projeto",
-        "Objetivo",
-        "Conceitos praticados",
-        "Como executar",
-        "Exemplo de saída",
-        "Aprendizados"
-      ]
     },
     "why": {
       "title": "Por que este exercício é importante?",
@@ -404,7 +413,7 @@
     "cta": {
       "title": "Pronto para praticar?",
       "body": "Baixe o arquivo, complete as funções e publique sua solução no GitHub.",
-      "download": "Baixar exercício .py",
+      "download": "Baixar analise_pedidos_guiado.py",
       "back": "Voltar ao portfólio",
       "github": "Ver repositório no GitHub"
     },

@@ -1106,4 +1106,24 @@
   .exercise-platform-tabs__btn--active {
     @apply border-accent bg-accent text-white hover:border-accent hover:text-white;
   }
+
+  .exercise-panel--guide {
+    @apply w-full;
+  }
+
+  .exercise-step-card__header {
+    @apply flex items-start gap-4;
+  }
+
+  .exercise-step-card__num {
+    @apply flex h-9 w-9 shrink-0 items-center justify-center border border-line font-mono text-[11px] text-accent;
+  }
+
+  .exercise-step-card__title {
+    @apply pt-1 text-base font-medium leading-snug text-ink-primary lg:text-[1.05rem];
+  }
+
+  .exercise-download-box {
+    @apply flex flex-wrap items-center;
+  }
 }
