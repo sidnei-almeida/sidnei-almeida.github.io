@@ -4,8 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "sync:exercise": "bash scripts/sync-exercise-public.sh",
+    "dev": "npm run sync:exercise && vite --force",
+    "build": "npm run sync:exercise && tsc -b && vite build",
     "preview": "vite preview",
     "generate:favicons": "bash scripts/generate-favicons.sh",
     "optimize:projects": "bash scripts/optimize-project-images.sh"

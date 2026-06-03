@@ -1,4 +1,3 @@
-import { Download } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 import { SectionReveal } from '../components/motion/SectionReveal';
@@ -6,6 +5,7 @@ import { profile } from '../data/profile';
 import { resume as baseResume } from '../data/resume';
 import { fadeUpItem, sectionStaggerContainer, cardStaggerContainer } from '../lib/motion';
 import { getLocalizedResume, resumeSkillGroupKeys } from '../i18n/resumeHelpers';
+import { DownloadTextLink } from '../components/ui/DownloadTextLink';
 import { useTranslation } from '../i18n/useTranslation';
 import './resume.css';
 
@@ -48,15 +48,14 @@ export function ResumePage() {
                   {contactLine}
                 </motion.p>
                 <motion.div variants={fadeUpItem}>
-                  <a
+                  <DownloadTextLink
                     href={profile.resumeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-6 inline-flex h-[44px] cursor-pointer items-center gap-2 text-[11px] uppercase tracking-label text-ink-label opacity-70 transition-opacity duration-150 hover:text-accent hover:opacity-100"
+                    className="mt-6"
                   >
-                    <Download className="h-3.5 w-3.5" strokeWidth={1.5} />
                     {t.hero.ctaSecondary}
-                  </a>
+                  </DownloadTextLink>
                 </motion.div>
               </div>
             </div>
