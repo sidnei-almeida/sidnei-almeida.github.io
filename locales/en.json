@@ -79,10 +79,8 @@
       "frontend": "Front-End",
       "anomaly": "Anomaly Detection",
       "financial": "Financial Analytics",
-      "dashboards": "Dashboards",
-      "fundamentals": "Python Fundamentals"
+      "dashboards": "Dashboards"
     },
-    "viewExercise": "View exercise",
     "noResults": "No projects found for this filter.",
     "liveDemo": "Live Demo",
     "source": "Source",
@@ -263,15 +261,9 @@
     ]
   },
   "pythonExercise": {
-    "card": {
-      "title": "Order Analysis with Basic Python",
-      "shortDescription": "A guided exercise in pure Python to build an e-commerce order report using lists, dictionaries, loops, and functions.",
-      "category": "Fundamentals / Data",
-      "tags": ["Python", "Fundamentals", "Data", "E-commerce", "Guided Project"]
-    },
     "back": "Back to portfolio",
     "hero": {
-      "label": "Project guide",
+      "label": "Mentoring exercise",
       "title": "Order Analysis with Basic Python",
       "subtitle": "From Runestone to your computer: build a real Python mini-project with VS Code, a virtual environment, terminal, and GitHub.",
       "description": "This guide walks you through creating the project folder, opening VS Code, creating and activating a venv, downloading the .py file, running in the terminal, completing functions, writing a README, and publishing on GitHub.",
