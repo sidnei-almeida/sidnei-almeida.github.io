@@ -6,7 +6,8 @@ export type ProjectFilterCategory =
   | 'frontend'
   | 'anomaly'
   | 'financial'
-  | 'dashboards';
+  | 'dashboards'
+  | 'fundamentals';
 
 export type ProjectFilter = 'all' | ProjectFilterCategory;
 
@@ -22,6 +23,10 @@ export type Project = {
   featured: boolean;
   image: string | null;
   liveDemo: string | null;
+  /** When true, liveDemo is an in-app route (Link) instead of an external URL */
+  liveDemoInternal?: boolean;
+  /** i18n key under projects.* for the primary link label */
+  liveDemoLabelKey?: 'liveDemo' | 'viewExercise';
   github: string | null;
 };
 
@@ -35,6 +40,7 @@ export const PROJECT_FILTERS: { value: ProjectFilter; labelKey: ProjectFilter }[
   { value: 'financial', labelKey: 'financial' },
   { value: 'dashboards', labelKey: 'dashboards' },
   { value: 'frontend', labelKey: 'frontend' },
+  { value: 'fundamentals', labelKey: 'fundamentals' },
 ];
 
 /** Portfolio projects — live demos linked from cards */
@@ -182,6 +188,23 @@ export const projects: Project[] = [
     image: '/assets/projects/rl_portfolio.webp',
     liveDemo: 'https://ai-trading-signals-dashboard.vercel.app/',
     github: 'https://github.com/sidnei-almeida/ai-trading-signals-dashboard',
+  },
+  {
+    id: 'python-orders-exercise',
+    number: 'PY',
+    title: 'Análise de Pedidos com Python Básico',
+    shortDescription:
+      'Exercício guiado em Python puro para gerar um relatório de pedidos de e-commerce usando listas, dicionários, loops e funções.',
+    fullDescription: null,
+    category: 'Fundamentos / Dados',
+    filterCategories: ['fundamentals'],
+    tags: ['Python', 'Fundamentos', 'Dados', 'E-commerce', 'Projeto Guiado'],
+    featured: false,
+    image: null,
+    liveDemo: '/exercises/analise-pedidos-python',
+    liveDemoInternal: true,
+    liveDemoLabelKey: 'viewExercise',
+    github: null,
   },
 ];
 

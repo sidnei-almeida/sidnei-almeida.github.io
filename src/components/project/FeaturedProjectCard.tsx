@@ -1,8 +1,11 @@
+import type { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import type { Project } from '../../data/projects';
 import { interpolate } from '../../i18n/helpers';
 import { useTranslation } from '../../i18n/useTranslation';
+import { localizeProject } from '../../lib/projectLocalization';
 import { cardHoverTransition, fadeUpItem } from '../../lib/motion';
 import { TechBadge } from './TechBadge';
 
@@ -11,11 +14,54 @@ type FeaturedProjectCardProps = {
   animated?: boolean;
 };
 
-export function FeaturedProjectCard({ project, animated = false }: FeaturedProjectCardProps) {
-  const { t } = useTranslation();
+function isInternalPath(href: string) {
+  return href.startsWith('/') && !href.startsWith('//');
+}
 
-  const articleClassName =
-    'group relative isolate grid w-full overflow-hidden bg-panel transition-shadow duration-200 hover:shadow-[0_10px_32px_rgba(0,0,0,0.28)] max-md:min-h-[320px] max-md:grid-rows-[auto_140px] md:h-[200px] md:grid-cols-[1.12fr_0.88fr] lg:h-[212px]';
+export function FeaturedProjectCard({ project: rawProject, animated = false }: FeaturedProjectCardProps) {
+  const { t } = useTranslation();
+  const project = localizeProject(rawProject, t);
+
+  const demoLabel =
+    project.liveDemoLabelKey === 'viewExercise'
+      ? t.projects.viewExercise
+      : t.projects.liveDemo;
+
+  const demoIsInternal = project.liveDemoInternal ?? (project.liveDemo ? isInternalPath(project.liveDemo) : false);
+
+  const articleClassName = project.image
+    ? 'group relative isolate grid w-full overflow-hidden bg-panel transition-shadow duration-200 hover:shadow-[0_10px_32px_rgba(0,0,0,0.28)] max-md:min-h-[320px] max-md:grid-rows-[auto_140px] md:h-[200px] md:grid-cols-[1.12fr_0.88fr] lg:h-[212px]'
+    : 'group relative isolate grid w-full overflow-hidden bg-panel transition-shadow duration-200 hover:shadow-[0_10px_32px_rgba(0,0,0,0.28)] max-md:min-h-[200px] md:h-[200px] md:grid-cols-[1.12fr_0.88fr] lg:h-[212px]';
+
+  const DemoLink = ({
+    className,
+    children,
+    'aria-label': ariaLabel,
+  }: {
+    className: string;
+    children: ReactNode;
+    'aria-label'?: string;
+  }) => {
+    if (!project.liveDemo) return null;
+    if (demoIsInternal) {
+      return (
+        <Link to={project.liveDemo} className={className} aria-label={ariaLabel}>
+          {children}
+        </Link>
+      );
+    }
+    return (
+      <a
+        href={project.liveDemo}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        aria-label={ariaLabel}
+      >
+        {children}
+      </a>
+    );
+  };
 
   const content = (
     <>
@@ -40,7 +86,7 @@ export function FeaturedProjectCard({ project, animated = false }: FeaturedProje
 
         <div className="mt-2 flex min-h-0 flex-col gap-2 md:mt-0">
           <div className="flex flex-wrap gap-1 overflow-hidden">
-            {project.tags.slice(0, 3).map((tag) => (
+            {project.tags.slice(0, 5).map((tag) => (
               <TechBadge key={tag} label={tag} />
             ))}
           </div>
@@ -48,15 +94,12 @@ export function FeaturedProjectCard({ project, animated = false }: FeaturedProje
           {(project.liveDemo || project.github) && (
             <div className="flex items-center gap-4 text-ink-label">
               {project.liveDemo && (
-                <a
-                  href={project.liveDemo}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <DemoLink
                   className="type-mono-link opacity-70 transition-opacity duration-150 hover:text-accent hover:opacity-100"
                   aria-label={interpolate(t.projects.liveDemoAria, { title: project.title })}
                 >
-                  {t.projects.liveDemo}
-                </a>
+                  {demoLabel}
+                </DemoLink>
               )}
               {project.github && (
                 <a
@@ -74,7 +117,7 @@ export function FeaturedProjectCard({ project, animated = false }: FeaturedProje
         </div>
       </div>
 
-      {project.image && (
+      {project.image ? (
         <div className="relative z-0 min-h-0 overflow-hidden border-line max-md:border-t md:border-l md:border-t-0">
           <img
             src={project.image}
@@ -84,6 +127,10 @@ export function FeaturedProjectCard({ project, animated = false }: FeaturedProje
           />
           <div className="pointer-events-none absolute inset-0 z-[1] bg-panel/25" />
         </div>
+      ) : (
+        <div className="relative z-0 flex min-h-0 items-center justify-center overflow-hidden border-line bg-[#0e1011] p-4 font-mono text-[10px] leading-relaxed text-ink-muted max-md:border-t md:border-l md:border-t-0 md:text-[11px]">
+          <span className="opacity-80">pedidos[0][&quot;itens&quot;][0][&quot;produto&quot;]</span>
+        </div>
       )}
 
       <div
@@ -92,15 +139,12 @@ export function FeaturedProjectCard({ project, animated = false }: FeaturedProje
       />
 
       {project.liveDemo && (
-        <a
-          href={project.liveDemo}
-          target="_blank"
-          rel="noopener noreferrer"
+        <DemoLink
           className="absolute bottom-3 right-3 z-40 text-accent/85 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 md:bottom-4 md:right-4"
           aria-label={interpolate(t.projects.openProjectAria, { title: project.title })}
         >
           <ArrowUpRight className="h-3.5 w-3.5 md:h-4 md:w-4" strokeWidth={1.5} />
-        </a>
+        </DemoLink>
       )}
     </>
   );

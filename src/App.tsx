@@ -8,6 +8,7 @@ import { Home } from './pages/Home';
 import { LanguageRedirectPage } from './pages/LanguageRedirectPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ResumePage } from './pages/ResumePage';
+import { PythonOrdersExercisePage } from './pages/PythonOrdersExercisePage';
 import { ResumePrintPage } from './pages/ResumePrintPage';
 
 function AppLayout() {
@@ -36,6 +37,7 @@ function App() {
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/resume" element={<ResumePage />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/exercises/analise-pedidos-python" element={<PythonOrdersExercisePage />} />
           </Route>
         </Routes>
       </I18nProvider>

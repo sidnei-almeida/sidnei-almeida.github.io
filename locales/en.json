@@ -79,8 +79,10 @@
       "frontend": "Front-End",
       "anomaly": "Anomaly Detection",
       "financial": "Financial Analytics",
-      "dashboards": "Dashboards"
+      "dashboards": "Dashboards",
+      "fundamentals": "Python Fundamentals"
     },
+    "viewExercise": "View exercise",
     "noResults": "No projects found for this filter.",
     "liveDemo": "Live Demo",
     "source": "Source",
@@ -175,7 +177,9 @@
     "ariaLabel": "Footer",
     "githubAria": "GitHub",
     "linkedinAria": "LinkedIn",
-    "emailAria": "Email"
+    "emailAria": "Email",
+    "uspEsalq": "USP ESALQ",
+    "uspEsalqAria": "USP ESALQ exercise — Order Analysis with Basic Python"
   },
   "aria": {
     "mainNav": "Main",
@@ -257,5 +261,124 @@
         "description": "Deployed high-precision vision models including a License Plate Recognition system (99.69% precision) and real-time emotion analysis."
       }
     ]
+  },
+  "pythonExercise": {
+    "card": {
+      "title": "Order Analysis with Basic Python",
+      "shortDescription": "A guided exercise in pure Python to build an e-commerce order report using lists, dictionaries, loops, and functions.",
+      "category": "Fundamentals / Data",
+      "tags": ["Python", "Fundamentals", "Data", "E-commerce", "Guided Project"]
+    },
+    "back": "Back to portfolio",
+    "hero": {
+      "label": "Guided exercise",
+      "title": "Order Analysis with Basic Python",
+      "subtitle": "A guided exercise to practice pure Python before moving on to Pandas and data analysis.",
+      "description": "This project simulates a small e-commerce order dataset. Each order has a customer, state, status, and a list of items. Your goal is to complete Python functions that generate a final report in the terminal.",
+      "ctaDownload": "Download exercise .py",
+      "ctaInstructions": "View instructions"
+    },
+    "simulation": {
+      "title": "What does this project simulate?",
+      "intro": "The exercise simulates a simple e-commerce order analysis. The structure is designed to feel like real data while using only basic Python.",
+      "fields": [
+        "order id",
+        "customer",
+        "state",
+        "order status",
+        "item list (product, category, unit price, quantity)"
+      ]
+    },
+    "concepts": {
+      "title": "Concepts practiced",
+      "subtitle": "The exercise combines lessons 01–09 into one analysis workflow.",
+      "items": [
+        "Variables",
+        "Operators",
+        "Strings",
+        "Lists",
+        "Dictionaries",
+        "Lists of dictionaries",
+        "Conditionals",
+        "for loops",
+        "Functions",
+        "Optional parameters",
+        "Code organization",
+        "Formatted terminal output"
+      ]
+    },
+    "dataStructure": {
+      "title": "Data structure",
+      "explanation": [
+        "pedidos is a list.",
+        "Each item in the list is a dictionary.",
+        "Each order has a key called itens.",
+        "itens is also a list of dictionaries.",
+        "This trains multi-level access, for example:"
+      ],
+      "accessExample": "pedidos[0][\"itens\"][0][\"produto\"]"
+    },
+    "encouragement": {
+      "title": "You don't need to get everything right the first time",
+      "body": "If you get stuck on a function, that's okay. The goal of this project isn't to finish quickly—it's to practice reading the data, testing ideas, making mistakes, fixing them, and trying again. That process is part of learning to program."
+    },
+    "closingNote": "What matters isn't a perfect solution on the first try. What matters is keeping at it until the logic starts to click.",
+    "implement": {
+      "title": "What you need to implement",
+      "subtitle": "Complete the functions marked with TODO in the .py file:",
+      "functions": [
+        { "name": "calcular_total_item(item)", "desc": "Computes preco_unitario × quantidade." },
+        { "name": "calcular_total_pedido(pedido)", "desc": "Loops through order items and sums totals." },
+        { "name": "calcular_faturamento_total(lista_pedidos)", "desc": "Sums only orders with status \"entregue\"." },
+        { "name": "contar_pedidos_por_status(lista_pedidos)", "desc": "Counts orders per status." },
+        { "name": "calcular_ticket_medio(lista_pedidos)", "desc": "Total revenue divided by delivered order count." },
+        { "name": "calcular_faturamento_por_categoria(lista_pedidos)", "desc": "Groups revenue by product category." },
+        { "name": "calcular_faturamento_por_estado(lista_pedidos)", "desc": "Groups revenue by customer state." },
+        { "name": "criar_ranking_clientes(lista_pedidos)", "desc": "Ranks customers by spend on delivered orders." },
+        { "name": "listar_pedidos_acima_de(lista_pedidos, valor_minimo=500)", "desc": "Lists delivered orders above the minimum total." },
+        { "name": "gerar_relatorio(lista_pedidos)", "desc": "Builds and prints the full terminal report." }
+      ]
+    },
+    "run": {
+      "title": "How to run",
+      "stepsIntro": "Suggested local setup:",
+      "steps": [
+        "Download or copy analise_pedidos_guiado.py.",
+        "Open it in VS Code, PyCharm, terminal, or your preferred editor.",
+        "Complete the TODO functions.",
+        "Uncomment the line gerar_relatorio(pedidos).",
+        "Run the script in the terminal."
+      ]
+    },
+    "output": {
+      "title": "Expected output example",
+      "subtitle": "Format of the final terminal report (values may vary with the dataset):"
+    },
+    "github": {
+      "title": "Suggested GitHub delivery",
+      "intro": "Create a simple repository and document your solution:",
+      "repoName": "analise-pedidos-python",
+      "readmeItems": [
+        "Project name",
+        "Objective",
+        "Concepts practiced",
+        "How to run",
+        "Sample output",
+        "Learnings"
+      ]
+    },
+    "why": {
+      "title": "Why this exercise matters",
+      "body": "Before using Pandas, it is important to understand how to manipulate data with pure Python. This project performs manually what libraries will simplify later.",
+      "quote": "Before automating with Pandas, understand the logic behind the data."
+    },
+    "cta": {
+      "title": "Ready to practice?",
+      "body": "Download the file, complete the functions, and publish your solution on GitHub.",
+      "download": "Download exercise .py",
+      "back": "Back to portfolio",
+      "github": "View repository on GitHub"
+    },
+    "nextStep": "The next study step will use Pandas to simplify this kind of analysis — this exercise bridges basic Python and data analysis."
   }
 }
