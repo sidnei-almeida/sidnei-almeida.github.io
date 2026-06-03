@@ -37,28 +37,31 @@ Pedido 102 | Carlos Souza | R$ 1200.00
 Pedido 104 | João Pedro | R$ 3290.00
 Pedido 108 | Rafael Alves | R$ 1490.00`;
 
-export const MKDIR_CD = `mkdir analise-pedidos-python
-cd analise-pedidos-python`;
-
-export const VSCODE_OPEN = `code .`;
-
-export const VENV_CREATE = `python -m venv .venv`;
-
-export const VENV_CREATE_LINUX = `python3 -m venv .venv`;
-
-export const ACTIVATE_LINUX = `source .venv/bin/activate`;
-
-export const ACTIVATE_WINDOWS_PS = `.venv\\Scripts\\Activate.ps1`;
-
-export const ACTIVATE_WINDOWS_CMD = `.venv\\Scripts\\activate.bat`;
-
-export const VENV_PROMPT_HINT = `(.venv)`;
-
-export const PROJECT_TREE = `analise-pedidos-python/
+export const PROJECT_TREE_WITH_README = `analise-pedidos-python/
 ├── .venv/
-└── analise_pedidos_guiado.py`;
+├── analise_pedidos_guiado.py
+└── README.md`;
 
-export const RUN_SCRIPT = `python analise_pedidos_guiado.py`;
+export const OS_SETUP_LINUX = `mkdir analise-pedidos-python
+cd analise-pedidos-python
+code .
+python -m venv .venv
+source .venv/bin/activate
+python analise_pedidos_guiado.py`;
+
+export const OS_SETUP_WINDOWS_PS = `mkdir analise-pedidos-python
+cd analise-pedidos-python
+code .
+python -m venv .venv
+.venv\\Scripts\\Activate.ps1
+python analise_pedidos_guiado.py`;
+
+export const OS_SETUP_WINDOWS_CMD = `mkdir analise-pedidos-python
+cd analise-pedidos-python
+code .
+python -m venv .venv
+.venv\\Scripts\\activate.bat
+python analise_pedidos_guiado.py`;
 
 export const TEST_FUNCTION_SNIPPET = `print(calcular_total_item(pedidos[0]["itens"][0]))`;
 
@@ -100,3 +103,11 @@ Cole aqui um exemplo do relatório gerado no terminal.`;
 export const GIT_PUBLISH = `git init
 git add .
 git commit -m "Adiciona projeto de análise de pedidos"`;
+
+export type OsPlatform = 'linux' | 'windows-ps' | 'windows-cmd';
+
+export const OS_SETUP_SCRIPTS: Record<OsPlatform, { code: string; language: string }> = {
+  linux: { code: OS_SETUP_LINUX, language: 'bash' },
+  'windows-ps': { code: OS_SETUP_WINDOWS_PS, language: 'powershell' },
+  'windows-cmd': { code: OS_SETUP_WINDOWS_CMD, language: 'cmd' },
+};

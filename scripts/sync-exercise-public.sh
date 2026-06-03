@@ -2,15 +2,19 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="$ROOT/exercicios_python/analise_pedidos_guiado.py"
-DEST_DIR="$ROOT/public/exercicios_python"
-DEST="$DEST_DIR/analise_pedidos_guiado.py"
 
 if [[ ! -f "$SRC" ]]; then
   echo "sync-exercise-public: arquivo não encontrado: $SRC" >&2
   exit 1
 fi
 
-mkdir -p "$DEST_DIR"
-# Corrige aspas escapadas se o fonte ainda tiver \"\"\"
-sed 's/\\"/"/g' "$SRC" > "$DEST"
-echo "sync-exercise-public: $DEST"
+fix_and_copy() {
+  local dest_dir="$1"
+  local dest="$dest_dir/analise_pedidos_guiado.py"
+  mkdir -p "$dest_dir"
+  sed 's/\\"/"/g' "$SRC" > "$dest"
+  echo "sync-exercise-public: $dest"
+}
+
+fix_and_copy "$ROOT/public/exercise_python"
+fix_and_copy "$ROOT/public/exercicios_python"

@@ -1028,7 +1028,11 @@
   }
 
   .exercise-code-block__bar {
-    @apply flex items-center gap-1.5 border-b border-line px-3 py-2;
+    @apply flex items-center gap-2 border-b border-line px-3 py-2;
+  }
+
+  .exercise-code-block__copy {
+    @apply ml-auto inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.16em] text-ink-muted transition-colors hover:text-accent;
   }
 
   .exercise-code-block__dot {
@@ -1036,7 +1040,7 @@
   }
 
   .exercise-code-block__lang {
-    @apply ml-auto font-mono text-[9px] uppercase tracking-[0.18em] text-ink-muted;
+    @apply font-mono text-[9px] uppercase tracking-[0.18em] text-ink-muted;
   }
 
   .exercise-code-block__pre {
@@ -1125,5 +1129,25 @@
 
   .exercise-download-box {
     @apply flex flex-wrap items-center;
+  }
+
+  .exercise-os-setup__tab {
+    @apply flex min-h-[52px] cursor-pointer items-center justify-center border border-line bg-panel/40 px-3 py-3 text-center transition-colors hover:border-accent/50;
+  }
+
+  .exercise-os-setup__tab--active {
+    @apply border-accent bg-accent text-white shadow-[0_4px_24px_rgba(200,16,46,0.2)];
+  }
+
+  .exercise-os-setup__tab-label {
+    @apply font-mono text-[10px] uppercase leading-snug tracking-[0.14em];
+  }
+
+  .exercise-os-setup__tab--active .exercise-os-setup__tab-label {
+    @apply text-white;
+  }
+
+  .exercise-os-setup__venv {
+    @apply border-l-2 border-l-accent/50 pl-4;
   }
 }

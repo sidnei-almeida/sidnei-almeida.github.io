@@ -58,7 +58,7 @@ export function PythonOrdersExercisePage() {
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink-secondary">{pe.hero.description}</p>
             <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
               <ExerciseDownloadLink>{pe.hero.ctaDownload}</ExerciseDownloadLink>
-              <Button variant="outline" href="#guia-projeto" className="h-[44px] px-6">
+              <Button variant="outline" href="#escolha-os" className="h-[44px] px-6">
                 {pe.hero.ctaInstructions}
               </Button>
             </div>

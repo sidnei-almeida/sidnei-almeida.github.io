@@ -276,7 +276,35 @@
       "subtitle": "From Runestone to your computer: build a real Python mini-project with VS Code, a virtual environment, terminal, and GitHub.",
       "description": "This guide walks you through creating the project folder, opening VS Code, creating and activating a venv, downloading the .py file, running in the terminal, completing functions, writing a README, and publishing on GitHub.",
       "ctaDownload": "Download analise_pedidos_guiado.py",
-      "ctaInstructions": "Start the guide"
+      "ctaInstructions": "Choose your OS"
+    },
+    "osSetup": {
+      "title": "Choose your operating system",
+      "intro": "Before starting the exercise, pick your operating system below. Commands differ slightly between Linux/macOS and Windows, especially when activating the virtual environment.",
+      "venvNote": "Even though this project does not use external libraries, creating a virtual environment is good practice. It isolates the project's Python and prepares you for larger projects later.",
+      "platformTabsAria": "Operating system",
+      "platformLinux": "Linux / macOS",
+      "platformWindowsPs": "Windows PowerShell",
+      "platformWindowsCmd": "Windows CMD",
+      "commandsHint": "Copy and run the commands below in order in your system's terminal:",
+      "commandLegend": [
+        "mkdir creates the project folder.",
+        "cd enters the folder.",
+        "code . opens the folder in VS Code.",
+        "python -m venv .venv creates the virtual environment.",
+        "The activation command depends on your system (see the tab you selected).",
+        "python analise_pedidos_guiado.py runs the project."
+      ],
+      "vscodeNote": "If code . does not work, open VS Code manually and use File > Open Folder to select analise-pedidos-python.",
+      "powershellNote": "If PowerShell blocks virtual environment activation, use the Windows CMD tab with .venv\\Scripts\\activate.bat — or open VS Code and use the integrated terminal set to CMD.",
+      "downloadTitle": "Download the exercise file",
+      "downloadBody": "After creating the folder and virtual environment, download the file and place it inside analise-pedidos-python:",
+      "downloadLabel": "Download analise_pedidos_guiado.py",
+      "treeIntro": "Expected project structure:",
+      "encouragement": "If a command does not work the first time, that's okay. Copy the error, ask for help in your group, and try again. Setting up your environment is part of learning.",
+      "copy": "Copy",
+      "copied": "Copied",
+      "copyAria": "Copy commands to clipboard"
     },
     "simulation": {
       "title": "What does this project simulate?",
@@ -341,42 +369,9 @@
     },
     "projectSetup": {
       "title": "How to create the project on your computer",
-      "intro": "Follow the steps below in order. You will move from the course environment to a real Python project on your machine — with a folder, VS Code, virtual environment, .py file, README, and GitHub publication.",
-      "step1": {
-        "title": "Create the project folder",
-        "body": "Open a terminal and create the main project folder. It will hold the virtual environment, .py file, and README."
-      },
-      "step2": {
-        "title": "Open in VS Code",
-        "body": "With the terminal inside analise-pedidos-python, open the project in VS Code:",
-        "note": "If code . does not work, open VS Code manually and use File > Open Folder to select analise-pedidos-python."
-      },
-      "step3": {
-        "title": "Create the virtual environment",
-        "body": "A virtual environment is an isolated folder for this project's Python. Even though this exercise does not use external libraries, it is good practice to learn this flow early. Inside the project folder, run:",
-        "linuxHint": "On Linux or macOS, if python does not work, use:"
-      },
-      "step4": {
-        "title": "Activate the virtual environment",
-        "body": "Before running the script, activate the environment. Choose the command for your system:",
-        "platformTabsAria": "Operating system",
-        "platformLinux": "Linux / macOS",
-        "platformWindowsPs": "Windows — PowerShell",
-        "platformWindowsCmd": "Windows — CMD",
-        "powershellNote": "If PowerShell blocks activation, run once: Set-ExecutionPolicy -Scope CurrentUser RemoteSigned. To exit later: deactivate.",
-        "activeHint": "When active, the terminal usually shows something like this before the folder path:"
-      },
-      "step5": {
-        "title": "Download the exercise file",
-        "body": "Download the base file and place it inside analise-pedidos-python.",
-        "downloadLabel": "Download analise_pedidos_guiado.py",
-        "afterDownload": "Expected project structure:"
-      },
-      "step6": {
-        "title": "Run the file",
-        "body": "With the virtual environment active and the file in the folder, run:",
-        "note": "At first the script may not show the full report because functions still have pass. That is normal — you will complete them step by step."
-      },
+      "intro": "This guide takes you from the course environment to a real Python project on your machine — folder, VS Code, virtual environment, .py file, README, and GitHub.",
+      "continuedTitle": "After terminal setup",
+      "continuedIntro": "Once the project runs on your computer, continue with the steps below to implement, test, and publish.",
       "step7": {
         "title": "Test one function at a time",
         "body": "You do not need to finish everything at once. After implementing a function, test only that one, for example:",
