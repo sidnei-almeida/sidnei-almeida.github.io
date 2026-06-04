@@ -271,10 +271,12 @@
     "curriculum": {
       "label": "Programa",
       "title": "Módulos do curso",
-      "hint": "Expanda um módulo para ver aulas e projeto final."
+      "hint": "Expanda um módulo para ver aulas, laboratórios ou projeto final."
     },
     "modulePrefix": "Módulo",
     "lessonCountLabel": "{count} aulas",
+    "labCountLabel": "{count} labs disponíveis",
+    "openLab": "Abrir lab",
     "statusAvailable": "DISPONÍVEL",
     "statusComingSoon": "EM BREVE",
     "comingSoonBody": "Este módulo será aberto em breve para alunos matriculados.",
@@ -330,7 +332,41 @@
         }
       },
       {
-        "title": "Pandas & Data Analysis"
+        "title": "Análise de Dados com Colab",
+        "lessons": [
+          {
+            "title": "Exploração e limpeza de dados com Pandas",
+            "description": "Pratique carregar CSVs, inspecionar DataFrames, identificar valores ausentes, converter tipos, tratar dados problemáticos e gerar uma base limpa para análise.",
+            "badge": "COLAB LAB"
+          },
+          {
+            "title": "Análise exploratória e Matplotlib",
+            "description": "Pratique agrupar, filtrar, agregar e visualizar perguntas de negócio com Pandas e Matplotlib usando uma base de vendas limpa.",
+            "badge": "COLAB LAB"
+          },
+          {
+            "title": "Customer churn — EDA e preparação",
+            "description": "Analise uma base de churn de clientes, inspecione a variável alvo, investigue features numéricas e categóricas, limpe TotalCharges e prepare os dados para modelagem.",
+            "badge": "COLAB LAB"
+          },
+          {
+            "title": "Primeiro modelo de classificação com Scikit-learn",
+            "description": "Treine um primeiro modelo de classificação de churn, separe treino/teste, encode variáveis categóricas, avalie previsões, inspecione importância de features e salve o modelo com joblib.",
+            "badge": "ML LAB"
+          }
+        ],
+        "colabGuide": {
+          "title": "Como usar os labs no Colab",
+          "steps": [
+            "Clique no link do lab.",
+            "Abra o notebook no Google Colab.",
+            "Vá em Arquivo > Salvar uma cópia no Drive.",
+            "Trabalhe sempre na sua própria cópia.",
+            "Execute as células em ordem.",
+            "Leia os comentários e complete os exercícios."
+          ],
+          "notice": "Não é necessário instalar nada localmente. Os notebooks rodam direto no navegador pelo Google Colab."
+        }
       },
       {
         "title": "Data Visualization"

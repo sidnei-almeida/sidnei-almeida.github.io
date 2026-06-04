@@ -271,10 +271,12 @@
     "curriculum": {
       "label": "Program",
       "title": "Course modules",
-      "hint": "Expand a module to see lessons and the final project."
+      "hint": "Expand a module to see lessons, labs, or the final project."
     },
     "modulePrefix": "Module",
     "lessonCountLabel": "{count} lessons",
+    "labCountLabel": "{count} labs available",
+    "openLab": "Open lab",
     "statusAvailable": "AVAILABLE",
     "statusComingSoon": "COMING SOON",
     "comingSoonBody": "This module will open soon for enrolled students.",
@@ -330,7 +332,41 @@
         }
       },
       {
-        "title": "Pandas & Data Analysis"
+        "title": "Data Analysis with Colab",
+        "lessons": [
+          {
+            "title": "Pandas data exploration and cleaning",
+            "description": "Practice loading CSV files, inspecting DataFrames, identifying missing values, converting data types, handling messy values, and creating a cleaned dataset for analysis.",
+            "badge": "COLAB LAB"
+          },
+          {
+            "title": "Exploratory analysis and Matplotlib",
+            "description": "Practice grouping, filtering, aggregating, and visualizing business questions with Pandas and Matplotlib using a cleaned sales dataset.",
+            "badge": "COLAB LAB"
+          },
+          {
+            "title": "Customer churn EDA and preparation",
+            "description": "Analyze a customer churn dataset, inspect the target variable, investigate numerical and categorical features, clean TotalCharges, and prepare the data for modeling.",
+            "badge": "COLAB LAB"
+          },
+          {
+            "title": "First classification model with Scikit-learn",
+            "description": "Train a first churn classification model, split train/test data, encode categorical variables, evaluate predictions, inspect feature importance, and save the model with joblib.",
+            "badge": "ML LAB"
+          }
+        ],
+        "colabGuide": {
+          "title": "How to use the Colab labs",
+          "steps": [
+            "Click the lab link.",
+            "Open the notebook in Google Colab.",
+            "Go to File > Save a copy in Drive.",
+            "Work on your own copy.",
+            "Run the cells in order.",
+            "Read the comments and complete the exercises."
+          ],
+          "notice": "No local installation is required. The notebooks run directly in the browser through Google Colab."
+        }
       },
       {
         "title": "Data Visualization"

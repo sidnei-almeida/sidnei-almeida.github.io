@@ -1,7 +1,10 @@
-import { ChevronDown, Lock } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import { mentoriaModule2LabUrls } from '../../data/mentoriaModule2Labs';
 import { mentoriaModules, type MentoriaModuleMeta } from '../../data/mentoriaModules';
 import { useTranslation } from '../../i18n/useTranslation';
 import { Button } from '../ui/Button';
+import { MentoriaColabGuide } from './MentoriaColabGuide';
+import { MentoriaLessonRow } from './MentoriaLessonRow';
 
 type MentoriaModuleAccordionProps = {
   meta: MentoriaModuleMeta;
@@ -18,9 +21,16 @@ export function MentoriaModuleAccordion({ meta, defaultOpen = false }: MentoriaM
   }
   const isAvailable = meta.status === 'available';
   const isComingSoon = !isAvailable;
+  const isLabs = meta.kind === 'labs';
+  const countLabel = isLabs
+    ? m.labCountLabel.replace('{count}', String(meta.lessonCount))
+    : m.lessonCountLabel.replace('{count}', String(meta.lessonCount));
+
+  const labUrls = meta.id === 'modulo-02' ? mentoriaModule2LabUrls : undefined;
 
   return (
     <details
+      id={meta.id}
       className={`mentoria-module group border border-line bg-panel ${isComingSoon ? 'mentoria-module--soon' : ''}`}
       open={defaultOpen}
     >
@@ -36,9 +46,7 @@ export function MentoriaModuleAccordion({ meta, defaultOpen = false }: MentoriaM
         </div>
         <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
           {meta.lessonCount > 0 && (
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-ink-muted">
-              {m.lessonCountLabel.replace('{count}', String(meta.lessonCount))}
-            </span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-ink-muted">{countLabel}</span>
           )}
           <span
             className={`mentoria-module__status font-mono text-[9px] uppercase tracking-[0.18em] ${
@@ -58,27 +66,31 @@ export function MentoriaModuleAccordion({ meta, defaultOpen = false }: MentoriaM
             <ul className="mentoria-lessons space-y-0">
               {content.lessons?.map((lesson, index) => {
                 const num = String(index + 1).padStart(2, '0');
+                const href = labUrls?.[index];
+                const locked = !href && meta.kind === 'lessons';
+                const badge = 'badge' in lesson && lesson.badge ? lesson.badge : m.lockedBadge;
                 return (
-                  <li key={num} className="mentoria-lesson border-t border-line first:border-t-0">
-                    <div className="mentoria-lesson__inner flex flex-col gap-3 py-5 sm:flex-row sm:items-start sm:gap-5">
-                      <span className="mentoria-lesson__num font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
-                        {num}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                          <h3 className="text-base font-medium text-ink-primary">{lesson.title}</h3>
-                          <span className="mentoria-lesson__lock inline-flex items-center gap-1.5 border border-line px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-ink-muted">
-                            <Lock className="h-3 w-3 shrink-0" strokeWidth={1.5} aria-hidden />
-                            {m.lockedBadge}
-                          </span>
-                        </div>
-                        <p className="mt-2 text-sm leading-relaxed text-ink-secondary">{lesson.description}</p>
-                      </div>
-                    </div>
-                  </li>
+                  <MentoriaLessonRow
+                    key={num}
+                    number={num}
+                    title={lesson.title}
+                    description={lesson.description}
+                    badge={badge}
+                    href={href}
+                    openLabel={href ? m.openLab : undefined}
+                    locked={locked}
+                  />
                 );
               })}
             </ul>
+
+            {content.colabGuide && (
+              <MentoriaColabGuide
+                title={content.colabGuide.title}
+                steps={content.colabGuide.steps}
+                notice={content.colabGuide.notice}
+              />
+            )}
 
             {content.finalProject && meta.finalProjectHref && (
               <div className="mentoria-capstone mt-6 border border-line border-l-2 border-l-accent bg-canvas/50 p-5 lg:p-6">
