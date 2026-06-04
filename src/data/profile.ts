@@ -1,3 +1,5 @@
+import { HERO_PORTRAIT } from './criticalAssets';
+
 export const profile = {
   name: 'Sidnei Almeida',
   role: 'AI Engineer & Full-Stack Developer',
@@ -27,7 +29,8 @@ export const profile = {
   huggingFace: 'https://huggingface.co/salmeida',
   // Opens the ATS print view; ?download=1 triggers a direct PDF download
   resumeUrl: '/resume/print?download=1',
-  profileImage: '/assets/profile/novo.png',
+  profileImage: HERO_PORTRAIT.src,
+  profileImageFallback: HERO_PORTRAIT.fallbackSrc,
   aboutImage: '/assets/profile/about.png',
   formspreeEndpoint: 'https://formspree.io/f/xgvnlaow',
 } as const;

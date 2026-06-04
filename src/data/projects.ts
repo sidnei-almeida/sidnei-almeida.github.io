@@ -189,7 +189,7 @@ export const projects: Project[] = [
   },
 ];
 
-/** Optimized WebP paths — keep in sync with index.html preload links */
+/** Optimized WebP paths for project cards (lazy-loaded; not preloaded on home). */
 export const projectImagePreloadPaths = projects
   .map((project) => project.image)
   .filter((image): image is string => image != null);
