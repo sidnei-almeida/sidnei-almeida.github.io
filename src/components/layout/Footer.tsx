@@ -46,9 +46,9 @@ export function Footer() {
                 key={item.href}
                 to={item.href}
                 className="type-footer text-ink-muted transition-colors hover:text-accent"
-                aria-label={t.footer.uspEsalqAria}
+                aria-label={t.footer.mentoriaProgramAria}
               >
-                {t.footer.uspEsalq}
+                {t.footer.mentoriaProgram}
               </Link>
             ))}
           </nav>

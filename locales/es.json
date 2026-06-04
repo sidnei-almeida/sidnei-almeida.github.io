@@ -2,9 +2,9 @@
   "nav": {
     "home": "Inicio",
     "about": "Acerca de",
-    "experience": "Experiencia",
     "projects": "Proyectos",
     "skills": "Habilidades",
+    "mentoria": "Mentoría",
     "resume": "Currículum",
     "contact": "Contacto",
     "letsConnect": "Conectemos"
@@ -176,8 +176,8 @@
     "githubAria": "GitHub",
     "linkedinAria": "LinkedIn",
     "emailAria": "Correo",
-    "uspEsalq": "USP ESALQ",
-    "uspEsalqAria": "Ejercicio USP ESALQ — Análisis de Pedidos con Python Básico"
+    "mentoriaProgram": "Mentoría Python",
+    "mentoriaProgramAria": "Mentoría Python y Datos — Módulo 01"
   },
   "aria": {
     "mainNav": "Principal",
@@ -259,6 +259,88 @@
         "description": "Modelos de visión de alta precisión, incluyendo reconocimiento de placas (99,69% de precisión) y análisis de emociones en tiempo real."
       }
     ]
+  },
+  "mentoria": {
+    "back": "Volver al portafolio",
+    "hero": {
+      "label": "Mentoría",
+      "title": "Python & Data",
+      "subtitle": "Ejercicios prácticos de programación con enfoque en datos. Acceso mediante matrícula.",
+      "notice": "Los ejercicios son accesibles solo para alumnos matriculados. Contacta para participar."
+    },
+    "curriculum": {
+      "label": "Programa",
+      "title": "Módulos del curso",
+      "hint": "Expande un módulo para ver clases y proyecto final."
+    },
+    "modulePrefix": "Módulo",
+    "lessonCountLabel": "{count} clases",
+    "statusAvailable": "DISPONIBLE",
+    "statusComingSoon": "PRÓXIMAMENTE",
+    "comingSoonBody": "Este módulo se abrirá pronto para alumnos matriculados.",
+    "lockedBadge": "RESTRINGIDO",
+    "finalProject": {
+      "label": "Proyecto final"
+    },
+    "modules": [
+      {
+        "title": "Python 3 Programming",
+        "lessons": [
+      {
+        "title": "Variables y print()",
+        "description": "Practicamos variables, valores, tipos básicos y print() en Python. El objetivo es guardar información, mostrar resultados y resolver problemas simples con datos."
+      },
+      {
+        "title": "Entrada de datos y conversión de tipos",
+        "description": "Practicamos input() y conversiones con int() y float(). Todo lo que el usuario escribe llega como texto y debe convertirse para calcular."
+      },
+      {
+        "title": "Operadores y cálculos simples",
+        "description": "Practicamos operadores matemáticos: suma, resta, multiplicación, división, potencia y porcentaje, aplicados a ventas, salarios y costos."
+      },
+      {
+        "title": "Cadenas útiles para datos",
+        "description": "Practicamos strip(), lower(), upper(), title(), split() y replace() para limpiar y transformar textos en bases reales."
+      },
+      {
+        "title": "Condicionales: if, elif y else",
+        "description": "Practicamos reglas de decisión para clasificar valores, validar situaciones y ejecutar acciones según los datos."
+      },
+      {
+        "title": "Listas y tuplas en Python",
+        "description": "Practicamos listas y tuplas, índices, mutabilidad vs inmutabilidad y funciones len(), sum(), max() y min()."
+      },
+      {
+        "title": "Repetición con for y while",
+        "description": "Practicamos for y while: recorrer listas, acumular valores, contar y distinguir iteración de repetición condicional."
+      },
+      {
+        "title": "Diccionarios y listas de diccionarios",
+        "description": "Practicamos datos estructurados: claves, actualización de registros y listas de diccionarios."
+      },
+      {
+        "title": "Funciones en Python",
+        "description": "Practicamos def, parámetros y return; reutilizar código, distinguir print() de return y usar lambda básico."
+      }
+        ],
+        "finalProject": {
+          "title": "Análisis de Pedidos con Python Básico",
+          "description": "Ejercicio de cierre del módulo: análisis simple de pedidos de e-commerce con Python puro. Disponible como mini-proyecto en el portafolio.",
+          "cta": "Ver proyecto"
+        }
+      },
+      {
+        "title": "Pandas & Data Analysis"
+      },
+      {
+        "title": "Data Visualization"
+      }
+    ],
+    "cta": {
+      "title": "¿Quieres participar en la mentoría?",
+      "body": "Los ejercicios forman parte de un curso privado de Python y Datos. Para acceder a Runestone y al grupo de mentoría, ponte en contacto.",
+      "button": "Conectemos"
+    }
   },
   "pythonExercise": {
     "back": "Volver al portafolio",

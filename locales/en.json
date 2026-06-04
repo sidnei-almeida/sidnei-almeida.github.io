@@ -2,9 +2,9 @@
   "nav": {
     "home": "Home",
     "about": "About",
-    "experience": "Experience",
     "projects": "Projects",
     "skills": "Skills",
+    "mentoria": "Mentoring",
     "resume": "Résumé",
     "contact": "Contact",
     "letsConnect": "Let's Connect"
@@ -176,8 +176,8 @@
     "githubAria": "GitHub",
     "linkedinAria": "LinkedIn",
     "emailAria": "Email",
-    "uspEsalq": "USP ESALQ",
-    "uspEsalqAria": "USP ESALQ exercise — Order Analysis with Basic Python"
+    "mentoriaProgram": "Python Mentoring",
+    "mentoriaProgramAria": "Python & Data mentoring — Module 01"
   },
   "aria": {
     "mainNav": "Main",
@@ -259,6 +259,88 @@
         "description": "Deployed high-precision vision models including a License Plate Recognition system (99.69% precision) and real-time emotion analysis."
       }
     ]
+  },
+  "mentoria": {
+    "back": "Back to portfolio",
+    "hero": {
+      "label": "Mentoring",
+      "title": "Python & Data",
+      "subtitle": "Hands-on programming exercises with a data focus. Enrollment required.",
+      "notice": "Lessons are available only to enrolled students. Get in touch to join."
+    },
+    "curriculum": {
+      "label": "Program",
+      "title": "Course modules",
+      "hint": "Expand a module to see lessons and the final project."
+    },
+    "modulePrefix": "Module",
+    "lessonCountLabel": "{count} lessons",
+    "statusAvailable": "AVAILABLE",
+    "statusComingSoon": "COMING SOON",
+    "comingSoonBody": "This module will open soon for enrolled students.",
+    "lockedBadge": "RESTRICTED",
+    "finalProject": {
+      "label": "Final project"
+    },
+    "modules": [
+      {
+        "title": "Python 3 Programming",
+        "lessons": [
+      {
+        "title": "Variables and print()",
+        "description": "Practice variables, values, basic types, and print() in Python. Learn how to store information, display results, and solve small problems with simple data."
+      },
+      {
+        "title": "User input and type conversion",
+        "description": "Practice input() and conversions with int() and float(). Understand that typed values arrive as text and must be converted for numeric work."
+      },
+      {
+        "title": "Operators and simple calculations",
+        "description": "Practice math operators in Python: add, subtract, multiply, divide, power, and percentages. Apply them to everyday data scenarios such as sales, payroll, and costs."
+      },
+      {
+        "title": "Strings for data work",
+        "description": "Practice basic text operations: strip(), lower(), upper(), title(), split(), and replace(). These skills matter when cleaning and standardizing real-world text data."
+      },
+      {
+        "title": "Conditionals: if, elif, and else",
+        "description": "Practice decision rules with if, elif, and else to classify values, validate inputs, and branch logic based on the data you receive."
+      },
+      {
+        "title": "Lists and tuples in Python",
+        "description": "Practice lists and tuples: store multiple values, index elements, compare mutable vs immutable collections, and use len(), sum(), max(), and min()."
+      },
+      {
+        "title": "Loops with for and while",
+        "description": "Practice for and while loops: iterate sequences, repeat actions, build accumulators, count values, and distinguish iteration from condition-driven repetition."
+      },
+      {
+        "title": "Dictionaries and lists of dictionaries",
+        "description": "Practice structured data with dicts and lists of dicts: access by key, update records, add fields, and navigate collections of objects."
+      },
+      {
+        "title": "Functions in Python",
+        "description": "Practice def, parameters, and return. Build reusable blocks, separate print() from return, use optional parameters, and try simple lambda expressions."
+      }
+        ],
+        "finalProject": {
+          "title": "Order Analysis with Basic Python",
+          "description": "End-of-module capstone. A simple e-commerce order report using pure Python — lists, dictionaries, functions, and terminal output. Available as a portfolio mini-project.",
+          "cta": "View project"
+        }
+      },
+      {
+        "title": "Pandas & Data Analysis"
+      },
+      {
+        "title": "Data Visualization"
+      }
+    ],
+    "cta": {
+      "title": "Want to join the mentoring program?",
+      "body": "These exercises are part of a private Python & Data course. To access Runestone lessons and the mentoring group, get in touch.",
+      "button": "Let's connect"
+    }
   },
   "pythonExercise": {
     "back": "Back to portfolio",

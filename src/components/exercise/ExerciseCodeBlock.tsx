@@ -6,9 +6,19 @@ type ExerciseCodeBlockProps = {
   code: string;
   language?: string;
   copyable?: boolean;
+  className?: string;
+  variant?: 'default' | 'terminal';
+  scrollable?: boolean;
 };
 
-export function ExerciseCodeBlock({ code, language = 'python', copyable = true }: ExerciseCodeBlockProps) {
+export function ExerciseCodeBlock({
+  code,
+  language = 'python',
+  copyable = true,
+  className = '',
+  variant = 'default',
+  scrollable = false,
+}: ExerciseCodeBlockProps) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 
@@ -22,15 +32,19 @@ export function ExerciseCodeBlock({ code, language = 'python', copyable = true }
     }
   }, [code]);
 
+  const barLabel = variant === 'terminal' ? 'terminal' : language;
+
   return (
-    <div className="exercise-code-block">
+    <div
+      className={`exercise-code-block ${variant === 'terminal' ? 'exercise-code-block--terminal' : ''} ${scrollable ? 'exercise-code-block--scroll' : ''} ${className}`.trim()}
+    >
       <div className="exercise-code-block__bar">
         <div className="flex items-center gap-1.5" aria-hidden>
           <span className="exercise-code-block__dot" />
           <span className="exercise-code-block__dot" />
           <span className="exercise-code-block__dot" />
         </div>
-        <span className="exercise-code-block__lang">{language}</span>
+        <span className="exercise-code-block__lang">{barLabel}</span>
         {copyable && (
           <button
             type="button"
