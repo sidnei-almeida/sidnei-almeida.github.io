@@ -990,45 +990,196 @@
   }
 
   .exercise-page__inner {
-    @apply w-full pt-8 pb-14 lg:pt-10 lg:pb-16;
+    @apply w-full pt-10 pb-16 lg:pt-14 lg:pb-24;
+  }
+
+  .exercise-back-link {
+    @apply text-[11px] uppercase tracking-label text-ink-label opacity-70 transition-opacity duration-150 hover:text-accent hover:opacity-100;
+  }
+
+  .exercise-hero {
+    @apply carbon-fiber-surface relative border border-line bg-panel px-6 py-10 lg:px-12 lg:py-14;
+  }
+
+  .exercise-hero__title {
+    @apply type-section-heading max-w-4xl text-[clamp(2.25rem,5vw,3.25rem)] leading-[1.08] text-ink-primary;
+  }
+
+  .exercise-hero__subtitle {
+    @apply max-w-[600px] text-base leading-relaxed text-ink-body lg:text-[15px];
+  }
+
+  .exercise-hero__description {
+    @apply max-w-[600px] text-sm leading-relaxed text-ink-secondary;
+  }
+
+  .exercise-hero__actions {
+    @apply flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-3;
+  }
+
+  .exercise-hero__os-btn {
+    @apply h-[44px] shrink-0 px-6;
+  }
+
+  .exercise-hero__divider {
+    @apply mt-10 h-px w-full bg-accent/35 lg:mt-12;
+  }
+
+  .exercise-section {
+    @apply w-full;
+  }
+
+  .exercise-section--alt {
+    @apply -mx-4 border-y border-line bg-canvas-raised px-4 py-12 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 lg:py-16;
   }
 
   .exercise-section + .exercise-section,
   .exercise-hero + .exercise-section,
   .exercise-section + .exercise-cta {
-    @apply mt-10 lg:mt-12;
+    @apply mt-14 lg:mt-20;
+  }
+
+  .exercise-section-header {
+    @apply max-w-4xl;
   }
 
   .exercise-panel {
-    @apply w-full;
+    @apply w-full border border-line bg-panel p-6 lg:p-10 xl:p-12;
   }
 
-  .exercise-list {
-    @apply list-disc space-y-2 pl-5 text-sm leading-relaxed text-ink-body;
+  .exercise-panel--guide {
+    @apply carbon-fiber-surface;
+  }
+
+  .exercise-panel--quote {
+    @apply carbon-fiber-surface;
+  }
+
+  .exercise-project-guide {
+    @apply mt-8;
+  }
+
+  .exercise-project-guide__continued {
+    @apply mt-14 border-t border-line pt-14 lg:mt-16 lg:pt-16;
+  }
+
+  .exercise-continued-heading {
+    @apply text-[clamp(1.35rem,2.8vw,1.75rem)] font-light leading-snug tracking-tight text-ink-primary;
+  }
+
+  .exercise-os-setup {
+    @apply mt-10;
+  }
+
+  .exercise-os-setup__heading {
+    @apply flex items-center gap-3 text-[clamp(1.2rem,2.4vw,1.5rem)] font-light leading-snug text-ink-primary;
+  }
+
+  .exercise-os-setup__heading::before {
+    content: '';
+    @apply inline-block h-px w-5 shrink-0 bg-accent;
+  }
+
+  .exercise-os-setup__picker {
+    @apply flex gap-2 overflow-x-auto pb-1 sm:grid sm:grid-cols-3 sm:overflow-visible;
+  }
+
+  .exercise-os-setup__tab {
+    @apply flex min-h-[52px] min-w-[9.5rem] shrink-0 cursor-pointer items-center justify-center border border-line bg-[#1a1a1a] px-3 py-3 text-center transition-colors hover:border-accent/50 sm:min-w-0;
+  }
+
+  .exercise-os-setup__tab--active {
+    @apply border-accent bg-accent text-white shadow-[0_4px_24px_rgba(227,52,47,0.22)];
+  }
+
+  .exercise-os-setup__tab-label {
+    @apply font-mono text-[10px] uppercase leading-snug tracking-[0.14em] text-ink-muted;
+  }
+
+  .exercise-os-setup__tab--active .exercise-os-setup__tab-label {
+    @apply text-white;
+  }
+
+  .exercise-note-callout {
+    @apply max-w-3xl border-l-[3px] border-l-accent bg-panel-raised/80 py-4 pl-5 pr-4 text-sm leading-[1.7] text-ink-secondary;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .exercise-download-card {
+    @apply max-w-3xl border border-line bg-[#0f0f0f] p-6 lg:p-8;
+  }
+
+  .exercise-download-card__title {
+    @apply text-base font-medium text-ink-primary;
+  }
+
+  .exercise-download-card__body {
+    @apply text-sm leading-relaxed text-ink-secondary;
+  }
+
+  .exercise-download-card__action {
+    @apply border-t border-line/60 pt-5;
+  }
+
+  .exercise-tree-block {
+    @apply max-w-md;
+  }
+
+  .exercise-def-list {
+    @apply divide-y divide-line/80;
+  }
+
+  .exercise-def-list li {
+    @apply flex gap-3 py-3 text-sm leading-relaxed text-ink-secondary first:pt-0 last:pb-0;
+  }
+
+  .exercise-def-list li::before {
+    content: '•';
+    @apply shrink-0 font-mono text-accent;
+  }
+
+  .exercise-field-pills {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .exercise-field-pills__tag {
+    @apply inline-block rounded border border-line bg-panel/60 px-3 py-1.5 font-mono text-[11px] leading-none tracking-[0.06em] text-ink-primary;
   }
 
   .exercise-concept-grid {
-    @apply grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3;
+    @apply grid grid-cols-1 gap-px overflow-hidden rounded border border-line bg-line sm:grid-cols-2 lg:grid-cols-3;
   }
 
   .exercise-concept-card {
-    @apply flex items-center gap-3;
+    @apply flex items-start gap-3 bg-panel px-4 py-4 transition-colors duration-200 hover:bg-[#1a1a1a];
   }
 
   .exercise-concept-card__index {
-    @apply shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-accent;
+    @apply shrink-0 font-mono text-[10px] uppercase tracking-[0.2em] text-accent/55 transition-colors duration-200;
+  }
+
+  .exercise-concept-card:hover .exercise-concept-card__index {
+    @apply text-accent;
   }
 
   .exercise-concept-card__label {
-    @apply text-sm text-ink-primary;
+    @apply pt-0.5 text-sm font-medium text-ink-primary;
   }
 
   .exercise-code-block {
-    @apply overflow-hidden rounded border border-line bg-[#0e1011];
+    @apply overflow-hidden rounded border border-line bg-[#141414];
+  }
+
+  .exercise-code-block--terminal .exercise-code-block__lang {
+    @apply text-accent/80;
+  }
+
+  .exercise-code-block--scroll .exercise-code-block__pre {
+    @apply max-h-[min(420px,55vh)] overflow-y-auto;
   }
 
   .exercise-code-block__bar {
-    @apply flex items-center gap-2 border-b border-line px-3 py-2;
+    @apply flex items-center gap-2 border-b border-line bg-[#111315] px-3 py-2.5;
   }
 
   .exercise-code-block__copy {
@@ -1044,110 +1195,216 @@
   }
 
   .exercise-code-block__pre {
-    @apply overflow-x-auto p-4 font-mono text-[12px] leading-[1.65] text-ink-body;
+    @apply overflow-x-auto p-4 font-mono text-[12px] leading-[1.6] text-ink-body;
+  }
+
+  .exercise-inline-code {
+    @apply rounded-sm bg-panel-elevated px-1.5 py-0.5 font-mono text-[12px] text-ink-bright;
+  }
+
+  .exercise-inline-code--accent {
+    @apply bg-accent/10 text-accent;
+  }
+
+  .exercise-steps-stack {
+    @apply flex flex-col gap-6 lg:gap-8;
+  }
+
+  .exercise-step-card {
+    @apply relative overflow-hidden border border-line bg-panel-raised/90 p-6 lg:p-8;
+  }
+
+  .exercise-step-card__watermark {
+    @apply pointer-events-none absolute -right-2 top-2 select-none font-mono text-[clamp(4rem,12vw,7rem)] font-light leading-none tracking-tighter text-accent/[0.07];
+  }
+
+  .exercise-step-card__header {
+    @apply relative z-[1] flex items-start gap-4;
+  }
+
+  .exercise-step-card__num {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center border border-accent/40 bg-canvas/80 font-mono text-[1.05rem] text-accent;
+  }
+
+  .exercise-step-card__title {
+    @apply pt-1.5 text-[clamp(1.1rem,2vw,1.35rem)] font-medium leading-snug text-ink-primary;
+  }
+
+  .exercise-step-card__body {
+    @apply relative z-[1] mt-6;
+  }
+
+  .exercise-step-card__prose {
+    @apply text-sm leading-relaxed text-ink-secondary;
+  }
+
+  .exercise-step-card__note {
+    @apply text-sm leading-relaxed text-ink-muted;
+  }
+
+  .exercise-before-after {
+    @apply grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-stretch md:gap-3;
+  }
+
+  .exercise-before-after__panel {
+    @apply flex min-w-0 flex-col;
+  }
+
+  .exercise-before-after__label {
+    @apply mb-3 font-mono text-[10px] uppercase tracking-[0.2em];
+  }
+
+  .exercise-before-after__label--muted {
+    @apply text-ink-muted;
+  }
+
+  .exercise-before-after__label--active {
+    @apply text-ink-primary;
+  }
+
+  .exercise-before-after__separator {
+    @apply flex items-center justify-center py-2 md:py-0 md:pt-10;
+  }
+
+  .exercise-before-after__code {
+    @apply h-full min-h-[12rem] md:min-h-[14rem];
+  }
+
+  .exercise-before-after__code .exercise-code-block,
+  .exercise-before-after__code .exercise-code-block__pre {
+    @apply h-full min-h-[inherit];
   }
 
   .exercise-checklist {
-    @apply space-y-4;
+    @apply divide-y divide-line/70;
   }
 
   .exercise-checklist__item {
-    @apply flex gap-3 border-t border-line pt-4 first:border-t-0 first:pt-0;
+    @apply flex gap-4 py-5 first:pt-0 last:pb-0;
   }
 
   .exercise-checklist__icon {
-    @apply mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded border border-accent/40 text-accent;
+    @apply mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded border border-accent/40 text-accent;
   }
 
   .exercise-checklist__fn {
-    @apply font-mono text-[13px] text-ink-bright;
+    @apply block font-mono text-[14px] leading-snug text-ink-bright;
   }
 
   .exercise-checklist__desc {
-    @apply mt-1 text-sm leading-relaxed text-ink-secondary;
+    @apply mt-2 text-sm leading-relaxed text-ink-secondary;
   }
 
-  .exercise-steps {
-    @apply space-y-3;
+  .exercise-highlight-callout {
+    @apply border-l-[3px] border-l-accent bg-[#120808] px-6 py-8 lg:px-10 lg:py-10;
+    border-radius: 0 4px 4px 0;
   }
 
-  .exercise-steps li {
-    @apply flex gap-3 text-sm leading-relaxed text-ink-body;
+  .exercise-highlight-callout__title {
+    @apply text-[clamp(1.2rem,2.5vw,1.5rem)] font-medium leading-snug text-ink-primary;
   }
 
-  .exercise-steps__num {
-    @apply flex h-6 w-6 shrink-0 items-center justify-center border border-line font-mono text-[10px] text-accent;
+  .exercise-highlight-callout__body {
+    @apply mt-4 max-w-3xl text-sm leading-[1.75] text-ink-secondary lg:text-[15px];
   }
 
   .exercise-quote {
-    @apply border-l-2 border-accent pl-4 text-base italic leading-relaxed text-ink-primary;
+    @apply max-w-3xl border-l-[3px] border-accent py-2 pl-6 text-[clamp(1.05rem,2vw,1.25rem)] italic leading-relaxed text-ink-primary;
   }
 
-  .exercise-callout {
-    @apply relative border-l-2 border-l-accent/70;
-  }
-
-  .exercise-callout__title {
-    @apply text-base font-medium tracking-tight text-ink-primary lg:text-[1.05rem];
-  }
-
-  .exercise-callout__body {
-    @apply max-w-3xl text-sm leading-[1.7] text-ink-secondary;
+  .exercise-forward-note {
+    @apply max-w-3xl text-sm leading-relaxed text-ink-muted;
   }
 
   .exercise-closing-note {
     @apply text-sm leading-relaxed text-ink-muted;
   }
 
-  .exercise-run-guide__venv-intro {
-    @apply text-sm leading-[1.7] text-ink-secondary;
+  .exercise-cta {
+    @apply border border-line bg-panel px-6 py-12 text-center lg:px-12 lg:py-16;
   }
 
-  .exercise-platform-tabs__btn {
-    @apply cursor-pointer rounded border border-line bg-transparent px-3 py-1.5 font-mono text-[10px] uppercase tracking-[2px] text-ink-muted transition-colors hover:border-accent/60 hover:text-accent;
+  .exercise-cta__title {
+    @apply type-section-heading text-[clamp(1.75rem,4vw,2.75rem)] text-ink-primary;
   }
 
-  .exercise-platform-tabs__btn--active {
-    @apply border-accent bg-accent text-white hover:border-accent hover:text-white;
+  .exercise-cta__body {
+    @apply mx-auto mt-5 max-w-lg text-base leading-relaxed text-ink-body;
   }
 
-  .exercise-panel--guide {
-    @apply w-full;
+  .exercise-cta .exercise-closing-note {
+    @apply mx-auto mt-5 max-w-xl;
   }
 
-  .exercise-step-card__header {
-    @apply flex items-start gap-4;
+  .exercise-cta__actions {
+    @apply mt-10 flex flex-col items-center gap-4 sm:gap-5;
   }
 
-  .exercise-step-card__num {
-    @apply flex h-9 w-9 shrink-0 items-center justify-center border border-line font-mono text-[11px] text-accent;
+  .exercise-cta__download-primary {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-btn border border-accent bg-accent/10 px-7 text-[11px] uppercase tracking-label text-ink-primary opacity-100 transition-colors duration-300 hover:bg-accent/20 hover:text-accent;
   }
 
-  .exercise-step-card__title {
-    @apply pt-1 text-base font-medium leading-snug text-ink-primary lg:text-[1.05rem];
+  .exercise-cta__back {
+    @apply inline-flex items-center gap-2 text-[11px] uppercase tracking-label text-ink-label opacity-70 transition-opacity duration-150 hover:text-accent hover:opacity-100;
   }
 
-  .exercise-download-box {
-    @apply flex flex-wrap items-center;
+  .mentoria-page {
+    @apply flex w-full flex-1 flex-col bg-canvas;
   }
 
-  .exercise-os-setup__tab {
-    @apply flex min-h-[52px] cursor-pointer items-center justify-center border border-line bg-panel/40 px-3 py-3 text-center transition-colors hover:border-accent/50;
+  .mentoria-page__inner {
+    @apply w-full pt-8 pb-14 lg:pt-10 lg:pb-16;
   }
 
-  .exercise-os-setup__tab--active {
-    @apply border-accent bg-accent text-white shadow-[0_4px_24px_rgba(200,16,46,0.2)];
+  .mentoria-section + .mentoria-section {
+    @apply mt-0;
   }
 
-  .exercise-os-setup__tab-label {
-    @apply font-mono text-[10px] uppercase leading-snug tracking-[0.14em];
+  .mentoria-hero + .mentoria-section {
+    @apply mt-10 lg:mt-12;
   }
 
-  .exercise-os-setup__tab--active .exercise-os-setup__tab-label {
-    @apply text-white;
+  .mentoria-notice {
+    @apply border-l-accent;
   }
 
-  .exercise-os-setup__venv {
-    @apply border-l-2 border-l-accent/50 pl-4;
+  .mentoria-lesson__num {
+    @apply w-8 shrink-0 sm:pt-0.5;
+  }
+
+  .mentoria-lesson__lock {
+    @apply bg-panel/40;
+  }
+
+  .mentoria-capstone {
+    @apply border-l-accent;
+  }
+
+  .mentoria-module {
+    @apply transition-opacity duration-200;
+  }
+
+  .mentoria-module--soon {
+    @apply opacity-[0.42];
+  }
+
+  .mentoria-module--soon .mentoria-module__summary {
+    @apply cursor-default;
+  }
+
+  .mentoria-module__summary {
+    @apply outline-none;
+  }
+
+  .mentoria-module__summary:focus-visible {
+    @apply ring-1 ring-accent ring-offset-2 ring-offset-canvas;
+  }
+
+  .mentoria-module__body {
+    @apply bg-canvas/40;
+  }
+
+  .mentoria-modules .mentoria-module + .mentoria-module {
+    @apply mt-0;
   }
 }

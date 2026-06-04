@@ -6,7 +6,6 @@ export const HOME_SECTION_IDS = [
   'projects',
   'skills',
   'about',
-  'experience',
   'contact',
 ] as const;
 

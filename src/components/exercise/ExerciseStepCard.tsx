@@ -7,15 +7,20 @@ type ExerciseStepCardProps = {
 };
 
 export function ExerciseStepCard({ number, title, children }: ExerciseStepCardProps) {
+  const numLabel = String(number).padStart(2, '0');
+
   return (
-    <article className="exercise-step-card border border-line bg-panel/60 p-5 lg:p-6">
+    <article className="exercise-step-card">
+      <span className="exercise-step-card__watermark" aria-hidden>
+        {numLabel}
+      </span>
       <div className="exercise-step-card__header">
         <span className="exercise-step-card__num" aria-hidden>
-          {String(number).padStart(2, '0')}
+          {numLabel}
         </span>
         <h3 className="exercise-step-card__title">{title}</h3>
       </div>
-      <div className="exercise-step-card__body mt-4">{children}</div>
+      <div className="exercise-step-card__body">{children}</div>
     </article>
   );
 }

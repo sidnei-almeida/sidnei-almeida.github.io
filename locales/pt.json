@@ -2,9 +2,9 @@
   "nav": {
     "home": "Início",
     "about": "Sobre",
-    "experience": "Experiência",
     "projects": "Projetos",
     "skills": "Competências",
+    "mentoria": "Mentoria",
     "resume": "Currículo",
     "contact": "Contato",
     "letsConnect": "Vamos Conversar"
@@ -176,8 +176,8 @@
     "githubAria": "GitHub",
     "linkedinAria": "LinkedIn",
     "emailAria": "E-mail",
-    "uspEsalq": "USP ESALQ",
-    "uspEsalqAria": "Exercício USP ESALQ — Análise de Pedidos com Python Básico"
+    "mentoriaProgram": "Mentoria Python",
+    "mentoriaProgramAria": "Mentoria Python e Dados — Módulo 01"
   },
   "aria": {
     "mainNav": "Principal",
@@ -259,6 +259,88 @@
         "description": "Modelos de visão de alta precisão, incluindo reconhecimento de placas (99,69% de precisão) e análise de emoções em tempo real."
       }
     ]
+  },
+  "mentoria": {
+    "back": "Voltar ao portfólio",
+    "hero": {
+      "label": "Mentoria",
+      "title": "Python & Data",
+      "subtitle": "Exercícios práticos de programação com foco em dados. Acesso mediante matrícula.",
+      "notice": "Os exercícios são acessíveis apenas para alunos matriculados. Entre em contato para participar."
+    },
+    "curriculum": {
+      "label": "Programa",
+      "title": "Módulos do curso",
+      "hint": "Expanda um módulo para ver aulas e projeto final."
+    },
+    "modulePrefix": "Módulo",
+    "lessonCountLabel": "{count} aulas",
+    "statusAvailable": "DISPONÍVEL",
+    "statusComingSoon": "EM BREVE",
+    "comingSoonBody": "Este módulo será aberto em breve para alunos matriculados.",
+    "lockedBadge": "RESTRITO",
+    "finalProject": {
+      "label": "Projeto final"
+    },
+    "modules": [
+      {
+        "title": "Python 3 Programming",
+        "lessons": [
+      {
+        "title": "Variáveis e print()",
+        "description": "Nesta atividade, vamos praticar variáveis, valores, tipos básicos e o uso de print() em Python. O objetivo é entender como guardar informações em variáveis, mostrar resultados na tela e resolver pequenos problemas com dados simples."
+      },
+      {
+        "title": "Entrada de dados e conversão de tipos",
+        "description": "Nesta atividade, vamos praticar entrada de dados com input() e conversão de tipos com int() e float(). O objetivo é entender que todo valor digitado pelo usuário chega como texto e precisa ser convertido quando queremos fazer cálculos."
+      },
+      {
+        "title": "Operadores e cálculos simples",
+        "description": "Nesta atividade, vamos praticar operadores matemáticos em Python, como soma, subtração, multiplicação, divisão, potência e porcentagem. O objetivo é usar Python para resolver pequenos cálculos comuns em situações de dados, vendas, salários e custos."
+      },
+      {
+        "title": "Strings úteis para dados",
+        "description": "Nesta atividade, vamos praticar operações básicas com textos em Python. O objetivo é aprender a limpar, padronizar, separar e transformar strings, usando métodos como strip(), lower(), upper(), title(), split() e replace(). Esses recursos são importantes para trabalhar com dados textuais em cadastros, vendas, clientes e bases reais."
+      },
+      {
+        "title": "Condicionais: if, elif e else",
+        "description": "Nesta atividade, vamos praticar estruturas condicionais em Python usando if, elif e else. O objetivo é aprender a criar regras de decisão para classificar valores, validar situações e executar ações diferentes dependendo dos dados informados."
+      },
+      {
+        "title": "Listas e tuplas em Python",
+        "description": "Nesta atividade, vamos praticar listas e tuplas em Python. O objetivo é entender como guardar vários valores em uma única variável, acessar elementos por índice e diferenciar coleções mutáveis, como listas, de coleções imutáveis, como tuplas. Também vamos usar funções básicas como len(), sum(), max() e min()."
+      },
+      {
+        "title": "Repetição com for e while",
+        "description": "Nesta atividade, vamos praticar estruturas de repetição em Python usando for e while. O objetivo é aprender a percorrer listas, repetir ações, criar acumuladores, contar valores e entender a diferença entre repetir para cada item de uma sequência e repetir enquanto uma condição for verdadeira."
+      },
+      {
+        "title": "Dicionários e listas de dicionários",
+        "description": "Nesta atividade, vamos praticar dicionários e listas de dicionários em Python. O objetivo é entender como representar dados estruturados, acessar valores por chave, atualizar informações, adicionar novas chaves e navegar por listas que contêm vários dicionários."
+      },
+      {
+        "title": "Funções em Python",
+        "description": "Nesta atividade, vamos praticar funções em Python usando def, parâmetros e return. O objetivo é entender como criar blocos de código reutilizáveis, diferenciar print() de return, usar parâmetros obrigatórios e opcionais e conhecer o uso básico de lambda para criar funções simples em uma linha."
+      }
+        ],
+        "finalProject": {
+          "title": "Análise de Pedidos com Python Básico",
+          "description": "Exercício prático de fim de módulo. Simula uma análise simples de pedidos de e-commerce usando Python puro — listas, dicionários, funções e formatação de terminal. Disponível como mini-projeto no portfólio.",
+          "cta": "Ver projeto"
+        }
+      },
+      {
+        "title": "Pandas & Data Analysis"
+      },
+      {
+        "title": "Data Visualization"
+      }
+    ],
+    "cta": {
+      "title": "Quer participar da mentoria?",
+      "body": "Os exercícios são parte de um curso particular de Python e Dados. Para ter acesso às aulas no Runestone e ao grupo de mentoria, entre em contato.",
+      "button": "Vamos conversar"
+    }
   },
   "pythonExercise": {
     "back": "Voltar ao portfólio",

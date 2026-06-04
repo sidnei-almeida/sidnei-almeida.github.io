@@ -21,15 +21,15 @@ export function ExerciseOsSetup() {
   const script = OS_SETUP_SCRIPTS[platform];
 
   return (
-    <div id="escolha-os" className="exercise-os-setup mt-8">
-      <h3 className="type-subsection-heading text-ink-primary">{os.title}</h3>
+    <div id="escolha-os" className="exercise-os-setup">
+      <h3 className="exercise-os-setup__heading">{os.title}</h3>
       <p className="section-body mt-3 max-w-3xl">{os.intro}</p>
-      <p className="exercise-os-setup__venv mt-4 max-w-3xl text-sm leading-relaxed text-ink-secondary">
-        {os.venvNote}
-      </p>
+      <aside className="exercise-note-callout mt-6">
+        <p>{os.venvNote}</p>
+      </aside>
 
       <div
-        className="exercise-os-setup__picker mt-6 grid gap-2 sm:grid-cols-3"
+        className="exercise-os-setup__picker mt-8"
         role="tablist"
         aria-label={os.platformTabsAria}
       >
@@ -57,46 +57,43 @@ export function ExerciseOsSetup() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.2 }}
-          className="mt-5"
+          className="mt-6"
         >
-          <p className="mb-3 text-sm text-ink-muted">{os.commandsHint}</p>
+          <p className="mb-4 text-sm text-ink-muted">{os.commandsHint}</p>
           <ExerciseCodeBlock code={script.code} language={script.language} />
 
-          <ul className="exercise-os-setup__legend mt-5 space-y-2">
+          <ul className="exercise-def-list mt-6">
             {os.commandLegend.map((line) => (
-              <li key={line} className="flex gap-2 text-sm leading-relaxed text-ink-secondary">
-                <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden />
-                {line}
-              </li>
+              <li key={line}>{line}</li>
             ))}
           </ul>
         </motion.div>
       </AnimatePresence>
 
-      <aside className="exercise-os-setup__note mt-6 border border-line bg-panel/50 p-4 lg:p-5">
-        <p className="text-sm leading-relaxed text-ink-secondary">{os.vscodeNote}</p>
+      <aside className="exercise-note-callout mt-8">
+        <p>{os.vscodeNote}</p>
       </aside>
 
       {platform === 'windows-ps' && (
-        <aside className="exercise-os-setup__note mt-4 border-l-2 border-l-accent/70 bg-panel/40 p-4 lg:p-5">
-          <p className="text-sm leading-relaxed text-ink-secondary">{os.powershellNote}</p>
+        <aside className="exercise-note-callout mt-4">
+          <p>{os.powershellNote}</p>
         </aside>
       )}
 
-      <div className="mt-8">
-        <p className="text-sm font-medium text-ink-primary">{os.downloadTitle}</p>
-        <p className="mt-2 text-sm text-ink-secondary">{os.downloadBody}</p>
-        <div className="exercise-download-box mt-4 border border-line bg-[#0e1011] p-5">
+      <div className="exercise-download-card mt-12">
+        <p className="exercise-download-card__title">{os.downloadTitle}</p>
+        <p className="exercise-download-card__body mt-2">{os.downloadBody}</p>
+        <div className="exercise-download-card__action mt-5">
           <ExerciseDownloadLink>{os.downloadLabel}</ExerciseDownloadLink>
         </div>
-        <p className="mt-4 text-sm text-ink-secondary">{os.treeIntro}</p>
-        <div className="mt-3">
+        <p className="exercise-download-card__body mt-6">{os.treeIntro}</p>
+        <div className="exercise-tree-block mt-4">
           <ExerciseCodeBlock code={PROJECT_TREE_WITH_README} language="text" copyable={false} />
         </div>
       </div>
 
-      <aside className="exercise-callout mt-8 border border-line bg-panel/80 p-5 lg:p-6">
-        <p className="text-sm leading-relaxed text-ink-secondary">{os.encouragement}</p>
+      <aside className="exercise-note-callout mt-8">
+        <p>{os.encouragement}</p>
       </aside>
     </div>
   );

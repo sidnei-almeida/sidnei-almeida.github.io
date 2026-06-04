@@ -73,6 +73,10 @@ export function Navbar() {
       return true;
     }
 
+    if (href === '/mentoria' && pathname === '/mentoria') {
+      return true;
+    }
+
     if (!isHome) {
       return false;
     }
