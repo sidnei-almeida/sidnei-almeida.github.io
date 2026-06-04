@@ -62,7 +62,10 @@ export function MentoriaPage() {
             <div className="mentoria-modules space-y-3">
               {mentoriaModules.map((meta, index) => (
                 <motion.div key={meta.id} variants={fadeUpItem}>
-                  <MentoriaModuleAccordion meta={meta} defaultOpen={index === 0 && meta.status === 'available'} />
+                  <MentoriaModuleAccordion
+                    meta={meta}
+                    defaultOpen={index === 0 && meta.status === 'available' && meta.kind === 'lessons'}
+                  />
                 </motion.div>
               ))}
             </div>

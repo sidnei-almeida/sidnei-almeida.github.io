@@ -1376,6 +1376,14 @@
     @apply bg-panel/40;
   }
 
+  .mentoria-lesson__open {
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent;
+  }
+
+  .mentoria-colab-guide__num {
+    @apply w-7 shrink-0;
+  }
+
   .mentoria-capstone {
     @apply border-l-accent;
   }
@@ -1407,4 +1415,5 @@
   .mentoria-modules .mentoria-module + .mentoria-module {
     @apply mt-0;
   }
+
 }
