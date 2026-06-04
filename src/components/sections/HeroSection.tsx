@@ -1,6 +1,7 @@
 import { Globe, MapPin } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { profile } from '../../data/profile';
+import { HeroPortrait } from './HeroPortrait';
 import {
   heroBodyVariant,
   heroCtaVariant,
@@ -120,11 +121,7 @@ export function HeroSection({ compactFoot = false }: { compactFoot?: boolean }) 
             className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-panel-elevated to-transparent"
             aria-hidden
           />
-          <img
-            src={profile.profileImage}
-            alt={t.hero.portraitAlt}
-            className="relative z-[1] h-full w-full object-contain object-bottom"
-          />
+          <HeroPortrait alt={t.hero.portraitAlt} />
         </motion.div>
 
         <motion.aside
