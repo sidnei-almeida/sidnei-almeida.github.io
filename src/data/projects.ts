@@ -187,6 +187,22 @@ export const projects: Project[] = [
     liveDemo: 'https://ai-trading-signals-dashboard.vercel.app/',
     github: 'https://github.com/sidnei-almeida/ai-trading-signals-dashboard',
   },
+  {
+    id: 'roadvision',
+    number: '10',
+    title: 'RoadVision AI — YOLO Traffic Sign Detection',
+    shortDescription:
+      'YOLOv8 traffic sign detection console for Brazilian road scenes — lights, stops, speed limits and crosswalks.',
+    fullDescription:
+      'RoadVision AI is a computer vision detection console built around a custom Ultralytics YOLO model served through FastAPI. Upload street-scene images and inspect bounding boxes, class labels, confidence scores, annotated frames, and inference latency. The project covers the full workflow from dataset prep and YOLO training to a production-style API and a dark operations dashboard wired to live inference.',
+    category: 'Computer Vision',
+    filterCategories: ['cv', 'dashboards'],
+    tags: ['React', 'YOLOv8', 'FastAPI', 'OpenCV'],
+    featured: false,
+    image: '/assets/projects/roadsign.webp',
+    liveDemo: 'https://roadvision-yolo-detection-console.vercel.app/',
+    github: 'https://github.com/sidnei-almeida/road_sign_detection_yolo',
+  },
 ];
 
 /** Optimized WebP paths for project cards (lazy-loaded; not preloaded on home). */
