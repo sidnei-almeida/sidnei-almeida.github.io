@@ -10,7 +10,7 @@
 
 <img src="./assets/readme/wave-soft.svg" width="80%" alt=""/>
 
-<img src="https://readme-typing-svg.herokuapp.com/?font=Inter&weight=500&size=15&duration=5200&pause=3400&color=79C0FF&center=true&vCenter=true&width=820&height=28&lines=Production-grade+ML+systems%2C+computer+vision%2C+RAG+and+quant+dashboards.;Nine+hosted+demos+on+Vercel+—+model%2C+API%2C+UI+and+deployment." alt="Portfolio summary"/>
+<img src="https://readme-typing-svg.herokuapp.com/?font=Inter&weight=500&size=15&duration=5200&pause=3400&color=79C0FF&center=true&vCenter=true&width=820&height=28&lines=Production-grade+ML+systems%2C+computer+vision%2C+RAG+and+quant+dashboards.;Ten+hosted+demos+on+Vercel+—+model%2C+API%2C+UI+and+deployment." alt="Portfolio summary"/>
 
 <sub>Source for <a href="https://sidnei-almeida.github.io/">sidnei-almeida.github.io</a> — ThinkPad-inspired dark UI, project grid, resume export, and guided Python exercise.</sub>
 
@@ -287,6 +287,26 @@ Research workspace: arXiv, web tools, multi-chat memory and tool-aware Groq resp
 PPO allocation, paper trading, risk guardrails and market replay (no live broker).
 
 [**Repository**](https://github.com/sidnei-almeida/ai-trading-signals-dashboard) · [**Live demo**](https://ai-trading-signals-dashboard.vercel.app/)
+
+</div></div>
+
+<div style="display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;margin:18px 0;padding:16px 18px;border-radius:12px;border:1px solid #30363d;background:linear-gradient(145deg,rgba(227,52,47,0.08),rgba(22,27,34,0.35));border-left:4px solid #e3342f;">
+
+<img src="./public/assets/projects/roadsign.webp" alt="RoadVision AI" width="252" style="border-radius:10px;border:1px solid rgba(227,52,47,0.45);max-width:100%;"/>
+
+<div style="flex:1;min-width:260px;">
+
+### RoadVision AI · YOLO Traffic Sign Detection
+
+<p>
+<img src="https://img.shields.io/badge/YOLOv8-149945?style=flat-square&logo=yolo&logoColor=white" alt="YOLOv8"/>
+<img src="https://img.shields.io/badge/FastAPI-059669?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI"/>
+<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React"/>
+</p>
+
+Brazilian road sign detection console — traffic lights, stops, speed limits and crosswalks with live YOLO inference.
+
+[**Repository**](https://github.com/sidnei-almeida/road_sign_detection_yolo) · [**Live demo**](https://roadvision-yolo-detection-console.vercel.app/)
 
 </div></div>
 
