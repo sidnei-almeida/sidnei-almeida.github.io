@@ -203,6 +203,22 @@ export const projects: Project[] = [
     liveDemo: 'https://roadvision-yolo-detection-console.vercel.app/',
     github: 'https://github.com/sidnei-almeida/road_sign_detection_yolo',
   },
+  {
+    id: 'cinescope',
+    number: '11',
+    title: 'CineScope Intelligence',
+    shortDescription:
+      'Semantic movie discovery with BERT recommendations, TMDb enrichment, trailers and match scoring.',
+    fullDescription:
+      'CineScope Intelligence transforms a movie recommender into a cinematic discovery product. Users can search by title, theme, mood, actor, or story context, while the app combines semantic recommendations from a BERT-based model with TMDb metadata enrichment. The interface highlights a featured movie, displays cast photos, trailers, posters, recommendation sources, match scores, and a filterable recommendation grid. The project demonstrates practical AI product design, API orchestration, recommendation ranking, data enrichment, and modern front-end presentation.',
+    category: 'ML / Recommender',
+    filterCategories: ['recommender', 'dashboards'],
+    tags: ['React', 'FastAPI', 'BERT', 'TMDb'],
+    featured: false,
+    image: '/assets/projects/mocie-recommender.webp',
+    liveDemo: 'https://cinescope-semantic-discovery.vercel.app/',
+    github: 'https://github.com/sidnei-almeida/tmdb-semantic-recommender',
+  },
 ];
 
 /** Optimized WebP paths for project cards (lazy-loaded; not preloaded on home). */
