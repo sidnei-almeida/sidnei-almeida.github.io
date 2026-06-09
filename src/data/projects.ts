@@ -46,7 +46,7 @@ export const projects: Project[] = [
   {
     id: 'docmind',
     number: '01',
-    title: 'DocMind — RAG Document QA Assistant',
+    title: 'DocMind RAG Document QA Assistant',
     shortDescription:
       'Cloud-hosted RAG assistant for PDF ingestion, semantic retrieval, source-grounded Q&A and document intelligence.',
     fullDescription:
