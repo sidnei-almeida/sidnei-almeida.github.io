@@ -122,7 +122,7 @@ export function I18nProvider({ children }: I18nProviderProps) {
 
     document.querySelectorAll('link[data-hreflang]').forEach((node) => node.remove());
 
-    // Only pages that actually exist in every language get alternates —
+    // Only pages that actually exist in every language get alternates;
     // pointing three hreflangs at one URL is what search engines reject.
     if (!isMultilingual) {
       return;

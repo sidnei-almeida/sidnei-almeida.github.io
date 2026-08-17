@@ -48,7 +48,7 @@ export function getLocalizedResume(t: Translation) {
   };
 }
 
-/** Order must mirror `resume.skills` in src/data/resume.ts — both are zipped by index. */
+/** Order must mirror `resume.skills` in src/data/resume.ts; both are zipped by index. */
 export const resumeSkillGroupKeys = [
   'dataScienceAI',
   'dataEngineering',

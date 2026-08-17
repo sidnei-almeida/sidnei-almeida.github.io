@@ -36,7 +36,7 @@ function App() {
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/resume" element={<ResumePage />} />
             <Route path="/contact" element={<ContactPage />} />
-            {/* Retired pages — keep old inbound links alive instead of 404ing */}
+            {/* Retired pages: keep old inbound links alive instead of 404ing */}
             <Route path="/mentoria" element={<Navigate to="/" replace />} />
             <Route path="/exercises/*" element={<Navigate to="/" replace />} />
           </Route>

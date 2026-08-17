@@ -64,7 +64,7 @@ export const resume = {
   phone: '+55 (54) 99174-6969',
 
   summary:
-    'AI Engineer and Full-Stack Developer building production machine learning systems end to end. Currently the sole developer of DOQYN, a multi-tenant document intelligence SaaS, owning everything from the LLM and OCR pipeline to the React frontend and the containerised infrastructure it runs on. Experience across computer vision (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) and LLM applications — RAG pipelines, AI agents and prompt engineering with LangChain, Groq and Hugging Face. Comfortable across the full data lifecycle: web scraping, ETL, SQL and NoSQL modelling, model training, and deployment with FastAPI, Docker and CI/CD on AWS, Google Cloud and Cloudflare. IBM-certified in AI Engineering and Generative AI Engineering, currently taking an MBA in Data Science & AI at USP/ESALQ.',
+    'AI Engineer and Full-Stack Developer building production machine learning systems end to end. Today I am the sole developer of DOQYN, a multi-tenant document intelligence SaaS, owning everything from the LLM and OCR pipeline to the React frontend and the containerised infrastructure it runs on. Experience across computer vision (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) and LLM applications such as RAG pipelines, AI agents and prompt engineering with LangChain, Groq and Hugging Face. Comfortable across the full data lifecycle: web scraping, ETL, SQL and NoSQL modelling, model training, and deployment with FastAPI, Docker and CI/CD on AWS, Google Cloud and Cloudflare. IBM-certified in AI Engineering and Generative AI Engineering, currently taking an MBA in Data Science & AI at USP/ESALQ.',
 
   experience: [
     {
@@ -74,11 +74,11 @@ export const resume = {
       engagements: [
         {
           client: 'DOQYN, Document Intelligence SaaS',
-          role: 'Sole Developer — AI, Backend, Frontend & Infrastructure',
+          role: 'Sole Developer (AI, Backend, Frontend & Infrastructure)',
           project:
             'Designed and built a multi-tenant document intelligence platform end to end: AI-assisted classification and metadata extraction, OCR, e-signature, versioning, sharing, audit trail and governance rules.',
           achievements: [
-            'Sole developer across two TypeScript services — the document platform and a dedicated identity microservice — owning architecture, AI pipeline, API, frontend and production infrastructure',
+            'Sole developer across two TypeScript services, the document platform and a dedicated identity microservice, owning architecture, AI pipeline, API, frontend and production infrastructure',
             'Built the AI layer: Groq LLM inference for document classification and metadata extraction, with Google Cloud Vision OCR, running as asynchronous Redis/BullMQ workers',
             'Designed the multi-tenant data architecture on MongoDB with per-tenant isolation, alongside a Fastify/PostgreSQL identity service with Argon2 hashing, HttpOnly cookie sessions, OAuth (Google, Microsoft), role-based access control and encrypted PII',
             'Built the React 19 and TypeScript frontend with TanStack Query, Zustand, React Hook Form and Zod, backed by Cloudflare R2 (S3-compatible) storage with presigned uploads',
@@ -419,7 +419,7 @@ export const resume = {
     },
     {
       issuer: 'IBM',
-      name: 'IBM Machine Learning Specialist — Associate',
+      name: 'IBM Machine Learning Specialist - Associate',
       month: 3,
       year: 2025,
       credentialId: 'PWID-B0236900',
@@ -433,7 +433,7 @@ export const resume = {
     },
     {
       issuer: 'IBM',
-      name: 'Applied Data Science with Python — Level 2',
+      name: 'Applied Data Science with Python - Level 2',
       month: 1,
       year: 2025,
       credentialId: 'PWID-B0571500',
@@ -460,7 +460,7 @@ export const resume = {
       featured: true,
     },
     {
-      issuer: 'Flexxo — Centro de Capacitação em TI',
+      issuer: 'Flexxo - Centro de Capacitação em TI',
       name: 'C++ Programming',
     },
   ] satisfies ResumeCertification[],
