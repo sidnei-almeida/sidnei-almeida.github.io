@@ -522,7 +522,7 @@ export function ResumePrintPage() {
             {languages
               .map((language) =>
                 language.credential
-                  ? `${language.name}: ${language.level} — ${language.credential}`
+                  ? `${language.name}: ${language.level} (${language.credential})`
                   : `${language.name}: ${language.level}`,
               )
               .join(' · ')}

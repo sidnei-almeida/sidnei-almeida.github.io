@@ -201,14 +201,14 @@
   },
   "meta": {
     "title": "Sidnei Almeida | Engenheiro de IA e Desenvolvedor Full-Stack",
-    "description": "Engenheiro de IA e desenvolvedor full-stack no Brasil. Construo sistemas de machine learning em produção — visão computacional, aplicações com RAG e LLM, deep learning e pipelines de dados — com Python, PyTorch, TensorFlow, LangChain, FastAPI e Docker. Todo projeto tem demo ao vivo.",
+    "description": "Engenheiro de IA e desenvolvedor full-stack no Brasil. Construo sistemas de machine learning em produção para visão computacional, aplicações com RAG e LLM, deep learning e pipelines de dados, usando Python, PyTorch, TensorFlow, LangChain, FastAPI e Docker. Todo projeto tem demo ao vivo.",
     "keywords": "Engenheiro de IA, Engenheiro de Machine Learning, Desenvolvedor Full-Stack, Cientista de Dados, Visão Computacional, Deep Learning, LLM, RAG, Geração Aumentada por Recuperação, LangChain, IA Generativa, Agentes de IA, Prompt Engineering, PyTorch, TensorFlow, YOLOv8, OpenCV, Python, FastAPI, Docker, Engenharia de Dados, ETL, MLOps, Ciência de Dados, Hugging Face, Bancos de Dados Vetoriais, Sidnei Almeida, Brasil, Caxias do Sul, Remoto"
   },
   "resumeData": {
     "title": "Engenheiro de IA e Desenvolvedor Full-Stack",
     "subtitle": "Soluções orientadas a IA e estratégia de dados",
     "location": "Caxias do Sul, RS",
-    "summary": "Engenheiro de IA e desenvolvedor full-stack, focado em levar sistemas de machine learning até produção. Atualmente sou o único desenvolvedor da DOQYN, um SaaS multi-tenant de inteligência documental, responsável por tudo — do pipeline de LLM e OCR ao frontend em React e à infraestrutura containerizada onde roda. Experiência em visão computacional (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) e aplicações com LLM — pipelines RAG, agentes de IA e prompt engineering com LangChain, Groq e Hugging Face. Atuo em todo o ciclo de vida dos dados: web scraping, ETL, modelagem SQL e NoSQL, treinamento de modelos e deploy com FastAPI, Docker e CI/CD em AWS, Google Cloud e Cloudflare. Certificado IBM em AI Engineering e Generative AI Engineering, cursando MBA em Data Science e IA na USP/ESALQ.",
+    "summary": "Engenheiro de IA e desenvolvedor full-stack, focado em levar sistemas de machine learning até produção. Atualmente sou o único desenvolvedor da DOQYN, um SaaS multi-tenant de inteligência documental, responsável por tudo, do pipeline de LLM e OCR ao frontend em React e à infraestrutura containerizada onde roda. Experiência em visão computacional (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) e aplicações com LLM, como pipelines RAG, agentes de IA e prompt engineering com LangChain, Groq e Hugging Face. Atuo em todo o ciclo de vida dos dados: web scraping, ETL, modelagem SQL e NoSQL, treinamento de modelos e deploy com FastAPI, Docker e CI/CD em AWS, Google Cloud e Cloudflare. Certificado IBM em AI Engineering e Generative AI Engineering, cursando MBA em Data Science e IA na USP/ESALQ.",
     "experience": [
       {
         "title": "Engenheiro de IA e Desenvolvedor Full-Stack",
@@ -217,10 +217,10 @@
         "engagements": [
           {
             "client": "DOQYN, SaaS de inteligência documental",
-            "role": "Desenvolvedor único — IA, backend, frontend e infraestrutura",
+            "role": "Desenvolvedor único (IA, backend, frontend e infraestrutura)",
             "project": "Projetei e construí do zero uma plataforma multi-tenant de inteligência documental: classificação e extração de metadados assistidas por IA, OCR, assinatura eletrônica, versionamento, compartilhamento, trilha de auditoria e regras de governança.",
             "achievements": [
-              "Único desenvolvedor de dois serviços em TypeScript — a plataforma documental e um microsserviço dedicado de identidade — responsável por arquitetura, pipeline de IA, API, frontend e infraestrutura de produção",
+              "Único desenvolvedor de dois serviços em TypeScript, a plataforma documental e um microsserviço dedicado de identidade, responsável por arquitetura, pipeline de IA, API, frontend e infraestrutura de produção",
               "Construí a camada de IA: inferência com LLM via Groq para classificação de documentos e extração de metadados, com OCR do Google Cloud Vision, executada em workers assíncronos Redis/BullMQ",
               "Projetei a arquitetura de dados multi-tenant em MongoDB com isolamento por tenant, além de um serviço de identidade em Fastify/PostgreSQL com hashing Argon2, sessões por cookie HttpOnly, OAuth (Google, Microsoft), controle de acesso por papéis e PII criptografada",
               "Construí o frontend em React 19 e TypeScript com TanStack Query, Zustand, React Hook Form e Zod, com armazenamento em Cloudflare R2 (compatível com S3) e uploads via URL pré-assinada",

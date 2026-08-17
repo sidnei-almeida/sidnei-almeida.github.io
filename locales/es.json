@@ -201,7 +201,7 @@
   },
   "meta": {
     "title": "Sidnei Almeida | Ingeniero de IA y Desarrollador Full-Stack",
-    "description": "Ingeniero de IA y desarrollador full-stack en Brasil. Construyo sistemas de machine learning en producción — visión por computador, aplicaciones con RAG y LLM, deep learning y pipelines de datos — con Python, PyTorch, TensorFlow, LangChain, FastAPI y Docker. Cada proyecto incluye una demo en vivo.",
+    "description": "Ingeniero de IA y desarrollador full-stack en Brasil. Construyo sistemas de machine learning en producción para visión por computador, aplicaciones con RAG y LLM, deep learning y pipelines de datos, usando Python, PyTorch, TensorFlow, LangChain, FastAPI y Docker. Cada proyecto incluye una demo en vivo.",
     "keywords": "Ingeniero de IA, Ingeniero de Machine Learning, Desarrollador Full-Stack, Científico de Datos, Visión por Computador, Deep Learning, LLM, RAG, Generación Aumentada por Recuperación, LangChain, IA Generativa, Agentes de IA, Prompt Engineering, PyTorch, TensorFlow, YOLOv8, OpenCV, Python, FastAPI, Docker, Ingeniería de Datos, ETL, MLOps, Ciencia de Datos, Hugging Face, Bases de Datos Vectoriales, Sidnei Almeida, Brasil, Remoto"
   },
   "resumeData": {
@@ -217,10 +217,10 @@
         "engagements": [
           {
             "client": "DOQYN, SaaS de inteligencia documental",
-            "role": "Desarrollador único — IA, backend, frontend e infraestructura",
+            "role": "Desarrollador único (IA, backend, frontend e infraestructura)",
             "project": "Diseñé y construí desde cero una plataforma multi-tenant de inteligencia documental: clasificación y extracción de metadatos asistidas por IA, OCR, firma electrónica, versionado, compartición, registro de auditoría y reglas de gobernanza.",
             "achievements": [
-              "Único desarrollador de dos servicios en TypeScript — la plataforma documental y un microservicio dedicado de identidad — a cargo de arquitectura, pipeline de IA, API, frontend e infraestructura de producción",
+              "Único desarrollador de dos servicios en TypeScript, la plataforma documental y un microservicio dedicado de identidad, a cargo de arquitectura, pipeline de IA, API, frontend e infraestructura de producción",
               "Construí la capa de IA: inferencia con LLM vía Groq para clasificación de documentos y extracción de metadatos, con OCR de Google Cloud Vision, ejecutada en workers asíncronos Redis/BullMQ",
               "Diseñé la arquitectura de datos multi-tenant en MongoDB con aislamiento por tenant, junto a un servicio de identidad en Fastify/PostgreSQL con hashing Argon2, sesiones por cookie HttpOnly, OAuth (Google, Microsoft), control de acceso por roles y PII cifrada",
               "Construí el frontend en React 19 y TypeScript con TanStack Query, Zustand, React Hook Form y Zod, con almacenamiento en Cloudflare R2 (compatible con S3) y subidas mediante URL prefirmada",
