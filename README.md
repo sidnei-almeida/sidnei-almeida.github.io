@@ -12,7 +12,7 @@
 
 <img src="https://readme-typing-svg.herokuapp.com/?font=Inter&weight=500&size=15&duration=5200&pause=3400&color=79C0FF&center=true&vCenter=true&width=820&height=28&lines=Production-grade+ML+systems%2C+computer+vision%2C+RAG+and+quant+dashboards.;Ten+hosted+demos+on+Vercel+—+model%2C+API%2C+UI+and+deployment." alt="Portfolio summary"/>
 
-<sub>Source for <a href="https://sidnei-almeida.github.io/">sidnei-almeida.github.io</a> — ThinkPad-inspired dark UI, project grid, resume export, and guided Python exercise.</sub>
+<sub>Source for <a href="https://sidnei-almeida.github.io/">sidnei-almeida.github.io</a> — ThinkPad-inspired dark UI, project grid, trilingual content, and ATS resume export.</sub>
 
 <br/>
 
@@ -46,7 +46,7 @@ Personal portfolio site built with **React 19**, **Vite**, **TypeScript**, and *
 | **Live site** | [sidnei-almeida.github.io](https://sidnei-almeida.github.io/) |
 | **Projects grid** | [/projects](https://sidnei-almeida.github.io/projects) |
 | **Resume (ATS PDF)** | [/resume/print](https://sidnei-almeida.github.io/resume/print) |
-| **Python exercise (USP)** | [/exercises/analise-pedidos-python](https://sidnei-almeida.github.io/exercises/analise-pedidos-python) |
+| **Contact** | [/contact](https://sidnei-almeida.github.io/contact) |
 
 <br/>
 
@@ -312,25 +312,13 @@ Brazilian road sign detection console — traffic lights, stops, speed limits an
 
 <br/>
 
-## Study materials
-
-<div style="border:1px solid #30363d;border-radius:12px;background:linear-gradient(90deg,rgba(56,139,253,0.06),#161b22);padding:16px 20px;border-left:3px solid #58a6ff;">
-
-**Análise de Pedidos com Python Básico** — guided exercise (USP ESALQ mentorship): setup by OS, venv, download `.py`, run locally. Not listed in the main projects grid.
-
-[**Open exercise**](https://sidnei-almeida.github.io/exercises/analise-pedidos-python) · [`analise_pedidos_guiado.py`](https://sidnei-almeida.github.io/exercise_python/analise_pedidos_guiado.py)
-
-</div>
-
-<br/>
-
 ## Engineering approach
 
 | Step | What this repo optimizes for |
 | :--- | :--- |
 | **1. Frame** | Demo-ready UX, LCP (hero preload), i18n, accessible navigation. |
 | **2. Data** | `src/data/projects.ts` as single source for cards, filters and preloads. |
-| **3. Build** | Vite → static `dist/`, WebP assets, exercise sync on `prebuild`. |
+| **3. Build** | Vite → static `dist/`, WebP assets, hero preload injection. |
 | **4. Ship** | GitHub Actions → Pages; SPA `404.html` redirect for deep routes. |
 | **5. Maintain** | `npm run optimize:projects` for screenshots; favicon script when branding changes. |
 
@@ -343,7 +331,7 @@ Brazilian road sign detection console — traffic lights, stops, speed limits an
 | **Hosting** | GitHub Pages (`dist/` from Vite build) |
 | **Frontend** | React 19 · Vite 6 · TypeScript · Tailwind · Framer Motion |
 | **Design** | ThinkPad / X1 Carbon — dark matte, red micro-accents |
-| **Routes** | Home · Projects · Resume · Contact · Python exercise · ATS print/PDF |
+| **Routes** | Home · Projects · Resume · Contact · ATS print/PDF |
 
 <br/>
 
@@ -353,10 +341,11 @@ Brazilian road sign detection console — traffic lights, stops, speed limits an
 sidnei-almeida.github.io/
 ├── src/                      # React app (pages, components, data, i18n)
 ├── public/assets/projects/     # WebP thumbnails for project cards
-├── public/exercise_python/     # Guided exercise .py (synced on build)
-├── exercicios_python/          # Source for exercise file + README
+├── public/og-image.png         # Social share card (1200×630)
+├── public/sitemap.xml          # Multilingual sitemap with hreflang alternates
+├── public/robots.txt           # Crawl rules + sitemap pointer
 ├── assets/readme/              # README accent SVGs
-├── scripts/                    # favicon, image optimize, exercise sync
+├── scripts/                    # favicon, image optimize
 ├── locales/                    # pt · en · es
 ├── index.html                  # entry + hero preload injection
 └── .github/workflows/          # Deploy to GitHub Pages
@@ -368,8 +357,8 @@ sidnei-almeida.github.io/
 
 ```bash
 npm install
-npm run dev                 # sync exercise + http://localhost:5173
-npm run build               # sync + tsc + vite build → dist/
+npm run dev                 # http://localhost:5173
+npm run build               # tsc + vite build → dist/
 npm run preview             # preview production build
 npm run optimize:projects   # PNG in repo root → WebP in public/assets/projects/
 npm run generate:favicons   # regenerate favicon set

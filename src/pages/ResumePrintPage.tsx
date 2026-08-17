@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { resume as baseResume } from '../data/resume';
-import { getLocalizedResume, resumeSkillGroupKeys } from '../i18n/resumeHelpers';
+import { resume as baseResume, featuredCertifications } from '../data/resume';
+import {
+  formatCertificationDate,
+  getLocalizedLanguages,
+  getLocalizedResume,
+  resumeSkillGroupKeys,
+} from '../i18n/resumeHelpers';
 import { useTranslation } from '../i18n/useTranslation';
 import { exportResumePdf } from '../lib/exportResumePdf';
 
@@ -347,6 +352,7 @@ export function ResumePrintPage() {
   const [searchParams] = useSearchParams();
   const shouldAutoPrint = searchParams.get('download') === '1';
   const resume = useMemo(() => getLocalizedResume(t), [t]);
+  const languages = useMemo(() => getLocalizedLanguages(t), [t]);
   const printRootRef = useRef<HTMLElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const exportingRef = useRef(false);
@@ -373,8 +379,13 @@ export function ResumePrintPage() {
           experience: resume.experience,
           projects: resume.projects,
           education: resume.education,
+          languages,
           skills: baseResume.skills.map((group) => ({ items: group.items })),
-          certifications: [...resume.certifications],
+          certifications: featuredCertifications.map((cert) => ({
+            issuer: cert.issuer,
+            name: cert.name,
+            date: formatCertificationDate(currentLang, cert),
+          })),
         },
         {
           sections: t.resumePrint.sections,
@@ -388,7 +399,7 @@ export function ResumePrintPage() {
       exportingRef.current = false;
       setIsExporting(false);
     }
-  }, [currentLang, resume, t]);
+  }, [currentLang, languages, resume, t]);
 
   useEffect(() => {
     document.body.classList.add('resume-print-active');
@@ -505,6 +516,19 @@ export function ResumePrintPage() {
           ))}
         </section>
 
+        <section className="print-section" aria-label={t.resumePrint.sections.languages}>
+          <h2>{t.resumePrint.sections.languages}</h2>
+          <p className="skill-line">
+            {languages
+              .map((language) =>
+                language.credential
+                  ? `${language.name}: ${language.level} — ${language.credential}`
+                  : `${language.name}: ${language.level}`,
+              )
+              .join(' · ')}
+          </p>
+        </section>
+
         <section className="print-section" aria-label={t.resumePrint.sections.skills}>
           <h2>{t.resumePrint.sections.skills}</h2>
           {resumeSkillGroupKeys.map((key, index) => (
@@ -519,12 +543,12 @@ export function ResumePrintPage() {
           <h2>{t.resumePrint.sections.certifications}</h2>
           <table className="cert-table">
             <tbody>
-              {resume.certifications.map((cert) => (
+              {featuredCertifications.map((cert) => (
                 <tr key={`${cert.issuer}-${cert.name}`}>
                   <td>
                     {cert.issuer}, {cert.name}
                   </td>
-                  <td>{cert.year}</td>
+                  <td>{formatCertificationDate(currentLang, cert)}</td>
                 </tr>
               ))}
             </tbody>

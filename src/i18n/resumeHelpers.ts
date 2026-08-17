@@ -1,5 +1,5 @@
-import { resume as baseResume } from '../data/resume';
-import type { Translation } from './types';
+import { resume as baseResume, type ResumeLanguage } from '../data/resume';
+import type { Lang, Translation } from './types';
 
 export function getLocalizedResume(t: Translation) {
   return {
@@ -48,9 +48,40 @@ export function getLocalizedResume(t: Translation) {
   };
 }
 
+/** Order must mirror `resume.skills` in src/data/resume.ts — both are zipped by index. */
 export const resumeSkillGroupKeys = [
   'dataScienceAI',
   'dataEngineering',
   'fullStack',
+  'cloudMlops',
   'visualization',
 ] as const;
+
+/** "Sep 2025" in the reader's language; empty when the credential carries no issue date. */
+export function formatCertificationDate(
+  lang: Lang,
+  cert: { month?: number; year?: number },
+): string {
+  if (!cert.year) return '';
+  if (!cert.month) return String(cert.year);
+
+  return new Intl.DateTimeFormat(lang, { month: 'short', year: 'numeric' }).format(
+    new Date(cert.year, cert.month - 1, 1),
+  );
+}
+
+export type LocalizedLanguage = {
+  code: ResumeLanguage['code'];
+  name: string;
+  level: string;
+  credential?: string;
+};
+
+export function getLocalizedLanguages(t: Translation): LocalizedLanguage[] {
+  return baseResume.languages.map((entry) => ({
+    code: entry.code,
+    name: t.resume.languageNames[entry.code],
+    level: t.resume.languageLevels[entry.level],
+    credential: entry.credential,
+  }));
+}

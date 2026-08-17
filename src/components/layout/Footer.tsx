@@ -1,7 +1,7 @@
 import { GitBranch, Link2, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { profile } from '../../data/profile';
-import { footerNav, footerProgramLinks } from '../../data/navigation';
+import { footerNav } from '../../data/navigation';
 import { useTranslation } from '../../i18n/useTranslation';
 
 export function Footer() {
@@ -41,16 +41,6 @@ export function Footer() {
                 </a>
               ),
             )}
-            {footerProgramLinks.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className="type-footer text-ink-muted transition-colors hover:text-accent"
-                aria-label={t.footer.mentoriaProgramAria}
-              >
-                {t.footer.mentoriaProgram}
-              </Link>
-            ))}
           </nav>
 
           <div className="flex items-center gap-4">

@@ -35,6 +35,22 @@ export function detectBrowserLanguage(): Lang {
   return DEFAULT_LANG;
 }
 
+/**
+ * `?lang=pt` lets a URL carry its own language, so shared links and the
+ * hreflang alternates in sitemap.xml resolve without relying on a cookie.
+ */
+export function readLanguageFromQuery(search?: string): Lang | null {
+  const query = search ?? (typeof window === 'undefined' ? '' : window.location.search);
+
+  if (!query) {
+    return null;
+  }
+
+  const value = new URLSearchParams(query).get('lang')?.toLowerCase();
+
+  return value && VALID_LANGS.includes(value as Lang) ? (value as Lang) : null;
+}
+
 function readLangCookie(): Lang | null {
   if (typeof document === 'undefined') {
     return null;
@@ -110,6 +126,13 @@ export function writeLanguagePreference(lang: Lang): void {
 }
 
 export function resolveInitialLanguage(): Lang {
+  const fromQuery = readLanguageFromQuery();
+
+  if (fromQuery) {
+    writeLanguagePreference(fromQuery);
+    return fromQuery;
+  }
+
   const saved = readSavedLanguage();
 
   if (saved) {
