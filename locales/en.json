@@ -208,8 +208,27 @@
     "title": "AI Engineer & Full-Stack Developer",
     "subtitle": "AI-Driven Solutions & Data Strategy",
     "location": "Caxias do Sul, RS",
-    "summary": "AI Engineer and Full-Stack Developer building production machine learning systems end to end. Experience across computer vision (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) and LLM applications — RAG pipelines, AI agents and prompt engineering with LangChain and Hugging Face. Comfortable across the full data lifecycle: web scraping, ETL, SQL and NoSQL modelling, model training, and deployment with FastAPI, Docker and CI/CD on AWS and Google Cloud. IBM-certified in AI Engineering and Generative AI Engineering, currently taking an MBA in Data Science & AI at USP/ESALQ.",
+    "summary": "AI Engineer and Full-Stack Developer building production machine learning systems end to end. Currently the sole developer of DOQYN, a multi-tenant document intelligence SaaS, owning everything from the LLM and OCR pipeline to the React frontend and the containerised infrastructure it runs on. Experience across computer vision (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) and LLM applications — RAG pipelines, AI agents and prompt engineering with LangChain, Groq and Hugging Face. Comfortable across the full data lifecycle: web scraping, ETL, SQL and NoSQL modelling, model training, and deployment with FastAPI, Docker and CI/CD on AWS, Google Cloud and Cloudflare. IBM-certified in AI Engineering and Generative AI Engineering, currently taking an MBA in Data Science & AI at USP/ESALQ.",
     "experience": [
+      {
+        "title": "AI Engineer & Full-Stack Developer",
+        "company": "DOQYN",
+        "period": "2026 - Present",
+        "engagements": [
+          {
+            "client": "DOQYN, Document Intelligence SaaS",
+            "role": "Sole Developer — AI, Backend, Frontend & Infrastructure",
+            "project": "Designed and built a multi-tenant document intelligence platform end to end: AI-assisted classification and metadata extraction, OCR, e-signature, versioning, sharing, audit trail and governance rules.",
+            "achievements": [
+              "Sole developer across two TypeScript services — the document platform and a dedicated identity microservice — owning architecture, AI pipeline, API, frontend and production infrastructure",
+              "Built the AI layer: Groq LLM inference for document classification and metadata extraction, with Google Cloud Vision OCR, running as asynchronous Redis/BullMQ workers",
+              "Designed the multi-tenant data architecture on MongoDB with per-tenant isolation, alongside a Fastify/PostgreSQL identity service with Argon2 hashing, HttpOnly cookie sessions, OAuth (Google, Microsoft), role-based access control and encrypted PII",
+              "Built the React 19 and TypeScript frontend with TanStack Query, Zustand, React Hook Form and Zod, backed by Cloudflare R2 (S3-compatible) storage with presigned uploads",
+              "Runs production infrastructure: a containerised Docker Compose stack on a self-managed VPS behind nginx, with connection pooling and Prometheus/Grafana observability"
+            ]
+          }
+        ]
+      },
       {
         "title": "Data Solutions Engineer & Full-Stack Developer",
         "company": "Freelance",

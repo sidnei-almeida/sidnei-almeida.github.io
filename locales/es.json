@@ -208,8 +208,27 @@
     "title": "Ingeniero de IA y Desarrollador Full-Stack",
     "subtitle": "Soluciones orientadas a IA y estrategia de datos",
     "location": "Caxias do Sul, RS",
-    "summary": "Ingeniero de IA y desarrollador full-stack, enfocado en llevar sistemas de machine learning a producción. Experiencia en visión por computador (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) y aplicaciones con LLM: pipelines RAG, agentes de IA y prompt engineering con LangChain y Hugging Face. Trabajo en todo el ciclo de vida de los datos: web scraping, ETL, modelado SQL y NoSQL, entrenamiento de modelos y despliegue con FastAPI, Docker y CI/CD en AWS y Google Cloud. Certificado IBM en AI Engineering y Generative AI Engineering, cursando un MBA en Data Science e IA en USP/ESALQ.",
+    "summary": "Ingeniero de IA y desarrollador full-stack, enfocado en llevar sistemas de machine learning a producción. Actualmente soy el único desarrollador de DOQYN, un SaaS multi-tenant de inteligencia documental, a cargo de todo: desde el pipeline de LLM y OCR hasta el frontend en React y la infraestructura contenerizada donde corre. Experiencia en visión por computador (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) y aplicaciones con LLM: pipelines RAG, agentes de IA y prompt engineering con LangChain, Groq y Hugging Face. Trabajo en todo el ciclo de vida de los datos: web scraping, ETL, modelado SQL y NoSQL, entrenamiento de modelos y despliegue con FastAPI, Docker y CI/CD en AWS, Google Cloud y Cloudflare. Certificado IBM en AI Engineering y Generative AI Engineering, cursando un MBA en Data Science e IA en USP/ESALQ.",
     "experience": [
+      {
+        "title": "Ingeniero de IA y Desarrollador Full-Stack",
+        "company": "DOQYN",
+        "period": "2026 - Actualidad",
+        "engagements": [
+          {
+            "client": "DOQYN, SaaS de inteligencia documental",
+            "role": "Desarrollador único — IA, backend, frontend e infraestructura",
+            "project": "Diseñé y construí desde cero una plataforma multi-tenant de inteligencia documental: clasificación y extracción de metadatos asistidas por IA, OCR, firma electrónica, versionado, compartición, registro de auditoría y reglas de gobernanza.",
+            "achievements": [
+              "Único desarrollador de dos servicios en TypeScript — la plataforma documental y un microservicio dedicado de identidad — a cargo de arquitectura, pipeline de IA, API, frontend e infraestructura de producción",
+              "Construí la capa de IA: inferencia con LLM vía Groq para clasificación de documentos y extracción de metadatos, con OCR de Google Cloud Vision, ejecutada en workers asíncronos Redis/BullMQ",
+              "Diseñé la arquitectura de datos multi-tenant en MongoDB con aislamiento por tenant, junto a un servicio de identidad en Fastify/PostgreSQL con hashing Argon2, sesiones por cookie HttpOnly, OAuth (Google, Microsoft), control de acceso por roles y PII cifrada",
+              "Construí el frontend en React 19 y TypeScript con TanStack Query, Zustand, React Hook Form y Zod, con almacenamiento en Cloudflare R2 (compatible con S3) y subidas mediante URL prefirmada",
+              "Opero la infraestructura de producción: stack contenerizada en Docker Compose sobre VPS propio detrás de nginx, con pool de conexiones y observabilidad en Prometheus/Grafana"
+            ]
+          }
+        ]
+      },
       {
         "title": "Ingeniero de Soluciones de Datos y Desarrollador Full-Stack",
         "company": "Trabajo autónomo",
