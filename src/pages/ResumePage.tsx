@@ -4,7 +4,12 @@ import { SectionReveal } from '../components/motion/SectionReveal';
 import { profile } from '../data/profile';
 import { resume as baseResume } from '../data/resume';
 import { fadeUpItem, sectionStaggerContainer, cardStaggerContainer } from '../lib/motion';
-import { getLocalizedResume, resumeSkillGroupKeys } from '../i18n/resumeHelpers';
+import {
+  formatCertificationDate,
+  getLocalizedLanguages,
+  getLocalizedResume,
+  resumeSkillGroupKeys,
+} from '../i18n/resumeHelpers';
 import { DownloadTextLink } from '../components/ui/DownloadTextLink';
 import { useTranslation } from '../i18n/useTranslation';
 import './resume.css';
@@ -22,8 +27,9 @@ function TagList({ tags }: { tags: readonly string[] }) {
 }
 
 export function ResumePage() {
-  const { t } = useTranslation();
+  const { t, currentLang } = useTranslation();
   const resume = useMemo(() => getLocalizedResume(t), [t]);
+  const languages = useMemo(() => getLocalizedLanguages(t), [t]);
 
   const contactLine = [resume.location, baseResume.email, baseResume.website, baseResume.phone].join(' · ');
   const titleLine = `${resume.title} | ${resume.subtitle}`;
@@ -170,6 +176,25 @@ export function ResumePage() {
             </SectionReveal>
           </section>
 
+          <section className="resume-section" aria-label={t.resume.sections.languages}>
+            <SectionReveal variants={sectionStaggerContainer}>
+              <motion.h2 variants={fadeUpItem} className="resume-section-label">
+                {t.resume.sections.languages}
+              </motion.h2>
+              <div className="languages-grid">
+                {languages.map((language) => (
+                  <motion.div key={language.code} variants={fadeUpItem} className="language-entry">
+                    <p className="language-name">{language.name}</p>
+                    <p className="language-level">{language.level}</p>
+                    {language.credential ? (
+                      <p className="language-credential">{language.credential}</p>
+                    ) : null}
+                  </motion.div>
+                ))}
+              </div>
+            </SectionReveal>
+          </section>
+
           <section className="resume-section" aria-label={t.resume.sections.skills}>
             <SectionReveal variants={sectionStaggerContainer}>
               <motion.h2 variants={fadeUpItem} className="resume-section-label">
@@ -201,8 +226,13 @@ export function ResumePage() {
                     <span className="cert-issuer">{cert.issuer}</span>
                     {', '}
                     {cert.name}
+                    {cert.credentialId ? (
+                      <span className="cert-credential">
+                        {t.resume.credentialId}: {cert.credentialId}
+                      </span>
+                    ) : null}
                   </p>
-                  <span className="cert-year">{cert.year}</span>
+                  <span className="cert-year">{formatCertificationDate(currentLang, cert)}</span>
                 </motion.article>
               ))}
             </SectionReveal>

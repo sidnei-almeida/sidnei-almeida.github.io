@@ -4,7 +4,6 @@
     "about": "About",
     "projects": "Projects",
     "skills": "Skills",
-    "mentoria": "Mentoring",
     "resume": "Résumé",
     "contact": "Contact",
     "letsConnect": "Let's Connect"
@@ -98,14 +97,29 @@
       "projects": "Key Technical Projects",
       "education": "Education",
       "skills": "Skills & Tools",
-      "certifications": "Certifications"
+      "certifications": "Certifications",
+      "languages": "Languages"
     },
     "present": "Present",
     "stack": "Stack",
     "pageTitle": "Sidnei Almeida | Resume",
     "clientPrefix": "Client",
     "rolePrefix": "Role",
-    "projectPrefix": "Project"
+    "projectPrefix": "Project",
+    "credentialId": "Credential ID",
+    "languageNames": {
+      "pt": "Portuguese",
+      "en": "English",
+      "es": "Spanish"
+    },
+    "languageLevels": {
+      "native": "Native",
+      "c2": "Proficient (C2)",
+      "c1": "Advanced (C1)",
+      "b2": "Upper-intermediate (B2)",
+      "b1": "Intermediate (B1)",
+      "a2": "Elementary (A2)"
+    }
   },
   "resumePrint": {
     "savePdf": "Download PDF",
@@ -117,7 +131,8 @@
       "projects": "Key Technical Projects",
       "education": "Education",
       "skills": "Skills",
-      "certifications": "Certifications"
+      "certifications": "Certifications",
+      "languages": "Languages"
     }
   },
   "skills": {
@@ -127,7 +142,8 @@
       "dataScienceAI": "Data Science & AI",
       "dataEngineering": "Data Engineering",
       "fullStack": "Full-Stack Development",
-      "visualization": "Visualization & Business"
+      "visualization": "Analytics & Business",
+      "cloudMlops": "Cloud, MLOps & DevOps"
     }
   },
   "techStack": {
@@ -175,9 +191,7 @@
     "ariaLabel": "Footer",
     "githubAria": "GitHub",
     "linkedinAria": "LinkedIn",
-    "emailAria": "Email",
-    "mentoriaProgram": "Python Mentoring",
-    "mentoriaProgramAria": "Python & Data mentoring — Module 01"
+    "emailAria": "Email"
   },
   "aria": {
     "mainNav": "Main",
@@ -186,14 +200,15 @@
     "closeMenu": "Close menu"
   },
   "meta": {
-    "title": "Sidnei Almeida | AI Engineer",
-    "description": "Sidnei Almeida — AI Engineer building intelligent systems across machine learning, computer vision, and LLM applications."
+    "title": "Sidnei Almeida | AI Engineer & Full-Stack Developer",
+    "description": "AI Engineer and Full-Stack Developer based in Brazil. I build production machine learning systems — computer vision, RAG and LLM applications, deep learning and data pipelines — with Python, PyTorch, TensorFlow, LangChain, FastAPI and Docker. Every project ships with a live demo.",
+    "keywords": "AI Engineer, Machine Learning Engineer, Full-Stack Developer, Computer Vision, Deep Learning, LLM, RAG, Retrieval-Augmented Generation, LangChain, Generative AI, AI Agents, Prompt Engineering, PyTorch, TensorFlow, YOLOv8, OpenCV, Python, FastAPI, Docker, Data Engineering, ETL, MLOps, Data Science, Hugging Face, Vector Databases, Sidnei Almeida, Brazil, Remote"
   },
   "resumeData": {
     "title": "AI Engineer & Full-Stack Developer",
     "subtitle": "AI-Driven Solutions & Data Strategy",
     "location": "Caxias do Sul, RS",
-    "summary": "Hands-on developer specializing in data engineering, machine learning, and web development. Experience building high-frequency data aggregators for digital asset markets and robust data architectures for HealthTech platforms. Proficient across the full data lifecycle: scraping, ETL, deep learning model training (LSTM, GANs, YOLOv8), and deployment with Docker and FastAPI. Focused on clean code, automation, and interfaces that make complex data accessible.",
+    "summary": "AI Engineer and Full-Stack Developer building production machine learning systems end to end. Experience across computer vision (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) and LLM applications — RAG pipelines, AI agents and prompt engineering with LangChain and Hugging Face. Comfortable across the full data lifecycle: web scraping, ETL, SQL and NoSQL modelling, model training, and deployment with FastAPI, Docker and CI/CD on AWS and Google Cloud. IBM-certified in AI Engineering and Generative AI Engineering, currently taking an MBA in Data Science & AI at USP/ESALQ.",
     "experience": [
       {
         "title": "Data Solutions Engineer & Full-Stack Developer",
@@ -228,13 +243,13 @@
     "education": [
       {
         "degree": "MBA, Data Science, Artificial Intelligence & Analytics",
-        "institution": "São Paulo University (USP ESALQ)",
-        "period": "2025 - 2027"
+        "institution": "University of São Paulo (USP / ESALQ)",
+        "period": "Apr 2025 - Dec 2027"
       },
       {
-        "degree": "Technology in Management Processes",
-        "institution": "Federal Institute of Rio Grande do Sul (IFRS)",
-        "period": "2020 - 2025"
+        "degree": "Associate of Applied Science, Business Administration & Management",
+        "institution": "Federal Institute of Rio Grande do Sul (IFRS), Caxias do Sul",
+        "period": "Mar 2019 - Dec 2025"
       }
     ],
     "projects": [
@@ -259,269 +274,5 @@
         "description": "Deployed high-precision vision models including a License Plate Recognition system (99.69% precision) and real-time emotion analysis."
       }
     ]
-  },
-  "mentoria": {
-    "back": "Back to portfolio",
-    "hero": {
-      "label": "Mentoring",
-      "title": "Python & Data",
-      "subtitle": "Hands-on programming exercises with a data focus. Enrollment required.",
-      "notice": "Lessons are available only to enrolled students. Get in touch to join."
-    },
-    "curriculum": {
-      "label": "Program",
-      "title": "Course modules",
-      "hint": "Expand a module to see lessons, labs, or the final project."
-    },
-    "modulePrefix": "Module",
-    "lessonCountLabel": "{count} lessons",
-    "labCountLabel": "{count} labs available",
-    "openLab": "Open lab",
-    "statusAvailable": "AVAILABLE",
-    "statusComingSoon": "COMING SOON",
-    "comingSoonBody": "This module will open soon for enrolled students.",
-    "lockedBadge": "RESTRICTED",
-    "finalProject": {
-      "label": "Final project"
-    },
-    "modules": [
-      {
-        "title": "Python 3 Programming",
-        "lessons": [
-      {
-        "title": "Variables and print()",
-        "description": "Practice variables, values, basic types, and print() in Python. Learn how to store information, display results, and solve small problems with simple data."
-      },
-      {
-        "title": "User input and type conversion",
-        "description": "Practice input() and conversions with int() and float(). Understand that typed values arrive as text and must be converted for numeric work."
-      },
-      {
-        "title": "Operators and simple calculations",
-        "description": "Practice math operators in Python: add, subtract, multiply, divide, power, and percentages. Apply them to everyday data scenarios such as sales, payroll, and costs."
-      },
-      {
-        "title": "Strings for data work",
-        "description": "Practice basic text operations: strip(), lower(), upper(), title(), split(), and replace(). These skills matter when cleaning and standardizing real-world text data."
-      },
-      {
-        "title": "Conditionals: if, elif, and else",
-        "description": "Practice decision rules with if, elif, and else to classify values, validate inputs, and branch logic based on the data you receive."
-      },
-      {
-        "title": "Lists and tuples in Python",
-        "description": "Practice lists and tuples: store multiple values, index elements, compare mutable vs immutable collections, and use len(), sum(), max(), and min()."
-      },
-      {
-        "title": "Loops with for and while",
-        "description": "Practice for and while loops: iterate sequences, repeat actions, build accumulators, count values, and distinguish iteration from condition-driven repetition."
-      },
-      {
-        "title": "Dictionaries and lists of dictionaries",
-        "description": "Practice structured data with dicts and lists of dicts: access by key, update records, add fields, and navigate collections of objects."
-      },
-      {
-        "title": "Functions in Python",
-        "description": "Practice def, parameters, and return. Build reusable blocks, separate print() from return, use optional parameters, and try simple lambda expressions."
-      }
-        ],
-        "finalProject": {
-          "title": "Order Analysis with Basic Python",
-          "description": "End-of-module capstone. A simple e-commerce order report using pure Python — lists, dictionaries, functions, and terminal output. Available as a portfolio mini-project.",
-          "cta": "View project"
-        }
-      },
-      {
-        "title": "Data Analysis with Colab",
-        "lessons": [
-          {
-            "title": "Pandas data exploration and cleaning",
-            "description": "Practice loading CSV files, inspecting DataFrames, identifying missing values, converting data types, handling messy values, and creating a cleaned dataset for analysis.",
-            "badge": "COLAB LAB"
-          },
-          {
-            "title": "Exploratory analysis and Matplotlib",
-            "description": "Practice grouping, filtering, aggregating, and visualizing business questions with Pandas and Matplotlib using a cleaned sales dataset.",
-            "badge": "COLAB LAB"
-          },
-          {
-            "title": "Customer churn EDA and preparation",
-            "description": "Analyze a customer churn dataset, inspect the target variable, investigate numerical and categorical features, clean TotalCharges, and prepare the data for modeling.",
-            "badge": "COLAB LAB"
-          },
-          {
-            "title": "First classification model with Scikit-learn",
-            "description": "Train a first churn classification model, split train/test data, encode categorical variables, evaluate predictions, inspect feature importance, and save the model with joblib.",
-            "badge": "ML LAB"
-          }
-        ],
-        "colabGuide": {
-          "title": "How to use the Colab labs",
-          "steps": [
-            "Click the lab link.",
-            "Open the notebook in Google Colab.",
-            "Go to File > Save a copy in Drive.",
-            "Work on your own copy.",
-            "Run the cells in order.",
-            "Read the comments and complete the exercises."
-          ],
-          "notice": "No local installation is required. The notebooks run directly in the browser through Google Colab."
-        }
-      },
-      {
-        "title": "Data Visualization"
-      }
-    ],
-    "cta": {
-      "title": "Want to join the mentoring program?",
-      "body": "These exercises are part of a private Python & Data course. To access Runestone lessons and the mentoring group, get in touch.",
-      "button": "Let's connect"
-    }
-  },
-  "pythonExercise": {
-    "back": "Back to portfolio",
-    "hero": {
-      "label": "Mentoring exercise",
-      "title": "Order Analysis with Basic Python",
-      "subtitle": "From Runestone to your computer: build a real Python mini-project with VS Code, a virtual environment, terminal, and GitHub.",
-      "description": "This guide walks you through creating the project folder, opening VS Code, creating and activating a venv, downloading the .py file, running in the terminal, completing functions, writing a README, and publishing on GitHub.",
-      "ctaDownload": "Download analise_pedidos_guiado.py",
-      "ctaInstructions": "Choose your OS"
-    },
-    "osSetup": {
-      "title": "Choose your operating system",
-      "intro": "Before starting the exercise, pick your operating system below. Commands differ slightly between Linux/macOS and Windows, especially when activating the virtual environment.",
-      "venvNote": "Even though this project does not use external libraries, creating a virtual environment is good practice. It isolates the project's Python and prepares you for larger projects later.",
-      "platformTabsAria": "Operating system",
-      "platformLinux": "Linux / macOS",
-      "platformWindowsPs": "Windows PowerShell",
-      "platformWindowsCmd": "Windows CMD",
-      "commandsHint": "Copy and run the commands below in order in your system's terminal:",
-      "commandLegend": [
-        "mkdir creates the project folder.",
-        "cd enters the folder.",
-        "code . opens the folder in VS Code.",
-        "python -m venv .venv creates the virtual environment.",
-        "The activation command depends on your system (see the tab you selected).",
-        "python analise_pedidos_guiado.py runs the project."
-      ],
-      "vscodeNote": "If code . does not work, open VS Code manually and use File > Open Folder to select analise-pedidos-python.",
-      "powershellNote": "If PowerShell blocks virtual environment activation, use the Windows CMD tab with .venv\\Scripts\\activate.bat — or open VS Code and use the integrated terminal set to CMD.",
-      "downloadTitle": "Download the exercise file",
-      "downloadBody": "After creating the folder and virtual environment, download the file and place it inside analise-pedidos-python:",
-      "downloadLabel": "Download analise_pedidos_guiado.py",
-      "treeIntro": "Expected project structure:",
-      "encouragement": "If a command does not work the first time, that's okay. Copy the error, ask for help in your group, and try again. Setting up your environment is part of learning.",
-      "copy": "Copy",
-      "copied": "Copied",
-      "copyAria": "Copy commands to clipboard"
-    },
-    "simulation": {
-      "title": "What does this project simulate?",
-      "intro": "The exercise simulates a simple e-commerce order analysis. The structure is designed to feel like real data while using only basic Python.",
-      "fields": [
-        "order id",
-        "customer",
-        "state",
-        "order status",
-        "item list (product, category, unit price, quantity)"
-      ]
-    },
-    "concepts": {
-      "title": "Concepts practiced",
-      "subtitle": "The exercise combines lessons 01–09 into one analysis workflow.",
-      "items": [
-        "Variables",
-        "Operators",
-        "Strings",
-        "Lists",
-        "Dictionaries",
-        "Lists of dictionaries",
-        "Conditionals",
-        "for loops",
-        "Functions",
-        "Optional parameters",
-        "Code organization",
-        "Formatted terminal output"
-      ]
-    },
-    "dataStructure": {
-      "title": "Data structure",
-      "explanation": [
-        "pedidos is a list.",
-        "Each item in the list is a dictionary.",
-        "Each order has a key called itens.",
-        "itens is also a list of dictionaries.",
-        "This trains multi-level access, for example:"
-      ],
-      "accessExample": "pedidos[0][\"itens\"][0][\"produto\"]"
-    },
-    "encouragement": {
-      "title": "You don't need to get everything right the first time",
-      "body": "If you get stuck on a function, that's okay. The goal of this project isn't to finish quickly—it's to practice reading the data, testing ideas, making mistakes, fixing them, and trying again. That process is part of learning to program."
-    },
-    "closingNote": "What matters isn't a perfect solution on the first try. What matters is keeping at it until the logic starts to click.",
-    "implement": {
-      "title": "What you need to implement",
-      "subtitle": "Complete the functions marked with TODO in the .py file:",
-      "functions": [
-        { "name": "calcular_total_item(item)", "desc": "Computes preco_unitario × quantidade." },
-        { "name": "calcular_total_pedido(pedido)", "desc": "Loops through order items and sums totals." },
-        { "name": "calcular_faturamento_total(lista_pedidos)", "desc": "Sums only orders with status \"entregue\"." },
-        { "name": "contar_pedidos_por_status(lista_pedidos)", "desc": "Counts orders per status." },
-        { "name": "calcular_ticket_medio(lista_pedidos)", "desc": "Total revenue divided by delivered order count." },
-        { "name": "calcular_faturamento_por_categoria(lista_pedidos)", "desc": "Groups revenue by product category." },
-        { "name": "calcular_faturamento_por_estado(lista_pedidos)", "desc": "Groups revenue by customer state." },
-        { "name": "criar_ranking_clientes(lista_pedidos)", "desc": "Ranks customers by spend on delivered orders." },
-        { "name": "listar_pedidos_acima_de(lista_pedidos, valor_minimo=500)", "desc": "Lists delivered orders above the minimum total." },
-        { "name": "gerar_relatorio(lista_pedidos)", "desc": "Builds and prints the full terminal report." }
-      ]
-    },
-    "projectSetup": {
-      "title": "How to create the project on your computer",
-      "intro": "This guide takes you from the course environment to a real Python project on your machine — folder, VS Code, virtual environment, .py file, README, and GitHub.",
-      "continuedTitle": "After terminal setup",
-      "continuedIntro": "Once the project runs on your computer, continue with the steps below to implement, test, and publish.",
-      "step7": {
-        "title": "Test one function at a time",
-        "body": "You do not need to finish everything at once. After implementing a function, test only that one, for example:",
-        "note": "Run the file, check the result, fix if needed, then move to the next function."
-      },
-      "step8": {
-        "title": "Enable the final report",
-        "body": "When the functions are ready, find the commented line at the end of the file and enable the report call:",
-        "beforeLabel": "Before",
-        "afterLabel": "After"
-      },
-      "step9": {
-        "title": "Creating README.md",
-        "body": "The README is your project's home page on GitHub. Create README.md in the project folder. You can start from this template:",
-        "note": "Replace the sample output with the report your script prints in the terminal."
-      },
-      "step10": {
-        "title": "Publishing on GitHub",
-        "body": "In the project folder, initialize Git and make the first commit:",
-        "repoHint": "Then create a GitHub repository named",
-        "repoName": "analise-pedidos-python",
-        "githubNote": "Follow the instructions GitHub shows to connect the remote and push your project. You do not need to master Git yet — the goal is to publish your solution."
-      }
-    },
-    "output": {
-      "title": "Expected output example",
-      "subtitle": "Format of the final terminal report (values may vary with the dataset):"
-    },
-    "why": {
-      "title": "Why this exercise matters",
-      "body": "Before using Pandas, it is important to understand how to manipulate data with pure Python. This project performs manually what libraries will simplify later.",
-      "quote": "Before automating with Pandas, understand the logic behind the data."
-    },
-    "cta": {
-      "title": "Ready to practice?",
-      "body": "Download the file, complete the functions, and publish your solution on GitHub.",
-      "download": "Download analise_pedidos_guiado.py",
-      "back": "Back to portfolio",
-      "github": "View repository on GitHub"
-    },
-    "nextStep": "The next study step will use Pandas to simplify this kind of analysis — this exercise bridges basic Python and data analysis."
   }
 }

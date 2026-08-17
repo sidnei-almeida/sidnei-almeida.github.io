@@ -33,8 +33,10 @@ export type ResumePdfContent = {
     institution: string;
     period: string;
   }>;
+  languages: Array<{ name: string; level: string; credential?: string }>;
   skills: Array<{ items: readonly string[] }>;
-  certifications: Array<{ issuer: string; name: string; year: string }>;
+  /** `date` arrives already formatted for the reader's locale; empty when undated. */
+  certifications: Array<{ issuer: string; name: string; date: string }>;
 };
 
 export type ResumePdfLabels = {
@@ -104,15 +106,29 @@ function createWriter(doc: jsPDF) {
   ) => {
     const size = opts.size ?? 10;
     const lh = lineHeight(size);
-    ensure(lh);
+
+    // Reserve the right column's width so long titles wrap instead of colliding with it.
+    setStyle({ size, color: [68, 68, 68] });
+    const rightWidth = right ? doc.getTextWidth(right) + 4 : 0;
 
     setStyle({ size, bold: opts.boldLeft });
-    doc.text(left, MARGIN, y);
+    const leftLines = doc.splitTextToSize(left, contentWidth - rightWidth) as string[];
 
-    setStyle({ size, color: [68, 68, 68] });
-    doc.text(right, pageWidth - MARGIN, y, { align: 'right' });
+    ensure(lh * leftLines.length);
 
-    y += lh + 1;
+    const firstLineY = y;
+    for (const line of leftLines) {
+      setStyle({ size, bold: opts.boldLeft });
+      doc.text(line, MARGIN, y);
+      y += lh;
+    }
+
+    if (right) {
+      setStyle({ size, color: [68, 68, 68] });
+      doc.text(right, pageWidth - MARGIN, firstLineY, { align: 'right' });
+    }
+
+    y += 1;
   };
 
   const sectionHeading = (title: string) => {
@@ -200,6 +216,18 @@ export function exportResumePdf(
     w.writeLines(entry.institution, { size: 10, color: [85, 85, 85], gap: 2 });
   }
 
+  w.sectionHeading(labels.sections.languages);
+  w.writeLines(
+    content.languages
+      .map((language) =>
+        language.credential
+          ? `${language.name}: ${language.level} (${language.credential})`
+          : `${language.name}: ${language.level}`,
+      )
+      .join('  |  '),
+    { size: 10, color: [51, 51, 51], gap: 2 },
+  );
+
   w.sectionHeading(labels.sections.skills);
   labels.skillGroupKeys.forEach((key, index) => {
     const items = content.skills[index]?.items ?? [];
@@ -208,7 +236,7 @@ export function exportResumePdf(
 
   w.sectionHeading(labels.sections.certifications);
   for (const cert of content.certifications) {
-    w.writeRow(`${cert.issuer}, ${cert.name}`, cert.year, { size: 10 });
+    w.writeRow(`${cert.issuer}, ${cert.name}`, cert.date, { size: 10 });
   }
 
   doc.save(filename);

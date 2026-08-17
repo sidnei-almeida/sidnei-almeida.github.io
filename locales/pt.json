@@ -4,7 +4,6 @@
     "about": "Sobre",
     "projects": "Projetos",
     "skills": "Competências",
-    "mentoria": "Mentoria",
     "resume": "Currículo",
     "contact": "Contato",
     "letsConnect": "Vamos Conversar"
@@ -98,14 +97,29 @@
       "projects": "Projetos Técnicos Principais",
       "education": "Formação",
       "skills": "Competências e ferramentas",
-      "certifications": "Certificações"
+      "certifications": "Certificações",
+      "languages": "Idiomas"
     },
     "present": "Atual",
     "stack": "Stack",
     "pageTitle": "Sidnei Almeida | Currículo",
     "clientPrefix": "Cliente",
     "rolePrefix": "Função",
-    "projectPrefix": "Projeto"
+    "projectPrefix": "Projeto",
+    "credentialId": "ID da credencial",
+    "languageNames": {
+      "pt": "Português",
+      "en": "Inglês",
+      "es": "Espanhol"
+    },
+    "languageLevels": {
+      "native": "Nativo",
+      "c2": "Proficiente (C2)",
+      "c1": "Avançado (C1)",
+      "b2": "Intermediário avançado (B2)",
+      "b1": "Intermediário (B1)",
+      "a2": "Básico (A2)"
+    }
   },
   "resumePrint": {
     "savePdf": "Baixar PDF",
@@ -117,7 +131,8 @@
       "projects": "Projetos Técnicos Principais",
       "education": "Formação",
       "skills": "Competências",
-      "certifications": "Certificações"
+      "certifications": "Certificações",
+      "languages": "Idiomas"
     }
   },
   "skills": {
@@ -127,7 +142,8 @@
       "dataScienceAI": "Ciência de dados e IA",
       "dataEngineering": "Engenharia de dados",
       "fullStack": "Desenvolvimento full stack",
-      "visualization": "Visualização e negócios"
+      "visualization": "Analytics e negócios",
+      "cloudMlops": "Cloud, MLOps e DevOps"
     }
   },
   "techStack": {
@@ -175,9 +191,7 @@
     "ariaLabel": "Rodapé",
     "githubAria": "GitHub",
     "linkedinAria": "LinkedIn",
-    "emailAria": "E-mail",
-    "mentoriaProgram": "Mentoria Python",
-    "mentoriaProgramAria": "Mentoria Python e Dados — Módulo 01"
+    "emailAria": "E-mail"
   },
   "aria": {
     "mainNav": "Principal",
@@ -186,14 +200,15 @@
     "closeMenu": "Fechar menu"
   },
   "meta": {
-    "title": "Sidnei Almeida | Engenheiro de IA",
-    "description": "Sidnei Almeida, engenheiro de IA. Sistemas inteligentes em aprendizado de máquina, visão computacional e aplicações com LLM."
+    "title": "Sidnei Almeida | Engenheiro de IA e Desenvolvedor Full-Stack",
+    "description": "Engenheiro de IA e desenvolvedor full-stack no Brasil. Construo sistemas de machine learning em produção — visão computacional, aplicações com RAG e LLM, deep learning e pipelines de dados — com Python, PyTorch, TensorFlow, LangChain, FastAPI e Docker. Todo projeto tem demo ao vivo.",
+    "keywords": "Engenheiro de IA, Engenheiro de Machine Learning, Desenvolvedor Full-Stack, Cientista de Dados, Visão Computacional, Deep Learning, LLM, RAG, Geração Aumentada por Recuperação, LangChain, IA Generativa, Agentes de IA, Prompt Engineering, PyTorch, TensorFlow, YOLOv8, OpenCV, Python, FastAPI, Docker, Engenharia de Dados, ETL, MLOps, Ciência de Dados, Hugging Face, Bancos de Dados Vetoriais, Sidnei Almeida, Brasil, Caxias do Sul, Remoto"
   },
   "resumeData": {
     "title": "Engenheiro de IA e Desenvolvedor Full-Stack",
     "subtitle": "Soluções orientadas a IA e estratégia de dados",
     "location": "Caxias do Sul, RS",
-    "summary": "Desenvolvedor com atuação prática em engenharia de dados, aprendizado de máquina e desenvolvimento web. Experiência na construção de agregadores de alta frequência para mercados de ativos digitais e de arquiteturas de dados para plataformas de saúde digital. Atua em todo o ciclo de vida dos dados: extração, ETL, treinamento de modelos de deep learning (LSTM, GANs, YOLOv8) e implantação com Docker e FastAPI. Foco em código limpo, automação e interfaces que tornam dados complexos mais acessíveis.",
+    "summary": "Engenheiro de IA e desenvolvedor full-stack, focado em levar sistemas de machine learning até produção. Experiência em visão computacional (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) e aplicações com LLM — pipelines RAG, agentes de IA e prompt engineering com LangChain e Hugging Face. Atuo em todo o ciclo de vida dos dados: web scraping, ETL, modelagem SQL e NoSQL, treinamento de modelos e deploy com FastAPI, Docker e CI/CD em AWS e Google Cloud. Certificado IBM em AI Engineering e Generative AI Engineering, cursando MBA em Data Science e IA na USP/ESALQ.",
     "experience": [
       {
         "title": "Engenheiro de Soluções de Dados e Desenvolvedor Full-Stack",
@@ -207,7 +222,7 @@
             "achievements": [
               "Avaliei respostas de IA quanto a precisão, clareza, segurança e seguimento de instruções",
               "Comparei saídas de modelos e identifiquei alucinações, erros de raciocínio e inconsistências",
-              "Forneci anotações estruturadas e retorno para melhorar a qualidade dos dados de treinamento de LLM",
+              "Forneci anotações estruturadas e feedback RLHF para melhorar a qualidade dos dados de treinamento de LLM",
               "Reescrevi e refinei respostas com base nas diretrizes do projeto"
             ]
           },
@@ -228,13 +243,13 @@
     "education": [
       {
         "degree": "MBA em Data Science, Inteligência Artificial e Analytics",
-        "institution": "Universidade de São Paulo (USP ESALQ)",
-        "period": "2025 - 2027"
+        "institution": "Universidade de São Paulo (USP / ESALQ)",
+        "period": "Abr 2025 - Dez 2027"
       },
       {
         "degree": "Tecnologia em Processos Gerenciais",
-        "institution": "Instituto Federal do Rio Grande do Sul (IFRS)",
-        "period": "2020 - 2025"
+        "institution": "Instituto Federal do Rio Grande do Sul (IFRS), Caxias do Sul",
+        "period": "Mar 2019 - Dez 2025"
       }
     ],
     "projects": [
@@ -259,269 +274,5 @@
         "description": "Modelos de visão de alta precisão, incluindo reconhecimento de placas (99,69% de precisão) e análise de emoções em tempo real."
       }
     ]
-  },
-  "mentoria": {
-    "back": "Voltar ao portfólio",
-    "hero": {
-      "label": "Mentoria",
-      "title": "Python & Data",
-      "subtitle": "Exercícios práticos de programação com foco em dados. Acesso mediante matrícula.",
-      "notice": "Os exercícios são acessíveis apenas para alunos matriculados. Entre em contato para participar."
-    },
-    "curriculum": {
-      "label": "Programa",
-      "title": "Módulos do curso",
-      "hint": "Expanda um módulo para ver aulas, laboratórios ou projeto final."
-    },
-    "modulePrefix": "Módulo",
-    "lessonCountLabel": "{count} aulas",
-    "labCountLabel": "{count} labs disponíveis",
-    "openLab": "Abrir lab",
-    "statusAvailable": "DISPONÍVEL",
-    "statusComingSoon": "EM BREVE",
-    "comingSoonBody": "Este módulo será aberto em breve para alunos matriculados.",
-    "lockedBadge": "RESTRITO",
-    "finalProject": {
-      "label": "Projeto final"
-    },
-    "modules": [
-      {
-        "title": "Python 3 Programming",
-        "lessons": [
-      {
-        "title": "Variáveis e print()",
-        "description": "Nesta atividade, vamos praticar variáveis, valores, tipos básicos e o uso de print() em Python. O objetivo é entender como guardar informações em variáveis, mostrar resultados na tela e resolver pequenos problemas com dados simples."
-      },
-      {
-        "title": "Entrada de dados e conversão de tipos",
-        "description": "Nesta atividade, vamos praticar entrada de dados com input() e conversão de tipos com int() e float(). O objetivo é entender que todo valor digitado pelo usuário chega como texto e precisa ser convertido quando queremos fazer cálculos."
-      },
-      {
-        "title": "Operadores e cálculos simples",
-        "description": "Nesta atividade, vamos praticar operadores matemáticos em Python, como soma, subtração, multiplicação, divisão, potência e porcentagem. O objetivo é usar Python para resolver pequenos cálculos comuns em situações de dados, vendas, salários e custos."
-      },
-      {
-        "title": "Strings úteis para dados",
-        "description": "Nesta atividade, vamos praticar operações básicas com textos em Python. O objetivo é aprender a limpar, padronizar, separar e transformar strings, usando métodos como strip(), lower(), upper(), title(), split() e replace(). Esses recursos são importantes para trabalhar com dados textuais em cadastros, vendas, clientes e bases reais."
-      },
-      {
-        "title": "Condicionais: if, elif e else",
-        "description": "Nesta atividade, vamos praticar estruturas condicionais em Python usando if, elif e else. O objetivo é aprender a criar regras de decisão para classificar valores, validar situações e executar ações diferentes dependendo dos dados informados."
-      },
-      {
-        "title": "Listas e tuplas em Python",
-        "description": "Nesta atividade, vamos praticar listas e tuplas em Python. O objetivo é entender como guardar vários valores em uma única variável, acessar elementos por índice e diferenciar coleções mutáveis, como listas, de coleções imutáveis, como tuplas. Também vamos usar funções básicas como len(), sum(), max() e min()."
-      },
-      {
-        "title": "Repetição com for e while",
-        "description": "Nesta atividade, vamos praticar estruturas de repetição em Python usando for e while. O objetivo é aprender a percorrer listas, repetir ações, criar acumuladores, contar valores e entender a diferença entre repetir para cada item de uma sequência e repetir enquanto uma condição for verdadeira."
-      },
-      {
-        "title": "Dicionários e listas de dicionários",
-        "description": "Nesta atividade, vamos praticar dicionários e listas de dicionários em Python. O objetivo é entender como representar dados estruturados, acessar valores por chave, atualizar informações, adicionar novas chaves e navegar por listas que contêm vários dicionários."
-      },
-      {
-        "title": "Funções em Python",
-        "description": "Nesta atividade, vamos praticar funções em Python usando def, parâmetros e return. O objetivo é entender como criar blocos de código reutilizáveis, diferenciar print() de return, usar parâmetros obrigatórios e opcionais e conhecer o uso básico de lambda para criar funções simples em uma linha."
-      }
-        ],
-        "finalProject": {
-          "title": "Análise de Pedidos com Python Básico",
-          "description": "Exercício prático de fim de módulo. Simula uma análise simples de pedidos de e-commerce usando Python puro — listas, dicionários, funções e formatação de terminal. Disponível como mini-projeto no portfólio.",
-          "cta": "Ver projeto"
-        }
-      },
-      {
-        "title": "Análise de Dados com Colab",
-        "lessons": [
-          {
-            "title": "Exploração e limpeza de dados com Pandas",
-            "description": "Pratique carregar CSVs, inspecionar DataFrames, identificar valores ausentes, converter tipos, tratar dados problemáticos e gerar uma base limpa para análise.",
-            "badge": "COLAB LAB"
-          },
-          {
-            "title": "Análise exploratória e Matplotlib",
-            "description": "Pratique agrupar, filtrar, agregar e visualizar perguntas de negócio com Pandas e Matplotlib usando uma base de vendas limpa.",
-            "badge": "COLAB LAB"
-          },
-          {
-            "title": "Customer churn — EDA e preparação",
-            "description": "Analise uma base de churn de clientes, inspecione a variável alvo, investigue features numéricas e categóricas, limpe TotalCharges e prepare os dados para modelagem.",
-            "badge": "COLAB LAB"
-          },
-          {
-            "title": "Primeiro modelo de classificação com Scikit-learn",
-            "description": "Treine um primeiro modelo de classificação de churn, separe treino/teste, encode variáveis categóricas, avalie previsões, inspecione importância de features e salve o modelo com joblib.",
-            "badge": "ML LAB"
-          }
-        ],
-        "colabGuide": {
-          "title": "Como usar os labs no Colab",
-          "steps": [
-            "Clique no link do lab.",
-            "Abra o notebook no Google Colab.",
-            "Vá em Arquivo > Salvar uma cópia no Drive.",
-            "Trabalhe sempre na sua própria cópia.",
-            "Execute as células em ordem.",
-            "Leia os comentários e complete os exercícios."
-          ],
-          "notice": "Não é necessário instalar nada localmente. Os notebooks rodam direto no navegador pelo Google Colab."
-        }
-      },
-      {
-        "title": "Data Visualization"
-      }
-    ],
-    "cta": {
-      "title": "Quer participar da mentoria?",
-      "body": "Os exercícios são parte de um curso particular de Python e Dados. Para ter acesso às aulas no Runestone e ao grupo de mentoria, entre em contato.",
-      "button": "Vamos conversar"
-    }
-  },
-  "pythonExercise": {
-    "back": "Voltar ao portfólio",
-    "hero": {
-      "label": "Exercício — mentoria",
-      "title": "Análise de Pedidos com Python Básico",
-      "subtitle": "Do Runestone ao seu computador: crie um mini-projeto Python real com VS Code, ambiente virtual, terminal e GitHub.",
-      "description": "Este guia ensina passo a passo como montar a pasta do projeto, abrir no VS Code, criar e ativar um venv, baixar o arquivo .py, rodar no terminal, completar as funções, escrever um README e publicar no GitHub.",
-      "ctaDownload": "Baixar analise_pedidos_guiado.py",
-      "ctaInstructions": "Escolher sistema"
-    },
-    "osSetup": {
-      "title": "Escolha seu sistema operacional",
-      "intro": "Antes de começar o exercício, escolha abaixo o seu sistema operacional. Os comandos mudam um pouco entre Linux/macOS e Windows, principalmente na hora de ativar o ambiente virtual.",
-      "venvNote": "Mesmo que este projeto não use bibliotecas externas, criar um ambiente virtual é uma boa prática. Ele isola o Python do projeto e prepara você para trabalhar em projetos maiores no futuro.",
-      "platformTabsAria": "Sistema operacional",
-      "platformLinux": "Linux / macOS",
-      "platformWindowsPs": "Windows PowerShell",
-      "platformWindowsCmd": "Windows CMD",
-      "commandsHint": "Copie e execute os comandos abaixo, na ordem, no terminal do seu sistema:",
-      "commandLegend": [
-        "mkdir cria a pasta do projeto.",
-        "cd entra na pasta.",
-        "code . abre a pasta no VS Code.",
-        "python -m venv .venv cria o ambiente virtual.",
-        "O comando de ativação muda conforme o sistema (veja a aba que você escolheu).",
-        "python analise_pedidos_guiado.py executa o projeto."
-      ],
-      "vscodeNote": "Se o comando code . não funcionar, abra o VS Code manualmente e use File > Open Folder (Arquivo > Abrir Pasta) para selecionar a pasta analise-pedidos-python.",
-      "powershellNote": "Se o PowerShell bloquear a ativação do ambiente virtual, use a aba Windows CMD com .venv\\Scripts\\activate.bat — ou abra o VS Code e use o terminal integrado configurado para CMD.",
-      "downloadTitle": "Baixe o arquivo do exercício",
-      "downloadBody": "Depois de criar a pasta e o ambiente virtual, baixe o arquivo e coloque-o dentro de analise-pedidos-python:",
-      "downloadLabel": "Baixar analise_pedidos_guiado.py",
-      "treeIntro": "A estrutura esperada do projeto:",
-      "encouragement": "Se algum comando não funcionar de primeira, não tem problema. Copie o erro, peça ajuda no grupo e tente novamente. Configurar ambiente também faz parte do aprendizado.",
-      "copy": "Copiar",
-      "copied": "Copiado",
-      "copyAria": "Copiar comandos para a área de transferência"
-    },
-    "simulation": {
-      "title": "O que este projeto simula?",
-      "intro": "O exercício simula uma análise simples de pedidos de e-commerce. A estrutura foi pensada para parecer um dado real, mas ainda usando apenas Python básico.",
-      "fields": [
-        "id do pedido",
-        "cliente",
-        "estado",
-        "status do pedido",
-        "lista de itens (produto, categoria, preço unitário, quantidade)"
-      ]
-    },
-    "concepts": {
-      "title": "Conceitos praticados",
-      "subtitle": "O exercício junta os conteúdos das aulas 01 a 09 em um único fluxo de análise.",
-      "items": [
-        "Variáveis",
-        "Operadores",
-        "Strings",
-        "Listas",
-        "Dicionários",
-        "Listas de dicionários",
-        "Condicionais",
-        "Loops com for",
-        "Funções",
-        "Parâmetros opcionais",
-        "Organização de código",
-        "Saída formatada no terminal"
-      ]
-    },
-    "dataStructure": {
-      "title": "Estrutura dos dados",
-      "explanation": [
-        "pedidos é uma lista.",
-        "Cada item da lista é um dicionário.",
-        "Cada pedido possui uma chave chamada itens.",
-        "itens também é uma lista de dicionários.",
-        "Por isso, o exercício treina acesso em mais de um nível:"
-      ],
-      "accessExample": "pedidos[0][\"itens\"][0][\"produto\"]"
-    },
-    "encouragement": {
-      "title": "Não precisa acertar tudo de primeira",
-      "body": "Se você travar em alguma função, não tem problema. O objetivo deste projeto não é terminar rápido, e sim praticar a leitura dos dados, testar soluções, errar, corrigir e continuar tentando. Esse processo faz parte de aprender programação."
-    },
-    "closingNote": "O importante não é resolver perfeito na primeira tentativa. O importante é continuar praticando até a lógica começar a fazer sentido.",
-    "implement": {
-      "title": "O que deve ser implementado",
-      "subtitle": "Complete as funções marcadas com TODO no arquivo .py:",
-      "functions": [
-        { "name": "calcular_total_item(item)", "desc": "Calcula preco_unitario × quantidade." },
-        { "name": "calcular_total_pedido(pedido)", "desc": "Percorre os itens do pedido e soma os totais." },
-        { "name": "calcular_faturamento_total(lista_pedidos)", "desc": "Soma apenas pedidos com status \"entregue\"." },
-        { "name": "contar_pedidos_por_status(lista_pedidos)", "desc": "Conta quantos pedidos existem em cada status." },
-        { "name": "calcular_ticket_medio(lista_pedidos)", "desc": "Faturamento total dividido pela quantidade de pedidos entregues." },
-        { "name": "calcular_faturamento_por_categoria(lista_pedidos)", "desc": "Agrupa faturamento por categoria de produto." },
-        { "name": "calcular_faturamento_por_estado(lista_pedidos)", "desc": "Agrupa faturamento por estado do cliente." },
-        { "name": "criar_ranking_clientes(lista_pedidos)", "desc": "Ordena clientes pelo total gasto em pedidos entregues." },
-        { "name": "listar_pedidos_acima_de(lista_pedidos, valor_minimo=500)", "desc": "Lista pedidos entregues com total acima do valor mínimo." },
-        { "name": "gerar_relatorio(lista_pedidos)", "desc": "Monta e imprime o relatório completo no terminal." }
-      ]
-    },
-    "projectSetup": {
-      "title": "Como montar o exercício no seu computador",
-      "intro": "Este guia leva você do ambiente do curso até rodar o exercício na sua máquina — com pasta de trabalho, VS Code, ambiente virtual, arquivo .py e, se quiser, README e GitHub para entrega.",
-      "continuedTitle": "Depois do setup no terminal",
-      "continuedIntro": "Com o projeto rodando no seu computador, continue com os passos abaixo para implementar, testar e publicar.",
-      "step7": {
-        "title": "Testar função por função",
-        "body": "Você não precisa terminar tudo de uma vez. Depois de implementar uma função, teste só ela no final do arquivo ou em um print temporário, por exemplo:",
-        "note": "Rode o arquivo, veja o resultado, corrija se precisar e só então passe para a próxima função."
-      },
-      "step8": {
-        "title": "Ativar o relatório final",
-        "body": "Quando as funções estiverem prontas, procure no final do arquivo a linha comentada e ative a chamada do relatório:",
-        "beforeLabel": "Antes",
-        "afterLabel": "Depois"
-      },
-      "step9": {
-        "title": "Criando o README.md",
-        "body": "O README é a página inicial do seu projeto no GitHub. Crie um arquivo README.md na pasta do projeto. Você pode começar com este modelo e adaptar:",
-        "note": "Substitua o exemplo de saída pelo relatório que o seu script gerar no terminal."
-      },
-      "step10": {
-        "title": "Publicando no GitHub",
-        "body": "Na pasta do projeto, inicialize o Git e faça o primeiro commit:",
-        "repoHint": "Depois crie um repositório no GitHub chamado",
-        "repoName": "analise-pedidos-python",
-        "githubNote": "Siga as instruções que o próprio GitHub mostra para conectar o repositório remoto e enviar o projeto (git remote add, git push). Não precisa dominar Git agora — o importante é publicar sua solução."
-      }
-    },
-    "output": {
-      "title": "Exemplo de saída esperada",
-      "subtitle": "Formato do relatório final no terminal (valores podem variar conforme a base de dados):"
-    },
-    "why": {
-      "title": "Por que este exercício é importante?",
-      "body": "Antes de usar Pandas, é importante entender como manipular dados com Python puro. Este projeto mostra manualmente operações que depois serão facilitadas por bibliotecas de dados.",
-      "quote": "Antes de automatizar com Pandas, é importante entender a lógica por trás dos dados."
-    },
-    "cta": {
-      "title": "Pronto para praticar?",
-      "body": "Baixe o arquivo, complete as funções e publique sua solução no GitHub.",
-      "download": "Baixar analise_pedidos_guiado.py",
-      "back": "Voltar ao portfólio",
-      "github": "Ver repositório no GitHub"
-    },
-    "nextStep": "A próxima etapa dos estudos será usar Pandas para simplificar esse tipo de análise — este exercício é a ponte entre Python básico e análise de dados."
   }
 }

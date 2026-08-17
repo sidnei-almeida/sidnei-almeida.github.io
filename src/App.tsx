@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
-import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { PageTransition } from './components/motion/PageTransition';
 import { PageShell } from './components/layout/PageShell';
 import { I18nProvider } from './i18n/I18nProvider';
@@ -8,8 +8,6 @@ import { Home } from './pages/Home';
 import { LanguageRedirectPage } from './pages/LanguageRedirectPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ResumePage } from './pages/ResumePage';
-import { MentoriaPage } from './pages/MentoriaPage';
-import { PythonOrdersExercisePage } from './pages/PythonOrdersExercisePage';
 import { ResumePrintPage } from './pages/ResumePrintPage';
 
 function AppLayout() {
@@ -38,8 +36,9 @@ function App() {
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/resume" element={<ResumePage />} />
             <Route path="/contact" element={<ContactPage />} />
-            <Route path="/mentoria" element={<MentoriaPage />} />
-            <Route path="/exercises/analise-pedidos-python" element={<PythonOrdersExercisePage />} />
+            {/* Retired pages — keep old inbound links alive instead of 404ing */}
+            <Route path="/mentoria" element={<Navigate to="/" replace />} />
+            <Route path="/exercises/*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
       </I18nProvider>

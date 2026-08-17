@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Print-only view of the resume — the /resume page carries the same content
+Disallow: /resume/print
+
+Sitemap: https://sidnei-almeida.github.io/sitemap.xml
