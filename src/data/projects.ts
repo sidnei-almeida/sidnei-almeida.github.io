@@ -219,6 +219,22 @@ export const projects: Project[] = [
     liveDemo: 'https://cinescope-semantic-discovery.vercel.app/',
     github: 'https://github.com/sidnei-almeida/tmdb-semantic-recommender',
   },
+  {
+    id: 'air-deck',
+    number: '12',
+    title: 'Air-Deck Gesture-Controlled Presentations',
+    shortDescription:
+      'Browser-based presenter that turns any PDF into a slide deck driven by real-time hand gestures via webcam.',
+    fullDescription:
+      'Air-Deck turns any PDF into a hands-free, gesture-controlled presentation that runs entirely in the browser, with no backend and no uploads. MediaPipe Hand Landmarker tracks the hand in a dedicated Web Worker, a One Euro Filter smooths the pointer for near-zero perceived lag, and a gesture state machine with confirmation windows and hysteresis keeps poses from overlapping. Pinch gestures draw freehand ink, rectangles, ellipses and arrows with live shape recognition, while pointing drives a laser pointer and magnifier zoom. Slides render client-side with pdf.js, and a guided gesture trainer, full keyboard fallback and local-only persistence round out a tool built for teachers and speakers.',
+    category: 'Computer Vision / HCI',
+    filterCategories: ['cv', 'frontend'],
+    tags: ['React', 'TypeScript', 'MediaPipe', 'pdf.js', 'Web Workers'],
+    featured: false,
+    image: '/assets/projects/air-deck.webp',
+    liveDemo: 'https://air-deck-eight.vercel.app/',
+    github: 'https://github.com/sidnei-almeida/air-deck',
+  },
 ];
 
 /** Optimized WebP paths for project cards (lazy-loaded; not preloaded on home). */
