@@ -208,7 +208,7 @@
     "title": "Engenheiro de IA e Desenvolvedor Full-Stack",
     "subtitle": "Soluções orientadas a IA e estratégia de dados",
     "location": "Caxias do Sul, RS",
-    "summary": "Engenheiro de IA e desenvolvedor full-stack, focado em levar sistemas de machine learning até produção. Atualmente sou o único desenvolvedor da DOQYN, um SaaS multi-tenant de inteligência documental, responsável por tudo, do pipeline de LLM e OCR ao frontend em React e à infraestrutura containerizada onde roda. Experiência em visão computacional (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) e aplicações com LLM, como pipelines RAG, agentes de IA e prompt engineering com LangChain, Groq e Hugging Face. Atuo em todo o ciclo de vida dos dados: web scraping, ETL, modelagem SQL e NoSQL, treinamento de modelos e deploy com FastAPI, Docker e CI/CD em AWS, Google Cloud e Cloudflare. Certificado IBM em AI Engineering e Generative AI Engineering, cursando MBA em Data Science e IA na USP/ESALQ.",
+    "summary": "Engenheiro de IA e desenvolvedor full-stack, focado em levar sistemas de machine learning até produção. Atualmente sou o único desenvolvedor da DOQYN, um SaaS multi-tenant de inteligência documental, responsável por tudo, do pipeline de LLM e OCR ao frontend em React e à infraestrutura containerizada onde roda. Experiência em visão computacional (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) e aplicações com LLM, como pipelines RAG, agentes de IA e prompt engineering com LangChain, Groq e Hugging Face. Atuo em todo o ciclo de vida dos dados: web scraping, ETL, modelagem SQL e NoSQL, treinamento de modelos e deploy com FastAPI, Docker e CI/CD em AWS, Google Cloud e Cloudflare. Certificado IBM em AI Engineering e Generative AI Engineering, cursando MBA em Data Science e IA na USP/ESALQ e Bacharelado em Ciência da Computação na FIAP.",
     "experience": [
       {
         "title": "Engenheiro de IA e Desenvolvedor Full-Stack",
@@ -260,6 +260,11 @@
       }
     ],
     "education": [
+      {
+        "degree": "Bacharelado em Ciência da Computação, Data Science, IA e Platform Engineering",
+        "institution": "FIAP",
+        "period": "Jun 2026 - Jun 2030"
+      },
       {
         "degree": "MBA em Data Science, Inteligência Artificial e Analytics",
         "institution": "Universidade de São Paulo (USP / ESALQ)",
