@@ -12,7 +12,7 @@ export function WhatIDoSection() {
   const impactStats = getImpactStats(t);
 
   return (
-    <section className="relative flex min-h-full w-full flex-col overflow-hidden bg-canvas p-10 lg:p-12">
+    <section className="whatido-section relative flex min-h-full w-full flex-col overflow-hidden bg-canvas p-10 lg:p-12">
       <SectionReveal>
         <SectionLabel animated>{t.whatIDo.label}</SectionLabel>
       </SectionReveal>
@@ -32,7 +32,7 @@ export function WhatIDoSection() {
         </ul>
       </SectionReveal>
 
-      <SectionReveal variants={cardStaggerContainer} className="mt-8 grid grid-cols-2 gap-3 border-t border-line pt-8">
+      <SectionReveal variants={cardStaggerContainer} className="whatido-stats mt-8 grid grid-cols-2 gap-3 border-t border-line pt-8">
         {impactStats.map((stat) => (
           <motion.div key={stat.label} variants={fadeUpItem}>
             <StatCard {...stat} />

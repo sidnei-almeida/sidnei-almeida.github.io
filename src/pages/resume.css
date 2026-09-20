@@ -446,4 +446,27 @@
   .resume-page-title {
     font-size: clamp(2rem, 8vw, 56px);
   }
+
+  /* Reclaim horizontal space the desktop rail/indent can afford. */
+  .resume-section {
+    margin-top: 56px;
+  }
+
+  .resume-summary {
+    padding-left: 16px;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  .timeline-content {
+    padding-left: 18px;
+  }
+
+  .timeline-entry {
+    margin-bottom: 40px;
+  }
+
+  .project-card {
+    padding: 20px;
+  }
 }
