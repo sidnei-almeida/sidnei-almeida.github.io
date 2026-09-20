@@ -12,7 +12,7 @@ export function Footer() {
       <div className="page-container py-12 lg:py-14">
         <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="mb-2 flex items-center text-[13px] font-medium uppercase tracking-brand text-ink-primary">
+            <p className="site-brand mb-2 flex items-center text-[13px] font-medium uppercase tracking-brand text-ink-primary">
               <span className="mr-3.5 inline-block h-px w-5 bg-accent" />
               {profile.name}
             </p>
@@ -21,7 +21,7 @@ export function Footer() {
             </p>
           </div>
 
-          <nav className="flex flex-wrap gap-5" aria-label={t.footer.ariaLabel}>
+          <nav className="site-footer-nav flex flex-wrap gap-5" aria-label={t.footer.ariaLabel}>
             {footerNav.map((item) =>
               item.isRoute ? (
                 <Link
@@ -43,7 +43,7 @@ export function Footer() {
             )}
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="site-footer-social flex items-center gap-4">
             <a
               href={profile.github}
               target="_blank"

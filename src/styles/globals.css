@@ -972,6 +972,84 @@
     }
   }
 
+  /* ---------------------------------------------------------------
+     Mobile refinements (below the lg breakpoint).
+     Everything here is scoped to max-width: 1023.98px so the desktop
+     layout stays byte-for-byte identical.
+     --------------------------------------------------------------- */
+  @media (max-width: 1023.98px) {
+    /* The header grid reserves an equal 1fr for the hidden desktop nav
+       column, which squeezed the brand into two lines. Give the brand the
+       leftover space instead. */
+    .site-header-bar {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+    }
+
+    .site-brand {
+      white-space: nowrap;
+      letter-spacing: 0.22em;
+    }
+
+    /* Label and marquee shared one row, leaving the marquee ~190px wide. */
+    .tech-stack-bar > .page-container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      padding-top: 18px;
+      padding-bottom: 18px;
+    }
+
+    .tech-stack-bar .tech-stack-marquee-wrap {
+      width: 100%;
+    }
+
+    /* 40px of section padding inside a 20px container gutter left the
+       list ~270px wide. */
+    .whatido-section {
+      padding: 28px 24px;
+    }
+
+    .tech-stack-bar {
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    /* Cards in the same row grew to different heights. */
+    .whatido-stats > *,
+    .whatido-stats .stat-card {
+      height: 100%;
+    }
+
+    /* Touch targets: footer links were 19px tall, icons 16px square. */
+    .site-footer-nav {
+      gap: 4px 20px;
+    }
+
+    .site-footer-nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+    }
+
+    .site-footer-social {
+      gap: 4px;
+    }
+
+    .site-footer-social a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+    }
+
+    .site-mobile-nav a {
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+  }
+
   @media print {
     *,
     *::before,
