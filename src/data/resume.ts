@@ -64,7 +64,7 @@ export const resume = {
   phone: '+55 (54) 99174-6969',
 
   summary:
-    'AI Engineer and Full-Stack Developer building production machine learning systems end to end. Today I am the sole developer of DOQYN, a multi-tenant document intelligence SaaS, owning everything from the LLM and OCR pipeline to the React frontend and the containerised infrastructure it runs on. Experience across computer vision (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) and LLM applications such as RAG pipelines, AI agents and prompt engineering with LangChain, Groq and Hugging Face. Comfortable across the full data lifecycle: web scraping, ETL, SQL and NoSQL modelling, model training, and deployment with FastAPI, Docker and CI/CD on AWS, Google Cloud and Cloudflare. IBM-certified in AI Engineering and Generative AI Engineering, currently taking an MBA in Data Science & AI at USP/ESALQ.',
+    'AI Engineer and Full-Stack Developer building production machine learning systems end to end. Today I am the sole developer of DOQYN, a multi-tenant document intelligence SaaS, owning everything from the LLM and OCR pipeline to the React frontend and the containerised infrastructure it runs on. Experience across computer vision (YOLOv8, U-Net, CNNs), deep learning (LSTM, GANs, Transformers) and LLM applications such as RAG pipelines, AI agents and prompt engineering with LangChain, Groq and Hugging Face. Comfortable across the full data lifecycle: web scraping, ETL, SQL and NoSQL modelling, model training, and deployment with FastAPI, Docker and CI/CD on AWS, Google Cloud and Cloudflare. IBM-certified in AI Engineering and Generative AI Engineering, currently taking an MBA in Data Science & AI at USP/ESALQ and a BSc in Computer Science at FIAP.',
 
   experience: [
     {
@@ -153,6 +153,11 @@ export const resume = {
 
   education: [
     {
+      degree: 'Bachelor of Science, Computer Science, Data Science, AI & Platform Engineering',
+      institution: 'FIAP',
+      period: 'Jun 2026 - Jun 2030',
+    },
+    {
       degree: 'MBA, Data Science, Artificial Intelligence & Analytics',
       institution: 'University of São Paulo (USP / ESALQ)',
       period: 'Apr 2025 - Dec 2027',
@@ -202,8 +207,12 @@ export const resume = {
         'OCR',
         'Document Intelligence',
         'AI Agents',
+        'Agentic Workflows',
+        'AutoGen',
         'Prompt Engineering',
         'RLHF',
+        'Reinforcement Learning',
+        'Unsupervised Learning',
         'Anomaly Detection',
         'Time Series Forecasting',
       ],
@@ -270,6 +279,7 @@ export const resume = {
         'GitHub Actions',
         'CI/CD',
         'Docker Compose',
+        'MLOps',
         'AWS',
         'Google Cloud (GCP)',
         'Cloudflare R2 / S3',
@@ -306,6 +316,25 @@ export const resume = {
 
   /** Newest first. `featured` entries are the subset printed on the one-page ATS resume. */
   certifications: [
+    {
+      issuer: 'DeepLearning.AI',
+      name: 'Transformers in Practice',
+    },
+    {
+      issuer: 'DeepLearning.AI',
+      name: 'AI Agentic Design Patterns with AutoGen',
+      featured: true,
+    },
+    {
+      issuer: 'DeepLearning.AI',
+      name: 'Deep Learning Specialization',
+      featured: true,
+    },
+    {
+      issuer: 'DeepLearning.AI',
+      name: 'Machine Learning Specialization',
+      featured: true,
+    },
     {
       issuer: 'IBM',
       name: 'IBM Generative AI Engineering',
